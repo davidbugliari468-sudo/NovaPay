@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Complete Profile | NovaPay</title>
+
+    <link rel="stylesheet" href="profile.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header>
+
+        <button id="backBtn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <h2>Complete Profile</h2>
+
+    </header>
+
+    <!-- Avatar -->
+
+    <div class="avatar">
+
+        <i class="fa-solid fa-user"></i>
+
+    </div>
+
+    <!-- Form -->
+
+    <form id="profileForm">
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Enter your full name"
+            required
+        >
+
+        <label>Phone Number</label>
+
+        <input
+            type="tel"
+            id="phone"
+            placeholder="08012345678"
+            required
+        >
+
+        <label>Email Address</label>
+
+        <input
+            type="email"
+            id="email"
+            readonly
+        >
+
+        <button
+            type="submit"
+            id="saveBtn"
+        >
+            Save Profile
+        </button>
+
+    </form> 
+        <!-- Success Modal -->
+
+    <div id="customModal" class="modal">
+
+        <div class="modal-content">
+
+            <h3 id="modalTitle">NovaPay</h3>
+
+            <p id="modalMessage"></p>
+
+            <button onclick="closeModal()">
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="profile.js"></script>
+
+</body>
+</html>

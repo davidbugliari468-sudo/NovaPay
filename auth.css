@@ -213,4 +213,133 @@ h2{
         height:46px;
     }
 
+} 
+/* Password Box */
+
+.password-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.password-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px;
+    font-size: 14px;
+    background: transparent;
+}
+
+.password-box button {
+    border: none;
+    background: transparent;
+    color: #0d6efd;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+.password-box button:hover {
+    color: #0a58ca;
+}
+
+/* Remember Me & Forgot Password */
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 20px;
+    font-size: 13px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.options a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.options a:hover {
+    text-decoration: underline;
+}
+
+/* Bottom Text */
+
+.bottom-text {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.bottom-text a {
+    color: #0d6efd;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.bottom-text a:hover {
+    text-decoration: underline;
+} 
+/* ===========================
+   NovaPay Modal
+=========================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 340px;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,.15);
+}
+
+.modal-content h3 {
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    color: #555;
+    line-height: 1.6;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background: #1d4ed8;
 }

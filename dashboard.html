@@ -4,12 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NovaPay Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-    <h1>🎉 Welcome to NovaPay Dashboard</h1>
+<div class="dashboard">
 
-    <p>Registration successful!</p>
+    <!-- Header -->
+    <header class="header">
+
+        <div class="profile-section">
+
+            <button id="profileBtn" class="avatar">
+                <i class="fa-solid fa-user"></i>
+            </button>
+
+            <div>
+
+                <small>Good Morning 👋</small>
+
+                <h2 id="userName">Loading...</h2>
+
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button id="supportBtn" class="icon-btn">
+                <i class="fa-solid fa-headset"></i>
+            </button>
+
+            <button id="notificationBtn" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- Wallet Card -->
+    <section class="wallet-card">
+
+        <div class="wallet-top">
+
+            <span>Available Balance</span>
+
+            <button id="historyBtn">
+                History
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+
+        </div>
+
+        <div class="wallet-middle">
+
+            <h1 id="walletBalance">₦0.00</h1>
+
+            <button id="hideBalance">
+                Hide
+            </button>
+
+        </div>
+
+        <button id="addMoneyBtn" class="primary-btn">
+            <i class="fa-solid fa-plus"></i>
+            Add Money
+        </button>
+
+    </section>
+
+    <!-- Complete Profile -->
+    <section class="card" id="completeProfileCard">
+
+        <div class="card-title">
+            <i class="fa-solid fa-user-check"></i>
+            <h3>Complete Your Profile</h3>
+        </div>
+
+        <p>
+            Finish setting up your account to unlock all NovaPay features.
+        </p>
+
+        <button id="completeProfileBtn" class="secondary-btn">
+            Complete Setup
+        </button>
+
+    </section>
+
+    <!-- Invite -->
+    <section class="card">
+
+        <div class="card-title">
+            <i class="fa-solid fa-gift"></i>
+            <h3>Invite & Earn</h3>
+        </div>
+
+        <p>
+            Invite your friends and earn exciting rewards.
+        </p>
+
+        <button id="inviteBtn" class="secondary-btn">
+            Invite Friends
+        </button>
+
+    </section>
+
+    <!-- Cards -->
+    <section class="card">
+
+        <div class="card-title">
+            <i class="fa-regular fa-credit-card"></i>
+            <h3>Cards</h3>
+        </div>
+
+        <p>
+            Request and manage your NovaPay virtual card.
+        </p>
+
+        <button id="cardsBtn" class="secondary-btn">
+            Get Card
+        </button>
+
+    </section>
+
+    <!-- Services -->
+    <section class="services-section">
+
+        <h3 class="section-title">
+            Services
+        </h3>
+
+        <div class="services-grid"> 
+                        <button class="service-btn" id="airtimeBtn">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <span>Airtime</span>
+            </button>
+
+            <button class="service-btn" id="dataBtn">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Data</span>
+            </button>
+
+            <button class="service-btn" id="tvBtn">
+                <i class="fa-solid fa-tv"></i>
+                <span>TV</span>
+            </button>
+
+            <button class="service-btn" id="electricityBtn">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Electricity</span>
+            </button>
+
+            <button class="service-btn" id="bettingBtn">
+                <i class="fa-solid fa-futbol"></i>
+                <span>Betting</span>
+            </button>
+
+            <button class="service-btn" id="pocketBtn">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <span>Smart Pocket</span>
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- Transactions -->
+    <section class="card">
+
+        <div class="card-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h3>Recent Transactions</h3>
+        </div>
+
+        <p id="transactionText">
+            No transactions yet.
+        </p>
+
+    </section>
+
+</div>
+
+<!-- Bottom Navigation -->
+
+<nav class="bottom-nav">
+
+    <button class="active">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </button>
+
+    <button id="walletBtn">
+        <i class="fa-solid fa-wallet"></i>
+        <span>Wallet</span>
+    </button>
+
+    <button id="historyNavBtn">
+        <i class="fa-solid fa-receipt"></i>
+        <span>History</span>
+    </button>
+
+    <button id="profileNavBtn">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+    </button>
+
+</nav>
+
+<!-- Custom Modal -->
+
+<div id="customModal" class="modal">
+
+    <div class="modal-content">
+
+        <h3 id="modalTitle">NovaPay</h3>
+
+        <p id="modalMessage"></p>
+
+        <button onclick="closeModal()">
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+<script type="module" src="dashboard.js"></script>
 
 </body>
 </html>

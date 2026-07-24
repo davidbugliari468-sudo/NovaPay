@@ -1,0 +1,209 @@
+/* ======================================
+   NovaPay Add Money
+====================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#222;
+}
+
+/* Header */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 20px;
+    background:#0d6efd;
+    color:#fff;
+}
+
+.header h2{
+    font-size:20px;
+    font-weight:600;
+}
+
+.back-btn{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:#fff;
+    color:#0d6efd;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* Main */
+
+.container{
+    padding:20px;
+}
+
+/* Wallet */
+
+.wallet-card{
+    background:linear-gradient(135deg,#0d6efd,#3d8bfd);
+    color:#fff;
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(13,110,253,.2);
+}
+
+.wallet-card p{
+    opacity:.9;
+    margin-bottom:10px;
+}
+
+.wallet-card h1{
+    font-size:34px;
+}
+
+/* Amount */
+
+.amount-section{
+    margin-bottom:25px;
+}
+
+.amount-section label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+.input-box{
+    display:flex;
+    align-items:center;
+    background:#fff;
+    border-radius:14px;
+    padding:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.input-box span{
+    font-size:28px;
+    color:#0d6efd;
+    margin-right:10px;
+    font-weight:bold;
+}
+
+.input-box input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-size:28px;
+    background:transparent;
+}
+
+/* Quick */
+
+.quick-section{
+    margin-bottom:25px;
+}
+
+.quick-section h3{
+    margin-bottom:15px;
+}
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.quickBtn{
+    border:none;
+    border-radius:12px;
+    background:#fff;
+    padding:15px;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.quickBtn:hover{
+    background:#0d6efd;
+    color:#fff;
+}
+
+/* Payment */
+
+.payment-card{
+    background:#fff;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:25px;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.payment-card h3{
+    margin-bottom:8px;
+}
+
+/* Button */
+
+.continue-btn{
+    width:100%;
+    border:none;
+    padding:18px;
+    background:#0d6efd;
+    color:#fff;
+    font-size:18px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.continue-btn:hover{
+    background:#0b5ed7;
+}
+
+/* Modal */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content{
+    width:90%;
+    max-width:360px;
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+}
+
+.modal-content h3{
+    margin-bottom:12px;
+}
+
+.modal-content p{
+    margin-bottom:20px;
+    line-height:1.6;
+}
+
+.modal-content button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#0d6efd;
+    color:#fff;
+    cursor:pointer;
+}
