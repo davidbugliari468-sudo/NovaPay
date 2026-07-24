@@ -74,7 +74,8 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     currentUser = user;
-
+console.log("Current Auth UID:", user.uid);
+console.log("Current Email:", user.email);
     try {
 
         const userRef = doc(db, "users", user.uid);
@@ -84,7 +85,7 @@ onAuthStateChanged(auth, async (user) => {
 
             const userData = userSnap.data();
 
-            balance = userData.balance || 0;
+            balance = userData.walletBalance || 0;
 
             walletBalance.textContent = formatMoney(balance);
 
