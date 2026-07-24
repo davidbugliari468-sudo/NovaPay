@@ -60,7 +60,8 @@ function formatMoney(amount) {
         maximumFractionDigits: 2
     });
 
-} 
+}
+
 // ======================================
 // Authentication
 // ======================================
@@ -114,7 +115,8 @@ quickButtons.forEach(button => {
 
     });
 
-}); 
+});
+
 // ======================================
 // Continue
 // ======================================
@@ -166,7 +168,10 @@ continueBtn.addEventListener("click", async () => {
                         "NovaPay User",
 
                     customerEmail:
-                        currentUser.email
+                        currentUser.email,
+
+                    uid:
+                        currentUser.uid
 
                 })
             }
@@ -193,12 +198,15 @@ continueBtn.addEventListener("click", async () => {
             error.message || "Unable to connect to payment server."
         );
 
+    } finally {
+
         continueBtn.disabled = false;
         continueBtn.textContent = "Continue";
 
     }
 
-}); 
+});
+
 // ======================================
 // Back
 // ======================================
