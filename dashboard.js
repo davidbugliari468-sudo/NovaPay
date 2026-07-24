@@ -113,7 +113,7 @@ onAuthStateChanged(auth, async (user) => {
             userName.textContent =
                 data.fullName || user.email.split("@")[0];
 
-            balance = data.balance || 0;
+            balance = data.walletBalance || 0;
 
             walletBalance.textContent =
                 formatMoney(balance);
@@ -208,7 +208,6 @@ completeProfileBtn?.addEventListener("click", () => {
 // ======================================
 
 addMoneyBtn.addEventListener("click", () => {
-    alert("NEW dashboard.js is running");
     window.location.href = "add-money.html";
 });
 
