@@ -1,25 +1,11 @@
-// Animate progress bar
-const progressFill = document.getElementById("progressFill");
-const amountPaid = document.getElementById("amountPaid");
+const okBtn = document.getElementById("okBtn");
 
-let progress = 0;
+// Redirect immediately when OK is clicked
+okBtn.addEventListener("click", () => {
+    window.location.href = "dashboard.html";
+});
 
-const interval = setInterval(() => {
-    progress += 2;
-    progressFill.style.width = progress + "%";
-
-    if (progress >= 100) {
-        clearInterval(interval);
-
-        // Redirect to dashboard
-        window.location.href = "dashboard.html";
-    }
-}, 60);
-
-// Get amount from URL (optional for now)
-const params = new URLSearchParams(window.location.search);
-const amount = params.get("amount");
-
-if (amount) {
-    amountPaid.textContent = `₦${Number(amount).toLocaleString()}`;
-}
+// Automatically redirect after 2 minutes
+setTimeout(() => {
+    window.location.href = "dashboard.html";
+}, 120000);

@@ -6,7 +6,7 @@
 }
 
 body{
-    background:#0b0b0b;
+    background:#0b1220;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -16,96 +16,94 @@ body{
 
 .success-container{
     width:100%;
-    max-width:500px;
+    max-width:420px;
 }
 
 .success-card{
-    background:#161616;
-    border:1px solid #222;
-    border-radius:24px;
-    padding:40px 30px;
+    background:#121c2f;
+    border:1px solid #22314d;
+    border-radius:22px;
+    padding:45px 30px;
     text-align:center;
     box-shadow:0 15px 40px rgba(0,0,0,.45);
 }
 
 .success-icon{
-    width:100px;
-    height:100px;
+    width:90px;
+    height:90px;
     margin:0 auto 25px;
-    background:#10b981;
+    background:#2563eb;
     color:#fff;
     border-radius:50%;
     display:flex;
-    align-items:center;
     justify-content:center;
-    font-size:48px;
+    align-items:center;
+    font-size:42px;
+}
+
+.logo{
+    color:#ffffff;
+    font-size:28px;
+    margin-bottom:15px;
+    font-weight:700;
 }
 
 h1{
-    color:#fff;
-    font-size:32px;
-    margin-bottom:15px;
+    color:#ffffff;
+    font-size:30px;
+    margin-bottom:18px;
 }
 
-.success-message{
-    color:#b5b5b5;
+.message{
+    color:#cbd5e1;
+    font-size:16px;
     line-height:1.7;
-    margin-bottom:30px;
+    margin-bottom:10px;
 }
 
-.payment-summary{
-    background:#101010;
-    border:1px solid #2a2a2a;
-    border-radius:16px;
-    padding:20px;
-    margin-bottom:30px;
+.status{
+    margin:30px 0;
+    color:#ffffff;
+    font-size:17px;
+    font-weight:600;
 }
 
-.summary-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 0;
-    color:#fff;
+.status span{
+    color:#2563eb;
 }
 
-.summary-row:not(:last-child){
-    border-bottom:1px solid #2b2b2b;
-}
-
-.success-text{
-    color:#10b981;
-}
-
-.progress-area{
-    margin-top:20px;
-}
-
-.progress-bar{
+#okBtn{
     width:100%;
-    height:10px;
-    background:#2c2c2c;
-    border-radius:50px;
-    overflow:hidden;
+    height:52px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:#fff;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
 }
 
-.progress-fill{
-    width:0%;
-    height:100%;
-    background:#10b981;
-    transition:width .3s ease;
+#okBtn:hover{
+    background:#1d4ed8;
 }
 
-#redirectText{
-    margin-top:15px;
-    color:#b5b5b5;
-    font-size:15px;
+.redirect-text{
+    margin-top:22px;
+    color:#94a3b8;
+    font-size:14px;
+    line-height:1.6;
 }
 
 @media(max-width:500px){
 
 .success-card{
-    padding:30px 20px;
+    padding:35px 22px;
+}
+
+.logo{
+    font-size:24px;
 }
 
 h1{
@@ -113,9 +111,9 @@ h1{
 }
 
 .success-icon{
-    width:85px;
-    height:85px;
-    font-size:40px;
+    width:80px;
+    height:80px;
+    font-size:36px;
 }
 
 }

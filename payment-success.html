@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Payment Successful | NovaPay</title>
 
     <link rel="stylesheet" href="payment-success.css">
 
     <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 </head>
 
 <body>
@@ -24,41 +21,30 @@
             <i class="fas fa-check"></i>
         </div>
 
+        <h2 class="logo">NovaPay</h2>
+
         <h1>Payment Successful</h1>
 
-        <p class="success-message">
+        <p class="message">
             Your payment has been received successfully.
+        </p>
+
+        <p class="message">
             Your NovaPay wallet is being updated.
         </p>
 
-        <div class="payment-summary">
-
-            <div class="summary-row">
-                <span>Amount Paid</span>
-                <strong id="amountPaid">₦0.00</strong>
-            </div>
-
-            <div class="summary-row">
-                <span>Status</span>
-                <strong class="success-text">Successful</strong>
-            </div>
-
+        <div class="status">
+            Status:
+            <span>Successful</span>
         </div>
 
-        <div class="progress-area">
+        <button id="okBtn">
+            OK
+        </button>
 
-            <div class="progress-bar">
-
-                <div class="progress-fill"
-                id="progressFill"></div>
-
-            </div>
-
-            <p id="redirectText">
-                Redirecting to dashboard...
-            </p>
-
-        </div>
+        <p class="redirect-text">
+            Please wait while we return you to your NovaPay wallet.
+        </p>
 
     </div>
 
