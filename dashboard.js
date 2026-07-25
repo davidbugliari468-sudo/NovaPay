@@ -4,7 +4,7 @@
 // ======================================
 
 import { auth, db } from "./firebase.js";
-
+alert("Dashboard JS Loaded");
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -212,15 +212,15 @@ addMoneyBtn.addEventListener("click", () => {
 });
 
 historyBtn?.addEventListener("click", () => {
-    comingSoon("Transaction History");
+    window.location.href = "transaction-history.html";
 });
 
 walletBtn?.addEventListener("click", () => {
     comingSoon("Wallet");
 });
 
-historyNavBtn?.addEventListener("click", () => {
-    comingSoon("Transaction History");
+historyBtn?.addEventListener("click", () => {
+    window.location.href = "transaction-history.html";
 });
 
 // ======================================

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Transaction History</title>
+
+<link rel="stylesheet" href="transaction-history.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="history-page">
+
+    <!-- Header -->
+    <header class="history-header">
+
+        <button id="backBtn" class="icon-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <h1>Transaction History</h1>
+
+        <button id="exportBtn" class="export-btn">
+            Export
+        </button>
+
+    </header>
+
+    <!-- Search -->
+
+    <div class="search-box">
+
+        <i class="fas fa-search"></i>
+
+        <input
+        type="text"
+        id="searchInput"
+        placeholder="Search transactions...">
+
+    </div>
+
+    <!-- Filters -->
+
+    <div class="filter-row">
+
+        <button id="categoryBtn" class="filter-btn">
+            <span>Category</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <button id="statusBtn" class="filter-btn">
+            <span>Status</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <button id="monthBtn" class="filter-btn">
+            <span>Month</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+
+    </div>
+
+    <!-- Summary -->
+
+    <section class="summary-card">
+
+        <h3>Recent Transactions</h3>
+
+        <p id="transactionCount">
+            Showing 0 transactions
+        </p>
+
+        <div class="summary-grid">
+
+            <div>
+
+                <span>In</span>
+
+                <h2 id="moneyIn">
+                    ₦0.00
+                </h2>
+
+            </div>
+
+            <div>
+
+                <span>Out</span>
+
+                <h2 id="moneyOut">
+                    ₦0.00
+                </h2>
+
+            </div>
+
+            <div>
+
+                <span>Net</span>
+
+                <h2 id="netAmount">
+                    ₦0.00
+                </h2>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Transactions -->
+
+    <section id="transactionContainer">
+
+    </section>
+
+</div> 
+<!-- Overlay -->
+<div id="sheetOverlay"></div>
+
+<!-- Category Bottom Sheet -->
+<div class="bottom-sheet" id="categorySheet">
+
+    <div class="sheet-header">
+        <h3>Select Category</h3>
+    </div>
+
+    <div class="sheet-options">
+
+        <button class="sheet-option" data-category="All Categories">All Categories</button>
+
+        <button class="sheet-option" data-category="Wallet Funding">Wallet Funding</button>
+
+        <button class="sheet-option" data-category="Transfer">Transfer</button>
+
+        <button class="sheet-option" data-category="Withdraw">Withdraw</button>
+
+        <button class="sheet-option" data-category="Airtime">Airtime</button>
+
+        <button class="sheet-option" data-category="Data">Data</button>
+
+        <button class="sheet-option" data-category="Electricity">Electricity</button>
+
+        <button class="sheet-option" data-category="TV">TV</button>
+
+        <button class="sheet-option" data-category="Betting">Betting</button>
+
+        <button class="sheet-option" data-category="Refund">Refund</button>
+
+    </div>
+
+</div>
+
+<!-- Status Bottom Sheet -->
+
+<div class="bottom-sheet" id="statusSheet">
+
+    <div class="sheet-header">
+        <h3>Select Status</h3>
+    </div>
+
+    <div class="sheet-options">
+
+        <button class="sheet-option" data-status="All Status">All Status</button>
+
+        <button class="sheet-option" data-status="Successful">Successful</button>
+
+        <button class="sheet-option" data-status="Pending">Pending</button>
+
+        <button class="sheet-option" data-status="Failed">Failed</button>
+
+        <button class="sheet-option" data-status="Refunded">Refunded</button>
+
+    </div>
+
+</div>
+
+<!-- Month Bottom Sheet -->
+
+<div class="bottom-sheet" id="monthSheet">
+
+    <div class="sheet-header">
+        <h3>Select Month</h3>
+    </div>
+
+    <div class="sheet-options">
+
+        <button class="sheet-option" data-month="January">January</button>
+
+        <button class="sheet-option" data-month="February">February</button>
+
+        <button class="sheet-option" data-month="March">March</button>
+
+        <button class="sheet-option" data-month="April">April</button>
+
+        <button class="sheet-option" data-month="May">May</button>
+
+        <button class="sheet-option" data-month="June">June</button>
+
+        <button class="sheet-option" data-month="July">July</button>
+
+        <button class="sheet-option" data-month="August">August</button>
+
+        <button class="sheet-option" data-month="September">September</button>
+
+        <button class="sheet-option" data-month="October">October</button>
+
+        <button class="sheet-option" data-month="November">November</button>
+
+        <button class="sheet-option" data-month="December">December</button>
+
+        <button class="sheet-option" data-month="Custom Range">Custom Range</button>
+
+    </div>
+
+</div>
+
+<!-- Export Bottom Sheet -->
+
+<div class="bottom-sheet" id="exportSheet">
+
+    <div class="sheet-header">
+        <h3>Export</h3>
+    </div>
+
+    <div class="sheet-options">
+
+        <button class="sheet-option" id="exportPDF">
+            Export as PDF
+        </button>
+
+        <button class="sheet-option" id="exportCSV">
+            Export as CSV
+        </button>
+
+        <button class="sheet-option" id="printHistory">
+            Print
+        </button>
+
+    </div>
+
+</div>
+
+<script type="module" src="transaction-history.js"></script>
+
+</body>
+</html>
