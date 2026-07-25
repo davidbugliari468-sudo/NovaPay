@@ -1,0 +1,182 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    color:#222;
+}
+
+.container{
+    max-width:500px;
+    margin:0 auto;
+    padding:25px 20px 40px;
+}
+
+header{
+    display:flex;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.back-btn{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    background:#ffffff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:#2563eb;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+    margin-right:15px;
+}
+
+.title h2{
+    font-size:24px;
+    color:#2563eb;
+}
+
+.title p{
+    color:#777;
+    margin-top:4px;
+}
+
+.status-card{
+    background:#ffffff;
+    border-radius:22px;
+    padding:35px 25px;
+    text-align:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.success-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:#2563eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    font-size:34px;
+}
+
+.status-card h3{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.status{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:17px;
+}
+
+.details-card{
+    background:#ffffff;
+    border-radius:22px;
+    padding:15px 25px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 0;
+    border-bottom:1px solid #eeeeee;
+}
+
+.row:last-child{
+    border-bottom:none;
+}
+
+.row span{
+    color:#777;
+}
+
+.row strong{
+    color:#222;
+}
+
+.success{
+    color:#2563eb;
+}
+
+.copy-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+#copyBtn{
+    border:none;
+    background:none;
+    color:#2563eb;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.support-card{
+    background:#ffffff;
+    border-radius:22px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    margin-bottom:30px;
+}
+
+.support-card p{
+    color:#666;
+    margin-bottom:18px;
+}
+
+#supportBtn{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:14px;
+    background:#2563eb;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.done-btn{
+    width:100%;
+    height:55px;
+    border:none;
+    border-radius:14px;
+    background:#2563eb;
+    color:#fff;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+@media(max-width:500px){
+
+.container{
+    padding:20px 16px 35px;
+}
+
+.status-card,
+.details-card,
+.support-card{
+    border-radius:18px;
+}
+
+.status-card h3{
+    font-size:20px;
+}
+
+}

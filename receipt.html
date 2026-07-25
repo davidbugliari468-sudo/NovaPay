@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transaction Receipt | NovaPay</title>
+
+    <link rel="stylesheet" href="receipt.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <a href="transaction-history.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <div class="title">
+
+            <h2>NovaPay</h2>
+
+            <p>Transaction Receipt</p>
+
+        </div>
+
+    </header>
+
+
+    <div class="status-card">
+
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h3 id="transactionTitle">
+            MTN Airtime Top-up
+        </h3>
+
+        <span class="status">
+            Successful
+        </span>
+
+    </div>
+
+
+    <div class="details-card">
+
+        <div class="row">
+            <span>Recipient</span>
+            <strong id="recipient">
+                09164584280
+            </strong>
+        </div>
+
+        <div class="row">
+            <span>Network</span>
+            <strong id="network">
+                MTN
+            </strong>
+        </div>
+
+        <div class="row">
+            <span>Amount</span>
+            <strong id="amount">
+                ₦1,000.00
+            </strong>
+        </div>
+
+        <div class="row">
+            <span>Date</span>
+            <strong id="date">
+                25 Jul 2026 • 8:33 PM
+            </strong>
+        </div>
+
+        <div class="row">
+
+            <span>Transaction ID</span>
+
+            <div class="copy-box">
+
+                <strong id="transactionId">
+                    NVP34753829
+                </strong>
+
+                <button id="copyBtn">
+
+                    <i class="far fa-copy"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <span>Status</span>
+            <strong class="success">
+                Successful
+            </strong>
+        </div>
+
+    </div>
+
+
+    <div class="support-card">
+
+        <p>
+            Need help with this transaction?
+        </p>
+
+        <button id="supportBtn">
+
+            Contact Support
+
+        </button>
+
+    </div>
+
+
+    <button class="done-btn" id="doneBtn">
+
+        Done
+
+    </button>
+
+</div>
+
+<script src="receipt.js"></script>
+
+</body>
+</html>
