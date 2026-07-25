@@ -3,140 +3,175 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>Transaction Receipt | NovaPay</title>
+<title>NovaPay Receipt</title>
 
-    <link rel="stylesheet" href="receipt.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="receipt.css">
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="receipt-page">
 
-    <header>
+<header class="top-bar">
 
-        <a href="transaction-history.html" class="back-btn">
-            <i class="fas fa-arrow-left"></i>
-        </a>
+<button id="backBtn" class="back-btn">
 
-        <div class="title">
+<i class="fas fa-arrow-left"></i>
 
-            <h2>NovaPay</h2>
+</button>
 
-            <p>Transaction Receipt</p>
+<h2>Receipt</h2>
 
-        </div>
+<div></div>
 
-    </header>
+</header>
 
 
-    <div class="status-card">
 
-        <div class="success-icon">
-            <i class="fas fa-check"></i>
-        </div>
+<div class="receipt-card">
 
-        <h3 id="transactionTitle">
-            MTN Airtime Top-up
-        </h3>
+<div class="success-area">
 
-        <span class="status">
-            Successful
-        </span>
+<div class="success-icon" id="receiptIcon">
 
-    </div>
-
-
-    <div class="details-card">
-
-        <div class="row">
-            <span>Recipient</span>
-            <strong id="recipient">
-                09164584280
-            </strong>
-        </div>
-
-        <div class="row">
-            <span>Network</span>
-            <strong id="network">
-                MTN
-            </strong>
-        </div>
-
-        <div class="row">
-            <span>Amount</span>
-            <strong id="amount">
-                ₦1,000.00
-            </strong>
-        </div>
-
-        <div class="row">
-            <span>Date</span>
-            <strong id="date">
-                25 Jul 2026 • 8:33 PM
-            </strong>
-        </div>
-
-        <div class="row">
-
-            <span>Transaction ID</span>
-
-            <div class="copy-box">
-
-                <strong id="transactionId">
-                    NVP34753829
-                </strong>
-
-                <button id="copyBtn">
-
-                    <i class="far fa-copy"></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="row">
-            <span>Status</span>
-            <strong class="success">
-                Successful
-            </strong>
-        </div>
-
-    </div>
-
-
-    <div class="support-card">
-
-        <p>
-            Need help with this transaction?
-        </p>
-
-        <button id="supportBtn">
-
-            Contact Support
-
-        </button>
-
-    </div>
-
-
-    <button class="done-btn" id="doneBtn">
-
-        Done
-
-    </button>
+<i class="fas fa-check"></i>
 
 </div>
 
-<script src="receipt.js"></script>
+<h3 id="transactionTitle">
+
+Wallet Funding
+
+</h3>
+
+<p id="transactionStatus">
+
+Successful
+
+</p>
+
+</div>
+
+
+
+<div class="receipt-details">
+
+<div class="detail-row">
+
+<span>Recipient</span>
+
+<strong id="recipient">
+
+NovaPay Wallet
+
+</strong>
+
+</div>
+
+<div class="detail-row">
+
+<span>Amount</span>
+
+<strong id="amount">
+
+₦0.00
+
+</strong>
+
+</div>
+
+<div class="detail-row">
+
+<span>Date</span>
+
+<strong id="date">
+
+--
+
+</strong>
+
+</div>
+
+<div class="detail-row">
+
+<span>Reference</span>
+
+<div class="reference-box">
+
+<strong id="transactionId">
+
+NVP000000
+
+</strong>
+
+<button id="copyBtn">
+
+<i class="far fa-copy"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="detail-row">
+
+<span>Status</span>
+
+<strong id="statusText">
+
+Successful
+
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="support-row" id="supportBtn">
+
+<div class="support-left">
+
+<i class="fas fa-headset"></i>
+
+<div>
+
+<h4>Contact Support</h4>
+
+<p>NovaPay Support</p>
+
+</div>
+
+</div>
+
+<i class="fas fa-chevron-right"></i>
+
+</div>
+
+
+
+<button class="done-btn" id="doneBtn">
+
+Done
+
+</button>
+
+</div>
+
+<script type="module" src="receipt.js"></script>
 
 </body>
+
 </html>
