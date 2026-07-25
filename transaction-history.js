@@ -359,7 +359,9 @@ onAuthStateChanged(auth, async (user) => {
         console.log("Snapshot size:", snapshot.size);
 console.log("Current UID:", user.uid);
 console.log(snapshot.docs.map(doc => doc.data()));
-        transactions = snapshot.docs.map(doc => {
+        alert("UID: " + user.uid);
+alert("Transactions found: " + snapshot.size);
+transactions = snapshot.docs.map(doc => {
 
             const data = doc.data();
 
