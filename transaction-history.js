@@ -349,10 +349,9 @@ onAuthStateChanged(auth, async (user) => {
     try {
 
         const q = query(
-            collection(db, "transactions"),
-            where("uid", "==", user.uid),
-            orderBy("createdAt", "desc")
-        );
+    collection(db, "transactions"),
+    where("uid", "==", user.uid)
+);
 
         const snapshot = await getDocs(q);
 
