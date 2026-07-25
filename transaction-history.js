@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase.js";
-console.log("TRANSACTION HISTORY VERSION 2");
+
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -358,8 +358,7 @@ onAuthStateChanged(auth, async (user) => {
         console.log("Snapshot size:", snapshot.size);
 console.log("Current UID:", user.uid);
 console.log(snapshot.docs.map(doc => doc.data()));
-        alert("UID: " + user.uid);
-alert("Transactions found: " + snapshot.size);
+        
 transactions = snapshot.docs.map(doc => {
 
             const data = doc.data();

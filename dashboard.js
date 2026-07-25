@@ -4,7 +4,7 @@
 // ======================================
 
 import { auth, db } from "./firebase.js";
-alert("Dashboard JS Loaded");
+
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
