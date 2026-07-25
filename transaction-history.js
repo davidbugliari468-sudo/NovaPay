@@ -83,7 +83,7 @@ function openSheet(sheet){
 }
 
 // =====================================
-// Button Events
+// Button Events look
 // =====================================
 
 categoryBtn.onclick = () => openSheet(categorySheet);
@@ -258,7 +258,7 @@ Try changing your search or filters.
 
         transactionContainer.innerHTML+=`
 
-<div class="transaction-item">
+<div class="transaction-item" data-id="${item.id}">
 
 <div class="transaction-icon"
 style="background:${item.color};">
@@ -317,6 +317,24 @@ ${item.status}
 
     });
 
+document.querySelectorAll(".transaction-item").forEach((card, index) => {
+
+    card.addEventListener("click", () => {
+
+        localStorage.setItem(
+            "selectedTransaction",
+            JSON.stringify(filtered[index])
+        );
+
+        window.location.href = "receipt.html";
+
+    });
+
+});
+
+transactionCount.textContent =
+`Showing ${filtered.length} transaction${filtered.length>1?"s":""}`;
+
     transactionCount.textContent=
 `Showing ${filtered.length} transaction${filtered.length>1?"s":""}`;
 
@@ -361,17 +379,21 @@ console.log(snapshot.docs.map(doc => doc.data()));
         
 transactions = snapshot.docs.map(doc => {
 
-            const data = doc.data();
+    const data = doc.data();
 
-            return {
+    return {
 
-                title: data.type || "Transaction",
+        id: doc.id,
 
-                category: data.type || "Other",
+        ...data,
 
-                status: data.status === "COMPLETED"
-                    ? "Successful"
-                    : (data.status || "Pending"),
+        title: data.type || "Transaction",
+
+        category: data.type || "Other",
+
+        status: data.status === "COMPLETED"
+            ? "Successful"
+            : (data.status || "Pending"),
 
                 amount: Number(data.amount || 0),
 
