@@ -1,0 +1,163 @@
+/* ===================================
+   NovaPay Profile
+=================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    color:#1f2937;
+}
+
+.container{
+    max-width:480px;
+    margin:auto;
+    padding:20px 16px 100px;
+}
+
+/* =========================
+   Header
+========================= */
+
+.header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.back-btn{
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    cursor:pointer;
+    font-size:18px;
+}
+
+.header h2{
+    font-size:24px;
+    font-weight:700;
+}
+
+/* =========================
+   Profile Card
+========================= */
+
+.profile-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:30px 25px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,.06);
+}
+
+.profile-image{
+    width:110px;
+    height:110px;
+    margin:auto;
+    position:relative;
+}
+
+.profile-image img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #10b981;
+}
+
+.camera-btn{
+    position:absolute;
+    right:0;
+    bottom:0;
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:50%;
+    background:#10b981;
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(16,185,129,.35);
+}
+
+#userName{
+    margin-top:18px;
+    font-size:22px;
+    font-weight:700;
+}
+
+#userEmail{
+    margin-top:8px;
+    color:#6b7280;
+    font-size:15px;
+}
+
+.account-status{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.status{
+    background:#fff8db;
+    color:#b45309;
+    padding:8px 15px;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.verify-btn{
+    border:none;
+    background:#10b981;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:50px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.verify-btn:hover{
+    background:#059669;
+}
+
+.status-text{
+    margin-top:18px;
+    color:#6b7280;
+    font-size:14px;
+    line-height:1.6;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media(max-width:380px){
+
+    .profile-card{
+        padding:25px 18px;
+    }
+
+    .profile-image{
+        width:95px;
+        height:95px;
+    }
+
+    #userName{
+        font-size:20px;
+    }
+
+}
