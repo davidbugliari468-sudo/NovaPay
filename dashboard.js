@@ -252,7 +252,7 @@ cardsBtn?.addEventListener("click", () => {
 // ======================================
 
 airtimeBtn?.addEventListener("click", () => {
-    comingSoon("Airtime");
+    window.location.href = "airtime.html";
 });
 
 dataBtn?.addEventListener("click", () => {

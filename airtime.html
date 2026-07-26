@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Airtime | NovaPay</title>
+
+    <link rel="stylesheet" href="airtime.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+
+        <button id="backBtn" class="back-btn">
+            ←
+        </button>
+
+        <h2>Buy Airtime</h2>
+
+    </header>
+
+
+    <!-- Network -->
+
+    <section class="network-section">
+
+        <h3>Choose Network</h3>
+
+        <div class="network-grid">
+
+            <button class="network" data-network="mtn">
+                <img src="assets/images/mtn.png" alt="MTN">
+            </button>
+
+            <button class="network" data-network="airtel">
+                <img src="assets/images/airtel.png" alt="Airtel">
+            </button>
+
+            <button class="network" data-network="glo">
+                <img src="assets/images/glo.png" alt="Glo">
+            </button>
+
+            <button class="network" data-network="9mobile">
+                <img src="assets/images/9mobile.png" alt="9mobile">
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- Phone -->
+
+    <section class="input-section">
+
+        <label for="phone">
+            Phone Number
+        </label>
+
+        <input
+            type="tel"
+            id="phone"
+            maxlength="11"
+            placeholder="08012345678">
+
+    </section>
+
+
+    <!-- Amount -->
+
+    <section class="amount-section">
+
+        <label>
+            Select Amount
+        </label>
+
+        <div class="amount-grid">
+
+            <button class="amount">₦100</button>
+            <button class="amount">₦200</button>
+            <button class="amount">₦500</button>
+
+            <button class="amount">₦1000</button>
+            <button class="amount">₦2000</button>
+            <button class="amount">₦5000</button>
+
+        </div>
+
+        <input
+            type="number"
+            id="customAmount"
+            placeholder="Enter Custom Amount">
+
+    </section>
+
+
+    <!-- Wallet -->
+
+    <section class="wallet">
+
+        <p>Wallet Balance</p>
+
+        <h2 id="walletBalance">
+            ₦0.00
+        </h2>
+
+    </section>
+
+
+    <!-- Continue -->
+
+    <button id="continueBtn">
+
+        Continue
+
+    </button>
+
+</div>
+
+<script src="airtime.js"></script>
+
+</body>
+</html>
