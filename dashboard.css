@@ -1,11 +1,7 @@
 /* ==========================================
-   NOVAPAY DASHBOARD
-   VERSION 3.0
+   NOVAPAY DASHBOARD V4.0
+   PART 1 - FOUNDATION
 ========================================== */
-
-/* ==========================
-   RESET
-========================== */
 
 *{
     margin:0;
@@ -13,65 +9,70 @@
     box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#F5F7FB;
-
-    color:#111827;
-
-    min-height:100vh;
-
-    overflow-x:hidden;
-
-}
-
-/* ==========================
-   ROOT
-========================== */
-
 :root{
 
     --primary:#2563EB;
-
     --primary-dark:#1D4ED8;
+
+    --background:#F5F7FB;
 
     --white:#FFFFFF;
 
     --text:#111827;
 
-    --subtext:#8A94A6;
+    --subtext:#8B93A7;
 
-    --border:#E8EDF5;
+    --border:#E9EEF5;
 
-    --card-shadow:
-    0 12px 35px rgba(15,23,42,.07);
+    --shadow-sm:
+        0 6px 18px rgba(15,23,42,.05);
 
-    --radius:26px;
+    --shadow-md:
+        0 12px 30px rgba(15,23,42,.07);
+
+    --shadow-lg:
+        0 20px 50px rgba(37,99,235,.16);
+
+    --radius-sm:14px;
+    --radius-md:18px;
+    --radius-lg:26px;
 
 }
 
-/* ==========================
-   ELEMENTS
-========================== */
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        var(--background);
+
+    color:
+        var(--text);
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+
+    -webkit-font-smoothing:antialiased;
+
+}
 
 button{
 
     border:none;
 
-    outline:none;
+    background:none;
 
     cursor:pointer;
-
-    background:none;
 
     font:inherit;
 
@@ -85,19 +86,9 @@ img{
 
 }
 
-a{
-
-    text-decoration:none;
-
-    color:inherit;
-
-}
-
-/* ==========================
-   CONTAINER
-========================== */
-
 .dashboard-container{
+
+    width:100%;
 
     max-width:500px;
 
@@ -105,13 +96,14 @@ a{
 
     padding:
 
-        28px
-        28px
-        110px;
+        26px
+        22px
+        120px;
 
 } 
 /* ==========================================
-   HEADER
+   PART 2
+   HEADER + GREETING
 ========================================== */
 
 .header{
@@ -122,9 +114,11 @@ a{
 
     align-items:center;
 
-    margin-bottom:30px;
+    margin-bottom:28px;
 
 }
+
+/* Logo */
 
 .logo{
 
@@ -136,13 +130,13 @@ a{
 
 .logo-text{
 
-    font-size:28px;
+    font-size:31px;
 
     font-weight:800;
 
     line-height:1;
 
-    letter-spacing:-0.8px;
+    letter-spacing:-1px;
 
 }
 
@@ -158,22 +152,24 @@ a{
 
 }
 
+/* Header Buttons */
+
 .header-actions{
 
     display:flex;
 
     align-items:center;
 
-    gap:14px;
+    gap:12px;
 
 }
 
 .icon-button,
 .profile-button{
 
-    width:54px;
+    width:50px;
 
-    height:54px;
+    height:50px;
 
     border-radius:50%;
 
@@ -185,16 +181,11 @@ a{
 
     background:#FFFFFF;
 
-    box-shadow:
-        0 10px 30px rgba(15,23,42,.08);
-
-    transition:.2s ease;
-
-}
-
-.icon-button{
-
     color:#2563EB;
+
+    box-shadow:var(--shadow-md);
+
+    transition:.25s ease;
 
 }
 
@@ -209,7 +200,7 @@ a{
 .icon-button i,
 .profile-button i{
 
-    font-size:20px;
+    font-size:19px;
 
 }
 
@@ -218,10 +209,11 @@ a{
 
     transform:scale(.96);
 
-} 
-/* ==========================================
+}
+
+/* ==========================
    GREETING
-========================================== */
+========================== */
 
 .greeting-section{
 
@@ -231,19 +223,11 @@ a{
 
 .greeting{
 
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
-    font-size:16px;
+    font-size:15px;
 
     font-weight:500;
 
-    color:#6B7280;
-
-    line-height:1.2;
+    color:var(--subtext);
 
     margin-bottom:6px;
 
@@ -251,13 +235,11 @@ a{
 
 #userName{
 
-    font-size:48px;
+    font-size:42px;
 
     font-weight:800;
 
     color:#111827;
-
-    letter-spacing:-1px;
 
     line-height:1;
 
@@ -269,16 +251,15 @@ a{
 
     display:block;
 
-    font-size:18px;
+    font-size:16px;
 
-    font-weight:400;
+    color:#9AA3B2;
 
-    color:#A0A7B5;
-
-    line-height:1.3;
+    line-height:1.4;
 
 } 
 /* ==========================================
+   PART 3
    WALLET CARD
 ========================================== */
 
@@ -288,25 +269,25 @@ a{
 
     overflow:hidden;
 
-    margin-bottom:36px;
-
-    padding:28px;
-
-    border-radius:28px;
-
     background:linear-gradient(
         135deg,
-        #2563EB 0%,
-        #2D5BFF 45%,
+        #2D7CFF 0%,
+        #2563EB 55%,
         #1D4ED8 100%
     );
+
+    border-radius:30px;
+
+    padding:26px;
+
+    margin-bottom:32px;
 
     box-shadow:
         0 18px 45px rgba(37,99,235,.22);
 
 }
 
-/* Background Circle */
+/* Decorative circles */
 
 .wallet-card::before{
 
@@ -314,15 +295,15 @@ a{
 
     position:absolute;
 
-    width:280px;
+    width:260px;
 
-    height:280px;
+    height:260px;
 
-    border-radius:50%;
-
-    right:-80px;
+    right:-90px;
 
     top:-90px;
+
+    border-radius:50%;
 
     background:rgba(255,255,255,.08);
 
@@ -334,23 +315,25 @@ a{
 
     position:absolute;
 
-    width:220px;
+    width:180px;
 
-    height:220px;
-
-    border-radius:50%;
+    height:180px;
 
     right:-70px;
 
-    bottom:-120px;
+    bottom:-90px;
+
+    border-radius:50%;
 
     background:rgba(255,255,255,.05);
 
 }
 
-/* Balance */
+/* Content */
 
-.wallet-header{
+.wallet-header,
+.wallet-balance-row,
+.wallet-buttons{
 
     position:relative;
 
@@ -360,9 +343,11 @@ a{
 
 .balance-label{
 
-    font-size:16px;
+    font-size:15px;
 
-    color:rgba(255,255,255,.90);
+    font-weight:500;
+
+    color:rgba(255,255,255,.88);
 
     margin-bottom:14px;
 
@@ -370,53 +355,57 @@ a{
 
 .wallet-balance-row{
 
-    position:relative;
-
-    z-index:2;
-
     display:flex;
 
     justify-content:space-between;
 
     align-items:flex-start;
 
-    margin-bottom:28px;
+    margin-bottom:24px;
 
 }
 
 #walletBalance{
 
-    font-size:58px;
+    font-size:50px;
 
     font-weight:800;
 
     color:#FFFFFF;
 
-    letter-spacing:-2px;
+    letter-spacing:-1px;
 
     line-height:1;
 
 }
 
-/* Hide */
-
 .hide-button{
-
-    background:none;
-
-    color:#FFFFFF;
 
     display:flex;
 
     align-items:center;
 
-    gap:8px;
+    gap:6px;
 
-    font-size:16px;
+    color:#FFFFFF;
+
+    background:none;
+
+    font-size:15px;
 
     font-weight:500;
 
-    padding:0;
+}
+
+.hide-button span{
+
+    color:#FFFFFF;
+
+}
+
+.hide-button i{
+
+    font-size:15px;
 
 }
 
@@ -424,13 +413,9 @@ a{
 
 .wallet-buttons{
 
-    position:relative;
-
-    z-index:2;
-
     display:flex;
 
-    gap:16px;
+    gap:14px;
 
 }
 
@@ -438,15 +423,15 @@ a{
 
     flex:1;
 
-    height:66px;
+    height:56px;
+
+    border-radius:18px;
 
     background:#FFFFFF;
 
     color:#2563EB;
 
-    border-radius:20px;
-
-    font-size:18px;
+    font-size:16px;
 
     font-weight:700;
 
@@ -456,29 +441,23 @@ a{
 
     align-items:center;
 
-    gap:10px;
+    gap:8px;
 
 }
 
 .secondary-button{
 
-    flex:1;
+    width:140px;
 
-    height:66px;
+    height:56px;
 
-    border-radius:20px;
+    border-radius:18px;
 
-    background:rgba(255,255,255,.10);
+    background:rgba(255,255,255,.14);
 
-    border:1px solid rgba(255,255,255,.18);
-
-    backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.20);
 
     color:#FFFFFF;
-
-    font-size:18px;
-
-    font-weight:600;
 
     display:flex;
 
@@ -486,16 +465,23 @@ a{
 
     align-items:center;
 
-    gap:10px;
+    gap:8px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    backdrop-filter:blur(10px);
 
 } 
 /* ==========================================
+   PART 4
    QUICK SERVICES
 ========================================== */
 
 .services-section{
 
-    margin-bottom:32px;
+    margin-bottom:30px;
 
 }
 
@@ -521,6 +507,16 @@ a{
 
 }
 
+.text-button{
+
+    color:#2563EB;
+
+    font-size:15px;
+
+    font-weight:700;
+
+}
+
 .services-grid{
 
     display:grid;
@@ -533,11 +529,11 @@ a{
 
 .service-card{
 
-    height:104px;
-
     background:#FFFFFF;
 
     border-radius:22px;
+
+    height:102px;
 
     display:flex;
 
@@ -549,26 +545,25 @@ a{
 
     gap:10px;
 
-    box-shadow:
-        0 10px 25px rgba(15,23,42,.06);
+    box-shadow:var(--shadow-sm);
 
     transition:.25s;
 
 }
 
-.service-card:hover{
+.service-card:active{
 
-    transform:translateY(-2px);
+    transform:scale(.97);
 
 }
 
 .service-icon{
 
-    width:48px;
+    width:46px;
 
-    height:48px;
+    height:46px;
 
-    border-radius:16px;
+    border-radius:15px;
 
     display:flex;
 
@@ -576,13 +571,17 @@ a{
 
     align-items:center;
 
-    font-size:20px;
+}
+
+.service-icon i{
+
+    font-size:19px;
 
 }
 
 .service-card span{
 
-    font-size:14px;
+    font-size:13px;
 
     font-weight:600;
 
@@ -590,7 +589,7 @@ a{
 
 }
 
-/* Colors */
+/* Icon Colors */
 
 .airtime{
 
@@ -604,21 +603,21 @@ a{
 
     background:#ECFDF3;
 
-    color:#16A34A;
+    color:#22C55E;
 
 }
 
 .electricity{
 
-    background:#FFF7E8;
+    background:#FFF8E8;
 
-    color:#D97706;
+    color:#F59E0B;
 
 }
 
 .tv{
 
-    background:#F5ECFF;
+    background:#F4ECFF;
 
     color:#9333EA;
 
@@ -626,20 +625,21 @@ a{
 
 .betting{
 
-    background:#FFEAF3;
+    background:#FFEAF4;
 
-    color:#DB2777;
+    color:#EC4899;
 
 }
 
 .more{
 
-    background:#F3F4F6;
+    background:#EEF2F7;
 
-    color:#4B5563;
+    color:#6B7280;
 
 } 
 /* ==========================================
+   PART 5
    RECENT TRANSACTIONS
 ========================================== */
 
@@ -651,29 +651,11 @@ a{
 
 .transactions-section .section-header{
 
-    margin-bottom:16px;
-
-}
-
-.text-button{
-
-    color:#2563EB;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    background:none;
+    margin-bottom:18px;
 
 }
 
 .transaction-card{
-
-    background:#FFFFFF;
-
-    border-radius:22px;
-
-    padding:18px;
 
     display:flex;
 
@@ -681,16 +663,21 @@ a{
 
     gap:16px;
 
-    box-shadow:
-        0 10px 25px rgba(15,23,42,.06);
+    padding:18px;
+
+    background:#FFFFFF;
+
+    border-radius:22px;
+
+    box-shadow:var(--shadow-sm);
 
 }
 
 .transaction-icon{
 
-    width:56px;
+    width:54px;
 
-    height:56px;
+    height:54px;
 
     border-radius:18px;
 
@@ -704,9 +691,13 @@ a{
 
     align-items:center;
 
-    font-size:22px;
-
     flex-shrink:0;
+
+}
+
+.transaction-icon i{
+
+    font-size:22px;
 
 }
 
@@ -732,18 +723,19 @@ a{
 
     font-size:14px;
 
-    color:#8A94A6;
-
     line-height:1.5;
+
+    color:#8B93A7;
 
 } 
 /* ==========================================
+   PART 6
    INVITE & EARN
 ========================================== */
 
 .invite-section{
 
-    margin-bottom:30px;
+    margin-bottom:32px;
 
 }
 
@@ -755,40 +747,38 @@ a{
 
     display:flex;
 
-    justify-content:space-between;
-
     align-items:center;
 
-    padding:20px 22px;
+    justify-content:space-between;
+
+    padding:22px;
 
     border-radius:24px;
 
     background:linear-gradient(
         135deg,
-        #2563EB 0%,
+        #2D7CFF 0%,
+        #2563EB 55%,
         #1D4ED8 100%
     );
 
-    color:#FFFFFF;
-
-    box-shadow:
-        0 14px 35px rgba(37,99,235,.18);
+    box-shadow:0 18px 45px rgba(37,99,235,.18);
 
 }
 
-.invite-content::after{
+.invite-content::before{
 
     content:"";
 
     position:absolute;
 
-    width:140px;
+    width:180px;
 
-    height:140px;
+    height:180px;
 
-    right:-40px;
+    right:-70px;
 
-    top:-30px;
+    top:-70px;
 
     border-radius:50%;
 
@@ -796,23 +786,25 @@ a{
 
 }
 
-.invite-content > div{
+.invite-content>div{
 
     position:relative;
 
     z-index:2;
 
-    max-width:70%;
+    max-width:58%;
 
 }
 
 .invite-content h3{
 
-    font-size:20px;
+    font-size:22px;
 
     font-weight:700;
 
-    margin-bottom:6px;
+    color:#FFFFFF;
+
+    margin-bottom:8px;
 
 }
 
@@ -822,19 +814,35 @@ a{
 
     line-height:1.5;
 
-    color:rgba(255,255,255,.90);
+    color:rgba(255,255,255,.92);
 
 }
 
-.invite-button{
+.gift-image{
 
     position:relative;
 
     z-index:2;
 
+    width:92px;
+
+    height:92px;
+
+    object-fit:contain;
+
+}
+
+.invite-button{
+
+    position:absolute;
+
+    left:22px;
+
+    bottom:20px;
+
     width:96px;
 
-    height:44px;
+    height:42px;
 
     border-radius:14px;
 
@@ -842,7 +850,7 @@ a{
 
     color:#2563EB;
 
-    font-size:14px;
+    font-size:15px;
 
     font-weight:700;
 
@@ -852,8 +860,11 @@ a{
 
     align-items:center;
 
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+
 } 
 /* ==========================================
+   PART 7
    BOTTOM NAVIGATION
 ========================================== */
 
@@ -871,13 +882,13 @@ a{
 
     max-width:500px;
 
-    height:82px;
+    height:78px;
 
     background:#FFFFFF;
 
-    border-top-left-radius:28px;
+    border-top-left-radius:26px;
 
-    border-top-right-radius:28px;
+    border-top-right-radius:26px;
 
     display:flex;
 
@@ -886,7 +897,7 @@ a{
     align-items:center;
 
     box-shadow:
-        0 -8px 30px rgba(15,23,42,.08);
+        0 -8px 24px rgba(15,23,42,.08);
 
     z-index:1000;
 
@@ -906,9 +917,9 @@ a{
 
     align-items:center;
 
-    gap:6px;
+    gap:4px;
 
-    color:#A0A7B5;
+    color:#9CA3AF;
 
     transition:.25s ease;
 
@@ -916,7 +927,7 @@ a{
 
 .nav-item i{
 
-    font-size:22px;
+    font-size:21px;
 
 }
 
@@ -940,6 +951,7 @@ a{
 
 } 
 /* ==========================================
+   PART 8
    MODAL
 ========================================== */
 
@@ -955,11 +967,11 @@ a{
 
     align-items:center;
 
-    background:rgba(17,24,39,.45);
-
-    backdrop-filter:blur(4px);
-
     padding:24px;
+
+    background:rgba(15,23,42,.45);
+
+    backdrop-filter:blur(6px);
 
     z-index:9999;
 
@@ -973,16 +985,15 @@ a{
 
     background:#FFFFFF;
 
-    border-radius:24px;
+    border-radius:26px;
 
     padding:28px 24px;
 
     text-align:center;
 
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.18);
+    box-shadow:0 25px 60px rgba(15,23,42,.18);
 
-    animation:modalPop .25s ease;
+    animation:popup .25s ease;
 
 }
 
@@ -994,7 +1005,7 @@ a{
 
     color:#111827;
 
-    margin-bottom:10px;
+    margin-bottom:12px;
 
 }
 
@@ -1014,7 +1025,7 @@ a{
 
     width:100%;
 
-    height:52px;
+    height:54px;
 
     border-radius:16px;
 
@@ -1028,13 +1039,13 @@ a{
 
 }
 
-@keyframes modalPop{
+@keyframes popup{
 
     from{
 
         opacity:0;
 
-        transform:translateY(15px);
+        transform:translateY(20px);
 
     }
 
@@ -1048,77 +1059,51 @@ a{
 
 } 
 /* ==========================================
-   FINAL POLISH
+   PART 9
+   RESPONSIVE
 ========================================== */
 
-/* Smooth Animations */
-
-button,
-.service-card,
-.transaction-card,
-.invite-content,
-.wallet-card{
-
-    transition:
-        all .25s ease;
-
-}
-
-/* Touch Effect */
-
-button:active{
-
-    transform:scale(.97);
-
-}
-
-/* Remove Mobile Highlight */
-
-button,
-a{
-
-    -webkit-tap-highlight-color:transparent;
-
-}
-
-/* Better Font Rendering */
-
-body{
-
-    -webkit-font-smoothing:antialiased;
-
-    -moz-osx-font-smoothing:grayscale;
-
-}
-
-/* Small Screens */
-
-@media(max-width:480px){
+@media (max-width:480px){
 
     .dashboard-container{
 
-        padding:24px 18px 110px;
+        padding:22px 18px 110px;
+
+    }
+
+    .wallet-card{
+
+        padding:22px;
 
     }
 
     #walletBalance{
 
-        font-size:46px;
+        font-size:42px;
 
     }
 
     .wallet-buttons{
 
-        gap:12px;
+        gap:10px;
 
     }
 
-    .primary-button,
+    .primary-button{
+
+        height:52px;
+
+        font-size:15px;
+
+    }
+
     .secondary-button{
 
-        height:58px;
+        width:125px;
 
-        font-size:16px;
+        height:52px;
+
+        font-size:14px;
 
     }
 
@@ -1128,17 +1113,17 @@ body{
 
     }
 
-    .invite-content{
+    .gift-image{
 
-        padding:18px;
+        width:82px;
+
+        height:82px;
 
     }
 
 }
 
-/* Very Small Phones */
-
-@media(max-width:360px){
+@media (max-width:360px){
 
     .services-grid{
 
@@ -1146,19 +1131,52 @@ body{
 
     }
 
-    .header-actions{
+} 
+/* ==========================================
+   PART 10
+   PREMIUM FINISHING
+========================================== */
 
-        gap:10px;
+button{
 
-    }
+    transition:
+        all .25s ease;
 
-    .icon-button,
-    .profile-button{
+}
 
-        width:48px;
+button:active{
 
-        height:48px;
+    transform:scale(.96);
 
-    }
+}
+
+.service-card,
+.transaction-card,
+.wallet-card,
+.invite-content{
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.service-card:hover,
+.transaction-card:hover,
+.wallet-card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+::-webkit-scrollbar{
+
+    width:0;
+
+}
+
+body{
+
+    background:#F5F7FB;
 
 }
