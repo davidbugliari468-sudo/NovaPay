@@ -1,6 +1,11 @@
 /* ==========================================
-   NovaPay Dashboard
-   Version 1
+   NOVAPAY DASHBOARD
+   CSS REBUILD
+   VERSION 2.0
+========================================== */
+
+/* ==========================================
+   RESET
 ========================================== */
 
 *{
@@ -9,186 +14,126 @@
     box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+/* ==========================================
+   ROOT
+========================================== */
+
+:root{
+
+    --primary:red;
+
+    --primary-dark:#1D4ED8;
+
+    --background:#F5F7FB;
+
+    --white:#FFFFFF;
+
+    --text:#111827;
+
+    --subtext:#6B7280;
+
+    --border:#E5E7EB;
+
+    --shadow:
+        0 10px 30px rgba(15,23,42,.08);
+
+    --radius-sm:14px;
+
+    --radius-md:18px;
+
+    --radius-lg:24px;
+
 }
+
+/* ==========================================
+   HTML
+========================================== */
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+/* ==========================================
+   BODY
+========================================== */
 
 body{
 
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:
 
-    background:#f5f7fb;
+        Arial,
 
-    color:#1f2937;
+        Helvetica,
 
-    min-height:100vh;
+        sans-serif;
+
+    background:
+
+        var(--background);
+
+    color:
+
+        var(--text);
+
+    min-height:
+
+        100vh;
 
 }
 
+/* ==========================================
+   BUTTON
+========================================== */
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    font:inherit;
+
+}
+
+/* ==========================================
+   IMAGE
+========================================== */
+
+img{
+
+    display:block;
+
+    max-width:100%;
+
+}
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
 .dashboard-container{
+
+    width:100%;
 
     max-width:500px;
 
     margin:auto;
 
-    padding:20px 20px 120px;
+    padding:
 
-} 
-/* ==========================================
-   Header
+        22px
+
+        20px
+
+        120px;
+
+} /* ==========================================
+   HEADER
 ========================================== */
 
 .header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:28px;
-
-}
-
-.logo-text{
-
-    font-size:24px;
-
-    font-weight:800;
-
-}
-
-.logo-nova{
-
-    color:#2563EB;
-
-}
-
-.logo-pay{
-
-    color:#111827;
-
-}
-
-.header-actions{
-
-    display:flex;
-
-    gap:12px;
-
-}
-
-.icon-button,
-.profile-button{
-
-    width:42px;
-
-    height:42px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#fff;
-
-    cursor:pointer;
-
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
-
-    font-size:16px;
-
-    transition:.25s;
-
-}
-
-.icon-button:hover,
-.profile-button:hover{
-
-    transform:translateY(-2px);
-
-}
-
-.profile-button{
-
-    background:#1d4ed8;
-
-    color:white;
-
-} 
-/* ==========================================
-   Greeting
-========================================== */
-
-.greeting-section{
-
-    margin-bottom:24px;
-
-}
-.greeting{
-
-    font-size:14px;
-
-    margin-bottom:2px;
-
-}
-
-#userName{
-
-    font-size:20px;
-
-    font-weight:600;
-
-    line-height:1.1;
-
-    margin-bottom:4px;
-
-}
-
-.welcome-text{
-
-    margin-top:0;
-
-    font-size:14px;
-
-}
-
-.welcome-text{
-
-    display:block;
-
-    margin-top:6px;
-
-    color:#9ca3af;
-
-    font-size:15px;
-
-} 
-/* ==========================================
-   Wallet Card
-========================================== */
-
-.wallet-card{
-
-    background:linear-gradient(135deg,#0f172a,#1d4ed8);
-
-    color:#fff;
-
-    border-radius:24px;
-
-    padding:24px;
-
-    box-shadow:0 15px 35px rgba(29,78,216,.25);
-
-    margin-bottom:24px;
-
-} 
-.wallet-header{
-
-    margin-bottom:10px;
-
-}
-
-.wallet-balance-row{
 
     display:flex;
 
@@ -200,24 +145,242 @@ body{
 
 }
 
-.balance-label{
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.logo-text{
+
+    font-size:29px;
+
+    font-weight:800;
+
+    line-height:1;
+
+    letter-spacing:-0.8px;
+
+}
+
+.logo-nova{
+
+    color:var(--primary);
+
+}
+
+.logo-pay{
+
+    color:var(--text);
+
+}
+
+.header-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.icon-button,
+
+.profile-button{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:var(--white);
+
+    color:var(--primary);
+
+    box-shadow:var(--shadow);
+
+    transition:.25s;
+
+}
+
+.profile-button{
+
+    background:var(--primary);
+
+    color:#FFFFFF;
+
+}
+
+.icon-button i,
+
+.profile-button i{
+
+    font-size:18px;
+
+}
+
+.icon-button:hover,
+
+.profile-button:hover{
+
+    transform:translateY(-2px);
+
+}
+/* ==========================================
+   GREETING
+========================================== */
+
+.greeting-section{
+
+    margin-bottom:24px;
+
+}
+
+.greeting{
 
     font-size:15px;
 
-    opacity:.85;
+    font-weight:500;
 
-    margin-bottom:10px;
+    color:var(--subtext);
+
+    margin-bottom:4px;
+
+    line-height:1.2;
 
 }
+
+#userName{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:var(--text);
+
+    line-height:1.1;
+
+    margin-bottom:4px;
+
+}
+
+.welcome-text{
+
+    display:block;
+
+    font-size:15px;
+
+    color:#9CA3AF;
+
+    font-weight:400;
+
+    line-height:1.4;
+
+} 
+/* ==========================================
+   WALLET CARD
+========================================== */
+
+.wallet-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:linear-gradient(
+        135deg,
+        #2563EB 0%,
+        #1D4ED8 100%
+    );
+
+    border-radius:26px;
+
+    padding:24px;
+
+    color:#FFFFFF;
+
+    margin-bottom:28px;
+
+    box-shadow:
+        0 20px 45px rgba(37,99,235,.22);
+
+}
+
+.wallet-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-90px;
+
+    right:-70px;
+
+    width:220px;
+
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.wallet-header{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.balance-label{
+
+    font-size:14px;
+
+    font-weight:500;
+
+    color:rgba(255,255,255,.82);
+
+}
+
+.wallet-balance-row{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    margin-top:10px;
+
+    margin-bottom:22px;
+
+}
+
 #walletBalance{
 
-    font-size:30px;
+    font-size:36px;
 
-    font-weight:700;
+    font-weight:800;
 
-    letter-spacing:.3px;
+    letter-spacing:-1px;
 
-    margin:0;
+    line-height:1;
 
 }
 
@@ -227,42 +390,56 @@ body{
 
     align-items:center;
 
-    gap:6px;
+    gap:7px;
 
-    background:none;
+    padding:10px 15px;
 
-    border:none;
+    border-radius:999px;
 
-    color:rgba(255,255,255,.9);
+    background:rgba(255,255,255,.14);
+
+    color:#FFFFFF;
 
     font-size:14px;
 
-    font-weight:500;
-
-    cursor:pointer;
-
-    padding:0;
+    font-weight:600;
 
 }
 
-.hide-button:hover{
+.hide-button i{
 
-    background:rgba(255,255,255,.28);
+    font-size:14px;
 
 } 
- .wallet-buttons{
+/* ==========================================
+   WALLET BUTTONS
+========================================== */
+
+.wallet-buttons{
+
+    position:relative;
+
+    z-index:2;
 
     display:flex;
 
-    gap:12px;
+    align-items:center;
 
-    margin-top:8px;
+    gap:10px;
 
 }
-    
+
 .primary-button{
 
     flex:1;
+
+    height:48px;
+
+    border-radius:14px;
+
+    background:#FFFFFF;
+
+    color:#2563EB;
 
     display:flex;
 
@@ -272,21 +449,9 @@ body{
 
     gap:8px;
 
-    background:#ffffff;
-
-    color:#2563EB;
-
-    border:none;
-
-    border-radius:14px;
-
-    padding:15px;
-
     font-size:15px;
 
-    font-weight:600;
-
-    cursor:pointer;
+    font-weight:700;
 
     transition:.25s;
 
@@ -296,10 +461,21 @@ body{
 
     transform:translateY(-2px);
 
-} 
+}
+
 .secondary-button{
 
-    flex:1;
+    width:120px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.12);
+
+    color:#FFFFFF;
+
+    border:1px solid rgba(255,255,255,.18);
 
     display:flex;
 
@@ -309,137 +485,34 @@ body{
 
     gap:8px;
 
-    background:rgba(255,255,255,.15);
-
-    color:#ffffff;
-
-    border:none;
-
-    border-radius:14px;
-
-    padding:15px;
-
-    font-size:15px;
+    font-size:14px;
 
     font-weight:600;
 
-    cursor:pointer;
-
     transition:.25s;
 
 }
 
 .secondary-button:hover{
 
-    background:rgba(255,255,255,.25);
+    background:rgba(255,255,255,.18);
 
 }
 
-.secondary-button:hover{
+.primary-button i,
 
-    background:rgba(255,255,255,.12);
-
-} 
-/* ==========================================
-   Complete Setup Card
-========================================== */
-
-.setup-card{
-
-    background:#ffffff;
-
-    border-radius:20px;
-
-    padding:20px;
-
-    margin-bottom:24px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:18px;
-
-    box-shadow:0 8px 24px rgba(0,0,0,.06);
-
-    border-left:5px solid #ef4444;
-
-} .setup-card h3{
-
-    font-size:18px;
-
-    color:#111827;
-
-    margin-bottom:8px;
-
-}
-
-.setup-card p{
-
-    color:#6b7280;
+.secondary-button i{
 
     font-size:14px;
 
-    line-height:1.5;
-
-}
-#completeProfileBtn{
-
-    border:none;
-
-    background:#ef4444;
-
-    color:white;
-
-    padding:12px 18px;
-
-    border-radius:12px;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    white-space:nowrap;
-
-    transition:.25s;
-
-}
-
-#completeProfileBtn:hover{
-
-    background:#dc2626;
-
-    transform:translateY(-2px);
-
-} 
-@media(max-width:480px){
-
-    .setup-card{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-    }
-
-    #completeProfileBtn{
-
-        width:100%;
-
-    }
-
 } 
 /* ==========================================
-   Quick Services
+   QUICK SERVICES
 ========================================== */
 
 .services-section{
 
-    margin-bottom:28px;
+    margin-bottom:26px;
 
 }
 
@@ -451,51 +524,49 @@ body{
 
     align-items:center;
 
-    margin-bottom:18px;
+    margin-bottom:16px;
 
 }
 
 .section-header h2{
 
-    font-size:22px;
-
-    color:#111827;
+    font-size:20px;
 
     font-weight:700;
 
-} 
+    color:var(--text);
+
+}
+
 .services-grid{
 
     display:grid;
 
     grid-template-columns:repeat(3,1fr);
 
-    gap:16px;
+    gap:12px;
 
-} 
+}
+
 .service-card{
 
-    background:#ffffff;
-
-    border:none;
+    background:#FFFFFF;
 
     border-radius:18px;
 
-    padding:18px 12px;
-
-    cursor:pointer;
+    height:96px;
 
     display:flex;
 
     flex-direction:column;
 
-    align-items:center;
-
     justify-content:center;
 
-    gap:12px;
+    align-items:center;
 
-    box-shadow:0 8px 22px rgba(0,0,0,.06);
+    gap:10px;
+
+    box-shadow:var(--shadow);
 
     transition:.25s;
 
@@ -503,28 +574,17 @@ body{
 
 .service-card:hover{
 
-    transform:translateY(-4px);
-
-    box-shadow:0 14px 30px rgba(0,0,0,.10);
+    transform:translateY(-2px);
 
 }
 
-.service-card span{
-
-    font-size:14px;
-
-    font-weight:600;
-
-    color:#374151;
-
-} 
 .service-icon{
 
-    width:54px;
+    width:44px;
 
-    height:54px;
+    height:44px;
 
-    border-radius:16px;
+    border-radius:14px;
 
     display:flex;
 
@@ -532,12 +592,23 @@ body{
 
     align-items:center;
 
-    font-size:22px;
+    font-size:18px;
 
-} 
+}
+
+.service-card span{
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:var(--text);
+
+}
+
 .airtime{
 
-    background:#DBEAFE;
+    background:#EAF2FF;
 
     color:#2563EB;
 
@@ -545,7 +616,7 @@ body{
 
 .data{
 
-    background:#DCFCE7;
+    background:#ECFDF3;
 
     color:#16A34A;
 
@@ -553,7 +624,7 @@ body{
 
 .electricity{
 
-    background:#FEF3C7;
+    background:#FFF7E6;
 
     color:#D97706;
 
@@ -561,7 +632,7 @@ body{
 
 .tv{
 
-    background:#F3E8FF;
+    background:#F4ECFF;
 
     color:#9333EA;
 
@@ -569,7 +640,7 @@ body{
 
 .betting{
 
-    background:#FCE7F3;
+    background:#FFEAF1;
 
     color:#DB2777;
 
@@ -577,49 +648,38 @@ body{
 
 .more{
 
-    background:#E5E7EB;
+    background:#F3F4F6;
 
-    color:#374151;
-
-} 
-@media(max-width:380px){
-
-    .services-grid{
-
-        grid-template-columns:repeat(2,1fr);
-
-    }
+    color:#4B5563;
 
 } 
 /* ==========================================
-   Recent Transactions
+   RECENT TRANSACTIONS
 ========================================== */
 
 .transactions-section{
 
-    margin-bottom:24px;
+    margin-bottom:26px;
 
-} 
+}
+
 .text-button{
 
     background:none;
 
-    border:none;
+    color:var(--primary);
 
-    color:#2563eb;
+    font-size:14px;
 
-    font-size:15px;
+    font-weight:700;
 
-    font-weight:600;
+}
 
-    cursor:pointer;
-
-} 
 .transaction-card{
 
-    background:#ffffff;
+    background:var(--white);
 
-    border-radius:18px;
+    border-radius:20px;
 
     padding:18px;
 
@@ -627,22 +687,23 @@ body{
 
     align-items:center;
 
-    gap:16px;
+    gap:14px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    box-shadow:var(--shadow);
 
-} 
+}
+
 .transaction-icon{
 
     width:52px;
 
     height:52px;
 
-    border-radius:14px;
+    border-radius:16px;
 
-    background:#DBEAFE;
+    background:#EEF4FF;
 
-    color:#2563EB;
+    color:var(--primary);
 
     display:flex;
 
@@ -650,11 +711,12 @@ body{
 
     align-items:center;
 
-    font-size:22px;
+    font-size:20px;
 
     flex-shrink:0;
 
-} 
+}
+
 .transaction-details{
 
     flex:1;
@@ -663,41 +725,46 @@ body{
 
 .transaction-details h4{
 
-    font-size:17px;
+    font-size:16px;
 
-    color:#111827;
+    font-weight:700;
 
-    margin-bottom:6px;
+    color:var(--text);
+
+    margin-bottom:4px;
 
 }
 
 .transaction-details p{
 
-    font-size:14px;
+    font-size:13px;
 
-    color:#6B7280;
+    color:var(--subtext);
 
     line-height:1.5;
 
 } 
 /* ==========================================
-   Invite & Earn
+   INVITE & EARN
 ========================================== */
 
 .invite-section{
 
-    margin-bottom:28px;
+    margin-bottom:24px;
 
-} 
+}
+
 .invite-content{
 
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-
-    color:#ffffff;
+    background:linear-gradient(
+        135deg,
+        #2563EB,
+        #1D4ED8
+    );
 
     border-radius:20px;
 
-    padding:20px;
+    padding:16px 18px;
 
     display:flex;
 
@@ -705,51 +772,51 @@ body{
 
     align-items:center;
 
-    gap:20px;
+    gap:16px;
 
-    box-shadow:0 10px 28px rgba(37,99,235,.25);
+    color:#FFFFFF;
 
-} 
+    box-shadow:var(--shadow);
+
+}
+
 .invite-content h3{
 
-    font-size:20px;
-
-    margin-bottom:8px;
+    font-size:18px;
 
     font-weight:700;
+
+    margin-bottom:4px;
 
 }
 
 .invite-content p{
 
-    font-size:14px;
+    font-size:13px;
 
     line-height:1.5;
 
-    opacity:.95;
+    opacity:.9;
 
-} 
+}
+
 .invite-button{
 
-    border:none;
+    min-width:92px;
 
-    background:#ffffff;
+    height:42px;
 
-    color:#2563eb;
+    border-radius:12px;
 
-    padding:12px 22px;
+    background:#FFFFFF;
 
-    border-radius:14px;
+    color:var(--primary);
 
-    font-size:15px;
+    font-size:14px;
 
     font-weight:700;
 
-    cursor:pointer;
-
     transition:.25s;
-
-    white-space:nowrap;
 
 }
 
@@ -758,7 +825,180 @@ body{
     transform:translateY(-2px);
 
 } 
+/* ==========================================
+   BOTTOM NAVIGATION
+========================================== */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:0;
+
+    transform:translateX(-50%);
+
+    width:100%;
+
+    max-width:500px;
+
+    height:72px;
+
+    background:#FFFFFF;
+
+    border-top-left-radius:24px;
+
+    border-top-right-radius:24px;
+
+    box-shadow:0 -8px 24px rgba(15,23,42,.08);
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    padding-bottom:env(safe-area-inset-bottom);
+
+    z-index:999;
+
+}
+
+.nav-item{
+
+    flex:1;
+
+    height:100%;
+
+    background:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:4px;
+
+    color:#9CA3AF;
+
+    transition:.25s ease;
+
+}
+
+.nav-item i{
+
+    font-size:20px;
+
+}
+
+.nav-item span{
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.nav-item.active{
+
+    color:var(--primary);
+
+}
+
+.nav-item:hover{
+
+    color:var(--primary);
+
+} 
+/* ==========================================
+   FINAL POLISH
+========================================== */
+
+/* Button Press Effect */
+
+button{
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+
+}
+
+button:active{
+
+    transform:scale(.97);
+
+}
+
+/* Smooth Card Animation */
+
+.wallet-card,
+.service-card,
+.transaction-card,
+.invite-content{
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.wallet-card:hover,
+.service-card:hover,
+.transaction-card:hover,
+.invite-content:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* Remove Blue Highlight */
+
+button,
+a{
+
+    -webkit-tap-highlight-color:transparent;
+
+}
+
+/* Better Scroll */
+
+body{
+
+    overflow-x:hidden;
+
+}
+
+/* Mobile */
+
 @media(max-width:480px){
+
+    .dashboard-container{
+
+        padding:18px 16px 110px;
+
+    }
+
+    .wallet-buttons{
+
+        flex-direction:column;
+
+        gap:10px;
+
+    }
+
+    .primary-button,
+
+    .secondary-button{
+
+        width:100%;
+
+    }
 
     .invite-content{
 
@@ -774,234 +1014,15 @@ body{
 
     }
 
-} 
-/* ==========================================
-   Bottom Navigation
-========================================== */
-
-.bottom-nav{
-
-    position:fixed;
-
-    bottom:0;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:100%;
-
-    max-width:500px;
-
-    background:#ffffff;
-
-    display:flex;
-
-    justify-content:space-around;
-
-    align-items:center;
-
-    padding:12px 0 calc(12px + env(safe-area-inset-bottom));
-
-    box-shadow:0 -6px 20px rgba(0,0,0,.08);
-
-    border-top-left-radius:22px;
-
-    border-top-right-radius:22px;
-
-    z-index:999;
-
-} 
-.nav-item{
-
-    background:none;
-
-    border:none;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    gap:6px;
-
-    cursor:pointer;
-
-    color:#6B7280;
-
-    font-size:13px;
-
-    transition:.25s;
-
-    flex:1;
-
-} 
-.nav-item i{
-
-    font-size:20px;
-
-} 
-.nav-item.active{
-
-    color:#2563EB;
-
-    font-weight:700;
-
 }
 
-.nav-item:hover{
+/* Small Phones */
 
-    color:#2563EB;
+@media(max-width:380px){
 
-} 
-.nav-item:active{
+    .services-grid{
 
-    transform:scale(.95);
-
-} 
-/* ==========================================
-   Custom Modal
-========================================== */
-
-.modal{
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:20px;
-
-    z-index:9999;
-
-}
-
-.modal-content{
-
-    width:100%;
-
-    max-width:360px;
-
-    background:#ffffff;
-
-    border-radius:22px;
-
-    padding:28px 24px;
-
-    text-align:center;
-
-    animation:modalFade .25s ease;
-
-}
-
-.modal-content h2{
-
-    color:#111827;
-
-    margin-bottom:12px;
-
-}
-
-.modal-content p{
-
-    color:#6B7280;
-
-    line-height:1.6;
-
-    margin-bottom:22px;
-
-}
-
-.modal-button{
-
-    width:100%;
-
-    border:none;
-
-    background:#2563EB;
-
-    color:#ffffff;
-
-    padding:14px;
-
-    border-radius:14px;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.modal-button:hover{
-
-    background:#1D4ED8;
-
-} 
-@keyframes modalFade{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(15px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-} 
-/* ==========================================
-   Responsive
-========================================== */
-
-@media (max-width:480px){
-
-    .dashboard-container{
-
-        padding:18px 16px 110px;
-
-    }
-
-    #walletBalance{
-
-        font-size:30px;
-
-    }
-
-    .wallet-buttons{
-
-        flex-direction:column;
-
-    }
-
-    .primary-button,
-    .secondary-button{
-
-        width:100%;
-
-    }
-
-    .section-header h2{
-
-        font-size:20px;
+        grid-template-columns:repeat(2,1fr);
 
     }
 
