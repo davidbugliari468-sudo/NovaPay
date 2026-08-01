@@ -222,30 +222,22 @@ img{
 }
 
 .greeting{
-
-    font-size:15px;
-
+    font-size:16px;
     font-weight:500;
+    margin-bottom:4px;
+}
 
-    color:var(--subtext);
-
-    margin-bottom:6px;
-
+.welcome-text{
+    font-size:16px;
+    margin-top:2px;
 }
 
 #userName{
-
-    font-size:42px;
-
-    font-weight:800;
-
-    color:#111827;
-
-    line-height:1;
-
-    margin-bottom:8px;
-
-}
+    font-size:30px;
+    font-weight:700;
+    line-height:1.1;
+    margin:2px 0 6px;
+} 
 
 .welcome-text{
 
