@@ -1,50 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Airtime | NovaPay</title>
 
-    <link rel="stylesheet" href="airtime.css">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Buy Airtime | NovaPay</title>
+
+<link rel="stylesheet" href="airtime.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
+
 <body>
 
 <div class="container">
 
-    <!-- Header -->
-    <header class="header">
+    <!-- HEADER -->
 
-        <button id="backBtn" class="back-btn">
-            ←
+    <header class="page-header">
+
+        <button class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
         </button>
 
-        <h2>Buy Airtime</h2>
+        <div>
+
+            <h1>Buy Airtime</h1>
+
+            <p>Purchase airtime</p>
+
+        </div>
 
     </header>
 
 
-    <!-- Network -->
+
+    <!-- AVAILABLE BALANCE -->
+
+    <section class="balance-card">
+
+        <div class="balance-info">
+
+            <p>Available Balance</p>
+
+            <h2>₦32,500.00</h2>
+
+        </div>
+
+        <button class="wallet-btn">
+
+            <i class="fa-solid fa-wallet"></i>
+
+        </button>
+
+    </section>
+
+
+
+    <!-- NETWORK -->
 
     <section class="network-section">
 
-        <h3>Choose Network</h3>
+        <h3>Select Network</h3>
 
-        <div class="network-grid">
+        <div class="network-scroll">
 
-            <button class="network" data-network="mtn">
-                <img src="assets/images/mtn.png" alt="MTN">
+            <button class="network-card">
+
+                MTN
+
             </button>
 
-            <button class="network" data-network="airtel">
-                <img src="assets/images/airtel.png" alt="Airtel">
+            <button class="network-card">
+
+                Airtel
+
             </button>
 
-            <button class="network" data-network="glo">
-                <img src="assets/images/glo.png" alt="Glo">
+            <button class="network-card">
+
+                9mobile
+
             </button>
 
-            <button class="network" data-network="9mobile">
-                <img src="assets/images/9mobile.png" alt="9mobile">
+            <button class="network-card">
+
+                Glo
+
             </button>
 
         </div>
@@ -52,67 +101,68 @@
     </section>
 
 
-    <!-- Phone -->
 
-    <section class="input-section">
+    <!-- PHONE NUMBER -->
 
-        <label for="phone">
-            Phone Number
-        </label>
+    <section class="phone-section">
 
         <input
-            type="tel"
-            id="phone"
-            maxlength="11"
-            placeholder="08012345678">
+        type="tel"
+        id="phone"
+        placeholder="Enter phone number">
+
+        <label class="save-box">
+
+            <input type="checkbox">
+
+            <span>Save Beneficiary</span>
+
+        </label>
 
     </section>
 
 
-    <!-- Amount -->
+
+    <!-- AMOUNT -->
 
     <section class="amount-section">
 
-        <label>
-            Select Amount
-        </label>
+        <h3>Select Amount</h3>
 
         <div class="amount-grid">
 
-            <button class="amount">₦100</button>
-            <button class="amount">₦200</button>
-            <button class="amount">₦500</button>
+            <button class="amount-btn">₦100</button>
 
-            <button class="amount">₦1000</button>
-            <button class="amount">₦2000</button>
-            <button class="amount">₦5000</button>
+            <button class="amount-btn">₦200</button>
+
+            <button class="amount-btn">₦500</button>
+
+            <button class="amount-btn">₦1000</button>
+
+            <button class="amount-btn">₦2000</button>
+
+            <button class="amount-btn">₦5000</button>
 
         </div>
 
+        <p class="other-title">
+
+            Other Amount
+
+        </p>
+
         <input
-            type="number"
-            id="customAmount"
-            placeholder="Enter Custom Amount">
+        type="number"
+        id="customAmount"
+        placeholder="₦ Enter custom amount">
 
     </section>
 
 
-    <!-- Wallet -->
 
-    <section class="wallet">
+    <!-- CONTINUE -->
 
-        <p>Wallet Balance</p>
-
-        <h2 id="walletBalance">
-            ₦0.00
-        </h2>
-
-    </section>
-
-
-    <!-- Continue -->
-
-    <button id="continueBtn">
+    <button class="continue-btn">
 
         Continue
 
@@ -123,4 +173,5 @@
 <script src="airtime.js"></script>
 
 </body>
+
 </html>

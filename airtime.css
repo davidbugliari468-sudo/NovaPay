@@ -1,354 +1,394 @@
-/* ====================================
-   NOVAPAY AIRTIME V1
-   PART 1
-==================================== */
+/* ==========================================
+   NOVAPAY AIRTIME PAGE
+========================================== */
 
-/* Reset */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root{
+
+--primary:#2563EB;
+--primary-light:#EEF4FF;
+--background:#F5F7FC;
+--white:#FFFFFF;
+--text:#1E293B;
+--subtext:#98A2B3;
+--border:#E6ECF5;
+--shadow:0 8px 24px rgba(15,23,42,.08);
+
+}
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
 }
 
 body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#f7f9fc;
-    color:#1b1b1b;
+
+font-family:'Poppins',sans-serif;
+background:var(--background);
+color:var(--text);
+
 }
 
 .container{
-    max-width:480px;
-    margin:0 auto;
-    min-height:100vh;
-    padding:20px 18px 110px;
+
+max-width:500px;
+margin:auto;
+padding:22px 18px 35px;
+
 }
 
-/* Header */
+/* ================= HEADER ================= */
 
-.header{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:30px;
+.page-header{
+
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:22px;
+
 }
 
 .back-btn{
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
-    background:#ffffff;
-    color:#2563eb;           /* Use your NovaPay blue */
-    font-size:20px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 4px 14px rgba(0,0,0,.08);
-    transition:.25s;
-}
 
-.back-btn:hover{
-    transform:scale(1.05);
-}
-
-.header h2{
-    font-size:24px;
-    font-weight:700;
-    color:#111827;
-}
-
-/* Network Section */
-
-.network-section{
-    margin-bottom:34px;
-}
-
-.network-section h3{
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:22px;
-    color:#444;
-}
-
-/* Logo Layout */
-
-.network-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:28px 24px;
-    justify-items:center;
-    align-items:center;
-}
-
-/* Logo Button */
-
-.network{
-    position:relative;
-    background:none;
-    border:none;
-    cursor:pointer;
-    transition:.25s ease;
-}
-
-/* Logo Size */
-
-.network img{
-    width:88px;
-    height:auto;
-    display:block;
-}
-
-/* Hover */
-
-.network:hover{
-    transform:scale(1.06);
-}
-
-/* Selected */
-
-.network.active{
-    transform:scale(1.08);
-}
-
-/* Blue Ring */
-
-.network.active::after{
-
-    content:"✓";
-
-    position:absolute;
-
-    top:-8px;
-    right:-8px;
-
-    width:24px;
-    height:24px;
-
-    background:#2563eb;   /* Same NovaPay blue */
-
-    color:#fff;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:13px;
-    font-weight:bold;
-
-    box-shadow:0 4px 10px rgba(37,99,235,.35);
+width:46px;
+height:46px;
+border:none;
+border-radius:14px;
+background:#fff;
+box-shadow:var(--shadow);
+color:var(--primary);
+font-size:18px;
 
 }
 
-/* Divider */
+.page-header h1{
 
-.section-divider{
-    height:1px;
-    background:#eceff4;
-    margin:28px 0;
-} 
-/* ====================================
-   PART 2
-   Phone • Amount • Wallet
-==================================== */
+font-size:26px;
+font-weight:600;
 
-/* Input Sections */
-
-.input-section,
-.amount-section{
-    margin-bottom:28px;
 }
 
-.input-section label,
-.amount-section label{
-    display:block;
-    font-size:15px;
-    font-weight:600;
-    color:#444;
-    margin-bottom:12px;
+.page-header p{
+
+font-size:14px;
+color:var(--subtext);
+margin-top:2px;
+
 }
 
-/* Inputs */
+/* ================= BALANCE ================= */
 
-.input-section input,
-.amount-section input{
-    width:100%;
-    height:54px;
-    border:1.5px solid #e5e7eb;
-    border-radius:16px;
-    background:#fff;
-    padding:0 16px;
-    font-size:16px;
-    outline:none;
-    transition:.25s;
+.balance-card{
+
+margin-bottom:25px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:18px;
+
+background:#fff;
+
+border-radius:18px;
+
+box-shadow:var(--shadow);
+
 }
 
-.input-section input:focus,
-.amount-section input:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,.12);
+.balance-info p{
+
+font-size:13px;
+color:var(--subtext);
+
+margin-bottom:6px;
+
 }
 
-/* Amount Grid */
+.balance-info h2{
+
+font-size:28px;
+
+font-weight:600;
+
+color:var(--primary);
+
+}
+
+.wallet-btn{
+
+width:54px;
+
+height:54px;
+
+border:none;
+
+border-radius:15px;
+
+background:var(--primary-light);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.wallet-btn i{
+
+font-size:22px;
+
+color:var(--primary);
+
+}
+
+/* ================= SECTION ================= */
+
+section{
+
+margin-bottom:24px;
+
+}
+
+section h3{
+
+font-size:15px;
+
+font-weight:600;
+
+margin-bottom:14px;
+
+}
+
+/* ================= NETWORK ================= */
+
+.network-scroll{
+
+display:flex;
+
+gap:14px;
+
+overflow-x:auto;
+
+padding-bottom:6px;
+
+scrollbar-width:none;
+
+}
+
+.network-scroll::-webkit-scrollbar{
+
+display:none;
+
+}
+
+.network-card{
+
+min-width:95px;
+
+height:56px;
+
+background:#fff;
+
+border:1px solid var(--border);
+
+border-radius:15px;
+
+font-size:15px;
+
+font-weight:600;
+
+color:var(--text);
+
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+
+}
+
+/* ================= PHONE ================= */
+
+#phone{
+
+width:100%;
+
+height:56px;
+
+border:1px solid var(--border);
+
+border-radius:15px;
+
+padding:0 18px;
+
+font-size:15px;
+
+background:#fff;
+
+outline:none;
+
+margin-bottom:15px;
+
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+
+}
+
+#phone::placeholder{
+
+color:#A6AFBF;
+
+}
+
+/* ================= SAVE ================= */
+
+.save-box{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+font-size:15px;
+
+color:var(--text);
+
+}
+
+.save-box input{
+
+width:18px;
+
+height:18px;
+
+accent-color:var(--primary);
+
+}
+
+/* ================= AMOUNT ================= */
 
 .amount-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-bottom:18px;
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:12px;
+
+margin-top:14px;
+
+margin-bottom:18px;
+
 }
 
-/* Amount Buttons */
+.amount-btn{
 
-.amount{
-    height:48px;
-    border:none;
-    border-radius:14px;
-    background:#fff;
-    color:#222;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-    transition:.25s;
+height:48px;
+
+border:1px solid var(--border);
+
+background:#fff;
+
+border-radius:14px;
+
+font-size:15px;
+
+font-weight:600;
+
+color:var(--primary);
+
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+
 }
 
-.amount:hover{
-    transform:translateY(-2px);
+.other-title{
+
+font-size:14px;
+
+margin-bottom:10px;
+
+color:var(--subtext);
+
 }
 
-.amount.active{
-    background:#2563eb;
-    color:#fff;
+#customAmount{
+
+width:100%;
+
+height:56px;
+
+padding:0 16px;
+
+border-radius:15px;
+
+border:1px solid var(--border);
+
+background:#fff;
+
+font-size:15px;
+
+outline:none;
+
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+
 }
 
-/* Wallet Card */
+/* ================= CONTINUE ================= */
 
-.wallet{
-    background:#fff;
-    border-radius:20px;
-    padding:20px;
-    margin-top:10px;
-    box-shadow:0 6px 18px rgba(0,0,0,.06);
+.continue-btn{
+
+margin-top:28px;
+
+width:100%;
+
+height:56px;
+
+border:none;
+
+border-radius:16px;
+
+background:var(--primary);
+
+color:#fff;
+
+font-size:16px;
+
+font-weight:600;
+
+box-shadow:0 10px 22px rgba(37,99,235,.25);
+
 }
 
-.wallet p{
-    color:#6b7280;
-    font-size:14px;
-    margin-bottom:8px;
+/* ================= MOBILE ================= */
+
+@media(max-width:480px){
+
+.container{
+
+padding:20px 16px 35px;
+
 }
 
-.wallet h2{
-    color:#2563eb;
-    font-size:30px;
-    font-weight:700;
 } 
-/* ====================================
-   PART 3
-   Continue Button • Responsive • Finish
-==================================== */
+.network-card.active,
+.amount-btn.active{
 
-/* Continue Button */
+background:var(--primary);
 
-#continueBtn{
-    position:fixed;
-    left:18px;
-    right:18px;
-    bottom:20px;
+color:#fff;
 
-    max-width:444px;
-    width:calc(100% - 36px);
-    margin:auto;
-
-    height:56px;
-
-    border:none;
-    border-radius:16px;
-
-    background:#2563eb;   /* Use your NovaPay blue */
-    color:#fff;
-
-    font-size:17px;
-    font-weight:700;
-
-    cursor:pointer;
-
-    box-shadow:0 12px 30px rgba(37,99,235,.28);
-
-    transition:all .25s ease;
-}
-
-#continueBtn:hover{
-    transform:translateY(-2px);
-}
-
-#continueBtn:active{
-    transform:scale(.98);
-}
-
-/* Small Screen Optimisation */
-
-@media (max-width:390px){
-
-    .container{
-        padding:16px 16px 100px;
-    }
-
-    .header h2{
-        font-size:21px;
-    }
-
-    .network-grid{
-        gap:22px 18px;
-    }
-
-    .network img{
-        width:72px;
-    }
-
-    .amount-grid{
-        gap:10px;
-    }
-
-    .amount{
-        font-size:14px;
-        height:44px;
-    }
-
-    .wallet h2{
-        font-size:26px;
-    }
+border-color:var(--primary);
 
 }
 
-/* Large Phones */
+.continue-btn:disabled{
 
-@media (min-width:430px){
+background:#CBD5E1;
 
-    .container{
-        padding:24px 22px 120px;
-    }
+box-shadow:none;
 
-    .network img{
-        width:95px;
-    }
+cursor:not-allowed;
 
-}
-
-/* Smooth Animations */
-
-.network,
-.amount,
-.back-btn,
-#continueBtn,
-input{
-    transition:all .25s ease;
-}
-
-/* Prevent blue tap highlight on mobile */
-
-button,
-input{
-    -webkit-tap-highlight-color:transparent;
 }
