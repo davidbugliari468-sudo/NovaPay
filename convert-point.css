@@ -1,0 +1,138 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    color:#222;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+    background:#fff;
+    min-height:100vh;
+}
+
+.header{
+    background:#0d6efd;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:18px 20px;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:24px;
+}
+
+.header h1{
+    font-size:20px;
+    font-weight:600;
+}
+
+.summary-card{
+    margin:20px;
+    padding:24px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+    text-align:center;
+}
+
+.summary-card h2{
+    font-size:18px;
+    margin-bottom:12px;
+    color:#444;
+}
+
+.summary-card h3{
+    font-size:34px;
+    color:#0d6efd;
+    margin-bottom:10px;
+}
+
+.summary-card p{
+    font-size:15px;
+    color:#666;
+    margin-bottom:8px;
+}
+
+.summary-card h4{
+    font-size:24px;
+    color:#222;
+}
+
+.section{
+    padding:20px;
+    border-top:1px solid #ececec;
+}
+
+.section h2{
+    font-size:18px;
+    margin-bottom:16px;
+    color:#222;
+}
+
+input{
+    width:100%;
+    height:50px;
+    border:1px solid #d9d9d9;
+    border-radius:12px;
+    padding:0 16px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#0d6efd;
+}
+
+small{
+    display:block;
+    margin-top:10px;
+    color:#777;
+    font-size:13px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    border-bottom:1px solid #f1f1f1;
+    font-size:15px;
+}
+
+.row:last-child{
+    border-bottom:none;
+}
+
+#receiveAmount{
+    color:#0d6efd;
+    font-size:30px;
+    font-weight:700;
+}
+
+#convertButton{
+    width:calc(100% - 40px);
+    margin:25px 20px;
+    height:50px;
+    border:none;
+    border-radius:12px;
+    background:#0d6efd;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+#convertButton:hover{
+    opacity:.95;
+}

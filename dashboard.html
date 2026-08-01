@@ -1,246 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>NovaPay Dashboard</title>
 
-    <link rel="stylesheet" href="dashboard.css">
+    <link
+        rel="stylesheet"
+        href="dashboard.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<div class="dashboard">
+<div class="dashboard-container"> 
+    <!-- ===========================
+     HEADER
+============================ -->
 
-    <!-- Header -->
-    <header class="header">
+<header class="header">
 
-        <div class="profile-section">
+    <div class="logo">
 
-            <button id="profileBtn" class="avatar">
-                <i class="fa-solid fa-user"></i>
-            </button>
+        <h2 class="logo-text">
 
-            <div>
+    <span class="logo-nova">Nova</span><span class="logo-pay">Pay</span>
 
-                <small>Good Morning 👋</small>
+</h2>
 
-                <h2 id="userName">Loading...</h2>
+    </div>
 
-            </div>
+    <div class="header-actions">
 
-        </div>
+        <button
+            id="supportBtn"
+            class="icon-button">
 
-        <div class="header-actions">
+            <i class="fa-solid fa-headset"></i>
 
-            <button id="supportBtn" class="icon-btn">
-                <i class="fa-solid fa-headset"></i>
-            </button>
-
-            <button id="notificationBtn" class="icon-btn">
-                <i class="fa-regular fa-bell"></i>
-            </button>
-
-        </div>
-
-    </header>
-
-    <!-- Wallet Card -->
-    <section class="wallet-card">
-
-        <div class="wallet-top">
-
-            <span>Available Balance</span>
-
-            <button id="historyBtn">
-                History
-                <i class="fa-solid fa-angle-right"></i>
-            </button>
-
-        </div>
-
-        <div class="wallet-middle">
-
-            <h1 id="walletBalance">₦0.00</h1>
-
-            <button id="hideBalance">
-                Hide
-            </button>
-
-        </div>
-
-        <button id="addMoneyBtn" class="primary-btn">
-            <i class="fa-solid fa-plus"></i>
-            Add Money
         </button>
 
-    </section>
+        <button
+            id="notificationBtn"
+            class="icon-button">
 
-    <!-- Complete Profile -->
-    <section class="card" id="completeProfileCard">
+            <i class="fa-regular fa-bell"></i>
 
-        <div class="card-title">
-            <i class="fa-solid fa-user-check"></i>
-            <h3>Complete Your Profile</h3>
-        </div>
-
-        <p>
-            Finish setting up your account to unlock all NovaPay features.
-        </p>
-
-        <button id="completeProfileBtn" class="secondary-btn">
-            Complete Setup
         </button>
 
-    </section>
+        <button
+            id="profileBtn"
+            class="profile-button">
 
-    <!-- Invite -->
-    <section class="card">
+            <i class="fa-solid fa-user"></i>
 
-        <div class="card-title">
-            <i class="fa-solid fa-gift"></i>
-            <h3>Invite & Earn</h3>
-        </div>
-
-        <p>
-            Invite your friends and earn exciting rewards.
-        </p>
-
-        <button id="inviteBtn" class="secondary-btn">
-            Invite Friends
         </button>
 
-    </section>
+    </div>
 
-    <!-- Cards -->
-    <section class="card">
+</header> 
+<!-- ===========================
+     GREETING
+============================ -->
 
-        <div class="card-title">
-            <i class="fa-regular fa-credit-card"></i>
-            <h3>Cards</h3>
-        </div>
+<section class="greeting-section">
 
-        <p>
-            Request and manage your NovaPay virtual card.
-        </p>
+    <p
+        id="greetingText"
+        class="greeting">
 
-        <button id="cardsBtn" class="secondary-btn">
-            Get Card
-        </button>
+        Good Morning
 
-    </section>
+    </p>
 
-    <!-- Services -->
-    <section class="services-section">
+    <h1
+        id="userName">
 
-        <h3 class="section-title">
-            Services
-        </h3>
+        Loading...
 
-        <div class="services-grid"> 
-                        <button class="service-btn" id="airtimeBtn">
-                <i class="fa-solid fa-mobile-screen"></i>
-                <span>Airtime</span>
-            </button>
+    </h1>
 
-            <button class="service-btn" id="dataBtn">
-                <i class="fa-solid fa-wifi"></i>
-                <span>Data</span>
-            </button>
+    <span class="welcome-text">
 
-            <button class="service-btn" id="tvBtn">
-                <i class="fa-solid fa-tv"></i>
-                <span>TV</span>
-            </button>
+        Welcome back to NovaPay
 
-            <button class="service-btn" id="electricityBtn">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Electricity</span>
-            </button>
+    </span>
 
-            <button class="service-btn" id="bettingBtn">
-                <i class="fa-solid fa-futbol"></i>
-                <span>Betting</span>
-            </button>
+</section> 
+<!-- ===========================
+     WALLET CARD
+============================ -->
 
-            <button class="service-btn" id="pocketBtn">
-                <i class="fa-solid fa-piggy-bank"></i>
-                <span>Smart Pocket</span>
-            </button>
+<section class="wallet-card">
 
-        </div>
+    <div class="wallet-header">
 
-    </section>
+    <p class="balance-label">
 
-    <!-- Transactions -->
-    <section class="card">
+        Available Balance
 
-        <div class="card-title">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <h3>Recent Transactions</h3>
-        </div>
-
-        <p id="transactionText">
-            No transactions yet.
-        </p>
-
-    </section>
+    </p>
 
 </div>
 
-<!-- Bottom Navigation -->
+<div class="wallet-balance-row">
+
+    <h2 id="walletBalance">
+
+        ₦0.00
+
+    </h2>
+
+    <button
+        id="hideBalance"
+        class="hide-button">
+
+        <i class="fa-regular fa-eye"></i>
+
+        Hide
+
+    </button>
+
+</div>
+
+<div class="wallet-buttons">
+
+    <button
+        id="addMoneyBtn"
+        class="primary-button">
+
+        <i class="fa-solid fa-plus"></i>
+
+        Add Money
+
+    </button>
+
+    <button
+        id="historyBtn"
+        class="secondary-button">
+
+        History
+
+        <i class="fa-solid fa-chevron-right"></i>
+
+    </button>
+
+</div>
+
+</section>
+
+<!-- ===========================
+     QUICK SERVICES
+============================ -->
+
+<section class="services-section">
+
+    <div class="section-header">
+
+        <h2>Quick Services</h2>
+
+    </div>
+
+    <div class="services-grid">
+
+        <!-- Airtime -->
+
+        <button
+            id="airtimeBtn"
+            class="service-card">
+
+            <div class="service-icon airtime">
+
+                <i class="fa-solid fa-mobile-screen"></i>
+
+            </div>
+
+            <span>Airtime</span>
+
+        </button>
+
+        <!-- Data -->
+
+        <button
+            id="dataBtn"
+            class="service-card">
+
+            <div class="service-icon data">
+
+                <i class="fa-solid fa-wifi"></i>
+
+            </div>
+
+            <span>Data</span>
+
+        </button>
+
+        <!-- Electricity -->
+
+        <button
+            id="electricityBtn"
+            class="service-card">
+
+            <div class="service-icon electricity">
+
+                <i class="fa-solid fa-bolt"></i>
+
+            </div>
+
+            <span>Electricity</span>
+
+        </button>
+
+        <!-- TV -->
+
+        <button
+            id="tvBtn"
+            class="service-card">
+
+            <div class="service-icon tv">
+
+                <i class="fa-solid fa-tv"></i>
+
+            </div>
+
+            <span>TV</span>
+
+        </button>
+
+        <!-- Betting -->
+
+        <button
+            id="bettingBtn"
+            class="service-card">
+
+            <div class="service-icon betting">
+
+                <i class="fa-solid fa-futbol"></i>
+
+            </div>
+
+            <span>Betting</span>
+
+        </button>
+
+        <!-- More -->
+
+        <button
+            id="moreBtn"
+            class="service-card">
+
+            <div class="service-icon more">
+
+                <i class="fa-solid fa-ellipsis"></i>
+
+            </div>
+
+            <span>More</span>
+
+        </button>
+
+    </div>
+
+</section> 
+<!-- ===========================
+     RECENT TRANSACTIONS
+============================ -->
+
+<section class="transactions-section">
+
+    <div class="section-header">
+
+        <h2>Recent Transactions</h2>
+
+        <button
+            id="viewAllTransactionsBtn"
+            class="text-button">
+
+            View All
+
+        </button>
+
+    </div>
+
+    <div class="transaction-card">
+
+        <div class="transaction-icon">
+
+            <i class="fa-solid fa-receipt"></i>
+
+        </div>
+
+        <div class="transaction-details">
+
+            <h4>No Transactions Yet</h4>
+
+            <p>
+                Your recent transactions will appear here.
+            </p>
+
+        </div>
+
+    </div>
+
+</section> 
+<!-- ===========================
+     INVITE & EARN
+============================ -->
+
+<section class="invite-section">
+
+    <div class="invite-content">
+
+        <div>
+
+            <h3>
+
+                Invite & Earn
+
+            </h3>
+
+            <p>
+
+                Invite your friends and earn reward points when they join NovaPay.
+
+            </p>
+
+        </div>
+
+        <button
+            id="inviteBtn"
+            class="invite-button">
+
+            Invite
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ===========================
+     BOTTOM NAVIGATION
+============================ -->
 
 <nav class="bottom-nav">
 
-    <button class="active">
+    <button
+        class="nav-item active">
+
         <i class="fa-solid fa-house"></i>
+
         <span>Home</span>
+
     </button>
 
-    <button id="walletBtn">
+    <button
+        id="walletBtn"
+        class="nav-item">
+
         <i class="fa-solid fa-wallet"></i>
+
         <span>Wallet</span>
+
     </button>
 
-    <button id="historyNavBtn">
-        <i class="fa-solid fa-receipt"></i>
-        <span>History</span>
+    <button
+        id="payBillsBtn"
+        class="nav-item">
+
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+
+        <span>Pay Bills</span>
+
     </button>
 
-    <button id="profileNavBtn">
+    <button
+        id="profileNavBtn"
+        class="nav-item">
+
         <i class="fa-solid fa-user"></i>
+
         <span>Profile</span>
+
     </button>
 
-</nav>
+</nav> 
+<!-- ===========================
+     CUSTOM MODAL
+============================ -->
 
-<!-- Custom Modal -->
-
-<div id="customModal" class="modal">
+<div
+    id="customModal"
+    class="modal">
 
     <div class="modal-content">
 
-        <h3 id="modalTitle">NovaPay</h3>
+        <h2 id="modalTitle">
 
-        <p id="modalMessage"></p>
+            NovaPay
 
-        <button onclick="closeModal()">
+        </h2>
+
+        <p id="modalMessage">
+
+            Message
+
+        </p>
+
+        <button
+            onclick="closeModal()"
+            class="modal-button">
+
             OK
+
         </button>
 
     </div>
 
 </div>
 
-<script type="module" src="dashboard.js"></script>
+</div>
+
+<script
+    type="module"
+    src="dashboard.js"></script>
 
 </body>
+
 </html>

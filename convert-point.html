@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Points - NovaPay</title>
+    <link rel="stylesheet" href="convert-point.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <a href="my-points.html" class="back-btn">←</a>
+        <h1>Convert Points</h1>
+    </header>
+
+    <!-- Summary -->
+    <section class="summary-card">
+
+        <h2>Available Points</h2>
+
+        <h3 id="availablePoints">0 Points</h3>
+
+        <p>Equivalent Wallet Value</p>
+
+        <h4 id="walletValue">₦0.00</h4>
+
+    </section>
+
+    <!-- Convert Form -->
+    <section class="section">
+
+        <h2>Points to Convert</h2>
+
+        <input
+            type="number"
+            id="pointsInput"
+            placeholder="Enter points">
+
+        <small id="availableText">
+            Available: 0 Points
+        </small>
+
+    </section>
+
+    <!-- Receive -->
+    <section class="section">
+
+        <h2>You'll Receive</h2>
+
+        <h3 id="receiveAmount">₦0.00</h3>
+
+    </section>
+
+    <!-- Information -->
+    <section class="section">
+
+        <div class="row">
+            <span>Minimum Conversion</span>
+            <span id="minimumPoints">Loading...</span>
+        </div>
+
+        <div class="row">
+            <span>Conversion Rate</span>
+            <span id="conversionRate">Loading...</span>
+        </div>
+
+    </section>
+
+    <button id="convertButton">
+        Convert Now
+    </button>
+
+</div>
+
+</body>
+</html>

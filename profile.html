@@ -1,109 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Complete Profile | NovaPay</title>
+    <title>My Profile | NovaPay</title>
 
     <link rel="stylesheet" href="profile.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <!-- Font Awesome -->
     <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
 
 <div class="container">
+<!-- =========================================
+     PROFILE HEADER
+========================================= -->
 
-    <!-- Header -->
+<header class="profile-header">
 
-    <header>
+    <button id="backBtn" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
 
-        <button id="backBtn">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
+    <div class="header-content">
+        <h1>My Profile</h1>
+        <p>Manage your NovaPay account</p>
+    </div>
 
-        <h2>Complete Profile</h2>
+</header>
 
-    </header>
+<!-- =========================================
+     PROFILE CARD
+========================================= -->
 
-    <!-- Avatar -->
+<section class="profile-card">
 
     <div class="avatar">
-
         <i class="fa-solid fa-user"></i>
+    </div>
+
+    <h2 id="userName">John Anderson</h2>
+
+    <p id="userEmail">john@email.com</p>
+
+    <div class="account-badge">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Basic Account</span>
+    </div>
+
+    <div class="profile-stats">
+
+        <div class="stat-box">
+            <span>Points</span>
+            <strong>0</strong>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-box">
+            <span>Rewards</span>
+            <strong>0</strong>
+        </div>
 
     </div>
 
-    <!-- Form -->
+</section>
 
-    <form id="profileForm">
+<!-- =========================================
+     ACCOUNT
+========================================= -->
 
-        <label>Full Name</label>
+<section class="profile-section">
 
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Enter your full name"
-            required
-        >
+    <h3 class="section-title">ACCOUNT</h3>
 
-        <label>Phone Number</label>
+    <div class="menu-card">
 
-        <input
-            type="tel"
-            id="phone"
-            placeholder="08012345678"
-            required
-        >
+        <a href="personal-information.html" class="menu-item">
 
-        <label>Email Address</label>
+            <div class="menu-left">
+                <i class="fa-solid fa-user"></i>
+                <span>Personal Information</span>
+            </div>
 
-        <input
-            type="email"
-            id="email"
-            readonly
-        >
+            <i class="fa-solid fa-chevron-right"></i>
 
-        <button
-            type="submit"
-            id="saveBtn"
-        >
-            Save Profile
-        </button>
+        </a>
 
-    </form> 
-        <!-- Success Modal -->
+        <div class="menu-item disabled">
 
-    <div id="customModal" class="modal">
+            <div class="menu-left">
+                <i class="fa-solid fa-id-card"></i>
+                <span>KYC Verification</span>
+            </div>
 
-        <div class="modal-content">
+            <span class="coming-soon">Coming Soon</span>
 
-            <h3 id="modalTitle">NovaPay</h3>
+        </div>
 
-            <p id="modalMessage"></p>
+        <a href="account-limits.html" class="menu-item">
 
-            <button onclick="closeModal()">
-                OK
-            </button>
+            <div class="menu-left">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Account Limits</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     SECURITY
+========================================= -->
+
+<section class="profile-section">
+
+    <h3 class="section-title">SECURITY</h3>
+
+    <div class="menu-card">
+
+        <a href="transaction-pin.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-lock"></i>
+                <span>Transaction PIN</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <div class="menu-item disabled">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-fingerprint"></i>
+                <span>Biometric Login</span>
+            </div>
+
+            <span class="coming-soon">Coming Soon</span>
+
+        </div>
+
+        <a href="change-password.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-key"></i>
+                <span>Change Password</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     REWARDS
+========================================= -->
+
+<section class="profile-section">
+
+    <h3 class="section-title">REWARDS</h3>
+
+    <div class="menu-card">
+
+        <a href="my-points.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-star"></i>
+                <span>My Points</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <a href="achievements.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-trophy"></i>
+                <span>My Achievements</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     PREFERENCES
+========================================= -->
+
+<section class="profile-section">
+
+    <h3 class="section-title">PREFERENCES</h3>
+
+    <div class="menu-card">
+
+        <a href="notifications.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <a href="language.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-language"></i>
+                <span>Language</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <div class="menu-item disabled">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-moon"></i>
+                <span>Dark Mode</span>
+            </div>
+
+            <span class="coming-soon">Coming Soon</span>
 
         </div>
 
     </div>
 
-</div>
+</section>
 
-<script type="module" src="profile.js"></script>
+<!-- =========================================
+     SUPPORT
+========================================= -->
 
-</body>
-</html>
+<section class="profile-section">
+
+    <h3 class="section-title">SUPPORT</h3>
+
+    <div class="menu-card">
+
+        <a href="help.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>Help Centre</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <a href="contact-support.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-headset"></i>
+                <span>Contact Support</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     LEGAL
+========================================= -->
+
+<section class="profile-section">
+
+    <h3 class="section-title">LEGAL</h3>
+
+    <div class="menu-card">
+
+        <a href="privacy-policy.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Privacy Policy</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <a href="terms.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-file-contract"></i>
+                <span>Terms & Conditions</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        <a href="about.html" class="menu-item">
+
+            <div class="menu-left">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>About NovaPay</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     LOGOUT
+========================================= -->
+
+<section class="logout-section">
+
+    <button id="logoutBtn" class="logout-btn">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        Logout
+
+    </button>
+
+</section>

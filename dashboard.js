@@ -1,3 +1,8 @@
+window.onload = () => {
+
+    window.scrollTo(0, 0);
+
+};
 // ======================================
 // NovaPay Dashboard
 // Part 1
@@ -21,7 +26,7 @@ import {
 const userName = document.getElementById("userName");
 const walletBalance = document.getElementById("walletBalance");
 const hideBalanceBtn = document.getElementById("hideBalance");
-const completeProfileCard = document.getElementById("completeProfileCard");
+const greetingText = document.getElementById("greetingText");
 
 const modal = document.getElementById("customModal");
 const modalTitle = document.getElementById("modalTitle");
@@ -64,7 +69,31 @@ function formatMoney(amount) {
     });
 
 }
+// ======================================
+// Greeting
+// ======================================
 
+function updateGreeting() {
+
+    const hour = new Date().getHours();
+
+    if (hour < 12) {
+
+        greetingText.textContent = "☀️ Good Morning";
+
+    } else if (hour < 18) {
+
+        greetingText.textContent = "🌤 Good Afternoon";
+
+    } else {
+
+        greetingText.textContent = "🌙 Good Evening";
+
+    }
+
+}
+
+updateGreeting();
 // ======================================
 // Hide / Show Balance
 // ======================================
@@ -108,35 +137,27 @@ onAuthStateChanged(auth, async (user) => {
 
         if (userSnap.exists()) {
 
-            const data = userSnap.data();
+    const data = userSnap.data();
 
-            userName.textContent =
-                data.fullName || user.email.split("@")[0];
+    userName.textContent =
+        data.fullName || user.email.split("@")[0];
 
-            balance = data.walletBalance || 0;
+    balance = data.walletBalance || 0;
 
-            walletBalance.textContent =
-                formatMoney(balance);
+    walletBalance.textContent =
+        formatMoney(balance);
 
-            if (data.profileCompleted === true) {
+} else {
 
-                completeProfileCard.style.display = "none";
+    userName.textContent =
+        user.email.split("@")[0];
 
-            }
+    walletBalance.textContent =
+        formatMoney(0);
 
-        } else {
+}
 
-            userName.textContent =
-                user.email.split("@")[0];
-
-            walletBalance.textContent =
-                formatMoney(0);
-
-            completeProfileCard.style.display = "block";
-
-        }
-
-    } catch (error) {
+} catch (error) {
 
         console.error(error);
 
@@ -156,12 +177,11 @@ const profileBtn = document.getElementById("profileBtn");
 const supportBtn = document.getElementById("supportBtn");
 const notificationBtn = document.getElementById("notificationBtn");
 
-const historyBtn = document.getElementById("historyBtn");
+const payBillsBtn = document.getElementById("payBillsBtn");
 const addMoneyBtn = document.getElementById("addMoneyBtn");
-const completeProfileBtn = document.getElementById("completeProfileBtn");
 
 const inviteBtn = document.getElementById("inviteBtn");
-const cardsBtn = document.getElementById("cardsBtn");
+const moreBtn = document.getElementById("moreBtn");
 
 const airtimeBtn = document.getElementById("airtimeBtn");
 const dataBtn = document.getElementById("dataBtn");
@@ -199,9 +219,6 @@ profileNavBtn?.addEventListener("click", () => {
     window.location.href = "profile.html";
 });
 
-completeProfileBtn?.addEventListener("click", () => {
-    window.location.href = "profile.html";
-});
 
 // ======================================
 // Wallet
@@ -209,10 +226,6 @@ completeProfileBtn?.addEventListener("click", () => {
 
 addMoneyBtn.addEventListener("click", () => {
     window.location.href = "add-money.html";
-});
-
-historyBtn?.addEventListener("click", () => {
-    window.location.href = "transaction-history.html";
 });
 
 walletBtn?.addEventListener("click", () => {
@@ -243,8 +256,8 @@ inviteBtn?.addEventListener("click", () => {
     comingSoon("Invite & Earn");
 });
 
-cardsBtn?.addEventListener("click", () => {
-    comingSoon("Virtual Cards");
+moreBtn?.addEventListener("click", () => {
+    comingSoon("More Services");
 });
 
 // ======================================
