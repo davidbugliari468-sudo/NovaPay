@@ -96,17 +96,19 @@ continueBtn.addEventListener("click", () => {
 
     }
 
-    console.log({
+    // Save airtime purchase details
 
-        network: selectedNetwork,
+localStorage.setItem("paymentType", "airtime");
 
-        phone,
+localStorage.setItem("airtimeNetwork", selectedNetwork);
 
-        amount
+localStorage.setItem("airtimePhone", phone);
 
-    });
+localStorage.setItem("airtimeAmount", amount);
 
-    alert("Proceeding to payment...");
+// Go to Transaction PIN page
+
+window.location.href = "transaction-pin.html";
 
 });
 
