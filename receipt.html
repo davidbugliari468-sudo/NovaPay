@@ -4,15 +4,17 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>NovaPay Receipt</title>
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<link rel="stylesheet" href="receipt.css">
+<link rel="stylesheet"
+href="receipt.css">
 
 </head>
 
@@ -20,7 +22,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="receipt-page">
 
-<header class="top-bar">
+<!-- ===========================
+HEADER
+=========================== -->
+
+<header class="receipt-header">
 
 <button id="backBtn" class="back-btn">
 
@@ -28,29 +34,31 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 </button>
 
-<h2>Receipt</h2>
+<h1>Receipt</h1>
 
-<div></div>
+<div class="header-space"></div>
 
 </header>
 
+<!-- ===========================
+RECEIPT CARD
+=========================== -->
 
+<section class="receipt-card">
 
-<div class="receipt-card">
+<div class="receipt-top">
 
-<div class="success-area">
-
-<div class="success-icon" id="receiptIcon">
+<div id="receiptIcon" class="status-icon">
 
 <i class="fas fa-check"></i>
 
 </div>
 
-<h3 id="transactionTitle">
+<h2 id="transactionTitle">
 
-Wallet Funding
+Credit Alert
 
-</h3>
+</h2>
 
 <p id="transactionStatus">
 
@@ -58,15 +66,22 @@ Successful
 
 </p>
 
+<h1 id="amount">
+
++₦0.00
+
+</h1>
+
 </div>
 
+<div class="receipt-details"> 
+    <div class="detail-row">
 
+<span>
 
-<div class="receipt-details">
+Recipient
 
-<div class="detail-row">
-
-<span>Recipient</span>
+</span>
 
 <strong id="recipient">
 
@@ -78,11 +93,15 @@ NovaPay Wallet
 
 <div class="detail-row">
 
-<span>Amount</span>
+<span>
 
-<strong id="amount">
+Transaction Amount
 
-₦0.00
+</span>
+
+<strong id="amountText">
+
++₦0.00
 
 </strong>
 
@@ -90,7 +109,11 @@ NovaPay Wallet
 
 <div class="detail-row">
 
-<span>Date</span>
+<span>
+
+Transaction Date
+
+</span>
 
 <strong id="date">
 
@@ -102,9 +125,11 @@ NovaPay Wallet
 
 <div class="detail-row">
 
-<span>Reference</span>
+<span>
 
-<div class="reference-box">
+Reference No.
+
+</span>
 
 <strong id="transactionId">
 
@@ -112,19 +137,31 @@ NVP000000
 
 </strong>
 
-<button id="copyBtn">
-
-<i class="far fa-copy"></i>
-
-</button>
-
 </div>
+
+<div class="detail-row">
+
+<span>
+
+Category
+
+</span>
+
+<strong id="category">
+
+Credit Alert
+
+</strong>
 
 </div>
 
 <div class="detail-row">
 
-<span>Status</span>
+<span>
+
+Status
+
+</span>
 
 <strong id="statusText">
 
@@ -136,21 +173,36 @@ Successful
 
 </div>
 
-</div>
+</section> 
+<!-- ===========================
+SUPPORT
+=========================== -->
 
-
-
-<div class="support-row" id="supportBtn">
+<section
+id="supportBtn"
+class="support-card">
 
 <div class="support-left">
 
+<div class="support-icon">
+
 <i class="fas fa-headset"></i>
+
+</div>
 
 <div>
 
-<h4>Contact Support</h4>
+<h3>
 
-<p>NovaPay Support</p>
+Contact NovaPay Support
+
+</h3>
+
+<p>
+
+Need help with this transaction?
+
+</p>
 
 </div>
 
@@ -158,11 +210,15 @@ Successful
 
 <i class="fas fa-chevron-right"></i>
 
-</div>
+</section>
 
+<!-- ===========================
+DONE BUTTON
+=========================== -->
 
-
-<button class="done-btn" id="doneBtn">
+<button
+id="doneBtn"
+class="done-btn">
 
 Done
 
@@ -170,7 +226,11 @@ Done
 
 </div>
 
-<script type="module" src="receipt.js"></script>
+<script
+type="module"
+src="receipt.js">
+
+</script>
 
 </body>
 

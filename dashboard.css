@@ -1,160 +1,152 @@
 /* ==========================================
-   NOVAPAY DASHBOARD V4.0
-   PART 1 - FOUNDATION
+   NOVAPAY DASHBOARD V2
+   FOUNDATION
 ========================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-:root{
+:root {
 
-    --primary:#2563EB;
-    --primary-dark:#1D4ED8;
+    --primary: #2F6BFF;
+    --primary-dark: #1E5CFF;
 
-    --background:#F5F7FB;
+    --background: #F5F7FC;
 
-    --white:#FFFFFF;
+    --white: #FFFFFF;
 
-    --text:#111827;
+    --text: #111827;
 
-    --subtext:#8B93A7;
+    --subtext: #7B8794;
 
-    --border:#E9EEF5;
+    --border: #E8EDF5;
 
     --shadow-sm:
-        0 6px 18px rgba(15,23,42,.05);
+        0 8px 20px rgba(15, 23, 42, .05);
 
     --shadow-md:
-        0 12px 30px rgba(15,23,42,.07);
+        0 15px 35px rgba(15, 23, 42, .08);
 
     --shadow-lg:
-        0 20px 50px rgba(37,99,235,.16);
+        0 25px 55px rgba(47, 107, 255, .18);
 
-    --radius-sm:14px;
-    --radius-md:18px;
-    --radius-lg:26px;
+    --radius: 24px;
 
 }
 
-html{
+html {
 
-    scroll-behavior:smooth;
+    scroll-behavior: smooth;
 
 }
 
-body{
+body {
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
-    background:
-        var(--background);
+    background: var(--background);
 
-    color:
-        var(--text);
+    color: var(--text);
 
-    min-height:100vh;
+    overflow-x: hidden;
 
-    overflow-x:hidden;
-
-    -webkit-font-smoothing:antialiased;
+    -webkit-font-smoothing: antialiased;
 
 }
 
-button{
+button {
 
-    border:none;
+    border: none;
 
-    background:none;
+    background: none;
 
-    cursor:pointer;
+    font: inherit;
 
-    font:inherit;
-
-}
-
-img{
-
-    display:block;
-
-    max-width:100%;
+    cursor: pointer;
 
 }
 
-.dashboard-container{
+img {
 
-    width:100%;
+    display: block;
 
-    max-width:500px;
+    max-width: 100%;
 
-    margin:auto;
+}
 
-    padding:
+.dashboard-container {
 
-        26px
-        22px
-        120px;
+    width: 100%;
 
-} 
+    max-width: 500px;
+
+    margin: auto;
+
+    padding: 22px 20px 120px;
+
+}
+
 /* ==========================================
    PART 2
-   HEADER + GREETING
+   HEADER
 ========================================== */
-
-.header{
+.dashboard-header{
 
     display:flex;
 
     justify-content:space-between;
 
-    align-items:center;
+    align-items:flex-start;
 
-    margin-bottom:28px;
-
-}
-
-/* Logo */
-
-.logo{
-
-    display:flex;
-
-    align-items:center;
+    margin-bottom:12px;
 
 }
 
-.logo-text{
+.header-left{
 
-    font-size:31px;
+    flex:1;
 
-    font-weight:800;
+    min-width:0;
 
-    line-height:1;
-
-    letter-spacing:-1px;
+    padding-right:16px;
 
 }
 
-.logo-nova{
+.greeting-text {
 
-    color:#2563EB;
+    font-size: 16px;
+
+    font-weight: 500;
+
+    color: var(--subtext);
+
+    margin-bottom: 6px;
 
 }
 
-.logo-pay{
+.user-name{
 
-    color:#111827;
+    font-size:18px;
+
+    font-weight:600px;
+
+    line-height:1.2;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 
 }
 
-/* Header Buttons */
-
-.header-actions{
+.header-right{
 
     display:flex;
 
@@ -162,92 +154,52 @@ img{
 
     gap:12px;
 
-}
-
-.icon-button,
-.profile-button{
-
-    width:50px;
-
-    height:50px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background:#FFFFFF;
-
-    color:#2563EB;
-
-    box-shadow:var(--shadow-md);
-
-    transition:.25s ease;
+    flex-shrink:0;
 
 }
+    
 
-.profile-button{
+.header-icon {
 
-    background:#2563EB;
+    width: 42px;
 
-    color:#FFFFFF;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: var(--white);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: var(--primary);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: .25s ease;
 
 }
 
-.icon-button i,
-.profile-button i{
+.header-icon i {
 
-    font-size:19px;
-
-}
-
-.icon-button:active,
-.profile-button:active{
-
-    transform:scale(.96);
+    font-size: 18px;
 
 }
 
-/* ==========================
-   GREETING
-========================== */
+.header-icon:active {
 
-.greeting-section{
-
-    margin-bottom:30px;
+    transform: scale(.95);
 
 }
 
-.greeting{
-    font-size:16px;
-    font-weight:500;
-    margin-bottom:4px;
-}
+.profile-icon {
 
-.welcome-text{
-    font-size:16px;
-    margin-top:2px;
-}
+    background: var(--primary);
 
-#userName{
-    font-size:30px;
-    font-weight:700;
-    line-height:1.1;
-    margin:2px 0 6px;
-} 
-
-.welcome-text{
-
-    display:block;
-
-    font-size:16px;
-
-    color:#9AA3B2;
-
-    line-height:1.4;
+    color: var(--white);
 
 } 
 /* ==========================================
@@ -261,25 +213,21 @@ img{
 
     overflow:hidden;
 
-    background:linear-gradient(
-        135deg,
-        #2D7CFF 0%,
-        #2563EB 55%,
-        #1D4ED8 100%
-    );
+    background: linear-gradient(
+    135deg,
+    #3D7BFF 0%,
+    #2F6BFF 55%,
+    #2563EB 100%
+);
 
     border-radius:30px;
 
-    padding:26px;
+    padding: 22px 22px;
+margin: 16px 0 26px;
 
-    margin-bottom:32px;
-
-    box-shadow:
-        0 18px 45px rgba(37,99,235,.22);
+    box-shadow:0 20px 45px rgba(47,107,255,.22);
 
 }
-
-/* Decorative circles */
 
 .wallet-card::before{
 
@@ -287,13 +235,13 @@ img{
 
     position:absolute;
 
-    width:260px;
+    width:220px;
 
-    height:260px;
-
-    right:-90px;
+    height:220px;
 
     top:-90px;
+
+    right:-80px;
 
     border-radius:50%;
 
@@ -307,13 +255,13 @@ img{
 
     position:absolute;
 
-    width:180px;
+    width:170px;
 
-    height:180px;
+    height:170px;
 
-    right:-70px;
+    left:-60px;
 
-    bottom:-90px;
+    bottom:-70px;
 
     border-radius:50%;
 
@@ -321,57 +269,33 @@ img{
 
 }
 
-/* Content */
-
-.wallet-header,
-.wallet-balance-row,
-.wallet-buttons{
+.wallet-top{
 
     position:relative;
 
     z-index:2;
 
-}
+    display:flex;
 
-.balance-label{
+    justify-content:space-between;
 
-    font-size:15px;
-
-    font-weight:500;
-
-    color:rgba(255,255,255,.88);
+    align-items:center;
 
     margin-bottom:14px;
 
 }
 
-.wallet-balance-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-start;
-
-    margin-bottom:24px;
-
-}
-
-#walletBalance{
-
-    font-size:50px;
-
-    font-weight:800;
+.balance-title{
 
     color:#FFFFFF;
 
-    letter-spacing:-1px;
+    font-size:16px;
 
-    line-height:1;
+    font-weight:500;
 
 }
 
-.hide-button{
+.hide-balance-btn{
 
     display:flex;
 
@@ -379,51 +303,59 @@ img{
 
     gap:6px;
 
-    color:#FFFFFF;
-
     background:none;
 
-    font-size:15px;
+    color:#FFFFFF;
+
+    font-size:16px;
 
     font-weight:500;
 
 }
 
-.hide-button span{
+.wallet-balance{
+
+    position:relative;
+
+    z-index:2;
 
     color:#FFFFFF;
 
+    font-size:44px;
+
+    font-weight:800;
+
+    line-height:1;
+
+    margin-bottom:20px;
+
 }
 
-.hide-button i{
+.wallet-actions{
 
-    font-size:15px;
+    position:relative;
 
-}
-
-/* Buttons */
-
-.wallet-buttons{
+    z-index:2;
 
     display:flex;
 
-    gap:14px;
+    gap:16px;
 
 }
 
-.primary-button{
+.wallet-primary-btn{
 
     flex:1;
 
-    height:56px;
+    height:50px;
 
-    border-radius:18px;
+    border-radius:20px;
 
     background:#FFFFFF;
 
-    color:#2563EB;
+    color:#2F6BFF;
 
-    font-size:16px;
+    font-size:18px;
 
     font-weight:700;
 
@@ -437,19 +369,23 @@ img{
 
 }
 
-.secondary-button{
+.wallet-secondary-btn{
 
-    width:140px;
+    flex:1;
 
-    height:56px;
+    height:62px;
 
-    border-radius:18px;
+    border-radius:20px;
 
-    background:rgba(255,255,255,.14);
+    background:rgba(255,255,255,.12);
 
-    border:1px solid rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.22);
 
     color:#FFFFFF;
+
+    font-size:20px;
+
+    font-weight:600;
 
     display:flex;
 
@@ -459,13 +395,8 @@ img{
 
     gap:8px;
 
-    font-size:15px;
+}
 
-    font-weight:600;
-
-    backdrop-filter:blur(10px);
-
-} 
 /* ==========================================
    PART 4
    QUICK SERVICES
@@ -473,7 +404,7 @@ img{
 
 .services-section{
 
-    margin-bottom:30px;
+    margin-bottom:34px;
 
 }
 
@@ -495,13 +426,13 @@ img{
 
     font-weight:700;
 
-    color:#111827;
+    color:var(--text);
 
 }
 
 .text-button{
 
-    color:#2563EB;
+    color:var(--primary);
 
     font-size:15px;
 
@@ -521,11 +452,11 @@ img{
 
 .service-card{
 
-    background:#FFFFFF;
+    background:var(--white);
 
     border-radius:22px;
 
-    height:102px;
+    height:104px;
 
     display:flex;
 
@@ -539,7 +470,7 @@ img{
 
     box-shadow:var(--shadow-sm);
 
-    transition:.25s;
+    transition:.25s ease;
 
 }
 
@@ -551,11 +482,11 @@ img{
 
 .service-icon{
 
-    width:46px;
+    width:48px;
 
-    height:46px;
+    height:48px;
 
-    border-radius:15px;
+    border-radius:16px;
 
     display:flex;
 
@@ -567,7 +498,7 @@ img{
 
 .service-icon i{
 
-    font-size:19px;
+    font-size:20px;
 
 }
 
@@ -581,19 +512,19 @@ img{
 
 }
 
-/* Icon Colors */
+/* Service Colors */
 
 .airtime{
 
-    background:#EAF2FF;
+    background:#E8F0FF;
 
-    color:#2563EB;
+    color:#2F6BFF;
 
 }
 
 .data{
 
-    background:#ECFDF3;
+    background:#EAFBF2;
 
     color:#22C55E;
 
@@ -601,7 +532,7 @@ img{
 
 .electricity{
 
-    background:#FFF8E8;
+    background:#FFF7E8;
 
     color:#F59E0B;
 
@@ -609,15 +540,15 @@ img{
 
 .tv{
 
-    background:#F4ECFF;
+    background:#F3ECFF;
 
-    color:#9333EA;
+    color:#8B5CF6;
 
 }
 
 .betting{
 
-    background:#FFEAF4;
+    background:#FFEAF5;
 
     color:#EC4899;
 
@@ -637,7 +568,7 @@ img{
 
 .transactions-section{
 
-    margin-bottom:30px;
+    margin-bottom:34px;
 
 }
 
@@ -647,17 +578,27 @@ img{
 
 }
 
+#recentTransactionsContainer{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
 .transaction-card{
 
     display:flex;
 
     align-items:center;
 
-    gap:16px;
+    gap:15px;
 
     padding:18px;
 
-    background:#FFFFFF;
+    background:var(--white);
 
     border-radius:22px;
 
@@ -673,9 +614,9 @@ img{
 
     border-radius:18px;
 
-    background:#EAF2FF;
+    background:#E8F0FF;
 
-    color:#2563EB;
+    color:var(--primary);
 
     display:flex;
 
@@ -689,7 +630,7 @@ img{
 
 .transaction-icon i{
 
-    font-size:22px;
+    font-size:21px;
 
 }
 
@@ -705,7 +646,7 @@ img{
 
     font-weight:700;
 
-    color:#111827;
+    color:var(--text);
 
     margin-bottom:5px;
 
@@ -715,9 +656,9 @@ img{
 
     font-size:14px;
 
-    line-height:1.5;
+    color:var(--subtext);
 
-    color:#8B93A7;
+    line-height:1.5;
 
 } 
 /* ==========================================
@@ -727,11 +668,11 @@ img{
 
 .invite-section{
 
-    margin-bottom:32px;
+    margin-bottom:34px;
 
 }
 
-.invite-content{
+.invite-card{
 
     position:relative;
 
@@ -739,26 +680,26 @@ img{
 
     display:flex;
 
-    align-items:center;
-
     justify-content:space-between;
 
-    padding:22px;
-
-    border-radius:24px;
+    align-items:center;
 
     background:linear-gradient(
         135deg,
-        #2D7CFF 0%,
+        #2F6BFF 0%,
         #2563EB 55%,
         #1D4ED8 100%
     );
 
-    box-shadow:0 18px 45px rgba(37,99,235,.18);
+    border-radius:28px;
+
+    padding:24px;
+
+    box-shadow:var(--shadow-lg);
 
 }
 
-.invite-content::before{
+.invite-card::before{
 
     content:"";
 
@@ -778,17 +719,17 @@ img{
 
 }
 
-.invite-content>div{
+.invite-left{
 
     position:relative;
 
     z-index:2;
 
-    max-width:58%;
+    max-width:60%;
 
 }
 
-.invite-content h3{
+.invite-left h2{
 
     font-size:22px;
 
@@ -796,11 +737,11 @@ img{
 
     color:#FFFFFF;
 
-    margin-bottom:8px;
+    margin-bottom:10px;
 
 }
 
-.invite-content p{
+.invite-left p{
 
     font-size:14px;
 
@@ -808,51 +749,45 @@ img{
 
     color:rgba(255,255,255,.92);
 
-}
-
-.gift-image{
-
-    position:relative;
-
-    z-index:2;
-
-    width:92px;
-
-    height:92px;
-
-    object-fit:contain;
+    margin-bottom:18px;
 
 }
 
-.invite-button{
+.invite-btn{
 
-    position:absolute;
+    width:120px;
 
-    left:22px;
+    height:46px;
 
-    bottom:20px;
-
-    width:96px;
-
-    height:42px;
-
-    border-radius:14px;
+    border-radius:15px;
 
     background:#FFFFFF;
 
-    color:#2563EB;
+    color:var(--primary);
 
     font-size:15px;
 
     font-weight:700;
 
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
     box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+}
+
+.invite-right{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.gift-image{
+
+    width:90px;
+
+    height:90px;
+
+    object-fit:contain;
 
 } 
 /* ==========================================
@@ -874,13 +809,13 @@ img{
 
     max-width:500px;
 
-    height:78px;
+    height:82px;
 
-    background:#FFFFFF;
+    background:var(--white);
 
-    border-top-left-radius:26px;
+    border-top-left-radius:28px;
 
-    border-top-right-radius:26px;
+    border-top-right-radius:28px;
 
     display:flex;
 
@@ -889,7 +824,7 @@ img{
     align-items:center;
 
     box-shadow:
-        0 -8px 24px rgba(15,23,42,.08);
+        0 -10px 28px rgba(15,23,42,.08);
 
     z-index:1000;
 
@@ -909,7 +844,7 @@ img{
 
     align-items:center;
 
-    gap:4px;
+    gap:6px;
 
     color:#9CA3AF;
 
@@ -933,7 +868,7 @@ img{
 
 .nav-item.active{
 
-    color:#2563EB;
+    color:var(--primary);
 
 }
 
@@ -975,7 +910,7 @@ img{
 
     max-width:360px;
 
-    background:#FFFFFF;
+    background:var(--white);
 
     border-radius:26px;
 
@@ -985,17 +920,11 @@ img{
 
     box-shadow:0 25px 60px rgba(15,23,42,.18);
 
-    animation:popup .25s ease;
-
 }
 
 .modal-content h2{
 
     font-size:24px;
-
-    font-weight:700;
-
-    color:#111827;
 
     margin-bottom:12px;
 
@@ -1003,9 +932,7 @@ img{
 
 .modal-content p{
 
-    font-size:15px;
-
-    color:#6B7280;
+    color:var(--subtext);
 
     line-height:1.6;
 
@@ -1017,37 +944,15 @@ img{
 
     width:100%;
 
-    height:54px;
+    height:52px;
 
     border-radius:16px;
 
-    background:#2563EB;
+    background:var(--primary);
 
-    color:#FFFFFF;
-
-    font-size:16px;
+    color:#fff;
 
     font-weight:700;
-
-}
-
-@keyframes popup{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(20px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
 
 } 
 /* ==========================================
@@ -1057,82 +962,59 @@ img{
 
 @media (max-width:480px){
 
-    .dashboard-container{
+.dashboard-container{
 
-        padding:22px 18px 110px;
-
-    }
-
-    .wallet-card{
-
-        padding:22px;
-
-    }
-
-    #walletBalance{
-
-        font-size:42px;
-
-    }
-
-    .wallet-buttons{
-
-        gap:10px;
-
-    }
-
-    .primary-button{
-
-        height:52px;
-
-        font-size:15px;
-
-    }
-
-    .secondary-button{
-
-        width:125px;
-
-        height:52px;
-
-        font-size:14px;
-
-    }
-
-    .service-card{
-
-        height:96px;
-
-    }
-
-    .gift-image{
-
-        width:82px;
-
-        height:82px;
-
-    }
+    padding:20px 18px 110px;
 
 }
 
-@media (max-width:360px){
+.user-name{
 
-    .services-grid{
+    font-size:28px;
 
-        grid-template-columns:repeat(2,1fr);
+}
 
-    }
+.wallet-balance{
+
+    font-size:40px;
+
+}
+
+.wallet-actions{
+
+    gap:10px;
+
+}
+
+.wallet-secondary-btn{
+
+    width:120px;
+
+}
+
+.service-card{
+
+    height:96px;
+
+}
+
+.gift-image{
+
+    width:80px;
+
+    height:80px;
+
+}
 
 } 
 /* ==========================================
    PART 10
-   PREMIUM FINISHING
+   FINAL POLISH
 ========================================== */
 
 button{
 
-    transition:
-        all .25s ease;
+    transition:.25s ease;
 
 }
 
@@ -1145,17 +1027,16 @@ button:active{
 .service-card,
 .transaction-card,
 .wallet-card,
-.invite-content{
+.invite-card{
 
     transition:
-        transform .25s ease,
-        box-shadow .25s ease;
+    transform .25s ease,
+    box-shadow .25s ease;
 
 }
 
 .service-card:hover,
-.transaction-card:hover,
-.wallet-card:hover{
+.transaction-card:hover{
 
     transform:translateY(-2px);
 
@@ -1163,12 +1044,6 @@ button:active{
 
 ::-webkit-scrollbar{
 
-    width:0;
-
-}
-
-body{
-
-    background:#F5F7FB;
+    display:none;
 
 }

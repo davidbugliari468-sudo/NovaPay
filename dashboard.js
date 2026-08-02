@@ -1,11 +1,9 @@
 window.onload = () => {
-
     window.scrollTo(0, 0);
-
 };
+
 // ======================================
-// NovaPay Dashboard
-// Part 1
+// NOVAPAY DASHBOARD V2
 // ======================================
 
 import { auth, db } from "./firebase.js";
@@ -20,30 +18,53 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 // ======================================
-// Elements
+// ELEMENTS
 // ======================================
 
 const userName = document.getElementById("userName");
+const greetingText = document.getElementById("greetingText");
+
 const walletBalance = document.getElementById("walletBalance");
 const hideBalanceBtn = document.getElementById("hideBalance");
-const greetingText = document.getElementById("greetingText");
+
+const supportBtn = document.getElementById("supportBtn");
+const notificationBtn = document.getElementById("notificationBtn");
+const profileBtn = document.getElementById("profileBtn");
+
+const addMoneyBtn = document.getElementById("addMoneyBtn");
+const historyBtn = document.getElementById("historyBtn");
+
+const airtimeBtn = document.getElementById("airtimeBtn");
+const dataBtn = document.getElementById("dataBtn");
+const electricityBtn = document.getElementById("electricityBtn");
+const tvBtn = document.getElementById("tvBtn");
+const bettingBtn = document.getElementById("bettingBtn");
+const moreBtn = document.getElementById("moreBtn");
+
+const inviteBtn = document.getElementById("inviteBtn");
+
+const viewAllTransactionsBtn =
+document.getElementById("viewAllTransactionsBtn");
+
+const walletBtn = document.getElementById("walletBtn");
+const payBillsBtn = document.getElementById("payBillsBtn");
+const profileNavBtn = document.getElementById("profileNavBtn");
 
 const modal = document.getElementById("customModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalMessage = document.getElementById("modalMessage");
 
 // ======================================
-// Variables
+// VARIABLES
 // ======================================
 
 let balance = 0;
-let balanceVisible = true;
-
+let balanceVisible = true; 
 // ======================================
-// Modal
+// MODAL
 // ======================================
 
-function showModal(title, message) {
+function showModal(title, message){
 
     modalTitle.textContent = title;
     modalMessage.textContent = message;
@@ -51,41 +72,52 @@ function showModal(title, message) {
 
 }
 
-window.closeModal = function () {
+window.closeModal = () => {
 
     modal.style.display = "none";
 
 };
 
+modal?.addEventListener("click",(e)=>{
+
+    if(e.target===modal){
+
+        closeModal();
+
+    }
+
+});
+
 // ======================================
-// Currency Formatter
+// FORMAT MONEY
 // ======================================
 
-function formatMoney(amount) {
+function formatMoney(amount){
 
-    return "₦" + Number(amount).toLocaleString("en-NG", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+    return "₦" + Number(amount).toLocaleString("en-NG",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
     });
 
 }
+
 // ======================================
-// Greeting
+// GREETING
 // ======================================
 
-function updateGreeting() {
+function updateGreeting(){
 
     const hour = new Date().getHours();
 
-    if (hour < 12) {
+    if(hour < 12){
 
         greetingText.textContent = "☀️ Good Morning";
 
-    } else if (hour < 18) {
+    }else if(hour < 18){
 
         greetingText.textContent = "🌤 Good Afternoon";
 
-    } else {
+    }else{
 
         greetingText.textContent = "🌙 Good Evening";
 
@@ -94,30 +126,32 @@ function updateGreeting() {
 }
 
 updateGreeting();
+
 // ======================================
-// Hide / Show Balance
+// HIDE / SHOW BALANCE
 // ======================================
 
-hideBalanceBtn.addEventListener("click", () => {
+hideBalanceBtn?.addEventListener("click",()=>{
 
     balanceVisible = !balanceVisible;
 
-    if (balanceVisible) {
+    if(balanceVisible){
 
         walletBalance.textContent = formatMoney(balance);
-        hideBalanceBtn.textContent = "Hide";
+        hideBalanceBtn.innerHTML =
+        `Hide <i class="fa-regular fa-eye"></i>`;
 
-    } else {
+    }else{
 
         walletBalance.textContent = "••••••";
-        hideBalanceBtn.textContent = "Show";
+        hideBalanceBtn.innerHTML =
+        `Show <i class="fa-regular fa-eye-slash"></i>`;
 
     }
 
-});
-
+}); 
 // ======================================
-// Load User
+// LOAD USER
 // ======================================
 
 onAuthStateChanged(auth, async (user) => {
@@ -137,27 +171,33 @@ onAuthStateChanged(auth, async (user) => {
 
         if (userSnap.exists()) {
 
-    const data = userSnap.data();
+            const data = userSnap.data();
 
-    userName.textContent =
-        data.fullName || user.email.split("@")[0];
+            userName.textContent =
+                data.fullName || user.email.split("@")[0];
 
-    balance = data.walletBalance || 0;
+            balance = data.walletBalance || 0;
 
-    walletBalance.textContent =
-        formatMoney(balance);
+            if (balanceVisible) {
 
-} else {
+                walletBalance.textContent =
+                    formatMoney(balance);
 
-    userName.textContent =
-        user.email.split("@")[0];
+            }
 
-    walletBalance.textContent =
-        formatMoney(0);
+        } else {
 
-}
+            userName.textContent =
+                user.email.split("@")[0];
 
-} catch (error) {
+            balance = 0;
+
+            walletBalance.textContent =
+                formatMoney(balance);
+
+        }
+
+    } catch (error) {
 
         console.error(error);
 
@@ -170,35 +210,87 @@ onAuthStateChanged(auth, async (user) => {
 
 }); 
 // ======================================
-// Dashboard Buttons
+// NAVIGATION
 // ======================================
 
-const profileBtn = document.getElementById("profileBtn");
-const supportBtn = document.getElementById("supportBtn");
-const notificationBtn = document.getElementById("notificationBtn");
+profileBtn?.addEventListener("click", () => {
 
-const payBillsBtn = document.getElementById("payBillsBtn");
-const addMoneyBtn = document.getElementById("addMoneyBtn");
+    window.location.href = "profile.html";
 
-const inviteBtn = document.getElementById("inviteBtn");
-const moreBtn = document.getElementById("moreBtn");
+});
 
-const airtimeBtn = document.getElementById("airtimeBtn");
-const dataBtn = document.getElementById("dataBtn");
-const tvBtn = document.getElementById("tvBtn");
-const electricityBtn = document.getElementById("electricityBtn");
-const bettingBtn = document.getElementById("bettingBtn");
-const pocketBtn = document.getElementById("pocketBtn");
+profileNavBtn?.addEventListener("click", () => {
 
-const walletBtn = document.getElementById("walletBtn");
-const historyNavBtn = document.getElementById("historyNavBtn");
-const profileNavBtn = document.getElementById("profileNavBtn");
+    window.location.href = "profile.html";
+
+});
+
+addMoneyBtn?.addEventListener("click", () => {
+
+    window.location.href = "add-money.html";
+
+});
+
+historyBtn?.addEventListener("click", () => {
+
+    window.location.href = "transaction-history.html";
+
+});
+
+viewAllTransactionsBtn?.addEventListener("click", () => {
+
+    window.location.href = "transaction-history.html";
+
+});
 
 // ======================================
-// Coming Soon
+// HEADER
 // ======================================
 
-function comingSoon(feature) {
+supportBtn?.addEventListener("click", () => {
+
+    showModal(
+        "Live Support",
+        "Live Support will be available in a future NovaPay update."
+    );
+
+});
+
+notificationBtn?.addEventListener("click", () => {
+
+    showModal(
+        "Notifications",
+        "No new notifications."
+    );
+
+});
+
+// ======================================
+// BOTTOM NAVIGATION
+// ======================================
+
+walletBtn?.addEventListener("click", () => {
+
+    showModal(
+        "Wallet",
+        "Wallet page is coming soon."
+    );
+
+});
+
+payBillsBtn?.addEventListener("click", () => {
+
+    showModal(
+        "Pay Bills",
+        "More bill payment services are coming soon."
+    );
+
+}); 
+// ======================================
+// QUICK SERVICES
+// ======================================
+
+function comingSoon(feature){
 
     showModal(
         feature,
@@ -207,97 +299,59 @@ function comingSoon(feature) {
 
 }
 
-// ======================================
-// Navigation
-// ======================================
-
-profileBtn?.addEventListener("click", () => {
-    window.location.href = "profile.html";
-});
-
-profileNavBtn?.addEventListener("click", () => {
-    window.location.href = "profile.html";
-});
-
-
-// ======================================
-// Wallet
-// ======================================
-
-addMoneyBtn.addEventListener("click", () => {
-    window.location.href = "add-money.html";
-});
-
-walletBtn?.addEventListener("click", () => {
-    comingSoon("Wallet");
-});
-
-historyBtn?.addEventListener("click", () => {
-    window.location.href = "transaction-history.html";
-});
-
-// ======================================
-// Header
-// ======================================
-
-supportBtn?.addEventListener("click", () => {
-    comingSoon("Live Support");
-});
-
-notificationBtn?.addEventListener("click", () => {
-    comingSoon("Notifications");
-});
-
-// ======================================
-// Cards
-// ======================================
-
-inviteBtn?.addEventListener("click", () => {
-    comingSoon("Invite & Earn");
-});
-
-moreBtn?.addEventListener("click", () => {
-    comingSoon("More Services");
-});
-
-// ======================================
-// Services
-// ======================================
-
 airtimeBtn?.addEventListener("click", () => {
+
     window.location.href = "airtime.html";
+
 });
 
 dataBtn?.addEventListener("click", () => {
-    comingSoon("Data");
-});
 
-tvBtn?.addEventListener("click", () => {
-    comingSoon("TV Subscription");
+    comingSoon("Data");
+
 });
 
 electricityBtn?.addEventListener("click", () => {
-    comingSoon("Electricity Bills");
+
+    comingSoon("Electricity");
+
+});
+
+tvBtn?.addEventListener("click", () => {
+
+    comingSoon("TV Subscription");
+
 });
 
 bettingBtn?.addEventListener("click", () => {
+
     comingSoon("Betting");
+
 });
 
-pocketBtn?.addEventListener("click", () => {
-    comingSoon("Smart Pocket");
+moreBtn?.addEventListener("click", () => {
+
+    comingSoon("More Services");
+
 });
+
+inviteBtn?.addEventListener("click", () => {
+
+    comingSoon("Invite & Earn");
+
+}); 
+// ======================================
+// RECENT TRANSACTIONS
+// ======================================
+
+// This will be connected to Firebase
+// in the next rebuild.
+
+const recentTransactionsContainer =
+document.getElementById("recentTransactionsContainer");
 
 // ======================================
-// Close Modal
+// DASHBOARD READY
 // ======================================
 
-modal?.addEventListener("click", (event) => {
-
-    if (event.target === modal) {
-        window.closeModal();
-    }
-
-});
-
-console.log("✅ NovaPay Dashboard Loaded");
+console.log("✅ NovaPay Dashboard V2 Loaded");

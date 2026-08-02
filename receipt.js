@@ -1,56 +1,101 @@
+/* ==========================================
+NOVAPAY RECEIPT
+========================================== */
+
 const transaction = JSON.parse(
     localStorage.getItem("selectedTransaction")
 );
 
+/* ==========================================
+ELEMENTS
+========================================== */
+
 const backBtn = document.getElementById("backBtn");
 const doneBtn = document.getElementById("doneBtn");
 const supportBtn = document.getElementById("supportBtn");
-const copyBtn = document.getElementById("copyBtn");
 
-backBtn.onclick = () => history.back();
+/* ==========================================
+BUTTONS
+========================================== */
+
+backBtn.onclick = () => {
+
+    history.back();
+
+};
 
 doneBtn.onclick = () => {
+
     window.location.href = "transaction-history.html";
+
 };
 
 supportBtn.onclick = () => {
-    alert("NovaPay Support coming soon.");
+
+    alert("NovaPay Support will be available soon.");
+
 };
+
+/* ==========================================
+LOAD RECEIPT
+========================================== */
 
 if (transaction) {
 
-    // Title
+    const title = transaction.title || "Transaction";
+
+    const amount = Number(transaction.amount || 0);
+
+    const isCredit = transaction.type === "in";
+
+    const amountText =
+        `${isCredit ? "+" : "-"}₦${amount.toLocaleString()}.00`;
+
+    /* Top */
+
     document.getElementById("transactionTitle").textContent =
-        transaction.title || "Transaction";
-
-    // Amount
-    document.getElementById("amount").textContent =
-        `₦${Number(transaction.amount).toLocaleString()}.00`;
-
-    // Date
-    document.getElementById("date").textContent =
-        transaction.date || "--";
-
-    // Reference
-    document.getElementById("transactionId").textContent =
-        transaction.id || "--";
-
-    // Status
-    document.getElementById("statusText").textContent =
-        transaction.status || "Successful";
+        title;
 
     document.getElementById("transactionStatus").textContent =
         transaction.status || "Successful";
 
-    // Recipient
+    document.getElementById("amount").textContent =
+        amountText;
+
+    /* Details */
+
+    document.getElementById("amountText").textContent =
+        amountText;
+
+    document.getElementById("date").textContent =
+        transaction.date || "--";
+
+    document.getElementById("transactionId").textContent =
+        transaction.id || "--";
+
+    document.getElementById("category").textContent =
+        title;
+
+    document.getElementById("statusText").textContent =
+        transaction.status || "Successful";
+
+    /* Amount Color */
+
+    const color = isCredit ? "#10B981" : "#EF4444";
+
+    document.getElementById("amount").style.color =
+        color;
+
+    document.getElementById("amountText").style.color =
+        color;
+
+    /* Recipient */
+
     let recipient = "NovaPay Wallet";
 
-    const title =
-        (transaction.title || "").toUpperCase();
-
     if (
-        title.includes("AIRTIME") ||
-        title.includes("DATA")
+        title.includes("Airtime") ||
+        title.includes("Data")
     ) {
 
         recipient =
@@ -60,7 +105,7 @@ if (transaction) {
 
     }
 
-    else if (title.includes("ELECTRICITY")) {
+    else if (title.includes("Electricity")) {
 
         recipient =
             transaction.meterNumber ||
@@ -76,7 +121,7 @@ if (transaction) {
 
     }
 
-    else if (title.includes("BET")) {
+    else if (title.includes("Bet")) {
 
         recipient =
             transaction.customerId ||
@@ -87,24 +132,37 @@ if (transaction) {
     document.getElementById("recipient").textContent =
         recipient;
 
+    /* Status Icon */
+
+    const icon = document.getElementById("receiptIcon");
+
+    if (transaction.status === "Pending") {
+
+        icon.style.background = "#F59E0B";
+
+        icon.innerHTML =
+            '<i class="fas fa-clock"></i>';
+
+    }
+
+    else if (transaction.status === "Failed") {
+
+        icon.style.background = "#EF4444";
+
+        icon.innerHTML =
+            '<i class="fas fa-times"></i>';
+
+    }
+
+    else {
+
+        icon.style.background = "#10B981";
+
+        icon.innerHTML =
+            '<i class="fas fa-check"></i>';
+
+    }
+
 }
 
-// Copy Reference
-copyBtn.onclick = () => {
-
-    const reference =
-        document.getElementById("transactionId").innerText;
-
-    navigator.clipboard.writeText(reference);
-
-    copyBtn.innerHTML =
-        '<i class="fas fa-check"></i>';
-
-    setTimeout(() => {
-
-        copyBtn.innerHTML =
-            '<i class="far fa-copy"></i>';
-
-    }, 1500);
-
-};
+console.log("✅ Receipt Loaded");

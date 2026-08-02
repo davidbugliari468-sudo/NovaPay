@@ -3,442 +3,438 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>NovaPay Dashboard</title>
+<title>NovaPay Dashboard</title>
 
-    <link
-        rel="stylesheet"
-        href="dashboard.css">
+<link rel="stylesheet"
+href="dashboard.css">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="dashboard-container"> 
-    <!-- ===========================
-     HEADER
-============================ -->
+<div class="dashboard-container">
 
-<header class="header">
-
-    <div class="logo">
-
-        <h2 class="logo-text">
-
-    <span class="logo-nova">Nova</span><span class="logo-pay">Pay</span>
-
-</h2>
-
-    </div>
-
-    <div class="header-actions">
-
-        <button
-            id="supportBtn"
-            class="icon-button">
-
-            <i class="fa-solid fa-headset"></i>
-
-        </button>
-
-        <button
-            id="notificationBtn"
-            class="icon-button">
-
-            <i class="fa-regular fa-bell"></i>
-
-        </button>
-
-        <button
-            id="profileBtn"
-            class="profile-button">
-
-            <i class="fa-solid fa-user"></i>
-
-        </button>
-
-    </div>
-
-</header> 
 <!-- ===========================
-     GREETING
-============================ -->
+HEADER
+=========================== -->
 
-<section class="greeting-section">
+<header class="dashboard-header">
 
-    <p
-        id="greetingText"
-        class="greeting">
+<div class="header-left">
 
-    Good Morning
+<p id="greetingText"
+class="greeting-text">
 
-    </p>
+☀️ Good Morning
 
-    <h1
-        id="userName">
+</p>
 
-        Loading...
+<h1 id="userName"
+class="user-name">
 
-    </h1>
+Loading...
 
-    <span class="welcome-text">
-
-        Welcome back to NovaPay
-
-    </span>
-
-</section> 
-<!-- ===========================
-     WALLET CARD
-============================ -->
-
-<section class="wallet-card">
-
-    <div class="wallet-header">
-
-    <p class="balance-label">
-
-        Available Balance
-
-    </p>
+</h1>
 
 </div>
 
-<div class="wallet-balance-row">
+<div class="header-right">
 
-    <h2 id="walletBalance">
+<button
+id="supportBtn"
+class="header-icon">
 
-        ₦0.00
+<i class="fa-solid fa-headset"></i>
 
-    </h2>
+</button>
 
-    <button
-    id="hideBalance"
-    class="hide-button">
+<button
+id="notificationBtn"
+class="header-icon">
 
-    <span>Hide</span>
+<i class="fa-regular fa-bell"></i>
 
-    <i class="fa-regular fa-eye-slash"></i>
+</button>
+
+<button
+id="profileBtn"
+class="header-icon profile-icon">
+
+<i class="fa-solid fa-user"></i>
 
 </button>
 
 </div>
 
-<div class="wallet-buttons">
+</header> 
+<!-- ===========================
+WALLET CARD
+=========================== -->
 
-    <button
-        id="addMoneyBtn"
-        class="primary-button">
+<section class="wallet-card">
 
-        <i class="fa-solid fa-plus"></i>
+<div class="wallet-top">
 
-        Add Money
+<div>
 
-    </button>
+<p class="balance-title">
 
-    <button
-        id="historyBtn"
-        class="secondary-button">
+Available Balance
 
-        History
-
-        <i class="fa-solid fa-chevron-right"></i>
-
-    </button>
+</p>
 
 </div>
 
-</section>
+<button
+id="hideBalance"
+class="hide-balance-btn">
 
+Hide
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+<h2
+id="walletBalance"
+class="wallet-balance">
+
+₦0.00
+
+</h2>
+
+<div class="wallet-actions">
+
+<button
+id="addMoneyBtn"
+class="wallet-primary-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+<span>Add Money</span>
+
+</button>
+
+<button
+id="historyBtn"
+class="wallet-secondary-btn">
+
+<span>History</span>
+
+<i class="fa-solid fa-chevron-right"></i>
+
+</button>
+
+</div>
+
+</section> 
 <!-- ===========================
-     QUICK SERVICES
-============================ -->
+QUICK SERVICES
+=========================== -->
 
 <section class="services-section">
 
-    <div class="section-header">
+<div class="section-header">
 
-    <h2>Quick Services</h2>
+<h2>
 
-    <button class="text-button">
-        Edit
-    </button>
+Quick Services
+
+</h2>
+
+<button
+class="text-button">
+
+Edit
+
+</button>
 
 </div>
 
-    <div class="services-grid">
+<div class="services-grid">
 
-        <!-- Airtime -->
+<button
+id="airtimeBtn"
+class="service-card">
 
-        <button
-            id="airtimeBtn"
-            class="service-card">
+<div class="service-icon airtime">
 
-            <div class="service-icon airtime">
+<i class="fa-solid fa-mobile-screen"></i>
 
-                <i class="fa-solid fa-mobile-screen"></i>
+</div>
 
-            </div>
+<span>Airtime</span>
 
-            <span>Airtime</span>
+</button>
 
-        </button>
+<button
+id="dataBtn"
+class="service-card">
 
-        <!-- Data -->
+<div class="service-icon data">
 
-        <button
-            id="dataBtn"
-            class="service-card">
+<i class="fa-solid fa-wifi"></i>
 
-            <div class="service-icon data">
+</div>
 
-                <i class="fa-solid fa-wifi"></i>
+<span>Data</span>
 
-            </div>
+</button>
 
-            <span>Data</span>
+<button
+id="electricityBtn"
+class="service-card">
 
-        </button>
+<div class="service-icon electricity">
 
-        <!-- Electricity -->
+<i class="fa-solid fa-bolt"></i>
 
-        <button
-            id="electricityBtn"
-            class="service-card">
+</div>
 
-            <div class="service-icon electricity">
+<span>Electricity</span>
 
-                <i class="fa-solid fa-bolt"></i>
+</button>
 
-            </div>
+<button
+id="tvBtn"
+class="service-card">
 
-            <span>Electricity</span>
+<div class="service-icon tv">
 
-        </button>
+<i class="fa-solid fa-tv"></i>
 
-        <!-- TV -->
+</div>
 
-        <button
-            id="tvBtn"
-            class="service-card">
+<span>TV</span>
 
-            <div class="service-icon tv">
+</button>
 
-                <i class="fa-solid fa-tv"></i>
+<button
+id="bettingBtn"
+class="service-card">
 
-            </div>
+<div class="service-icon betting">
 
-            <span>TV</span>
+<i class="fa-solid fa-futbol"></i>
 
-        </button>
+</div>
 
-        <!-- Betting -->
+<span>Betting</span>
 
-        <button
-            id="bettingBtn"
-            class="service-card">
+</button>
 
-            <div class="service-icon betting">
+<button
+id="moreBtn"
+class="service-card">
 
-                <i class="fa-solid fa-futbol"></i>
+<div class="service-icon more">
 
-            </div>
+<i class="fa-solid fa-ellipsis"></i>
 
-            <span>Betting</span>
+</div>
 
-        </button>
+<span>More</span>
 
-        <!-- More -->
+</button>
 
-        <button
-            id="moreBtn"
-            class="service-card">
-
-            <div class="service-icon more">
-
-                <i class="fa-solid fa-ellipsis"></i>
-
-            </div>
-
-            <span>More</span>
-
-        </button>
-
-    </div>
+</div>
 
 </section> 
 <!-- ===========================
-     RECENT TRANSACTIONS
-============================ -->
+RECENT TRANSACTIONS
+=========================== -->
 
 <section class="transactions-section">
 
-    <div class="section-header">
+<div class="section-header">
 
-        <h2>Recent Transactions</h2>
+<h2>
 
-        <button
-            id="viewAllTransactionsBtn"
-            class="text-button">
+Recent Transactions
 
-            View All
+</h2>
 
-        </button>
+<button
+id="viewAllTransactionsBtn"
+class="text-button">
 
-    </div>
+Show More
 
-    <div class="transaction-card">
-
-        <div class="transaction-icon">
-
-            <i class="fa-solid fa-receipt"></i>
-
-        </div>
-
-        <div class="transaction-details">
-
-            <h4>No Transactions Yet</h4>
-
-            <p>
-                Your recent transactions will appear here.
-            </p>
-
-        </div>
-
-    </div>
-
-</section> 
-<!-- ===========================
-     INVITE & EARN
-============================ -->
-
-<section class="invite-section">
-
-    <div class="invite-content">
-
-    <div>
-
-        <h3>
-            Invite & Earn
-        </h3>
-
-        <p>
-            Invite your friends and earn reward points when they join NovaPay.
-        </p>
-
-    </div>
-
-    <img
-        src="images/gift.png"
-        class="gift-image"
-        alt="Gift">
-
-    <button
-        id="inviteBtn"
-        class="invite-button">
-
-        Invite
-
-    </button>
+</button>
 
 </div>
 
-</section>
+<div
+id="recentTransactionsContainer">
 
+<div class="transaction-card">
+
+<div class="transaction-icon">
+
+<i class="fa-solid fa-receipt"></i>
+
+</div>
+
+<div class="transaction-details">
+
+<h4>
+
+No Transactions Yet
+
+</h4>
+
+<p>
+
+Your recent transactions will appear here.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section> 
 <!-- ===========================
-     BOTTOM NAVIGATION
-============================ -->
+INVITE & EARN
+=========================== -->
+
+<section class="invite-section">
+
+<div class="invite-card">
+
+<div class="invite-left">
+
+<h2>
+
+Invite & Earn
+
+</h2>
+
+<p>
+
+Invite friends and earn reward bonuses when they join NovaPay.
+
+</p>
+
+<button
+id="inviteBtn"
+class="invite-btn">
+
+Invite Now
+
+</button>
+
+</div>
+
+<div class="invite-right">
+
+<img
+src="images/gift.png"
+alt="Gift"
+class="gift-image">
+
+</div>
+
+</div>
+
+</section> 
+<!-- ===========================
+BOTTOM NAVIGATION
+=========================== -->
 
 <nav class="bottom-nav">
 
-    <button
-        class="nav-item active">
+<button
+class="nav-item active">
 
-        <i class="fa-solid fa-house"></i>
+<i class="fa-solid fa-house"></i>
 
-        <span>Home</span>
+<span>Home</span>
 
-    </button>
+</button>
 
-    <button
-        id="walletBtn"
-        class="nav-item">
+<button
+id="walletBtn"
+class="nav-item">
 
-        <i class="fa-solid fa-wallet"></i>
+<i class="fa-solid fa-wallet"></i>
 
-        <span>Wallet</span>
+<span>Wallet</span>
 
-    </button>
+</button>
 
-    <button
-        id="payBillsBtn"
-        class="nav-item">
+<button
+id="payBillsBtn"
+class="nav-item">
 
-        <i class="fa-solid fa-file-invoice-dollar"></i>
+<i class="fa-solid fa-file-invoice-dollar"></i>
 
-        <span>Pay Bills</span>
+<span>Pay Bills</span>
 
-    </button>
+</button>
 
-    <button
-        id="profileNavBtn"
-        class="nav-item">
+<button
+id="profileNavBtn"
+class="nav-item">
 
-        <i class="fa-solid fa-user"></i>
+<i class="fa-solid fa-user"></i>
 
-        <span>Profile</span>
+<span>Me</span>
 
-    </button>
+</button>
 
 </nav> 
 <!-- ===========================
-     CUSTOM MODAL
-============================ -->
+CUSTOM MODAL
+=========================== -->
 
 <div
-    id="customModal"
-    class="modal">
+id="customModal"
+class="modal">
 
-    <div class="modal-content">
+<div class="modal-content">
 
-        <h2 id="modalTitle">
+<h2 id="modalTitle">
 
-            NovaPay
+NovaPay
 
-        </h2>
+</h2>
 
-        <p id="modalMessage">
+<p id="modalMessage">
 
-            Message
+Message
 
-        </p>
+</p>
 
-        <button
-            onclick="closeModal()"
-            class="modal-button">
+<button
+onclick="closeModal()"
+class="modal-button">
 
-            OK
+OK
 
-        </button>
+</button>
 
-    </div>
+</div>
 
 </div>
 
 </div>
 
 <script
-    type="module"
-    src="dashboard.js"></script>
+type="module"
+src="dashboard.js"></script>
 
 </body>
 

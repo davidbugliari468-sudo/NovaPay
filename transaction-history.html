@@ -1,142 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Transaction History</title>
 
-<link rel="stylesheet" href="transaction-history.css">
+<link rel="stylesheet"
+href="transaction-history.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
 
 <body>
 
 <div class="history-page">
 
-    <!-- Header -->
-    <header class="history-header">
+<!-- ======================================
+HEADER
+====================================== -->
 
-        <button id="backBtn" class="icon-btn">
-            <i class="fas fa-arrow-left"></i>
-        </button>
+<header class="history-header">
 
-        <h1>Transaction History</h1>
+<button
+id="backBtn"
+class="icon-btn">
 
-        <button id="exportBtn" class="export-btn">
-            Export
-        </button>
+<i class="fas fa-arrow-left"></i>
 
-    </header>
+</button>
 
-    <!-- Search -->
+<h1>
 
-    <div class="search-box">
+Transaction History
 
-        <i class="fas fa-search"></i>
+</h1>
 
-        <input
-        type="text"
-        id="searchInput"
-        placeholder="Search transactions...">
+<button
+id="exportBtn"
+class="export-btn">
 
-    </div>
+Export
 
-    <!-- Filters -->
+</button>
 
-    <div class="filter-row">
+</header>
 
-        <button id="categoryBtn" class="filter-btn">
-            <span>Category</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
+<!-- ======================================
+SEARCH
+====================================== -->
 
-        <button id="statusBtn" class="filter-btn">
-            <span>Status</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
+<div class="search-box">
 
-        <button id="monthBtn" class="filter-btn">
-            <span>Month</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
+<i class="fas fa-search"></i>
 
-    </div>
+<input
+type="text"
+id="searchInput"
+placeholder="Search transactions...">
 
-    <!-- Summary -->
+</div>
 
-    <section class="summary-card">
+<!-- ======================================
+FILTERS
+====================================== -->
 
-        <h3>Recent Transactions</h3>
+<div class="filter-row">
 
-        <p id="transactionCount">
-            Showing 0 transactions
-        </p>
+<button
+id="categoryBtn"
+class="filter-btn">
 
-        <div class="summary-grid">
+<span>All Categories</span>
 
-            <div>
+<i class="fas fa-chevron-down"></i>
 
-                <span>In</span>
+</button>
 
-                <h2 id="moneyIn">
-                    ₦0.00
-                </h2>
+<button
+id="statusBtn"
+class="filter-btn">
 
-            </div>
+<span>All Status</span>
 
-            <div>
+<i class="fas fa-chevron-down"></i>
 
-                <span>Out</span>
+</button>
 
-                <h2 id="moneyOut">
-                    ₦0.00
-                </h2>
+<button
+id="monthBtn"
+class="filter-btn">
 
-            </div>
+<span>This Month</span>
 
-            <div>
+<i class="fas fa-chevron-down"></i>
 
-                <span>Net</span>
+</button>
 
-                <h2 id="netAmount">
-                    ₦0.00
-                </h2>
+</div> 
+<!-- ======================================
+SUMMARY
+====================================== -->
 
-            </div>
+<section class="summary-card">
+
+    <h3>
+
+        Recent Transactions
+
+    </h3>
+
+    <p id="transactionCount">
+
+        Showing 0 Transactions
+
+    </p>
+
+    <div class="summary-grid">
+
+        <div class="summary-item">
+
+            <span>Money In</span>
+
+            <h2 id="moneyIn">
+
+                ₦0.00
+
+            </h2>
 
         </div>
 
-    </section>
+        <div class="summary-item">
 
-    <!-- Transactions -->
+            <span>Money Out</span>
 
-    <section id="transactionContainer">
+            <h2 id="moneyOut">
 
-    </section>
+                ₦0.00
 
-</div> 
-<!-- Overlay -->
+            </h2>
+
+        </div>
+
+        <div class="summary-item">
+
+            <span>Balance</span>
+
+            <h2 id="netAmount">
+
+                ₦0.00
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ======================================
+TRANSACTIONS
+====================================== -->
+
+<section class="transactions-section">
+
+    <div id="transactionContainer">
+
+        <!-- Transactions load from Firebase -->
+
+    </div>
+
+</section> 
+<!-- ======================================
+OVERLAY
+====================================== -->
+
 <div id="sheetOverlay"></div>
 
-<!-- Category Bottom Sheet -->
+<!-- ======================================
+CATEGORY SHEET
+====================================== -->
+
 <div class="bottom-sheet" id="categorySheet">
 
     <div class="sheet-header">
-        <h3>Select Category</h3>
+
+        <h3>Categories</h3>
+
     </div>
 
     <div class="sheet-options">
 
         <button class="sheet-option" data-category="All Categories">All Categories</button>
 
-        <button class="sheet-option" data-category="Wallet Funding">Wallet Funding</button>
+        <button class="sheet-option" data-category="Credit Alert">Credit Alert</button>
 
         <button class="sheet-option" data-category="Transfer">Transfer</button>
-
-        <button class="sheet-option" data-category="Withdraw">Withdraw</button>
 
         <button class="sheet-option" data-category="Airtime">Airtime</button>
 
@@ -144,22 +209,24 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <button class="sheet-option" data-category="Electricity">Electricity</button>
 
-        <button class="sheet-option" data-category="TV">TV</button>
+        <button class="sheet-option" data-category="TV">TV Subscription</button>
 
         <button class="sheet-option" data-category="Betting">Betting</button>
-
-        <button class="sheet-option" data-category="Refund">Refund</button>
 
     </div>
 
 </div>
 
-<!-- Status Bottom Sheet -->
+<!-- ======================================
+STATUS SHEET
+====================================== -->
 
 <div class="bottom-sheet" id="statusSheet">
 
     <div class="sheet-header">
-        <h3>Select Status</h3>
+
+        <h3>Status</h3>
+
     </div>
 
     <div class="sheet-options">
@@ -172,21 +239,25 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <button class="sheet-option" data-status="Failed">Failed</button>
 
-        <button class="sheet-option" data-status="Refunded">Refunded</button>
-
     </div>
 
 </div>
 
-<!-- Month Bottom Sheet -->
+<!-- ======================================
+MONTH SHEET
+====================================== -->
 
 <div class="bottom-sheet" id="monthSheet">
 
     <div class="sheet-header">
-        <h3>Select Month</h3>
+
+        <h3>Month</h3>
+
     </div>
 
     <div class="sheet-options">
+
+        <button class="sheet-option" data-month="This Month">This Month</button>
 
         <button class="sheet-option" data-month="January">January</button>
 
@@ -212,18 +283,20 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <button class="sheet-option" data-month="December">December</button>
 
-        <button class="sheet-option" data-month="Custom Range">Custom Range</button>
-
     </div>
 
 </div>
 
-<!-- Export Bottom Sheet -->
+<!-- ======================================
+EXPORT SHEET
+====================================== -->
 
 <div class="bottom-sheet" id="exportSheet">
 
     <div class="sheet-header">
+
         <h3>Export</h3>
+
     </div>
 
     <div class="sheet-options">
@@ -247,4 +320,5 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <script type="module" src="transaction-history.js"></script>
 
 </body>
+
 </html>

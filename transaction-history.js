@@ -1,3 +1,8 @@
+/* ======================================
+NOVAPAY TRANSACTION HISTORY V2
+PART 1
+====================================== */
+
 import { auth, db } from "./firebase.js";
 
 import {
@@ -8,15 +13,13 @@ import {
     collection,
     query,
     where,
-    orderBy,
     getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-/* =====================================
-   NOVAPAY TRANSACTION HISTORY
-   PART 1
-===================================== */
 
-// Buttons
+/* ======================================
+ELEMENTS
+====================================== */
+
 const backBtn = document.getElementById("backBtn");
 const exportBtn = document.getElementById("exportBtn");
 
@@ -24,7 +27,6 @@ const categoryBtn = document.getElementById("categoryBtn");
 const statusBtn = document.getElementById("statusBtn");
 const monthBtn = document.getElementById("monthBtn");
 
-// Bottom Sheets
 const categorySheet = document.getElementById("categorySheet");
 const statusSheet = document.getElementById("statusSheet");
 const monthSheet = document.getElementById("monthSheet");
@@ -34,11 +36,9 @@ const overlay = document.getElementById("sheetOverlay");
 
 const searchInput = document.getElementById("searchInput");
 
-// Transaction container
 const transactionContainer =
 document.getElementById("transactionContainer");
 
-// Summary
 const transactionCount =
 document.getElementById("transactionCount");
 
@@ -51,15 +51,22 @@ document.getElementById("moneyOut");
 const netAmount =
 document.getElementById("netAmount");
 
-// Current Filters
-let currentCategory = "All Categories";
-let currentStatus = "All Status";
-let currentMonth = "All Months";
-let searchText = "";
+/* ======================================
+VARIABLES
+====================================== */
 
-// =====================================
-// Bottom Sheet Functions
-// =====================================
+let transactions = [];
+
+let currentCategory = "All Categories";
+
+let currentStatus = "All Status";
+
+let currentMonth = "This Month";
+
+let searchText = ""; 
+/* ======================================
+BOTTOM SHEETS
+====================================== */
 
 function closeSheets(){
 
@@ -82,9 +89,9 @@ function openSheet(sheet){
 
 }
 
-// =====================================
-// Button Events look
-// =====================================
+/* ======================================
+BUTTON EVENTS
+====================================== */
 
 categoryBtn.onclick = () => openSheet(categorySheet);
 
@@ -96,167 +103,181 @@ exportBtn.onclick = () => openSheet(exportSheet);
 
 overlay.onclick = closeSheets;
 
-// =====================================
-// Back
-// =====================================
-
 backBtn.onclick = () => {
 
     window.history.back();
 
 };
 
-// =====================================
-// Search
-// =====================================
+/* ======================================
+SEARCH
+====================================== */
 
-searchInput.addEventListener("input", function(){
+searchInput.addEventListener("input", () => {
 
-    searchText = this.value.toLowerCase();
+    searchText = searchInput.value.trim().toLowerCase();
 
     renderTransactions();
 
+});
+
+/* ======================================
+FILTERS
+====================================== */
+
+document.querySelectorAll("[data-category]").forEach(button => {
+
+    button.onclick = () => {
+
+        currentCategory = button.dataset.category;
+
+        categoryBtn.querySelector("span").textContent =
+        currentCategory;
+
+        closeSheets();
+
+        renderTransactions();
+
+    };
+
+});
+
+document.querySelectorAll("[data-status]").forEach(button => {
+
+    button.onclick = () => {
+
+        currentStatus = button.dataset.status;
+
+        statusBtn.querySelector("span").textContent =
+        currentStatus;
+
+        closeSheets();
+
+        renderTransactions();
+
+    };
+
+});
+
+document.querySelectorAll("[data-month]").forEach(button => {
+
+    button.onclick = () => {
+
+        currentMonth = button.dataset.month;
+
+        monthBtn.querySelector("span").textContent =
+        currentMonth;
+
+        closeSheets();
+
+        renderTransactions();
+
+    };
+
 }); 
-/* =====================================
-   DEMO DATA
-===================================== */
-let transactions = [];
-
-
-/* =====================================
-   FILTER BUTTONS
-===================================== */
-
-document.querySelectorAll("[data-category]").forEach(btn=>{
-
-    btn.onclick=()=>{
-
-        currentCategory=btn.dataset.category;
-
-        categoryBtn.querySelector("span").textContent=currentCategory;
-
-        closeSheets();
-
-        renderTransactions();
-
-    };
-
-});
-
-document.querySelectorAll("[data-status]").forEach(btn=>{
-
-    btn.onclick=()=>{
-
-        currentStatus=btn.dataset.status;
-
-        statusBtn.querySelector("span").textContent=currentStatus;
-
-        closeSheets();
-
-        renderTransactions();
-
-    };
-
-});
-
-document.querySelectorAll("[data-month]").forEach(btn=>{
-
-    btn.onclick=()=>{
-
-        currentMonth=btn.dataset.month;
-
-        monthBtn.querySelector("span").textContent=currentMonth;
-
-        closeSheets();
-
-        renderTransactions();
-
-    };
-
-});
-
-/* =====================================
-   RENDER
-===================================== */
+/* ======================================
+RENDER TRANSACTIONS
+====================================== */
 
 function renderTransactions(){
 
-    transactionContainer.innerHTML="";
+    transactionContainer.innerHTML = "";
 
-    let filtered=transactions.filter(item=>{
+    let filtered = [...transactions];
 
-        const matchCategory=
-        currentCategory==="All Categories" ||
-        item.category===currentCategory;
+    /* Newest first */
 
-        const matchStatus=
-        currentStatus==="All Status" ||
-        item.status===currentStatus;
+    filtered.sort((a, b) => b.time - a.time);
 
-        const matchMonth=
-        currentMonth==="All Months" ||
-        currentMonth==="Custom Range" ||
-        item.month===currentMonth;
+    /* Search */
 
-        const matchSearch=
+    if(searchText){
 
-        item.title.toLowerCase().includes(searchText) ||
+        filtered = filtered.filter(item =>
 
-        item.category.toLowerCase().includes(searchText) ||
+            item.title.toLowerCase().includes(searchText) ||
 
-        item.status.toLowerCase().includes(searchText);
+            item.category.toLowerCase().includes(searchText) ||
 
-        return matchCategory &&
-               matchStatus &&
-               matchMonth &&
-               matchSearch;
+            item.status.toLowerCase().includes(searchText)
 
-    });
+        );
 
-    if(filtered.length===0){
+    }
 
-        transactionContainer.innerHTML=`
+    /* Category */
+
+    if(currentCategory !== "All Categories"){
+
+        filtered = filtered.filter(item =>
+            item.category === currentCategory
+        );
+
+    }
+
+    /* Status */
+
+if(currentStatus !== "All Status"){
+
+    filtered = filtered.filter(item =>
+        item.status === currentStatus
+    );
+
+}
+
+    /* Month */
+
+    if(currentMonth !== "This Month"){
+
+        filtered = filtered.filter(item =>
+            item.month === currentMonth
+        );
+
+    }
+
+    if(filtered.length === 0){
+
+        transactionContainer.innerHTML = `
 
 <div class="empty-state">
 
-<i class="fas fa-file-invoice"></i>
+<i class="fas fa-receipt"></i>
 
 <h3>No transactions found</h3>
 
-<p>
-Try changing your search or filters.
-</p>
+<p>Try changing your filters.</p>
 
 </div>
 
 `;
 
-        transactionCount.textContent="Showing 0 transactions";
+        transactionCount.textContent =
+        "Showing 0 Transactions";
 
-        moneyIn.textContent="₦0.00";
-        moneyOut.textContent="₦0.00";
-        netAmount.textContent="₦0.00";
+        moneyIn.textContent = "₦0.00";
+        moneyOut.textContent = "₦0.00";
+        netAmount.textContent = "₦0.00";
 
         return;
 
     }
 
-    let totalIn=0;
-    let totalOut=0;
+    let totalIn = 0;
+    let totalOut = 0;
 
-    filtered.forEach(item=>{
+    filtered.forEach(item => {
 
-        if(item.type==="in"){
+        if(item.type === "in"){
 
-            totalIn+=item.amount;
+            totalIn += item.amount;
 
         }else{
 
-            totalOut+=item.amount;
+            totalOut += item.amount;
 
         }
 
-        transactionContainer.innerHTML+=`
+        transactionContainer.innerHTML += `
 
 <div class="transaction-item" data-id="${item.id}">
 
@@ -295,7 +316,7 @@ ${item.date}
 
 <div class="transaction-status">
 
-<span class="status-dot ${item.status==="Successful"?"status-success":item.status==="Pending"?"status-pending":"status-failed"}"></span>
+<span class="status-dot status-${item.status.toLowerCase()}"></span>
 
 ${item.status}
 
@@ -317,118 +338,194 @@ ${item.status}
 
     });
 
-document.querySelectorAll(".transaction-item").forEach((card, index) => {
+    transactionCount.textContent =
+    `Showing ${filtered.length} Transaction${filtered.length>1?"s":""}`;
 
-    card.addEventListener("click", () => {
+    moneyIn.textContent =
+    `₦${totalIn.toLocaleString()}.00`;
 
-        localStorage.setItem(
-            "selectedTransaction",
-            JSON.stringify(filtered[index])
-        );
+    moneyOut.textContent =
+    `₦${totalOut.toLocaleString()}.00`;
 
-        window.location.href = "receipt.html";
+    netAmount.textContent =
+    `₦${(totalIn-totalOut).toLocaleString()}.00`;
 
-    });
-
-});
-
-transactionCount.textContent =
-`Showing ${filtered.length} transaction${filtered.length>1?"s":""}`;
-
-    transactionCount.textContent=
-`Showing ${filtered.length} transaction${filtered.length>1?"s":""}`;
-
-    moneyIn.textContent=
-`₦${totalIn.toLocaleString()}.00`;
-
-    moneyOut.textContent=
-`₦${totalOut.toLocaleString()}.00`;
-
-    netAmount.textContent=
-`₦${(totalIn-totalOut).toLocaleString()}.00`;
-
-}
-
-/* =====================================
-   START
-===================================== */
-
-/* =====================================
-   LOAD FROM FIRESTORE
-===================================== */
+} 
+/* ======================================
+LOAD TRANSACTIONS
+====================================== */
 
 onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
+
         window.location.href = "login.html";
         return;
+
     }
 
     try {
 
         const q = query(
-    collection(db, "transactions"),
-    where("uid", "==", user.uid)
-);
+            collection(db, "transactions"),
+            where("uid", "==", user.uid)
+        );
 
         const snapshot = await getDocs(q);
 
-        console.log("Snapshot size:", snapshot.size);
-console.log("Current UID:", user.uid);
-console.log(snapshot.docs.map(doc => doc.data()));
-        
-transactions = snapshot.docs.map(doc => {
+        transactions = snapshot.docs.map(doc => {
 
-    const data = doc.data();
+            const data = doc.data();
 
-    return {
+            /* Display title */
 
-        id: doc.id,
+            let title = "Transaction";
 
-        ...data,
+            switch ((data.type || "").toUpperCase()) {
 
-        title: data.type || "Transaction",
+                case "DEPOSIT":
+                    title = "Credit Alert";
+                    break;
 
-        category: data.type || "Other",
+                case "AIRTIME":
+                    title = "Airtime Purchase";
+                    break;
 
-        status: data.status === "COMPLETED"
-            ? "Successful"
-            : (data.status || "Pending"),
+                case "DATA":
+                    title = "Data Purchase";
+                    break;
+
+                case "ELECTRICITY":
+                    title = "Electricity Payment";
+                    break;
+
+                case "TV":
+                    title = "TV Subscription";
+                    break;
+
+                case "BETTING":
+                    title = "Betting";
+                    break;
+
+                case "TRANSFER":
+                    title = "Transfer";
+                    break;
+
+            }
+
+            /* Status */
+const rawStatus = String(data.status || "")
+    .trim()
+    .toUpperCase();
+
+let status = "Pending";
+
+if (
+    rawStatus === "SUCCESS" ||
+    rawStatus === "COMPLETED" ||
+    rawStatus === "SUCCESSFUL"
+) {
+
+    status = "Successful";
+
+} else if (rawStatus === "FAILED") {
+
+    status = "Failed";
+
+}
+    
+
+            /* Credit / Debit */
+
+            const isCredit =
+                (data.type || "").toUpperCase() === "DEPOSIT";
+
+            return {
+
+                id: doc.id,
+
+                title,
+
+                category: title,
+
+                status,
 
                 amount: Number(data.amount || 0),
 
-                type: data.type === "DEPOSIT"
-                    ? "in"
-                    : "out",
+                type: isCredit ? "in" : "out",
+
+                icon: isCredit
+    ? "fa-circle-arrow-down"
+    : "fa-circle-arrow-up",
+
+                color: isCredit
+                    ? "#10B981"
+                    : "#EF4444",
 
                 date: data.createdAt
-                    ? data.createdAt.toDate().toLocaleDateString()
+                    ? data.createdAt
+                        .toDate()
+                        .toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric"
+                        })
                     : "",
 
                 month: data.createdAt
-                    ? data.createdAt.toDate().toLocaleString("default", {
-                        month: "long"
-                    })
+                    ? data.createdAt
+                        .toDate()
+                        .toLocaleString("default", {
+                            month: "long"
+                        })
                     : "",
 
-                icon: "fa-wallet",
-
-                color: "#10b981"
+                time: data.createdAt
+                    ? data.createdAt.toDate().getTime()
+                    : 0
 
             };
 
         });
 
-        console.log("Transactions:", transactions);
-
         renderTransactions();
 
     } catch (error) {
 
-        console.error("Firestore Error:", error);
+        console.error(error);
 
         renderTransactions();
 
     }
 
+}); 
+/* ======================================
+RECEIPT
+====================================== */
+
+document.addEventListener("click", (event) => {
+
+    const card = event.target.closest(".transaction-item");
+
+    if (!card) return;
+
+    const id = card.dataset.id;
+
+    const transaction = transactions.find(item => item.id === id);
+
+    if (!transaction) return;
+
+    localStorage.setItem(
+        "selectedTransaction",
+        JSON.stringify(transaction)
+    );
+
+    window.location.href = "receipt.html";
+
 });
+
+/* ======================================
+START
+====================================== */
+
+console.log("✅ Transaction History Loaded");
