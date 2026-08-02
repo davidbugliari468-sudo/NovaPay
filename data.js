@@ -8,17 +8,18 @@ const backBtn = document.getElementById("backBtn");
 
 const continueBtn = document.getElementById("continueBtn");
 
+const phoneInput = document.getElementById("phoneNumber");
+
+const beneficiaryBtn = document.getElementById("beneficiaryBtn");
+
 const networkCards =
 document.querySelectorAll(".network-card");
 
-const tabs =
+const categoryTabs =
 document.querySelectorAll(".plan-tab");
 
 const plansContainer =
 document.getElementById("plansContainer");
-
-const phoneInput =
-document.getElementById("phoneNumber");
 
 /* ========= DEFAULT ========= */
 
@@ -32,63 +33,81 @@ let selectedPlan = null;
 
 backBtn.addEventListener("click", () => {
 
-history.back();
+    history.back();
+
+});
+
+/* ========= BENEFICIARIES ========= */
+
+beneficiaryBtn.addEventListener("click", () => {
+
+    alert("Beneficiaries coming soon.");
 
 }); 
-/* ========= DATA PLANS ========= */
+/* ==========================================
+DATA PLANS
+========================================== */
 
 const dataPlans = {
 
-Hot: [
+    Hot: [
 
-{ size: "500MB", validity: "30 Days", price: 150 },
+        { size: "500MB", validity: "30 Days", price: 150 },
 
-{ size: "1GB", validity: "30 Days", price: 300 },
+        { size: "1GB", validity: "30 Days", price: 300 },
 
-{ size: "2GB", validity: "30 Days", price: 600 },
+        { size: "2GB", validity: "30 Days", price: 600 },
 
-{ size: "5GB", validity: "30 Days", price: 1500 },
+        { size: "5GB", validity: "30 Days", price: 1500 },
 
-{ size: "10GB", validity: "30 Days", price: 3000 }
+        { size: "10GB", validity: "30 Days", price: 3000 }
 
-],
+    ],
 
-Daily: [
+    Daily: [
 
-{ size: "100MB", validity: "1 Day", price: 100 },
+        { size: "100MB", validity: "1 Day", price: 100 },
 
-{ size: "350MB", validity: "1 Day", price: 200 },
+        { size: "350MB", validity: "1 Day", price: 200 },
 
-{ size: "1GB", validity: "1 Day", price: 350 }
+        { size: "1GB", validity: "1 Day", price: 350 },
 
-],
+        { size: "1.5GB", validity: "1 Day", price: 450 }
 
-Weekly: [
+    ],
 
-{ size: "1GB", validity: "7 Days", price: 500 },
+    Weekly: [
 
-{ size: "2GB", validity: "7 Days", price: 900 }
+        { size: "1GB", validity: "7 Days", price: 500 },
 
-],
+        { size: "2GB", validity: "7 Days", price: 900 },
 
-Monthly: [
+        { size: "5GB", validity: "7 Days", price: 1800 }
 
-{ size: "2GB", validity: "30 Days", price: 600 },
+    ],
 
-{ size: "5GB", validity: "30 Days", price: 1500 }
+    Monthly: [
 
-],
+        { size: "2GB", validity: "30 Days", price: 600 },
 
-Router: [],
+        { size: "5GB", validity: "30 Days", price: 1500 },
 
-Social: [],
+        { size: "10GB", validity: "30 Days", price: 3000 }
 
-Night: [],
+    ],
 
-SME: []
+    Router: [],
+
+    Social: [],
+
+    Night: [],
+
+    SME: []
 
 }; 
-/* ========= RENDER PLANS ========= */
+/* ==========================================
+RENDER DATA PLANS
+========================================== */
 
 function renderPlans(category) {
 
@@ -104,17 +123,24 @@ function renderPlans(category) {
 
         card.innerHTML = `
 
-            <h3>${plan.size}</h3>
+            <div class="plan-size">
+                ${plan.size}
+            </div>
 
-            <p>${plan.validity}</p>
+            <div class="plan-validity">
+                ${plan.validity}
+            </div>
 
-            <strong>₦${plan.price.toLocaleString()}</strong>
+            <div class="plan-price">
+                ₦${plan.price.toLocaleString()}
+            </div>
 
         `;
 
         card.addEventListener("click", () => {
 
-            document.querySelectorAll(".plan-card")
+            document
+                .querySelectorAll(".plan-card")
                 .forEach(item =>
                     item.classList.remove("active")
                 );
@@ -131,21 +157,25 @@ function renderPlans(category) {
 
 }
 
-renderPlans("Hot"); 
-/* ========= CATEGORY TABS ========= */
+/* Load Hot plans by default */
 
-tabs.forEach(tab => {
+renderPlans("Hot"); 
+/* ==========================================
+CATEGORY TABS
+========================================== */
+
+categoryTabs.forEach(tab => {
 
     tab.addEventListener("click", () => {
 
-        tabs.forEach(item =>
+        categoryTabs.forEach(item =>
             item.classList.remove("active")
         );
 
         tab.classList.add("active");
 
         selectedCategory =
-            tab.textContent.trim();
+            tab.textContent.trim().replace("🔥 ", "");
 
         renderPlans(selectedCategory);
 
@@ -153,7 +183,9 @@ tabs.forEach(tab => {
 
 });
 
-/* ========= NETWORK ========= */
+/* ==========================================
+NETWORKS
+========================================== */
 
 networkCards.forEach(card => {
 
@@ -172,24 +204,18 @@ networkCards.forEach(card => {
 
 });
 
-/* ========= CONTINUE ========= */
+/* ==========================================
+CONTINUE
+========================================== */
 
 continueBtn.addEventListener("click", () => {
 
     const phone =
         phoneInput.value.trim();
 
-    if (!selectedNetwork) {
-
-        alert("Select a network.");
-
-        return;
-
-    }
-
     if (phone.length !== 11) {
 
-        alert("Enter a valid phone number.");
+        alert("Please enter a valid 11-digit phone number.");
 
         return;
 
@@ -197,7 +223,7 @@ continueBtn.addEventListener("click", () => {
 
     if (!selectedPlan) {
 
-        alert("Select a data plan.");
+        alert("Please select a data plan.");
 
         return;
 
@@ -209,7 +235,7 @@ continueBtn.addEventListener("click", () => {
 
         category: selectedCategory,
 
-        phone,
+        phone: phone,
 
         plan: selectedPlan
 

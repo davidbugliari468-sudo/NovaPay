@@ -15,12 +15,9 @@ font-family:Arial,Helvetica,sans-serif;
 --primary:#2F6BFF;
 --background:#F5F7FC;
 --card:#FFFFFF;
-
 --text:#111827;
 --subtext:#6B7280;
-
 --border:#E5E7EB;
-
 --shadow:0 12px 35px rgba(47,107,255,.08);
 
 }
@@ -28,7 +25,6 @@ font-family:Arial,Helvetica,sans-serif;
 body{
 
 background:var(--background);
-
 color:var(--text);
 
 }
@@ -36,11 +32,8 @@ color:var(--text);
 .data-page{
 
 max-width:430px;
-
 margin:auto;
-
 padding:22px 18px 100px;
-
 min-height:100vh;
 
 }
@@ -52,11 +45,8 @@ HEADER
 .page-header{
 
 display:flex;
-
-justify-content:space-between;
-
 align-items:flex-start;
-
+gap:16px;
 margin-bottom:26px;
 
 }
@@ -64,47 +54,35 @@ margin-bottom:26px;
 .back-btn{
 
 width:46px;
-
 height:46px;
-
 border:none;
-
 border-radius:14px;
-
 background:#FFFFFF;
-
 box-shadow:var(--shadow);
-
 color:var(--primary);
-
 font-size:18px;
-
 cursor:pointer;
 
 }
 
-.header-space{
+.header-content{
 
-width:46px;
+flex:1;
 
 }
 
-.page-header h1{
+.header-content h1{
 
 font-size:24px;
-
 font-weight:600;
-
 margin-bottom:4px;
 
 }
 
-.page-header p{
+.header-content p{
 
 font-size:14px;
-
 color:var(--subtext);
-
 line-height:1.5;
 
 }
@@ -122,9 +100,7 @@ margin-bottom:24px;
 .section h2{
 
 font-size:17px;
-
 font-weight:600;
-
 margin-bottom:14px;
 
 }
@@ -136,52 +112,38 @@ NETWORKS
 .network-grid{
 
 display:grid;
-
 grid-template-columns:repeat(4,1fr);
-
 gap:12px;
 
 }
 
 .network-card{
 
-height:82px;
-
+height:80px;
 background:#FFFFFF;
-
 border-radius:18px;
-
 border:2px solid transparent;
-
 display:flex;
-
 align-items:center;
-
 justify-content:center;
-
 box-shadow:var(--shadow);
-
 cursor:pointer;
-
 transition:.25s;
-
-}
-
-.network-card img{
-
-width:44px;
-
-height:44px;
-
-object-fit:contain;
 
 }
 
 .network-card.active{
 
 border-color:var(--primary);
-
 background:#F3F7FF;
+
+}
+
+.network-card img{
+
+width:46px;
+height:46px;
+object-fit:contain;
 
 } 
 /* ==========================================
@@ -191,11 +153,8 @@ PHONE NUMBER
 .section-title{
 
 display:flex;
-
 justify-content:space-between;
-
 align-items:center;
-
 margin-bottom:14px;
 
 }
@@ -203,29 +162,23 @@ margin-bottom:14px;
 .beneficiary-btn{
 
 border:none;
-
 background:none;
-
 color:var(--primary);
-
 font-size:14px;
-
 font-weight:500;
-
 cursor:pointer;
+display:flex;
+align-items:center;
+gap:6px;
 
 }
 
 .input-card{
 
 background:#FFFFFF;
-
 border-radius:18px;
-
 padding:16px;
-
 box-shadow:var(--shadow);
-
 margin-bottom:14px;
 
 }
@@ -233,15 +186,10 @@ margin-bottom:14px;
 .input-card input{
 
 width:100%;
-
 border:none;
-
 outline:none;
-
 background:none;
-
-font-size:17px;
-
+font-size:16px;
 color:var(--text);
 
 }
@@ -249,76 +197,64 @@ color:var(--text);
 .save-beneficiary{
 
 display:flex;
-
 align-items:center;
-
 gap:10px;
-
-font-size:15px;
-
+font-size:14px;
 color:var(--subtext);
 
 }
 
 /* ==========================================
-DATA CARD
+DATA BALANCE
 ========================================== */
 
-.plans-card{
+.balance-card{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:16px 18px;
 
 background:#FFFFFF;
 
-border-radius:22px;
+border-radius:18px;
 
 box-shadow:var(--shadow);
 
-overflow:hidden;
-
 }
 
-.ussd-card{
+.balance-left{
 
 display:flex;
-
-justify-content:space-between;
-
 align-items:center;
+gap:10px;
 
-padding:18px;
-
-border-bottom:1px solid var(--border);
-
-}
-
-.ussd-card h3{
-
-font-size:16px;
-
-margin-bottom:4px;
+font-weight:600;
 
 }
 
-.ussd-card p{
+.balance-left i{
 
-font-size:13px;
-
-color:var(--subtext);
+color:var(--primary);
 
 }
 
-.ussd-card button{
+.balance-btn{
 
 border:none;
 
-background:var(--primary);
+background:#EEF4FF;
 
-color:#FFFFFF;
+color:var(--primary);
 
-padding:10px 18px;
+padding:10px 16px;
 
 border-radius:12px;
 
 font-size:14px;
+
+font-weight:600;
 
 cursor:pointer;
 
@@ -332,11 +268,11 @@ CATEGORY TABS
 
 display:flex;
 
+gap:12px;
+
 overflow-x:auto;
 
-gap:10px;
-
-padding:16px;
+padding-bottom:14px;
 
 scrollbar-width:none;
 
@@ -352,21 +288,21 @@ display:none;
 
 border:none;
 
-background:#EEF4FF;
+background:none;
 
-color:var(--text);
+padding:10px 4px;
 
-padding:10px 18px;
+font-size:15px;
 
-border-radius:30px;
+font-weight:600;
+
+color:var(--subtext);
 
 white-space:nowrap;
 
 cursor:pointer;
 
-font-size:14px;
-
-font-weight:500;
+border-bottom:3px solid transparent;
 
 transition:.25s;
 
@@ -374,133 +310,165 @@ transition:.25s;
 
 .plan-tab.active{
 
+color:var(--primary);
+
+border-color:var(--primary);
+
+} 
+/* ==========================================
+DATA PLAN CARDS
+========================================== */
+
+.plans-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:12px;
+
+margin-top:8px;
+
+}
+
+.plan-card{
+
+background:#FFFFFF;
+
+border:2px solid #E5E7EB;
+
+border-radius:16px;
+
+padding:14px;
+
+cursor:pointer;
+
+transition:.25s;
+
+min-height:92px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+}
+
+.plan-card:hover{
+
+border-color:var(--primary);
+
+}
+
+.plan-card.active{
+
+border-color:var(--primary);
+
+background:#F3F7FF;
+
+box-shadow:0 8px 20px rgba(47,107,255,.12);
+
+}
+
+.plan-size{
+
+font-size:17px;
+
+font-weight:700;
+
+color:var(--text);
+
+}
+
+.plan-validity{
+
+font-size:13px;
+
+color:var(--subtext);
+
+margin:6px 0;
+
+}
+
+.plan-price{
+
+font-size:16px;
+
+font-weight:700;
+
+color:var(--primary);
+
+}
+
+/* ==========================================
+CONTINUE BUTTON
+========================================== */
+
+.continue-btn{
+
+width:100%;
+
+height:56px;
+
+margin-top:28px;
+
+border:none;
+
+border-radius:18px;
+
 background:var(--primary);
 
 color:#FFFFFF;
 
-} 
+font-size:17px;
+
+font-weight:600;
+
+cursor:pointer;
+
+box-shadow:0 12px 28px rgba(47,107,255,.20);
+
+transition:.25s;
+
+}
+
+.continue-btn:active{
+
+transform:scale(.98);
+
+}
+
 /* ==========================================
-   PART 3 - COMPACT PROFILE CARD
+MOBILE
 ========================================== */
 
-.profile-card{
+@media(max-width:390px){
 
-    background:linear-gradient(
-        135deg,
-        var(--primary-navy) 0%,
-        var(--primary-dark) 55%,
-        var(--primary) 100%
-    );
+.plans-grid{
 
-    border-radius:18px;
-
-    padding:16px 18px;
-
-    margin-bottom:18px;
-
-    text-align:center;
-
-    color:#fff;
-
-    box-shadow:0 14px 28px rgba(47,95,227,.22);
+gap:10px;
 
 }
 
-.avatar{
+.plan-card{
 
-    width:56px;
-    height:56px;
+padding:12px;
 
-    margin:0 auto 10px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.18);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border:2px solid rgba(255,255,255,.20);
+min-height:86px;
 
 }
 
-.avatar i{
+.plan-size{
 
-    font-size:24px;
-
-    color:#fff;
+font-size:16px;
 
 }
 
-.profile-card h2{
+.plan-price{
 
-    font-size:17px;
-
-    font-weight:600;
-
-    margin-bottom:2px;
-
-    color:#fff;
+font-size:15px;
 
 }
 
-.profile-card p{
-
-    font-size:12px;
-
-    font-weight:400;
-
-    color:rgba(255,255,255,.82);
-
-    margin-bottom:14px;
-
 }
-
-.profile-stats{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:26px;
-
-    font-size:13px;
-
-    font-weight:500;
-
-}
-
-.stat-box{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
-}
-
-.stat-box span{
-
-    color:rgba(255,255,255,.82);
-
-}
-
-.stat-box strong{
-
-    font-size:14px;
-
-    font-weight:600;
-
-    color:#fff;
-
-}
-
-.stat-divider{
-
-    display:none;
-
-} 

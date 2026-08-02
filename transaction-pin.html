@@ -2,112 +2,115 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Transaction PIN | NovaPay</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="transaction-pin.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<title>Transaction PIN</title>
+
+<link rel="stylesheet" href="transaction-pin.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="pin-page">
 
-    <!-- Header -->
+<header class="page-header">
 
-    <header class="page-header">
+<button id="backBtn" class="back-btn">
 
-        <button class="back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
+<i class="fas fa-arrow-left"></i>
 
-        <h1>Transaction PIN</h1>
+</button>
 
-    </header>
+<div class="header-content">
 
-    <!-- Security Card -->
+<h1>Transaction PIN</h1>
 
-    <section class="security-card">
+<p>Create a secure 4-digit PIN for your transactions.</p>
 
-        <div class="shield">
-            <i class="fa-solid fa-shield-halved"></i>
-        </div>
+</div>
 
-        <h2>Create Transaction PIN</h2>
+</header>
 
-        <p>Secure your wallet with a 4-digit PIN.</p>
+<section class="pin-card">
 
-    </section>
+<div class="pin-icon">
 
-    <!-- New PIN -->
+<i class="fas fa-shield-alt"></i>
 
-    <h3 class="section-title">Enter New PIN</h3>
+</div>
 
-    <div class="pin-row">
+<h2>Create Transaction PIN</h2>
 
-        <input class="pin-input new-pin" maxlength="1" inputmode="numeric" type="password">
+<p>Your PIN will be required before completing payments.</p>
 
-        <input class="pin-input new-pin" maxlength="1" inputmode="numeric" type="password">
+</section> 
+<!-- NEW PIN -->
 
-        <input class="pin-input new-pin" maxlength="1" inputmode="numeric" type="password">
+<section class="pin-section">
 
-        <input class="pin-input new-pin" maxlength="1" inputmode="numeric" type="password">
+<h3>New PIN</h3>
 
-    </div>
+<div id="newPinContainer" class="pin-inputs">
 
-    <!-- Confirm PIN -->
+<input class="pin-input" type="password" maxlength="1" inputmode="numeric">
 
-    <h3 class="section-title">Confirm PIN</h3>
+<input class="pin-input" type="password" maxlength="1" inputmode="numeric">
 
-    <div class="pin-row">
+<input class="pin-input" type="password" maxlength="1" inputmode="numeric">
 
-        <input class="pin-input confirm-pin" maxlength="1" inputmode="numeric" type="password">
+<input class="pin-input" type="password" maxlength="1" inputmode="numeric">
 
-        <input class="pin-input confirm-pin" maxlength="1" inputmode="numeric" type="password">
+</div>
 
-        <input class="pin-input confirm-pin" maxlength="1" inputmode="numeric" type="password">
+<p id="pinStrength" class="pin-status"></p>
 
-        <input class="pin-input confirm-pin" maxlength="1" inputmode="numeric" type="password">
+</section>
 
-    </div>
+<!-- CONFIRM PIN -->
 
-    <!-- Requirements -->
+<section class="pin-section">
 
-    <div class="requirements">
+<h3>Confirm PIN</h3>
 
-        <p class="green">
-            PIN must contain exactly 4 digits.
-        </p>
+<div id="confirmPinContainer" class="pin-inputs">
 
-        <p class="orange">
-            Avoid easy PINs like 1234 or 0000.
-        </p>
+<input class="confirm-pin-input" type="password" maxlength="1" inputmode="numeric">
 
-        <p class="red">
-            Never share your Transaction PIN.
-        </p>
+<input class="confirm-pin-input" type="password" maxlength="1" inputmode="numeric">
 
-        <p class="blue">
-            Required for every transaction.
-        </p>
+<input class="confirm-pin-input" type="password" maxlength="1" inputmode="numeric">
 
-    </div>
+<input class="confirm-pin-input" type="password" maxlength="1" inputmode="numeric">
 
-    <button class="create-btn" disabled>
+</div>
 
-        <i class="fa-solid fa-lock"></i>
+<p id="pinMatch" class="pin-status"></p>
 
-        Create Transaction PIN
+</section>
 
-    </button>
+<p class="pin-note">
+
+Never share your Transaction PIN.
+
+</p> <button
+id="createPinBtn"
+class="create-pin-btn"
+disabled>
+
+Create Transaction PIN
+
+</button>
 
 </div>
 
 <script src="transaction-pin.js"></script>
 
 </body>
+
 </html>

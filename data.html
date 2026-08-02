@@ -3,18 +3,17 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>Buy Data</title>
+    <title>Buy Data</title>
 
-<link rel="stylesheet"
-href="data.css">
+    <link rel="stylesheet" href="data.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
@@ -22,312 +21,180 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div class="data-page">
 
-<!-- HEADER -->
+    <!-- HEADER -->
 
-<header class="page-header">
+    <header class="page-header">
 
-<button
-id="backBtn"
-class="back-btn">
+        <button id="backBtn" class="back-btn">
 
-<i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i>
 
-</button>
+        </button>
 
-<div>
+        <div class="header-content">
 
-<h1>
+            <h1>Buy Data</h1>
 
-Buy Data
+            <p>Purchase data bundles for all networks.</p>
 
-</h1>
+        </div>
 
-<p>
+    </header>
 
-Purchase data bundles for all networks.
+    <!-- SERVICE PROVIDER -->
 
-</p>
+    <section class="section">
 
-</div>
+        <h2>Service Provider</h2>
 
-<div class="header-space"></div>
+        <div class="network-grid">
 
-</header>
+            <div class="network-card active"
+                data-network="MTN">
 
-<!-- SERVICE PROVIDER -->
+                <img
+                    src="images/mtn.png"
+                    alt="MTN">
 
-<section class="section">
+            </div>
 
-<h2>
+            <div class="network-card"
+                data-network="Airtel">
 
-Service Provider
+                <img
+                    src="images/airtel.png"
+                    alt="Airtel">
 
-</h2>
+            </div>
 
-<div class="network-grid">
+            <div class="network-card"
+                data-network="Glo">
 
-<div class="network-card active"
-data-network="MTN">
+                <img
+                    src="images/glo.png"
+                    alt="Glo">
 
-<img
-src="images/mtn.png"
-alt="MTN">
+            </div>
 
-</div>
+            <div class="network-card"
+                data-network="9mobile">
 
-<div class="network-card"
-data-network="Airtel">
+                <img
+                    src="images/9mobile.png"
+                    alt="9mobile">
 
-<img
-src="images/airtel.png"
-alt="Airtel">
+            </div>
 
-</div>
+        </div>
 
-<div class="network-card"
-data-network="Glo">
+    </section>     <!-- PHONE NUMBER -->
 
-<img
-src="images/glo.png"
-alt="Glo">
+    <section class="section">
 
-</div>
+        <div class="section-title">
 
-<div class="network-card"
-data-network="9mobile">
+            <h2>Phone Number</h2>
 
-<img
-src="images/9mobile.png"
-alt="9mobile">
+            <button
+                id="beneficiaryBtn"
+                class="beneficiary-btn">
 
-</div>
+                <i class="fas fa-user"></i>
 
-</div>
+                Beneficiaries
 
-</section> 
-<!-- PHONE NUMBER -->
+            </button>
 
-<section class="section">
+        </div>
 
-<div class="section-title">
+        <div class="input-card">
 
-<h2>
+            <input
+                type="tel"
+                id="phoneNumber"
+                maxlength="11"
+                placeholder="Enter phone number">
 
-Phone Number
+        </div>
 
-</h2>
+        <label class="save-beneficiary">
 
-<button
-type="button"
-class="beneficiary-btn">
+            <input
+                type="checkbox"
+                id="saveBeneficiary">
 
-<i class="fas fa-user"></i>
+            <span>Save Beneficiary</span>
 
-Beneficiaries
+        </label>
 
-</button>
+    </section>
 
-</div>
+    <!-- DATA BALANCE -->
 
-<div class="input-card">
+    <section class="section">
 
-<input
-type="tel"
-id="phoneNumber"
-placeholder="Enter phone number"
-maxlength="11">
+        <div class="balance-card">
 
-</div>
+            <div class="balance-left">
 
-<label class="save-beneficiary">
+                <i class="fas fa-signal"></i>
 
-<input
-type="checkbox"
-id="saveBeneficiary">
+                <span>Data Balance</span>
 
-<span>
+            </div>
 
-Save Beneficiary
+            <button
+                id="checkBalanceBtn"
+                class="balance-btn">
 
-</span>
+                *323*4#
 
-</label>
+            </button>
 
-</section>
+        </div>
 
-<!-- DATA PLANS -->
+    </section>
 
-<section class="section">
+    <!-- PLAN CATEGORIES -->
 
-<div class="plans-card">
+    <section class="section">
 
-<div class="ussd-card">
+        <div class="plan-tabs">
 
-<div>
+            <button class="plan-tab active">🔥 Hot</button>
 
-<h3>
+            <button class="plan-tab">Daily</button>
 
-Data Balance
+            <button class="plan-tab">Weekly</button>
 
-</h3>
+            <button class="plan-tab">Monthly</button>
 
-<p>
+            <button class="plan-tab">Router</button>
 
-Check your remaining data
+            <button class="plan-tab">Social</button>
 
-</p>
+            <button class="plan-tab">Night</button>
 
-</div>
+            <button class="plan-tab">SME</button>
 
-<button
-id="checkBalanceBtn">
+        </div>
 
-*323*4#
+        <div
+            id="plansContainer"
+            class="plans-grid">
 
-</button>
+        </div>
 
-</div>
+    </section> 
+        <!-- CONTINUE BUTTON -->
 
-<div class="plan-tabs">
+    <button
+        id="continueBtn"
+        class="continue-btn">
 
-<button
-class="plan-tab active">
+        Continue
 
-🔥 Hot
-
-</button>
-
-<button
-class="plan-tab">
-
-Daily
-
-</button>
-
-<button
-class="plan-tab">
-
-Weekly
-
-</button>
-
-<button
-class="plan-tab">
-
-Monthly
-
-</button>
-
-<button
-class="plan-tab">
-
-Router
-
-</button>
-
-<button
-class="plan-tab">
-
-Social
-
-</button>
-
-<button
-class="plan-tab">
-
-Night
-
-</button>
-
-<button
-class="plan-tab">
-
-SME
-
-</button>
-
-</div>
-
-<div
-id="plansContainer"
-class="plans-grid"> 
-<!-- HOT PLANS -->
-
-<div class="plan-card">
-
-<h3>500MB</h3>
-
-<p>30 Days</p>
-
-<strong>₦150</strong>
-
-</div>
-
-<div class="plan-card">
-
-<h3>1GB</h3>
-
-<p>30 Days</p>
-
-<strong>₦300</strong>
-
-</div>
-
-<div class="plan-card">
-
-<h3>2GB</h3>
-
-<p>30 Days</p>
-
-<strong>₦600</strong>
-
-</div>
-
-<div class="plan-card">
-
-<h3>5GB</h3>
-
-<p>30 Days</p>
-
-<strong>₦1,500</strong>
-
-</div>
-
-<div class="plan-card">
-
-<h3>10GB</h3>
-
-<p>30 Days</p>
-
-<strong>₦3,000</strong>
-
-</div>
-
-<div class="plan-card">
-
-<h3>15GB</h3>
-
-<p>30 Days</p>
-
-<strong>₦4,500</strong>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- CONTINUE -->
-
-<button
-id="continueBtn"
-class="continue-btn">
-
-Continue
-
-</button>
+    </button>
 
 </div>
 
