@@ -1,137 +1,113 @@
-// ==========================================
-// NOVAPAY AIRTIME
-// ==========================================
+/* ==========================================
+NOVAPAY AIRTIME
+========================================== */
 
-// Selected values
+/* ========= ELEMENTS ========= */
+
+const backBtn = document.getElementById("backBtn");
+const continueBtn = document.getElementById("continueBtn");
+
+const phoneInput = document.getElementById("phoneNumber");
+const amountInput = document.getElementById("amount");
+
+const beneficiaryBtn = document.querySelector(".beneficiary-btn");
+
+const networkCards =
+document.querySelectorAll(".network-card");
+
+/* ========= DEFAULT ========= */
+
 let selectedNetwork = "";
-let selectedAmount = "";
 
-// Elements
-const networkCards = document.querySelectorAll(".network-card");
-const amountButtons = document.querySelectorAll(".amount-btn");
-const phoneInput = document.getElementById("phone");
-const customAmount = document.getElementById("customAmount");
-const continueButton = document.querySelector(".continue-btn");
+/* ========= BACK ========= */
 
-// Disable Continue initially
-continueButton.disabled = true;
+backBtn.addEventListener("click", () => {
 
-// =========================
-// SELECT NETWORK
-// =========================
+    history.back();
+
+});
+
+/* ========= NETWORK ========= */
 
 networkCards.forEach(card => {
 
     card.addEventListener("click", () => {
 
-        networkCards.forEach(item => {
-            item.classList.remove("active");
-        });
+        networkCards.forEach(item =>
+            item.classList.remove("active")
+        );
 
         card.classList.add("active");
 
-        selectedNetwork = card.innerText.trim();
-
-        checkForm();
-
-    });
-
-});
-
-// =========================
-// SELECT AMOUNT
-// =========================
-
-amountButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        amountButtons.forEach(item => {
-            item.classList.remove("active");
-        });
-
-        button.classList.add("active");
-
-        selectedAmount = button.innerText.replace("₦","").trim();
-
-        customAmount.value = "";
-
-        checkForm();
+        selectedNetwork =
+            card.dataset.network;
 
     });
 
 });
 
-// =========================
-// CUSTOM AMOUNT
-// =========================
+/* ========= BENEFICIARY ========= */
 
-customAmount.addEventListener("input", () => {
+beneficiaryBtn.addEventListener("click", () => {
 
-    amountButtons.forEach(item => {
-        item.classList.remove("active");
-    });
-
-    selectedAmount = customAmount.value.trim();
-
-    checkForm();
+    alert("Beneficiaries coming soon.");
 
 });
 
-// =========================
-// PHONE NUMBER
-// =========================
+/* ========= CONTINUE ========= */
 
-phoneInput.addEventListener("input", () => {
+continueBtn.addEventListener("click", () => {
 
-    phoneInput.value = phoneInput.value.replace(/\D/g, "");
+    const phone =
+        phoneInput.value.trim();
 
-    checkForm();
+    const amount =
+        amountInput.value.trim();
 
-});
+    if (!selectedNetwork) {
 
-// =========================
-// CHECK FORM
-// =========================
+        alert("Please select a network.");
 
-function checkForm(){ 
-    // ==========================================
-// CONTINUE
-// ==========================================
+        return;
 
-continueButton.addEventListener("click", () => {
+    }
 
-    const airtimeData = {
+    if (phone.length !== 11) {
+
+        alert("Enter a valid 11-digit phone number.");
+
+        return;
+
+    }
+
+    if (amount === "") {
+
+        alert("Enter an amount.");
+
+        return;
+
+    }
+
+    if (Number(amount) < 50) {
+
+        alert("Minimum airtime amount is ₦50.");
+
+        return;
+
+    }
+
+    console.log({
 
         network: selectedNetwork,
 
-        phone: phoneInput.value,
+        phone,
 
-        amount: selectedAmount,
+        amount
 
-        saveBeneficiary:
-            document.querySelector(".save-box input").checked
+    });
 
-    };
-
-    localStorage.setItem(
-
-        "airtimePurchase",
-
-        JSON.stringify(airtimeData)
-
-    );
-
-    window.location.href = "review-airtime.html";
+    alert("Proceeding to payment...");
 
 });
 
-    const validPhone = phoneInput.value.length >= 11;
-
-    const validAmount = selectedAmount !== "";
-
-    const validNetwork = selectedNetwork !== "";
-
-    continueButton.disabled = !(validPhone && validAmount && validNetwork);
-
-}
+console.log("✅ Airtime Ready");

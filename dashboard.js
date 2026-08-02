@@ -307,7 +307,7 @@ airtimeBtn?.addEventListener("click", () => {
 
 dataBtn?.addEventListener("click", () => {
 
-    comingSoon("Data");
+    window.location.href = "data.html";
 
 });
 

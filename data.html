@@ -8,9 +8,10 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Buy Airtime</title>
+<title>Buy Data</title>
 
-<link rel="stylesheet" href="airtime.css">
+<link rel="stylesheet"
+href="data.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -19,7 +20,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <body>
 
-<div class="airtime-page">
+<div class="data-page">
 
 <!-- HEADER -->
 
@@ -35,11 +36,15 @@ class="back-btn">
 
 <div>
 
-<h1>Buy Airtime</h1>
+<h1>
+
+Buy Data
+
+</h1>
 
 <p>
 
-Purchase airtime for all networks.
+Purchase data bundles for all networks.
 
 </p>
 
@@ -61,8 +66,7 @@ Service Provider
 
 <div class="network-grid">
 
-<div
-class="network-card active"
+<div class="network-card active"
 data-network="MTN">
 
 <img
@@ -71,8 +75,7 @@ alt="MTN">
 
 </div>
 
-<div
-class="network-card"
+<div class="network-card"
 data-network="Airtel">
 
 <img
@@ -81,8 +84,7 @@ alt="Airtel">
 
 </div>
 
-<div
-class="network-card"
+<div class="network-card"
 data-network="Glo">
 
 <img
@@ -91,8 +93,7 @@ alt="Glo">
 
 </div>
 
-<div
-class="network-card"
+<div class="network-card"
 data-network="9mobile">
 
 <img
@@ -154,50 +155,171 @@ Save Beneficiary
 
 </section>
 
-<!-- TOP UP -->
+<!-- DATA PLANS -->
 
 <section class="section">
 
-<h2>
+<div class="plans-card">
 
-Top Up
-
-</h2>
-
-<div class="amount-card">
-
-<input
-type="number"
-id="amount"
-placeholder="₦ Enter amount">
-
-<div class="balance-row">
+<div class="ussd-card">
 
 <div>
 
-<i class="fas fa-wallet"></i>
+<h3>
 
-<span>
+Data Balance
 
-Wallet Balance
+</h3>
 
-</span>
+<p>
 
-</div>
+Check your remaining data
 
-<strong
-id="walletBalance">
-
-₦0.00
-
-</strong>
+</p>
 
 </div>
 
+<button
+id="checkBalanceBtn">
+
+*323*4#
+
+</button>
+
 </div>
 
-</section> 
-<!-- CONTINUE BUTTON -->
+<div class="plan-tabs">
+
+<button
+class="plan-tab active">
+
+🔥 Hot
+
+</button>
+
+<button
+class="plan-tab">
+
+Daily
+
+</button>
+
+<button
+class="plan-tab">
+
+Weekly
+
+</button>
+
+<button
+class="plan-tab">
+
+Monthly
+
+</button>
+
+<button
+class="plan-tab">
+
+Router
+
+</button>
+
+<button
+class="plan-tab">
+
+Social
+
+</button>
+
+<button
+class="plan-tab">
+
+Night
+
+</button>
+
+<button
+class="plan-tab">
+
+SME
+
+</button>
+
+</div>
+
+<div
+id="plansContainer"
+class="plans-grid"> 
+<!-- HOT PLANS -->
+
+<div class="plan-card">
+
+<h3>500MB</h3>
+
+<p>30 Days</p>
+
+<strong>₦150</strong>
+
+</div>
+
+<div class="plan-card">
+
+<h3>1GB</h3>
+
+<p>30 Days</p>
+
+<strong>₦300</strong>
+
+</div>
+
+<div class="plan-card">
+
+<h3>2GB</h3>
+
+<p>30 Days</p>
+
+<strong>₦600</strong>
+
+</div>
+
+<div class="plan-card">
+
+<h3>5GB</h3>
+
+<p>30 Days</p>
+
+<strong>₦1,500</strong>
+
+</div>
+
+<div class="plan-card">
+
+<h3>10GB</h3>
+
+<p>30 Days</p>
+
+<strong>₦3,000</strong>
+
+</div>
+
+<div class="plan-card">
+
+<h3>15GB</h3>
+
+<p>30 Days</p>
+
+<strong>₦4,500</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CONTINUE -->
 
 <button
 id="continueBtn"
@@ -209,10 +331,7 @@ Continue
 
 </div>
 
-<script
-src="airtime.js">
-
-</script>
+<script src="data.js"></script>
 
 </body>
 

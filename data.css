@@ -1,5 +1,5 @@
 /* ==========================================
-NOVAPAY AIRTIME
+NOVAPAY DATA
 PART 1
 ========================================== */
 
@@ -33,7 +33,7 @@ color:var(--text);
 
 }
 
-.airtime-page{
+.data-page{
 
 max-width:430px;
 
@@ -115,7 +115,7 @@ SECTION
 
 .section{
 
-margin-bottom:26px;
+margin-bottom:24px;
 
 }
 
@@ -127,11 +127,10 @@ font-weight:600;
 
 margin-bottom:14px;
 
-color:var(--text);
+}
 
-} 
 /* ==========================================
-SERVICE PROVIDER
+NETWORKS
 ========================================== */
 
 .network-grid{
@@ -150,9 +149,9 @@ height:82px;
 
 background:#FFFFFF;
 
-border:2px solid transparent;
-
 border-radius:18px;
+
+border:2px solid transparent;
 
 display:flex;
 
@@ -160,9 +159,9 @@ align-items:center;
 
 justify-content:center;
 
-cursor:pointer;
-
 box-shadow:var(--shadow);
+
+cursor:pointer;
 
 transition:.25s;
 
@@ -184,16 +183,9 @@ border-color:var(--primary);
 
 background:#F3F7FF;
 
-}
-
-.network-card:active{
-
-transform:scale(.96);
-
-}
-
+} 
 /* ==========================================
-PHONE
+PHONE NUMBER
 ========================================== */
 
 .section-title{
@@ -220,12 +212,6 @@ font-size:14px;
 
 font-weight:500;
 
-display:flex;
-
-align-items:center;
-
-gap:6px;
-
 cursor:pointer;
 
 }
@@ -236,9 +222,9 @@ background:#FFFFFF;
 
 border-radius:18px;
 
-box-shadow:var(--shadow);
-
 padding:16px;
+
+box-shadow:var(--shadow);
 
 margin-bottom:14px;
 
@@ -252,9 +238,9 @@ border:none;
 
 outline:none;
 
-font-size:17px;
+background:none;
 
-background:transparent;
+font-size:17px;
 
 color:var(--text);
 
@@ -272,14 +258,13 @@ font-size:15px;
 
 color:var(--subtext);
 
-cursor:pointer;
+}
 
-} 
 /* ==========================================
-TOP UP
+DATA CARD
 ========================================== */
 
-.amount-card{
+.plans-card{
 
 background:#FFFFFF;
 
@@ -287,41 +272,11 @@ border-radius:22px;
 
 box-shadow:var(--shadow);
 
-padding:18px;
+overflow:hidden;
 
 }
 
-.amount-card input{
-
-width:100%;
-
-border:none;
-
-outline:none;
-
-background:transparent;
-
-font-size:28px;
-
-font-weight:600;
-
-color:var(--text);
-
-margin-bottom:18px;
-
-}
-
-.amount-card input::placeholder{
-
-font-size:18px;
-
-font-weight:400;
-
-color:#9CA3AF;
-
-}
-
-.balance-row{
+.ussd-card{
 
 display:flex;
 
@@ -329,116 +284,223 @@ justify-content:space-between;
 
 align-items:center;
 
-padding-top:16px;
+padding:18px;
 
-border-top:1px solid var(--border);
+border-bottom:1px solid var(--border);
 
 }
 
-.balance-row div{
+.ussd-card h3{
 
-display:flex;
+font-size:16px;
 
-align-items:center;
+margin-bottom:4px;
 
-gap:8px;
+}
+
+.ussd-card p{
+
+font-size:13px;
 
 color:var(--subtext);
 
-font-size:15px;
-
 }
 
-.balance-row i{
-
-color:var(--primary);
-
-font-size:16px;
-
-}
-
-.balance-row strong{
-
-font-size:16px;
-
-font-weight:600;
-
-color:var(--text);
-
-}
-
-/* ==========================================
-CONTINUE BUTTON
-========================================== */
-
-.continue-btn{
-
-width:100%;
-
-height:56px;
+.ussd-card button{
 
 border:none;
-
-border-radius:18px;
 
 background:var(--primary);
 
 color:#FFFFFF;
 
-font-size:17px;
+padding:10px 18px;
 
-font-weight:600;
+border-radius:12px;
+
+font-size:14px;
 
 cursor:pointer;
 
-box-shadow:0 12px 28px rgba(47,107,255,.20);
+}
+
+/* ==========================================
+CATEGORY TABS
+========================================== */
+
+.plan-tabs{
+
+display:flex;
+
+overflow-x:auto;
+
+gap:10px;
+
+padding:16px;
+
+scrollbar-width:none;
+
+}
+
+.plan-tabs::-webkit-scrollbar{
+
+display:none;
+
+}
+
+.plan-tab{
+
+border:none;
+
+background:#EEF4FF;
+
+color:var(--text);
+
+padding:10px 18px;
+
+border-radius:30px;
+
+white-space:nowrap;
+
+cursor:pointer;
+
+font-size:14px;
+
+font-weight:500;
 
 transition:.25s;
 
 }
 
-.continue-btn:active{
+.plan-tab.active{
 
-transform:scale(.98);
+background:var(--primary);
 
-}
+color:#FFFFFF;
 
+} 
 /* ==========================================
-MOBILE
+   PART 3 - COMPACT PROFILE CARD
 ========================================== */
 
-@media(max-width:390px){
+.profile-card{
 
-.network-grid{
+    background:linear-gradient(
+        135deg,
+        var(--primary-navy) 0%,
+        var(--primary-dark) 55%,
+        var(--primary) 100%
+    );
 
-gap:8px;
+    border-radius:18px;
 
-}
+    padding:16px 18px;
 
-.network-card{
+    margin-bottom:18px;
 
-height:74px;
+    text-align:center;
 
-}
+    color:#fff;
 
-.network-card img{
-
-width:38px;
-
-height:38px;
-
-}
-
-.page-header h1{
-
-font-size:22px;
+    box-shadow:0 14px 28px rgba(47,95,227,.22);
 
 }
 
-.amount-card input{
+.avatar{
 
-font-size:24px;
+    width:56px;
+    height:56px;
+
+    margin:0 auto 10px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.18);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:2px solid rgba(255,255,255,.20);
 
 }
 
+.avatar i{
+
+    font-size:24px;
+
+    color:#fff;
+
 }
+
+.profile-card h2{
+
+    font-size:17px;
+
+    font-weight:600;
+
+    margin-bottom:2px;
+
+    color:#fff;
+
+}
+
+.profile-card p{
+
+    font-size:12px;
+
+    font-weight:400;
+
+    color:rgba(255,255,255,.82);
+
+    margin-bottom:14px;
+
+}
+
+.profile-stats{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:26px;
+
+    font-size:13px;
+
+    font-weight:500;
+
+}
+
+.stat-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+.stat-box span{
+
+    color:rgba(255,255,255,.82);
+
+}
+
+.stat-box strong{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#fff;
+
+}
+
+.stat-divider{
+
+    display:none;
+
+} 
