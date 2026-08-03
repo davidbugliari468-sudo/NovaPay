@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Buy Airtime</title>
 
-<link rel="stylesheet" href="airtime.css">
+<link rel="stylesheet"
+href="airtime.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 </head>
 
@@ -22,8 +31,12 @@
 
 <header class="top-bar">
 
-<button id="backBtn" class="back-btn">
+<button
+id="backBtn"
+class="back-btn">
+
 ←
+
 </button>
 
 <div>
@@ -40,128 +53,127 @@
 
 <h2>Service Provider</h2>
 
-<div class="providers">
-
-<div class="provider active" data-network="mtn">
-<img src="images/mtn.png" alt="MTN">
+<div class="providers"> 
+    <div class="provider active" data-network="mtn">
+    <img src="images/mtn.png" alt="MTN">
 </div>
 
 <div class="provider" data-network="glo">
-<img src="images/glo.png" alt="Glo">
+    <img src="images/glo.png" alt="Glo">
 </div>
 
 <div class="provider" data-network="airtel">
-<img src="images/airtel.png" alt="Airtel">
+    <img src="images/airtel.png" alt="Airtel">
 </div>
 
 <div class="provider" data-network="9mobile">
-<img src="images/9mobile.png" alt="9mobile">
+    <img src="images/9mobile.png" alt="9mobile">
 </div>
 
 </div>
 
-</section> <section class="phone-section">
-
-    <div class="section-title">
-
-        <h2>Phone Number</h2>
-
-        <button id="beneficiaryBtn" class="beneficiary-btn">
-            👤 Beneficiaries
-        </button>
-
-    </div>
-
-    <input
-        type="tel"
-        id="phoneNumber"
-        placeholder="Enter phone number"
-        maxlength="11"
-        inputmode="numeric"
-    >
-
-    <label class="save-beneficiary">
-
-        <input
-            type="checkbox"
-            id="saveBeneficiary"
-        >
-
-        <span>Save Beneficiary</span>
-
-    </label>
-
 </section>
 
+<section class="phone-section">
 
-<section class="amount-section">
+<div class="section-title">
 
-    <h2>Top Up</h2>
-
-    <div class="amount-card">
-
-        <div class="amount-input">
-
-            <span class="naira">₦</span>
-
-            <input
-                type="number"
-                id="amount"
-                placeholder="Enter amount"
-                min="10"
-                step="1"
-                inputmode="numeric"
-            >
-
-        </div>
-
-        <hr>
-
-        <div class="wallet-row">
-
-            <div class="wallet-left">
-
-                💳 Wallet Balance
-
-            </div>
-
-            <div
-                id="walletBalance"
-                class="wallet-balance"
-            >
-
-                ₦0.00
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
+<h2>Phone Number</h2>
 
 <button
-    id="continueBtn"
-    class="continue-btn"
->
+id="beneficiaryBtn"
+class="beneficiary-btn">
 
-    Continue
+👤 Beneficiaries
 
 </button>
-<!-- Loading Overlay -->
-
-<div id="loadingOverlay" class="loading-overlay hidden">
-
-    <div class="loader"></div>
-
-    <p>Please wait...</p>
 
 </div>
 
-<!-- Success / Error Message -->
+<input
+type="tel"
+id="phoneNumber"
+placeholder="Enter phone number"
+maxlength="11"
+inputmode="numeric">
 
-<div id="messageBox" class="message-box hidden"></div>
+<label class="save-beneficiary">
+
+<input
+type="checkbox"
+id="saveBeneficiary">
+
+<span>Save Beneficiary</span>
+
+</label>
+
+</section> 
+<section class="amount-section">
+
+<h2>Top Up</h2>
+
+<div class="amount-card">
+
+<div class="amount-input">
+
+<span class="naira">₦</span>
+
+<input
+type="text"
+id="amount"
+placeholder="Enter amount"
+inputmode="numeric"
+autocomplete="off">
+
+</div>
+
+<hr>
+
+<div class="wallet-row">
+
+<div class="wallet-left">
+
+💳 Wallet Balance
+
+</div>
+
+<div
+id="walletBalance"
+class="wallet-balance">
+
+₦0.00
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<button
+id="continueBtn"
+class="continue-btn">
+
+Continue
+
+</button>
+
+<div
+id="loadingOverlay"
+class="loading-overlay hidden">
+
+<div class="loader"></div>
+
+<p>Please wait...</p>
+
+</div>
+
+<div
+id="messageBox"
+class="message-box hidden">
+
+</div>
 
 </div>
 
