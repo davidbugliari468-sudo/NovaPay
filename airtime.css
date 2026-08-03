@@ -1,200 +1,159 @@
-/* ==========================================
-NOVAPAY AIRTIME
-PART 1
-========================================== */
-
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
-
-:root{
-
---primary:#2F6BFF;
---background:#F5F7FC;
---card:#FFFFFF;
-
---text:#111827;
---subtext:#6B7280;
-
---border:#E5E7EB;
-
---shadow:0 12px 35px rgba(47,107,255,.08);
-
 }
 
 body{
 
-background:var(--background);
+font-family:"Poppins",sans-serif;
 
-color:var(--text);
+background:#f6f8ff;
+
+color:#111827;
 
 }
 
-.airtime-page{
+.container{
 
 max-width:430px;
 
 margin:auto;
 
-padding:22px 18px 100px;
-
 min-height:100vh;
 
-}
-
-/* ==========================================
-HEADER
-========================================== */
-
-.page-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:flex-start;
-
-margin-bottom:26px;
+padding:26px;
 
 }
 
-.back-btn{
-
-width:46px;
-
-height:46px;
-
-border:none;
-
-border-radius:14px;
-
-background:#FFFFFF;
-
-box-shadow:var(--shadow);
-
-color:var(--primary);
-
-font-size:18px;
-
-cursor:pointer;
-
-}
-
-.header-space{
-
-width:46px;
-
-}
-
-.page-header h1{
-
-font-size:24px;
-
-font-weight:600;
-
-margin-bottom:4px;
-
-}
-
-.page-header p{
-
-font-size:14px;
-
-color:var(--subtext);
-
-line-height:1.5;
-
-}
-
-/* ==========================================
-SECTION
-========================================== */
-
-.section{
-
-margin-bottom:26px;
-
-}
-
-.section h2{
-
-font-size:17px;
-
-font-weight:600;
-
-margin-bottom:14px;
-
-color:var(--text);
-
-} 
-/* ==========================================
-SERVICE PROVIDER
-========================================== */
-
-.network-grid{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:12px;
-
-}
-
-.network-card{
-
-height:82px;
-
-background:#FFFFFF;
-
-border:2px solid transparent;
-
-border-radius:18px;
+.top-bar{
 
 display:flex;
 
 align-items:center;
 
-justify-content:center;
+gap:18px;
 
-cursor:pointer;
-
-box-shadow:var(--shadow);
-
-transition:.25s;
+margin-bottom:32px;
 
 }
 
-.network-card img{
+.back-btn{
 
-width:44px;
+width:56px;
 
-height:44px;
+height:56px;
+
+border:none;
+
+border-radius:18px;
+
+background:white;
+
+font-size:26px;
+
+cursor:pointer;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.top-bar h1{
+
+font-size:42px;
+
+font-weight:700;
+
+line-height:1.1;
+
+}
+
+.top-bar p{
+
+margin-top:6px;
+
+font-size:17px;
+
+color:#6b7280;
+
+}
+
+.provider-section{
+
+margin-top:20px;
+
+}
+
+.provider-section h2{
+
+font-size:20px;
+
+margin-bottom:18px;
+
+font-weight:700;
+
+}
+
+.providers{
+
+display:flex;
+
+justify-content:space-between;
+
+gap:14px;
+
+}
+
+.provider{
+
+width:86px;
+
+height:86px;
+
+background:white;
+
+border-radius:22px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+cursor:pointer;
+
+transition:.25s;
+
+border:3px solid transparent;
+
+box-shadow:0 10px 30px rgba(0,0,0,.05);
+
+}
+
+.provider img{
+
+width:58px;
+
+height:58px;
 
 object-fit:contain;
 
 }
 
-.network-card.active{
+.provider.active{
 
-border-color:var(--primary);
+border-color:#2d6cff;
 
-background:#F3F7FF;
-
-}
-
-.network-card:active{
-
-transform:scale(.96);
-
-}
-
+} 
 /* ==========================================
 PHONE
 ========================================== */
+
+.phone-section{
+
+margin-top:34px;
+
+}
 
 .section-title{
 
@@ -204,7 +163,15 @@ justify-content:space-between;
 
 align-items:center;
 
-margin-bottom:14px;
+margin-bottom:18px;
+
+}
+
+.section-title h2{
+
+font-size:20px;
+
+font-weight:700;
 
 }
 
@@ -214,49 +181,35 @@ border:none;
 
 background:none;
 
-color:var(--primary);
+color:#2d6cff;
 
-font-size:14px;
+font-size:15px;
 
-font-weight:500;
-
-display:flex;
-
-align-items:center;
-
-gap:6px;
+font-weight:600;
 
 cursor:pointer;
 
 }
 
-.input-card{
-
-background:#FFFFFF;
-
-border-radius:18px;
-
-box-shadow:var(--shadow);
-
-padding:16px;
-
-margin-bottom:14px;
-
-}
-
-.input-card input{
+.phone-section input[type="tel"]{
 
 width:100%;
 
+height:62px;
+
 border:none;
 
+border-radius:18px;
+
+padding:0 20px;
+
+font-size:18px;
+
+background:#fff;
+
+box-shadow:0 10px 30px rgba(0,0,0,.05);
+
 outline:none;
-
-font-size:17px;
-
-background:transparent;
-
-color:var(--text);
 
 }
 
@@ -268,74 +221,47 @@ align-items:center;
 
 gap:10px;
 
+margin-top:16px;
+
 font-size:15px;
 
-color:var(--subtext);
-
-cursor:pointer;
-
-} 
-/* ==========================================
-TOP UP
-========================================== */
-
-.amount-card{
-
-background:#FFFFFF;
-
-border-radius:22px;
-
-box-shadow:var(--shadow);
-
-padding:18px;
+color:#6b7280;
 
 }
 
-.amount-card input{
+/* ==========================================
+AMOUNT
+========================================== */
 
-width:100%;
+.amount-section{
 
-border:none;
+margin-top:34px;
 
-outline:none;
+}
 
-background:transparent;
+.amount-section h2{
 
-font-size:28px;
+font-size:20px;
 
-font-weight:600;
-
-color:var(--text);
+font-weight:700;
 
 margin-bottom:18px;
 
 }
 
-.amount-card input::placeholder{
+.amount-card{
 
-font-size:18px;
+background:#fff;
 
-font-weight:400;
+border-radius:22px;
 
-color:#9CA3AF;
+padding:22px;
 
-}
-
-.balance-row{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding-top:16px;
-
-border-top:1px solid var(--border);
+box-shadow:0 10px 30px rgba(0,0,0,.05);
 
 }
 
-.balance-row div{
+.amount-input{
 
 display:flex;
 
@@ -343,57 +269,89 @@ align-items:center;
 
 gap:8px;
 
-color:var(--subtext);
+margin-bottom:18px;
+
+}
+
+.naira{
+
+font-size:30px;
+
+font-weight:700;
+
+}
+
+.amount-input input{
+
+flex:1;
+
+border:none;
+
+outline:none;
+
+font-size:30px;
+
+font-weight:700;
+
+background:none;
+
+}
+
+.wallet-row{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-top:18px;
+
+}
+
+.wallet-left{
+
+color:#6b7280;
 
 font-size:15px;
 
 }
 
-.balance-row i{
+.wallet-balance{
 
-color:var(--primary);
+font-weight:700;
 
-font-size:16px;
-
-}
-
-.balance-row strong{
-
-font-size:16px;
-
-font-weight:600;
-
-color:var(--text);
+font-size:18px;
 
 }
 
 /* ==========================================
-CONTINUE BUTTON
+BUTTON
 ========================================== */
 
 .continue-btn{
 
 width:100%;
 
-height:56px;
+height:60px;
+
+margin-top:34px;
 
 border:none;
 
 border-radius:18px;
 
-background:var(--primary);
+background:#2d6cff;
 
-color:#FFFFFF;
+color:#fff;
 
-font-size:17px;
+font-size:18px;
 
-font-weight:600;
+font-weight:700;
 
 cursor:pointer;
 
-box-shadow:0 12px 28px rgba(47,107,255,.20);
-
-transition:.25s;
+transition:.2s;
 
 }
 
@@ -404,66 +362,99 @@ transform:scale(.98);
 }
 
 /* ==========================================
-MOBILE
+LOADING
 ========================================== */
 
-@media(max-width:390px){
+.hidden{
 
-.network-grid{
-
-gap:8px;
+display:none;
 
 }
 
-.network-card{
+.loading-overlay{
 
-height:74px;
+position:fixed;
 
-}
+inset:0;
 
-.network-card img{
+background:rgba(255,255,255,.9);
 
-width:38px;
+display:flex;
 
-height:38px;
+flex-direction:column;
 
-}
+justify-content:center;
 
-.page-header h1{
+align-items:center;
 
-font-size:22px;
-
-}
-
-.amount-card input{
-
-font-size:24px;
+z-index:9999;
 
 }
 
-} 
+.loader{
+
+width:52px;
+
+height:52px;
+
+border:5px solid #ddd;
+
+border-top-color:#2d6cff;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+to{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+.loading-overlay p{
+
+margin-top:18px;
+
+font-weight:600;
+
+}
+
 /* ==========================================
 MESSAGE
 ========================================== */
 
-.airtime-message{
+.message-box{
 
-margin-top:18px;
+position:fixed;
 
-text-align:center;
+left:50%;
+
+bottom:30px;
+
+transform:translateX(-50%);
+
+background:#111827;
+
+color:#fff;
+
+padding:14px 22px;
+
+border-radius:14px;
 
 font-size:15px;
 
 font-weight:500;
 
-color:#EF4444;
+z-index:10000;
 
-min-height:20px;
+max-width:90%;
 
-}
-
-.airtime-message.success{
-
-color:#16A34A;
+text-align:center;
 
 }

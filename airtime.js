@@ -1,70 +1,79 @@
 /* ==========================================
 NOVAPAY AIRTIME
-PART 1
+Clean Version
 ========================================== */
 
 import { auth, db } from "./firebase-config.js";
 
 import {
-
     doc,
     getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+/* ==========================================
+BACKEND
+========================================== */
 
-const API_URL =
-"https://novapay-server.onrender.com";
+const API_URL = "https://novapay-server.onrender.com";
 
 /* ==========================================
 ELEMENTS
 ========================================== */
 
-const backBtn =
-document.getElementById("backBtn");
+const backBtn = document.getElementById("backBtn");
+const continueBtn = document.getElementById("continueBtn");
 
-const continueBtn =
-document.getElementById("continueBtn");
+const phoneInput = document.getElementById("phoneNumber");
+const amountInput = document.getElementById("amount");
 
-const phoneInput =
-document.getElementById("phoneNumber");
+const walletBalance = document.getElementById("walletBalance");
 
-const amountInput =
-document.getElementById("amount");
+const loadingOverlay = document.getElementById("loadingOverlay");
+const messageBox = document.getElementById("messageBox");
 
-const walletBalance =
-document.getElementById("walletBalance");
+const beneficiaryBtn = document.getElementById("beneficiaryBtn");
 
-const airtimeMessage =
-document.getElementById("airtimeMessage");
-
-const beneficiaryBtn =
-document.querySelector(".beneficiary-btn");
-
-const networkCards =
-document.querySelectorAll(".network-card");
+const providers = document.querySelectorAll(".provider");
 
 /* ==========================================
 STATE
 ========================================== */
 
 let currentUser = null;
-
 let selectedNetwork = "mtn";
 
 /* ==========================================
-BACK
+UTILITIES
 ========================================== */
 
-backBtn.addEventListener("click", () => {
+function showLoading() {
+    loadingOverlay.classList.remove("hidden");
+}
 
-    history.back();
+function hideLoading() {
+    loadingOverlay.classList.add("hidden");
+}
 
-});
+function showMessage(text) {
+
+    messageBox.textContent = text;
+
+    messageBox.classList.remove("hidden");
+
+    setTimeout(() => {
+
+        messageBox.classList.add("hidden");
+
+    },3000);
+
+} 
 /* ==========================================
 AUTH
 ========================================== */
 
 auth.onAuthStateChanged(async (user) => {
+
+    hideLoading();
 
     if (!user) {
 
@@ -76,7 +85,9 @@ auth.onAuthStateChanged(async (user) => {
 
     currentUser = user;
 
-    loadWalletBalance();
+    await loadWallet();
+
+    setupNetworks();
 
 });
 
@@ -84,7 +95,7 @@ auth.onAuthStateChanged(async (user) => {
 LOAD WALLET
 ========================================== */
 
-async function loadWalletBalance() {
+async function loadWallet() {
 
     try {
 
@@ -94,22 +105,35 @@ async function loadWalletBalance() {
         const userSnap =
             await getDoc(userRef);
 
-        if (!userSnap.exists()) return;
+        if (!userSnap.exists()) {
 
-        const userData =
+            walletBalance.textContent = "₦0.00";
+
+            return;
+
+        }
+
+        const data =
             userSnap.data();
 
         walletBalance.textContent =
-            "₦" + Number(
-                userData.walletBalance || 0
-            ).toLocaleString();
+            "₦" +
+            Number(
+                data.walletBalance || 0
+            ).toLocaleString("en-NG", {
+
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+
+            });
 
     } catch (error) {
 
         console.error(error);
 
-        airtimeMessage.textContent =
-            "Unable to load wallet balance.";
+        showMessage(
+            "Unable to load wallet balance."
+        );
 
     }
 
@@ -118,61 +142,44 @@ async function loadWalletBalance() {
 NETWORK
 ========================================== */
 
-networkCards.forEach(card => {
+function setupNetworks() {
 
-    if (card.dataset.network.toLowerCase() === "mtn") {
+    providers.forEach(card => {
 
-        card.classList.add("active");
+        if (card.dataset.network === "mtn") {
 
-    } else {
+            card.classList.add("active");
 
-        card.classList.remove("active");
+        } else {
 
-    }
+            card.classList.remove("active");
 
-    card.addEventListener("click", () => {
+        }
 
-        networkCards.forEach(item =>
-            item.classList.remove("active")
-        );
+        card.addEventListener("click", () => {
 
-        card.classList.add("active");
+            providers.forEach(item =>
+                item.classList.remove("active")
+            );
 
-        selectedNetwork =
-            card.dataset.network.toLowerCase();
+            card.classList.add("active");
 
-        airtimeMessage.textContent = "";
+            selectedNetwork =
+                card.dataset.network;
+
+        });
 
     });
 
-});
+}
 
 /* ==========================================
-PHONE
+BACK BUTTON
 ========================================== */
 
-phoneInput.addEventListener("input", () => {
+backBtn.addEventListener("click", () => {
 
-    phoneInput.value =
-        phoneInput.value.replace(/\D/g, "");
-
-    if (phoneInput.value.length > 11) {
-
-        phoneInput.value =
-            phoneInput.value.slice(0, 11);
-
-    }
-
-});
-
-/* ==========================================
-AMOUNT
-========================================== */
-
-amountInput.addEventListener("input", () => {
-
-    amountInput.value =
-        amountInput.value.replace(/\D/g, "");
+    history.back();
 
 });
 
@@ -182,8 +189,51 @@ BENEFICIARIES
 
 beneficiaryBtn.addEventListener("click", () => {
 
-    airtimeMessage.textContent =
-        "Beneficiaries coming soon.";
+    showMessage(
+        "Beneficiaries coming soon."
+    );
+
+}); 
+/* ==========================================
+PHONE INPUT
+========================================== */
+
+phoneInput.addEventListener("input", () => {
+
+    phoneInput.value = phoneInput.value
+        .replace(/\D/g, "")
+        .slice(0, 11);
+
+});
+
+/* ==========================================
+AMOUNT INPUT
+========================================== */
+
+amountInput.addEventListener("input", () => {
+
+    amountInput.value = amountInput.value
+        .replace(/\D/g, "");
+
+});
+
+amountInput.addEventListener("keydown", (event) => {
+
+    if (["e", "E", "+", "-", "."].includes(event.key)) {
+
+        event.preventDefault();
+
+    }
+
+});
+
+phoneInput.addEventListener("keydown", (event) => {
+
+    if (["e", "E", "+", "-", "."].includes(event.key)) {
+
+        event.preventDefault();
+
+    }
 
 });
 
@@ -193,11 +243,9 @@ VALIDATION
 
 function validateForm() {
 
-    const phone =
-        phoneInput.value.trim();
+    const phone = phoneInput.value.trim();
 
-    const amount =
-        Number(amountInput.value);
+    const amount = Number(amountInput.value);
 
     if (phone.length !== 11) {
 
@@ -220,14 +268,11 @@ BUY AIRTIME
 
 continueBtn.addEventListener("click", async () => {
 
-    airtimeMessage.textContent = "";
-    airtimeMessage.classList.remove("success");
+    const error = validateForm();
 
-    const validationError = validateForm();
+    if (error) {
 
-    if (validationError) {
-
-        airtimeMessage.textContent = validationError;
+        showMessage(error);
 
         return;
 
@@ -235,9 +280,9 @@ continueBtn.addEventListener("click", async () => {
 
     try {
 
-        continueBtn.disabled = true;
+        showLoading();
 
-        continueBtn.textContent = "Processing...";
+        continueBtn.disabled = true;
 
         const response = await fetch(
 
@@ -257,9 +302,9 @@ continueBtn.addEventListener("click", async () => {
 
                     uid: currentUser.uid,
 
-                    phone: phoneInput.value.trim(),
-
                     network: selectedNetwork,
+
+                    phone: phoneInput.value.trim(),
 
                     amount: Number(amountInput.value)
 
@@ -281,31 +326,29 @@ continueBtn.addEventListener("click", async () => {
 
         }
 
-        airtimeMessage.classList.add("success");
-
-        airtimeMessage.textContent =
-            "Airtime purchased successfully.";
-
-        amountInput.value = "";
+        showMessage("Airtime purchased successfully.");
 
         phoneInput.value = "";
 
-        await loadWalletBalance();
+        amountInput.value = "";
+
+        await loadWallet();
 
     } catch (error) {
 
         console.error(error);
 
-        airtimeMessage.classList.remove("success");
+        showMessage(
 
-        airtimeMessage.textContent =
-            error.message;
+            error.message || "Unable to purchase airtime."
+
+        );
 
     } finally {
 
-        continueBtn.disabled = false;
+        hideLoading();
 
-        continueBtn.textContent = "Continue";
+        continueBtn.disabled = false;
 
     }
 

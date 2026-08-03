@@ -1,225 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Buy Airtime</title>
 
 <link rel="stylesheet" href="airtime.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="airtime-page">
+<div class="container">
 
-<!-- HEADER -->
+<header class="top-bar">
 
-<header class="page-header">
-
-<button
-id="backBtn"
-class="back-btn">
-
-<i class="fas fa-arrow-left"></i>
-
+<button id="backBtn" class="back-btn">
+←
 </button>
 
 <div>
 
 <h1>Buy Airtime</h1>
 
-<p>
-
-Purchase airtime for all networks.
-
-</p>
+<p>Purchase airtime for all networks.</p>
 
 </div>
-
-<div class="header-space"></div>
 
 </header>
 
-<!-- SERVICE PROVIDER -->
+<section class="provider-section">
 
-<section class="section">
+<h2>Service Provider</h2>
 
-<h2>
+<div class="providers">
 
-Service Provider
-
-</h2>
-
-<div class="network-grid">
-
-<div
-class="network-card active"
-data-network="MTN">
-
-<img
-src="images/mtn.png"
-alt="MTN">
-
+<div class="provider active" data-network="mtn">
+<img src="images/mtn.png" alt="MTN">
 </div>
 
-<div
-class="network-card"
-data-network="Airtel">
-
-<img
-src="images/airtel.png"
-alt="Airtel">
-
+<div class="provider" data-network="glo">
+<img src="images/glo.png" alt="Glo">
 </div>
 
-<div
-class="network-card"
-data-network="Glo">
-
-<img
-src="images/glo.png"
-alt="Glo">
-
+<div class="provider" data-network="airtel">
+<img src="images/airtel.png" alt="Airtel">
 </div>
 
-<div
-class="network-card"
-data-network="9mobile">
-
-<img
-src="images/9mobile.png"
-alt="9mobile">
-
+<div class="provider" data-network="9mobile">
+<img src="images/9mobile.png" alt="9mobile">
 </div>
 
 </div>
 
-</section> 
-<!-- PHONE NUMBER -->
+</section> <section class="phone-section">
 
-<section class="section">
+    <div class="section-title">
 
-<div class="section-title">
+        <h2>Phone Number</h2>
 
-<h2>
+        <button id="beneficiaryBtn" class="beneficiary-btn">
+            👤 Beneficiaries
+        </button>
 
-Phone Number
+    </div>
 
-</h2>
+    <input
+        type="tel"
+        id="phoneNumber"
+        placeholder="Enter phone number"
+        maxlength="11"
+        inputmode="numeric"
+    >
 
-<button
-type="button"
-class="beneficiary-btn">
+    <label class="save-beneficiary">
 
-<i class="fas fa-user"></i>
+        <input
+            type="checkbox"
+            id="saveBeneficiary"
+        >
 
-Beneficiaries
+        <span>Save Beneficiary</span>
 
-</button>
-
-</div>
-
-<div class="input-card">
-
-<input
-type="tel"
-id="phoneNumber"
-placeholder="Enter phone number"
-maxlength="11">
-
-</div>
-
-<label class="save-beneficiary">
-
-<input
-type="checkbox"
-id="saveBeneficiary">
-
-<span>
-
-Save Beneficiary
-
-</span>
-
-</label>
+    </label>
 
 </section>
 
-<!-- TOP UP -->
 
-<section class="section">
+<section class="amount-section">
 
-<h2>
+    <h2>Top Up</h2>
 
-Top Up
+    <div class="amount-card">
 
-</h2>
+        <div class="amount-input">
 
-<div class="amount-card">
+            <span class="naira">₦</span>
 
-<input
-type="number"
-id="amount"
-placeholder="₦ Enter amount">
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+                min="10"
+                step="1"
+                inputmode="numeric"
+            >
 
-<div class="balance-row">
+        </div>
 
-<div>
+        <hr>
 
-<i class="fas fa-wallet"></i>
+        <div class="wallet-row">
 
-<span>
+            <div class="wallet-left">
 
-Wallet Balance
+                💳 Wallet Balance
 
-</span>
+            </div>
 
-</div>
+            <div
+                id="walletBalance"
+                class="wallet-balance"
+            >
 
-<strong
-id="walletBalance">
+                ₦0.00
 
-₦0.00
+            </div>
 
-</strong>
+        </div>
 
-</div>
+    </div>
 
-</div>
+</section>
 
-</section> 
-<!-- CONTINUE BUTTON -->
 
 <button
-id="continueBtn"
-class="continue-btn">
+    id="continueBtn"
+    class="continue-btn"
+>
 
-Continue
+    Continue
 
 </button>
+<!-- Loading Overlay -->
 
-<p
-id="airtimeMessage"
-class="airtime-message">
+<div id="loadingOverlay" class="loading-overlay hidden">
 
-</p>
+    <div class="loader"></div>
+
+    <p>Please wait...</p>
 
 </div>
 
-<script
-src="airtime.js">
+<!-- Success / Error Message -->
 
-</script>
+<div id="messageBox" class="message-box hidden"></div>
+
+</div>
+
+<script type="module" src="airtime.js"></script>
 
 </body>
-
 </html>
