@@ -441,4 +441,29 @@ font-size:24px;
 
 }
 
+} 
+/* ==========================================
+MESSAGE
+========================================== */
+
+.airtime-message{
+
+margin-top:18px;
+
+text-align:center;
+
+font-size:15px;
+
+font-weight:500;
+
+color:#EF4444;
+
+min-height:20px;
+
+}
+
+.airtime-message.success{
+
+color:#16A34A;
+
 }

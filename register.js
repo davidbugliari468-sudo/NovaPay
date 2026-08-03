@@ -120,11 +120,18 @@ form.addEventListener("submit", async function (e) {
         const user = userCredential.user;
 
         await setDoc(doc(db, "users", user.uid), {
-            uid: user.uid,
-            email: user.email,
-            walletBalance: 0,
-            createdAt: serverTimestamp()
-        });
+    uid: user.uid,
+    email: user.email,
+
+    walletBalance: 0,
+
+    hasLoginPin: false,
+    loginPin: null,
+
+    biometricEnabled: false,
+
+    createdAt: serverTimestamp()
+});
 
         alert("Account created successfully!");
 
