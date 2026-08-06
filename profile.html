@@ -2,342 +2,503 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Profile | NovaPay</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>NovaPay | Settings</title>
 
     <link rel="stylesheet" href="profile.css">
 
-    <!-- Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 </head>
 
 <body>
 
-<div class="container">
-<!-- =========================================
-     PROFILE HEADER
-========================================= -->
+<div class="settings-page">
 
-<header class="profile-header">
+    <!-- Header -->
 
-    <button id="backBtn" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i>
-    </button>
+    <header class="settings-header">
 
-    <div class="header-content">
-        <h1>My Profile</h1>
-        <p>Manage your NovaPay account</p>
-    </div>
+        <button
+            id="backBtn"
+            class="back-btn">
 
-</header>
+            <i class="fa-solid fa-arrow-left"></i>
 
-<!-- =========================================
-     PROFILE CARD
-========================================= -->
+        </button>
 
-<section class="profile-card">
+        <h1>Settings</h1>
 
-    <div class="avatar">
-        <i class="fa-solid fa-user"></i>
-    </div>
+        <div class="header-placeholder"></div>
 
-    <h2 id="userName">John Anderson</h2>
+    </header>
 
-    <p id="userEmail">john@email.com</p>
 
-    
+    <!-- Profile Card -->
 
-    <div class="profile-stats">
+    <section class="profile-card">
 
-    <div class="stat-box">
-        ⭐
-        <span>0 Points</span>
-    </div>
+        <div class="profile-left">
 
-    <div class="stat-box">
-        🏆
-        <span>0 Rewards</span>
-    </div>
+            <div class="profile-avatar">
+
+                <img
+                    id="profileImage"
+                    src="images/avatar.png"
+                    alt="Profile">
+
+            </div>
+
+            <div class="profile-info">
+
+                <h2 id="userName">
+
+                    Loading...
+
+                </h2>
+
+                <p id="userEmail">
+
+                    Loading...
+
+                </p>
+
+                <div class="profile-stats">
+
+                    <div class="stat-item">
+
+                        <i class="fa-solid fa-star"></i>
+
+                        <span id="userPoints">
+
+                            0 Points
+
+                        </span>
+
+                    </div>
+
+                    <div class="stat-divider"></div>
+
+                    <div class="stat-item">
+
+                        <i class="fa-solid fa-gift"></i>
+
+                        <span id="userRewards">
+
+                            0 Rewards
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            id="personalInformationBtn"
+            class="profile-arrow">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+    </section> 
+        <!-- ==========================
+         ACCOUNT
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Account</h3>
+
+        <div class="settings-card">
+
+            <a href="personal-information.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>Personal Information</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="kyc.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-id-card"></i>
+
+                    <span>KYC Verification</span>
+
+                </div>
+
+                <span class="coming-soon">
+
+                    Coming Soon
+
+                </span>
+
+            </a>
+
+            <a href="account-limits.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    <span>Account Limits</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="#" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-building-columns"></i>
+
+                    <span>Business Account</span>
+
+                </div>
+
+                <span class="coming-soon">
+
+                    Coming Soon
+
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         SECURITY
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Security</h3>
+
+        <div class="settings-card">
+
+            <a href="login-pin.html"
+               class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <span>Login PIN</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="transaction-pin.html"
+               class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>Transaction PIN</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="#"
+               class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-fingerprint"></i>
+
+                    <span>Biometric Login</span>
+
+                </div>
+
+                <span class="coming-soon">
+
+                    Coming Soon
+
+                </span>
+
+            </a>
+
+            <a href="change-password.html"
+               class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-key"></i>
+
+                    <span>Change Password</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+        </div>
+
+    </section> 
+        <!-- ==========================
+         REWARDS
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Rewards</h3>
+
+        <div class="settings-card">
+
+            <a href="my-points.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-star"></i>
+
+                    <span>My Points</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="achievements.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                    <span>My Achievements</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         PREFERENCES
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Preferences</h3>
+
+        <div class="settings-card">
+
+            <a href="notifications.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    <span>Notifications</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="language.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-language"></i>
+
+                    <span>Language</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="#" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-moon"></i>
+
+                    <span>Dark Mode</span>
+
+                </div>
+
+                <span class="coming-soon">
+
+                    Coming Soon
+
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         SUPPORT
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Support</h3>
+
+        <div class="settings-card">
+
+            <a href="help.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-circle-question"></i>
+
+                    <span>Help Centre</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="contact-support.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-headset"></i>
+
+                    <span>Contact Support</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         LEGAL
+    ========================== -->
+
+    <section class="settings-section">
+
+        <h3>Legal</h3>
+
+        <div class="settings-card">
+
+            <a href="privacy-policy.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <span>Privacy Policy</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="terms.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-file-contract"></i>
+
+                    <span>Terms & Conditions</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+            <a href="about.html" class="settings-item">
+
+                <div class="item-left">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <span>About NovaPay</span>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         LOGOUT
+    ========================== -->
+
+    <section class="logout-section">
+
+        <button
+            id="logoutBtn"
+            class="logout-btn">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </button>
+
+    </section>
 
 </div>
 
-</section>
+<script type="module" src="profile.js"></script>
 
-<!-- =========================================
-     ACCOUNT
-========================================= -->
+</body>
 
-<section class="profile-section">
-
-    <h3 class="section-title">ACCOUNT</h3>
-
-    <div class="menu-card">
-
-        <a href="personal-information.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-user"></i>
-                <span>Personal Information</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <div class="menu-item disabled">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-id-card"></i>
-                <span>KYC Verification</span>
-            </div>
-
-            <span class="coming-soon">Coming Soon</span>
-
-        </div>
-
-        <a href="account-limits.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-chart-column"></i>
-                <span>Account Limits</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     SECURITY
-========================================= -->
-
-<section class="profile-section">
-
-    <h3 class="section-title">SECURITY</h3>
-
-    <div class="menu-card">
-
-        <a href="create-pin.html" class="menu-item">
-
-    <div class="menu-left">
-        <i class="fa-solid fa-shield-halved"></i>
-        <span>Security PIN</span>
-    </div>
-
-    <i class="fa-solid fa-chevron-right"></i>
-
-</a>
-
-        <div class="menu-item disabled">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-fingerprint"></i>
-                <span>Biometric Login</span>
-            </div>
-
-            <span class="coming-soon">Coming Soon</span>
-
-        </div>
-
-        <a href="change-password.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-key"></i>
-                <span>Change Password</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     REWARDS
-========================================= -->
-
-<section class="profile-section">
-
-    <h3 class="section-title">REWARDS</h3>
-
-    <div class="menu-card">
-
-        <a href="my-points.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-star"></i>
-                <span>My Points</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <a href="achievements.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-trophy"></i>
-                <span>My Achievements</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     PREFERENCES
-========================================= -->
-
-<section class="profile-section">
-
-    <h3 class="section-title">PREFERENCES</h3>
-
-    <div class="menu-card">
-
-        <a href="notifications.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-bell"></i>
-                <span>Notifications</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <a href="language.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-language"></i>
-                <span>Language</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <div class="menu-item disabled">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-moon"></i>
-                <span>Dark Mode</span>
-            </div>
-
-            <span class="coming-soon">Coming Soon</span>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     SUPPORT
-========================================= -->
-
-<section class="profile-section">
-
-    <h3 class="section-title">SUPPORT</h3>
-
-    <div class="menu-card">
-
-        <a href="help.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-circle-question"></i>
-                <span>Help Centre</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <a href="contact-support.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-headset"></i>
-                <span>Contact Support</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     LEGAL
-========================================= -->
-
-<section class="profile-section">
-
-    <h3 class="section-title">LEGAL</h3>
-
-    <div class="menu-card">
-
-        <a href="privacy-policy.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-user-shield"></i>
-                <span>Privacy Policy</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <a href="terms.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-file-contract"></i>
-                <span>Terms & Conditions</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-        <a href="about.html" class="menu-item">
-
-            <div class="menu-left">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>About NovaPay</span>
-            </div>
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- =========================================
-     LOGOUT
-========================================= -->
-
-<section class="logout-section">
-
-    <button id="logoutBtn" class="logout-btn">
-
-        <i class="fa-solid fa-right-from-bracket"></i>
-
-        Logout
-
-    </button>
-
-</section>
+</html>

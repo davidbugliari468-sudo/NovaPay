@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>Notifications</title>
+
+<link rel="stylesheet"
+href="notifications.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="page">
+
+<!-- Header -->
+
+<header class="header">
+
+<button
+id="backBtn"
+class="back-btn">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<div class="header-text">
+
+<h1>Notifications</h1>
+
+<p>
+
+Stay updated with every
+activity on your account.
+
+</p>
+
+</div>
+
+</header>
+
+<!-- Search -->
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+id="searchInput"
+type="text"
+placeholder="Search notifications">
+
+</div>
+
+<!-- Tabs -->
+
+<div class="tabs">
+
+<button
+class="tab active">
+
+All
+
+</button>
+
+<button
+class="tab">
+
+Transactions
+
+</button>
+
+<button
+class="tab">
+
+Services
+
+</button>
+
+<button
+class="tab">
+
+NovaPay
+
+</button>
+
+</div>
+
+<!-- Notification List -->
+
+<div
+id="notificationList"
+class="notification-list">
+
+</div>
+
+<!-- Empty -->
+
+<div
+id="emptyState"
+class="empty">
+
+<i class="fa-regular fa-bell"></i>
+
+<h2>
+
+No Notifications
+
+</h2>
+
+<p>
+
+You're all caught up.
+
+New transactions,
+services and NovaPay
+updates will appear here.
+
+</p>
+
+</div>
+
+</div>
+
+<script
+type="module"
+src="notifications.js">
+
+</script>
+
+</body>
+
+</html>

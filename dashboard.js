@@ -258,13 +258,9 @@ supportBtn?.addEventListener("click", () => {
 
 notificationBtn?.addEventListener("click", () => {
 
-    showModal(
-        "Notifications",
-        "No new notifications."
-    );
+    window.location.href = "notifications.html";
 
 });
-
 // ======================================
 // BOTTOM NAVIGATION
 // ======================================
@@ -280,10 +276,7 @@ walletBtn?.addEventListener("click", () => {
 
 payBillsBtn?.addEventListener("click", () => {
 
-    showModal(
-        "Pay Bills",
-        "More bill payment services are coming soon."
-    );
+    
 
 }); 
 // ======================================

@@ -1,5 +1,5 @@
 /* ==========================================
-   NOVAPAY PROFILE V5
+   NOVAPAY SETTINGS
    PART 1 - FOUNDATION
 ========================================== */
 
@@ -7,465 +7,506 @@
 
 :root{
 
-    --primary:#2F5FE3;
-    --primary-dark:#234FD2;
-    --primary-navy:#162454;
+    --primary:#2F6BFF;
+    --primary-light:#4D84FF;
+    --background:#F5F8FF;
 
-    --bg:#F5F7FC;
     --card:#FFFFFF;
 
-    --text:#182230;
-    --subtext:#667085;
+    --text:#111827;
+    --subtext:#6B7280;
 
-    --border:#E8EDF5;
+    --border:#E8EDF7;
 
-    --danger:#DC2626;
+    --danger:#E53935;
 
-    --shadow:0 8px 24px rgba(15,23,42,.08);
+    --shadow:0 10px 30px rgba(47,107,255,.08);
 
     --radius:20px;
 
 }
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
 
-html{
-    scroll-behavior:smooth;
+margin:0;
+padding:0;
+box-sizing:border-box;
+
 }
 
 body{
 
-    background:var(--bg);
+font-family:'Poppins',sans-serif;
 
-    color:var(--text);
+background:var(--background);
 
-    font-family:'Poppins',sans-serif;
-
-}
-
-.container{
-
-    width:100%;
-    max-width:500px;
-
-    margin:auto;
-
-    padding:18px 16px 32px;
-
-    min-height:100vh;
+color:var(--text);
 
 }
 
-a{
+.settings-page{
 
-    color:inherit;
+max-width:480px;
 
-    text-decoration:none;
+margin:auto;
+
+padding:16px 16px 40px;
+
+min-height:100vh;
 
 }
 
-button{
-
-    font-family:inherit;
-
-} 
 /* ==========================================
-   PART 2 - HEADER
+HEADER
 ========================================== */
 
-.profile-header{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:18px;
+.settings-header{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+margin-bottom:18px;
+
 }
 
 .back-btn{
-    width:44px;
-    height:44px;
 
-    border:none;
-    border-radius:14px;
+width:44px;
+height:44px;
 
-    background:#fff;
+border:none;
 
-    color:var(--primary);
+border-radius:14px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+background:#FFFFFF;
 
-    cursor:pointer;
+display:flex;
 
-    box-shadow:var(--shadow);
+align-items:center;
 
-    transition:.2s;
-}
+justify-content:center;
 
-.back-btn i{
-    font-size:17px;
+color:var(--primary);
+
+font-size:17px;
+
+box-shadow:var(--shadow);
+
+cursor:pointer;
+
+transition:.25s;
+
 }
 
 .back-btn:active{
-    transform:scale(.96);
-}
 
-.header-content{
-    flex:1;
-}
-
-.header-content h1{
-
-    font-size:22px;
-
-    font-weight:600;
-
-    color:var(--text);
-
-    line-height:1.2;
+transform:scale(.96);
 
 }
 
-.header-content p{
+.settings-header h1{
 
-    margin-top:2px;
+font-size:24px;
 
-    font-size:13px;
+font-weight:700;
 
-    font-weight:400;
+color:var(--text);
 
-    color:var(--subtext);
+}
 
-} 
+.header-placeholder{
+
+width:44px;
+
+}
+
 /* ==========================================
-   PART 3 - COMPACT PROFILE CARD
+PROFILE CARD
 ========================================== */
 
 .profile-card{
 
-    background:linear-gradient(
-        135deg,
-        var(--primary-navy) 0%,
-        var(--primary-dark) 55%,
-        var(--primary) 100%
-    );
+background:linear-gradient(
+135deg,
+#4A84FF,
+#2F6BFF
+);
 
-    border-radius:18px;
+border-radius:22px;
 
-    padding:16px 18px;
+padding:18px;
 
-    margin-bottom:18px;
+display:flex;
 
-    text-align:center;
+justify-content:space-between;
 
-    color:#fff;
+align-items:center;
 
-    box-shadow:0 14px 28px rgba(47,95,227,.22);
+box-shadow:0 16px 35px rgba(47,107,255,.20);
 
-}
-
-.avatar{
-
-    width:56px;
-    height:56px;
-
-    margin:0 auto 10px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.18);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border:2px solid rgba(255,255,255,.20);
+margin-bottom:22px;
 
 }
 
-.avatar i{
+.profile-left{
 
-    font-size:24px;
+display:flex;
 
-    color:#fff;
+align-items:center;
 
-}
-
-.profile-card h2{
-
-    font-size:17px;
-
-    font-weight:600;
-
-    margin-bottom:2px;
-
-    color:#fff;
+gap:14px;
 
 }
 
-.profile-card p{
+.profile-avatar{
 
-    font-size:12px;
+width:62px;
+height:62px;
 
-    font-weight:400;
+border-radius:50%;
 
-    color:rgba(255,255,255,.82);
+background:rgba(255,255,255,.20);
 
-    margin-bottom:14px;
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+overflow:hidden;
 
 }
+
+.profile-avatar img{
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+}
+
+.profile-info h2{
+
+font-size:18px;
+
+font-weight:600;
+
+color:#FFFFFF;
+
+margin-bottom:2px;
+
+}
+
+.profile-info p{
+
+font-size:13px;
+
+color:rgba(255,255,255,.85);
+
+margin-bottom:10px;
+
+} 
+/* ==========================================
+   PROFILE STATS
+========================================== */
 
 .profile-stats{
 
-    display:flex;
+display:flex;
 
-    justify-content:center;
+align-items:center;
 
-    align-items:center;
+gap:14px;
 
-    gap:26px;
-
-    font-size:13px;
-
-    font-weight:500;
+flex-wrap:wrap;
 
 }
 
-.stat-box{
+.stat-item{
 
-    display:flex;
+display:flex;
 
-    align-items:center;
+align-items:center;
 
-    gap:6px;
+gap:6px;
+
+font-size:13px;
+
+font-weight:500;
+
+color:#FFFFFF;
 
 }
 
-.stat-box span{
+.stat-item i{
 
-    color:rgba(255,255,255,.82);
+font-size:13px;
 
-}
-
-.stat-box strong{
-
-    font-size:14px;
-
-    font-weight:600;
-
-    color:#fff;
+color:#FFD54F;
 
 }
 
 .stat-divider{
 
-    display:none;
+width:1px;
+
+height:16px;
+
+background:rgba(255,255,255,.30);
+
+}
+
+.profile-arrow{
+
+width:42px;
+
+height:42px;
+
+border:none;
+
+border-radius:14px;
+
+background:rgba(255,255,255,.18);
+
+color:#FFFFFF;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.profile-arrow:active{
+
+transform:scale(.95);
+
+}
+
+/* ==========================================
+   SECTIONS
+========================================== */
+
+.settings-section{
+
+margin-bottom:18px;
+
+}
+
+.settings-section h3{
+
+font-size:12px;
+
+font-weight:600;
+
+text-transform:uppercase;
+
+letter-spacing:.8px;
+
+color:#94A3B8;
+
+margin:0 0 10px 6px;
+
+}
+
+/* ==========================================
+   SETTINGS CARD
+========================================== */
+
+.settings-card{
+
+background:#FFFFFF;
+
+border-radius:18px;
+
+overflow:hidden;
+
+border:1px solid var(--border);
+
+box-shadow:0 6px 18px rgba(15,23,42,.04);
+
+}
+
+/* ==========================================
+   MENU ITEM
+========================================== */
+
+.settings-item{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+min-height:60px;
+
+padding:0 18px;
+
+text-decoration:none;
+
+border-bottom:1px solid #EEF2F7;
+
+transition:.2s;
+
+}
+
+.settings-item:last-child{
+
+border-bottom:none;
+
+}
+
+.settings-item:active{
+
+background:#F8FAFF;
+
+}
+
+/* Left */
+
+.item-left{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+}
+
+.item-left i{
+
+width:40px;
+
+height:40px;
+
+border-radius:12px;
+
+background:#EEF4FF;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:16px;
+
+color:var(--primary);
+
+}
+
+.item-left span{
+
+font-size:15px;
+
+font-weight:500;
+
+color:var(--text);
+
+}
+
+/* Right */
+
+.settings-item .fa-chevron-right{
+
+font-size:12px;
+
+color:#B6C0D4;
 
 } 
 /* ==========================================
-   PART 4 - SECTION & CARDS
+   COMING SOON BADGE
 ========================================== */
-
-.profile-section{
-    margin-bottom:16px;
-}
-
-.section-title{
-
-    font-size:11px;
-
-    font-weight:500;
-
-    color:#98A2B3;
-
-    text-transform:uppercase;
-
-    letter-spacing:.8px;
-
-    margin:0 0 8px 6px;
-
-}
-
-.menu-card{
-
-    background:#fff;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    border:1px solid #EEF2F7;
-
-    box-shadow:0 4px 16px rgba(15,23,42,.05);
-
-} 
-/* ==========================================
-   PART 5 - MENU ITEMS
-========================================== */
-
-.menu-item{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    min-height:54px;
-
-    padding:0 16px;
-
-    border-bottom:1px solid #EEF2F7;
-
-    transition:.2s;
-
-}
-
-.menu-item:last-child{
-
-    border-bottom:none;
-
-}
-
-.menu-item:active{
-
-    background:#F8FAFF;
-
-}
-
-.menu-left{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-.menu-left i{
-
-    width:38px;
-
-    height:38px;
-
-    border-radius:12px;
-
-    background:#EEF4FF;
-
-    color:var(--primary);
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:15px;
-
-}
-
-.menu-left span{
-
-    font-size:14px;
-
-    font-weight:500;
-
-    color:var(--text);
-
-}
-
-.fa-chevron-right{
-
-    font-size:12px;
-
-    color:#B8C1D1;
-
-}
 
 .coming-soon{
 
-    padding:4px 10px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
 
-    border-radius:999px;
+padding:5px 12px;
 
-    background:#FFF8E5;
+border-radius:999px;
 
-    color:#D97706;
+background:#FFF7E6;
 
-    font-size:10px;
+color:#D97706;
 
-    font-weight:600;
+font-size:11px;
+
+font-weight:600;
 
 }
 
-.disabled{
-
-    cursor:default;
-
-} 
 /* ==========================================
-   PART 6 - LOGOUT
+   LOGOUT
 ========================================== */
 
 .logout-section{
 
-    margin:20px 0 40px;
+margin:24px 0 40px;
 
 }
 
 .logout-btn{
 
-    width:100%;
+width:100%;
 
-    height:50px;
+height:54px;
 
-    border:none;
+border:none;
 
-    border-radius:16px;
+border-radius:18px;
 
-    background:#FEE2E2;
+background:#FEECEC;
 
-    color:#DC2626;
+color:#DC2626;
 
-    font-size:15px;
+font-size:16px;
 
-    font-weight:600;
+font-weight:600;
 
-    cursor:pointer;
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:10px;
+
+cursor:pointer;
+
+transition:.25s;
+
+box-shadow:0 6px 16px rgba(220,38,38,.08);
+
+}
+
+.logout-btn:active{
+
+transform:scale(.98);
 
 }
 
 .logout-btn i{
 
-    margin-right:8px;
-
-} 
-/* ==========================================
-   PART 7 - MOBILE
-========================================== */
-
-@media(max-width:480px){
-
-.container{
-
-padding:16px;
+font-size:16px;
 
 }
 
-.profile-card{
-
-padding:14px 16px;
-
-}
-
-} 
 /* ==========================================
-   PART 8 - FINAL
+   SCROLLBAR
 ========================================== */
 
 ::-webkit-scrollbar{
@@ -474,8 +515,108 @@ display:none;
 
 }
 
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width:480px){
+
+.settings-page{
+
+padding:14px 14px 36px;
+
+}
+
+.settings-header{
+
+margin-bottom:16px;
+
+}
+
+.settings-header h1{
+
+font-size:22px;
+
+}
+
+.profile-card{
+
+padding:16px;
+
+border-radius:20px;
+
+}
+
+.profile-avatar{
+
+width:58px;
+height:58px;
+
+}
+
+.profile-info h2{
+
+font-size:17px;
+
+}
+
+.profile-info p{
+
+font-size:12px;
+
+}
+
+.settings-item{
+
+min-height:56px;
+
+padding:0 16px;
+
+}
+
+.item-left{
+
+gap:12px;
+
+}
+
+.item-left i{
+
+width:38px;
+height:38px;
+
+font-size:15px;
+
+}
+
+.item-left span{
+
+font-size:14px;
+
+}
+
+.logout-btn{
+
+height:52px;
+
+}
+
+}
+
+/* ==========================================
+   FINAL POLISH
+========================================== */
+
 body{
 
 -webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+
+}
+
+button,
+a{
+
+-webkit-tap-highlight-color:transparent;
 
 }
