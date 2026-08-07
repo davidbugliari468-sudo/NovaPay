@@ -3,213 +3,589 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>NovaPay</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta
+        name="description"
+        content="NovaPay — Fast, secure and reliable payments for everyday services."
+    >
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>NovaPay</title>
 
-<link rel="stylesheet" href="style.css">
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- NovaPay Homepage CSS -->
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
 <body>
 
-<section class="hero">
+    <!-- =================================
+         HEADER
+    ================================== -->
 
-<div class="container">
+    <header class="site-header">
 
-<h1 class="logo">
+        <div class="container">
 
-<span>Nova</span>Pay
+            <nav class="navbar">
 
-</h1>
+                <a
+                    href="index.html"
+                    class="logo"
+                    aria-label="NovaPay Home"
+                >
+                    <span>Nova</span>Pay
+                </a>
 
-<p class="badge">
+                <button
+                    type="button"
+                    class="menu-button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
 
-⚡ Fast • Secure • Reliable
+            </nav>
 
-</p>
+        </div>
 
-<h2 class="hero-title">
+    </header>
 
-Manage Your Money<br>
 
-Without Stress.
+    <!-- =================================
+         HERO
+    ================================== -->
 
-</h2>
+    <main>
 
-<p class="hero-text">
+        <section class="hero">
 
-Buy airtime, data, electricity,
-TV subscriptions, fund betting
-wallets and manage your wallet
-in one secure app.
+            <div class="container">
 
-</p>
+                <div class="hero-content">
 
-<a href="register.html" class="btn">
+                    <div class="hero-badge">
+                        ⚡ Fast • Secure • Reliable
+                    </div>
 
-Open Free Account
+                    <h1 class="hero-title">
+                        Manage Your Money
+                        <span>Without Stress.</span>
+                    </h1>
 
-</a>
+                    <p class="hero-description">
+                        Buy airtime, data, electricity,
+                        TV subscriptions, fund betting
+                        wallets and manage your wallet
+                        in one secure app.
+                    </p>
 
-<p class="login-text">
+                    <div class="hero-actions">
 
-Already have an account?
+                        <a
+                            href="register.html"
+                            class="primary-button"
+                        >
+                            Open Free Account
+                        </a>
 
-<a href="login.html">
+                        <p class="login-text">
+                            Already have an account?
+                            <a href="login.html">
+                                Login →
+                            </a>
+                        </p>
 
-Login →
+                    </div>
 
-</a>
+                </div>
 
-</p>
+            </div>
 
-</div>
+        </section> 
+                <!-- =================================
+             OUR SERVICES
+        ================================== -->
 
-</section>
+        <section class="services" id="services">
 
-<section class="services">
+            <div class="container">
 
-<div class="container">
+                <div class="section-heading">
 
-<h2 class="section-title">
+                    <span class="section-label">
+                        NOVAPAY SERVICES
+                    </span>
 
-Our Services
+                    <h2>
+                        Everything You Need
+                    </h2>
 
-</h2>
+                    <p>
+                        Simple services for your everyday payments.
+                    </p>
 
-<div class="service-grid">
+                </div>
 
-<div class="service-card">
 
-<div class="icon">📱</div>
+                <div class="services-grid">
 
-<h3>Airtime</h3>
+                    <!-- Airtime -->
 
-</div>
+                    <a
+                        href="airtime.html"
+                        class="service-card"
+                    >
 
-<div class="service-card">
+                        <div class="service-icon">
+                            📱
+                        </div>
 
-<div class="icon">📶</div>
+                        <div class="service-content">
 
-<h3>Data</h3>
+                            <h3>
+                                Airtime
+                            </h3>
 
-</div>
+                            <p>
+                                Instant recharge
+                            </p>
 
-<div class="service-card">
+                        </div>
 
-<div class="icon">⚡</div>
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-<h3>Electricity</h3>
+                    </a>
 
-</div>
 
-<div class="service-card">
+                    <!-- Data -->
 
-<div class="icon">📺</div>
+                    <a
+                        href="data.html"
+                        class="service-card"
+                    >
 
-<h3>TV</h3>
+                        <div class="service-icon">
+                            📶
+                        </div>
 
-</div>
+                        <div class="service-content">
 
-<div class="service-card">
+                            <h3>
+                                Data
+                            </h3>
 
-<div class="icon">🎯</div>
+                            <p>
+                                Affordable bundles
+                            </p>
 
-<h3>Betting</h3>
+                        </div>
 
-</div>
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-<div class="service-card">
+                    </a>
 
-<div class="icon">👛</div>
 
-<h3>Wallet</h3>
+                    <!-- Electricity -->
 
-</div>
+                    <a
+                        href="electricity.html"
+                        class="service-card"
+                    >
 
-</div>
+                        <div class="service-icon">
+                            ⚡
+                        </div>
 
-</div>
+                        <div class="service-content">
 
-<section class="services">
+                            <h3>
+                                Electricity
+                            </h3>
 
-<div class="container">
+                            <p>
+                                Pay bills easily
+                            </p>
 
-<h2 class="section-title">
-Our Services
-</h2>
+                        </div>
 
-<div class="service-grid">
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-<div class="service-card">
+                    </a>
 
-<div class="icon-box">📱</div>
 
-<h3>Airtime</h3>
+                    <!-- TV -->
 
-<p>Instant recharge</p>
+                    <a
+                        href="tv.html"
+                        class="service-card"
+                    >
 
-</div>
+                        <div class="service-icon">
+                            📺
+                        </div>
 
-<div class="service-card">
+                        <div class="service-content">
 
-<div class="icon-box">📶</div>
+                            <h3>
+                                TV Subscription
+                            </h3>
 
-<h3>Data</h3>
+                            <p>
+                                Renew your subscription
+                            </p>
 
-<p>Affordable bundles</p>
+                        </div>
 
-</div>
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-<div class="service-card">
+                    </a>
 
-<div class="icon-box">⚡</div>
 
-<h3>Electricity</h3>
+                    <!-- Betting -->
 
-<p>Pay bills easily</p>
+                    <a
+                        href="betting.html"
+                        class="service-card"
+                    >
 
-</div>
+                        <div class="service-icon">
+                            🎯
+                        </div>
 
-<div class="service-card">
+                        <div class="service-content">
 
-<div class="icon-box">📺</div>
+                            <h3>
+                                Betting
+                            </h3>
 
-<h3>TV</h3>
+                            <p>
+                                Fund your wallet
+                            </p>
 
-<p>Renew subscriptions</p>
+                        </div>
 
-</div>
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-<div class="service-card">
+                    </a>
 
-<div class="icon-box">🎯</div>
 
-<h3>Betting</h3>
+                    <!-- Wallet -->
 
-<p>Fund betting wallets</p>
+                    <a
+                        href="wallet.html"
+                        class="service-card"
+                    >
 
-</div>
+                        <div class="service-icon">
+                            👛
+                        </div>
 
-<div class="service-card">
+                        <div class="service-content">
 
-<div class="icon-box">👛</div>
+                            <h3>
+                                Wallet
+                            </h3>
 
-<h3>Wallet</h3>
+                            <p>
+                                Manage your funds
+                            </p>
 
-<p>Add & manage funds</p>
+                        </div>
 
-</div>
+                        <span class="service-arrow">
+                            →
+                        </span>
 
-</div>
+                    </a>
 
-</div>
+                </div>
 
-</section>
+            </div>
+
+        </section> 
+                <!-- =================================
+             WHY CHOOSE NOVAPAY
+        ================================== -->
+
+        <section class="why-novapay">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        WHY NOVAPAY
+                    </span>
+
+                    <h2>
+                        Built For Simplicity
+                    </h2>
+
+                    <p>
+                        Everything you need for fast and reliable payments.
+                    </p>
+
+                </div>
+
+
+                <div class="benefits-grid">
+
+                    <!-- Secure -->
+
+                    <div class="benefit-card">
+
+                        <div class="benefit-icon">
+                            🔒
+                        </div>
+
+                        <div class="benefit-content">
+
+                            <h3>
+                                Secure Payments
+                            </h3>
+
+                            <p>
+                                Your transactions are protected.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Fast -->
+
+                    <div class="benefit-card">
+
+                        <div class="benefit-icon">
+                            ⚡
+                        </div>
+
+                        <div class="benefit-content">
+
+                            <h3>
+                                Instant Transactions
+                            </h3>
+
+                            <p>
+                                Fast and reliable payments.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Affordable -->
+
+                    <div class="benefit-card">
+
+                        <div class="benefit-icon">
+                            💰
+                        </div>
+
+                        <div class="benefit-content">
+
+                            <h3>
+                                Affordable Prices
+                            </h3>
+
+                            <p>
+                                Great value for everyday payments.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Support -->
+
+                    <div class="benefit-card">
+
+                        <div class="benefit-icon">
+                            🎧
+                        </div>
+
+                        <div class="benefit-content">
+
+                            <h3>
+                                24/7 Support
+                            </h3>
+
+                            <p>
+                                Help whenever you need it.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section> 
+                <!-- =================================
+             FINAL CALL TO ACTION
+        ================================== -->
+
+        <section class="final-cta">
+
+            <div class="container">
+
+                <div class="cta-box">
+
+                    <span class="cta-label">
+                        GET STARTED TODAY
+                    </span>
+
+                    <h2>
+                        Ready to Get Started?
+                    </h2>
+
+                    <p>
+                        Create your free NovaPay account
+                        and enjoy simple, secure payments.
+                    </p>
+
+                    <a
+                        href="register.html"
+                        class="cta-button"
+                    >
+                        Open Free Account
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section> 
+                <!-- =================================
+             FOOTER
+        ================================== -->
+
+        <footer class="site-footer">
+
+            <div class="container">
+
+                <div class="footer-main">
+
+                    <div class="footer-brand">
+
+                        <a
+                            href="index.html"
+                            class="footer-logo"
+                        >
+                            <span>Nova</span>Pay
+                        </a>
+
+                        <p>
+                            ⚡ Fast • Secure • Reliable
+                        </p>
+
+                    </div>
+
+
+                    <div class="footer-links">
+
+                        <a href="#services">
+                            Features
+                        </a>
+
+                        <a href="#services">
+                            Services
+                        </a>
+
+                        <a href="#support">
+                            Support
+                        </a>
+
+                        <a href="privacy.html">
+                            Privacy Policy
+                        </a>
+
+                        <a href="terms.html">
+                            Terms & Conditions
+                        </a>
+
+                        <a href="contact.html">
+                            Contact Us
+                        </a>
+
+                    </div>
+
+
+                    <div class="footer-contact">
+
+                        <a href="mailto:support@novapay.com">
+                            support@novapay.com
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </footer> 
+                            <div class="footer-bottom">
+
+                        <p>
+                            © 2026 NovaPay. All Rights Reserved.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
