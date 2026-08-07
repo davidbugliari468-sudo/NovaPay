@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>NovaPay | Betting</title>
+
+<link
+rel="stylesheet"
+href="betting.css">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Header -->
+
+<header class="top-bar">
+
+<button
+id="backBtn"
+class="back-btn">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<div>
+
+<h1>Fund Betting Account</h1>
+
+<p>Fund your betting wallet instantly.</p>
+
+</div>
+
+</header>
+
+<!-- Betting Provider -->
+
+<section>
+
+<h2>Betting Provider</h2>
+
+<div class="providers">
+
+<div
+class="provider active"
+data-provider="bet9ja">
+
+Bet9ja
+
+</div>
+
+<div
+class="provider"
+data-provider="sportybet">
+
+SportyBet
+
+</div>
+
+<div
+class="provider"
+data-provider="1xbet">
+
+1xBet
+
+</div>
+
+<div
+class="provider"
+data-provider="betking">
+
+BetKing
+
+</div>
+
+<div
+class="provider"
+data-provider="nairabet">
+
+NairaBet
+
+</div>
+
+<div
+class="provider"
+data-provider="merrybet">
+
+MerryBet
+
+</div>
+
+</div>
+
+</section> 
+    <!-- ==========================
+         CUSTOMER ID
+    ========================== -->
+
+    <section>
+
+        <h2>Customer ID</h2>
+
+        <input
+            type="text"
+            id="customerId"
+            class="customer-input"
+            placeholder="Enter Customer ID"
+            autocomplete="off">
+
+        <button
+            id="verifyAccountBtn"
+            class="verify-btn">
+
+            Verify Account
+
+        </button>
+
+    </section>
+
+    <!-- ==========================
+         ACCOUNT DETAILS
+    ========================== -->
+
+    <section
+        id="accountCard"
+        class="account-card hidden">
+
+        <div class="account-row">
+
+            <span>Account Name</span>
+
+            <strong id="accountName">
+
+                —
+
+            </strong>
+
+        </div>
+
+        <div class="account-row">
+
+            <span>Provider</span>
+
+            <strong id="accountProvider">
+
+                —
+
+            </strong>
+
+        </div>
+
+        <div class="account-row">
+
+            <span>Status</span>
+
+            <strong id="accountStatus">
+
+                —
+
+            </strong>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         AMOUNT
+    ========================== -->
+
+    <section
+        id="amountSection"
+        class="hidden">
+
+        <h2>Amount</h2>
+
+        <div class="amount-card">
+
+            <div class="amount-input">
+
+                <span class="naira">
+
+                    ₦
+
+                </span>
+
+                <input
+                    type="text"
+                    id="amount"
+                    placeholder="Enter amount"
+                    inputmode="numeric"
+                    autocomplete="off">
+
+            </div>
+
+            <hr>
+
+            <div class="wallet-row">
+
+                <div class="wallet-left">
+
+                    💳 Wallet Balance
+
+                </div>
+
+                <div
+                    id="walletBalance"
+                    class="wallet-balance">
+
+                    ₦0.00
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         CONTINUE
+    ========================== -->
+
+    <button
+        id="continueBtn"
+        class="continue-btn hidden">
+
+        Continue
+
+    </button>
+
+    <!-- ==========================
+         LOADING
+    ========================== -->
+
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden">
+
+        <div class="loader"></div>
+
+        <p>
+
+            Please wait...
+
+        </p>
+
+    </div>
+
+    <!-- ==========================
+         MESSAGE
+    ========================== -->
+
+    <div
+        id="messageBox"
+        class="message-box hidden">
+
+    </div>
+
+</div>
+
+<script
+type="module"
+src="betting.js"></script>
+
+</body>
+
+</html>

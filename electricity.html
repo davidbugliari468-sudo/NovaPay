@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>NovaPay | Electricity</title>
+
+    <link
+        rel="stylesheet"
+        href="electricity.css">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header class="top-bar">
+
+        <button
+            id="backBtn"
+            class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </button>
+
+        <div>
+
+            <h1>Buy Electricity</h1>
+
+            <p>Pay electricity bills securely.</p>
+
+        </div>
+
+    </header>
+
+    <!-- Distribution Company -->
+
+    <section>
+
+        <h2>Distribution Company</h2>
+
+        <div class="providers">
+
+            <div class="provider active"
+                 data-company="ikedc">
+
+                IKEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="ekedc">
+
+                EKEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="aedc">
+
+                AEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="ibedc">
+
+                IBEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="phed">
+
+                PHED
+
+            </div>
+
+            <div class="provider"
+                 data-company="eedc">
+
+                EEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="bedc">
+
+                BEDC
+
+            </div>
+
+            <div class="provider"
+                 data-company="jed">
+
+                JED
+
+            </div>
+
+        </div>
+
+    </section> 
+        <!-- ==========================
+         METER TYPE
+    ========================== -->
+
+    <section>
+
+        <h2>Meter Type</h2>
+
+        <div class="meter-types">
+
+            <button
+                class="meter-type active"
+                data-type="prepaid">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                Prepaid
+
+            </button>
+
+            <button
+                class="meter-type"
+                data-type="postpaid">
+
+                <i class="fa-regular fa-credit-card"></i>
+
+                Postpaid
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         METER NUMBER
+    ========================== -->
+
+    <section>
+
+        <h2>Meter Number</h2>
+
+        <input
+            type="text"
+            id="meterNumber"
+            class="meter-input"
+            placeholder="Enter meter number"
+            inputmode="numeric"
+            autocomplete="off">
+
+        <button
+            id="verifyMeterBtn"
+            class="verify-btn">
+
+            Verify Meter
+
+        </button>
+
+    </section>
+
+    <!-- ==========================
+         CUSTOMER DETAILS
+    ========================== -->
+
+    <section
+        id="customerCard"
+        class="customer-card hidden">
+
+        <div class="customer-row">
+
+            <span>Customer Name</span>
+
+            <strong id="customerName">
+
+                —
+
+            </strong>
+
+        </div>
+
+        <div class="customer-row">
+
+            <span>Address</span>
+
+            <strong id="customerAddress">
+
+                —
+
+            </strong>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         TOP UP
+    ========================== -->
+
+    <section
+        id="amountSection"
+        class="hidden">
+
+        <h2>Top Up</h2>
+
+        <div class="amount-card">
+
+            <div class="amount-input">
+
+                <span class="naira">
+
+                    ₦
+
+                </span>
+
+                <input
+                    type="text"
+                    id="amount"
+                    placeholder="Enter amount"
+                    inputmode="numeric"
+                    autocomplete="off">
+
+            </div>
+
+            <hr>
+
+            <div class="wallet-row">
+
+                <div class="wallet-left">
+
+                    💳 Wallet Balance
+
+                </div>
+
+                <div
+                    id="walletBalance"
+                    class="wallet-balance">
+
+                    ₦0.00
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         CONTINUE
+    ========================== -->
+
+    <button
+        id="continueBtn"
+        class="continue-btn hidden">
+
+        Continue
+
+    </button>
+
+    <!-- ==========================
+         LOADING
+    ========================== -->
+
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden">
+
+        <div class="loader"></div>
+
+        <p>
+
+            Please wait...
+
+        </p>
+
+    </div>
+
+    <!-- ==========================
+         MESSAGE
+    ========================== -->
+
+    <div
+        id="messageBox"
+        class="message-box hidden">
+
+    </div>
+
+</div>
+
+<script
+    type="module"
+    src="electricity.js"></script>
+
+</body>
+
+</html>

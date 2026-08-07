@@ -1,6 +1,5 @@
 /* ==========================================
-   NOVAPAY AIRTIME
-   REBUILT BY CHATGPT
+   NOVAPAY TV SUBSCRIPTION
 ========================================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
@@ -10,7 +9,7 @@
 --primary:#2F6BFF;
 --primary-light:#4B7DFF;
 
---bg:#F5F7FF;
+--bg:#F5F8FF;
 
 --white:#FFFFFF;
 
@@ -34,12 +33,6 @@ box-sizing:border-box;
 
 }
 
-html{
-
-scroll-behavior:smooth;
-
-}
-
 body{
 
 font-family:"Poppins",sans-serif;
@@ -49,8 +42,6 @@ background:var(--bg);
 color:var(--text);
 
 -webkit-font-smoothing:antialiased;
-
-overflow-x:hidden;
 
 }
 
@@ -62,7 +53,7 @@ margin:auto;
 
 min-height:100vh;
 
-padding:24px 22px 40px;
+padding:24px 20px 40px;
 
 }
 
@@ -78,19 +69,19 @@ align-items:center;
 
 gap:18px;
 
-margin-bottom:34px;
+margin-bottom:30px;
 
 }
 
 .back-btn{
 
-width:60px;
+width:56px;
 
-height:60px;
+height:56px;
 
 border:none;
 
-border-radius:20px;
+border-radius:18px;
 
 background:var(--white);
 
@@ -100,7 +91,7 @@ align-items:center;
 
 justify-content:center;
 
-font-size:28px;
+font-size:20px;
 
 color:var(--primary);
 
@@ -109,8 +100,6 @@ cursor:pointer;
 box-shadow:var(--shadow);
 
 transition:.25s;
-
-flex-shrink:0;
 
 }
 
@@ -122,23 +111,19 @@ transform:scale(.96);
 
 .top-bar h1{
 
-font-size:30px;
+font-size:28px;
 
 font-weight:700;
 
 line-height:1.2;
 
-color:var(--text);
-
 }
 
 .top-bar p{
 
-margin-top:6px;
+margin-top:4px;
 
-font-size:16px;
-
-line-height:1.5;
+font-size:15px;
 
 color:var(--sub);
 
@@ -150,41 +135,43 @@ SECTION
 
 section{
 
-margin-bottom:34px;
+margin-bottom:28px;
 
 }
 
 section h2{
 
-font-size:18px;
+font-size:17px;
 
 font-weight:700;
 
-margin-bottom:18px;
+margin-bottom:16px;
 
 }
 
 /* ==========================================
-PROVIDERS
+TV PROVIDERS
 ========================================== */
 
 .providers{
 
 display:grid;
 
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(2,1fr);
 
-gap:16px;
+gap:14px;
 
 }
 
 .provider{
 
-height:92px;
+height:64px;
 
 background:var(--white);
 
-border-radius:22px;
+border:2px solid transparent;
+
+border-radius:18px;
 
 display:flex;
 
@@ -192,9 +179,11 @@ align-items:center;
 
 justify-content:center;
 
-cursor:pointer;
+font-size:16px;
 
-border:2px solid transparent;
+font-weight:600;
+
+cursor:pointer;
 
 box-shadow:var(--shadow);
 
@@ -202,21 +191,13 @@ transition:.25s;
 
 }
 
-.provider img{
-
-width:54px;
-
-height:54px;
-
-object-fit:contain;
-
-}
-
 .provider.active{
+
+background:#EEF4FF;
 
 border-color:var(--primary);
 
-background:#F7FAFF;
+color:var(--primary);
 
 }
 
@@ -226,62 +207,10 @@ transform:scale(.97);
 
 } 
 /* ==========================================
-PHONE NUMBER
+   SMARTCARD NUMBER
 ========================================== */
 
-.section-title{
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-margin-bottom:14px;
-
-}
-
-.section-title h2{
-
-margin:0;
-
-}
-
-.beneficiary-btn{
-
-border:none;
-
-background:#EEF4FF;
-
-color:var(--primary);
-
-padding:10px 16px;
-
-border-radius:14px;
-
-font-size:13px;
-
-font-weight:600;
-
-cursor:pointer;
-
-display:flex;
-
-align-items:center;
-
-gap:8px;
-
-transition:.25s;
-
-}
-
-.beneficiary-btn:active{
-
-transform:scale(.97);
-
-}
-
-.phone-section input{
+.smartcard-input{
 
 width:100%;
 
@@ -309,7 +238,7 @@ box-shadow:var(--shadow);
 
 }
 
-.phone-section input:focus{
+.smartcard-input:focus{
 
 border-color:var(--primary);
 
@@ -317,59 +246,65 @@ box-shadow:0 0 0 4px rgba(47,107,255,.10);
 
 }
 
-.phone-section input::placeholder{
+.smartcard-input::placeholder{
 
 color:#9CA3AF;
-
-font-weight:400;
-
-}
-
-.save-beneficiary{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-margin-top:16px;
-
-font-size:14px;
-
-font-weight:500;
-
-color:var(--sub);
-
-cursor:pointer;
-
-user-select:none;
-
-}
-
-.save-beneficiary input{
-
-width:18px;
-
-height:18px;
-
-accent-color:var(--primary);
-
-cursor:pointer;
 
 }
 
 /* ==========================================
-TOP UP
+VERIFY BUTTON
 ========================================== */
 
-.amount-card{
+.verify-btn{
+
+width:100%;
+
+height:56px;
+
+margin-top:16px;
+
+border:none;
+
+border-radius:18px;
+
+background:linear-gradient(
+135deg,
+var(--primary-light),
+var(--primary)
+);
+
+color:#FFFFFF;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+box-shadow:0 12px 24px rgba(47,107,255,.20);
+
+transition:.25s;
+
+}
+
+.verify-btn:active{
+
+transform:scale(.98);
+
+}
+
+/* ==========================================
+CUSTOMER DETAILS
+========================================== */
+
+.customer-card{
 
 background:var(--white);
 
-border-radius:24px;
+border-radius:22px;
 
-padding:22px;
+padding:18px;
 
 border:1px solid var(--border);
 
@@ -377,72 +312,104 @@ box-shadow:var(--shadow);
 
 }
 
-.amount-input{
+.customer-row{
 
 display:flex;
 
-align-items:center;
+justify-content:space-between;
 
-gap:12px;
+align-items:flex-start;
 
-margin-bottom:18px;
+padding:12px 0;
+
+border-bottom:1px solid #EEF2F7;
 
 }
 
-.naira{
+.customer-row:last-child{
 
-font-size:30px;
+border-bottom:none;
 
-font-weight:700;
+padding-bottom:0;
+
+}
+
+.customer-row span{
+
+font-size:14px;
+
+color:var(--sub);
+
+}
+
+.customer-row strong{
+
+font-size:15px;
+
+font-weight:600;
 
 color:var(--text);
 
-}
+text-align:right;
 
-.amount-input input{
+max-width:60%;
 
-flex:1;
-
-border:none;
-
-outline:none;
-
-background:transparent;
-
-font-size:30px;
-
-font-weight:700;
-
-color:var(--text);
-
-padding:0;
+word-break:break-word;
 
 }
 
-.amount-input input::placeholder{
+/* ==========================================
+PACKAGE
+========================================== */
 
-font-size:18px;
+.package-select{
+
+width:100%;
+
+height:58px;
+
+padding:0 18px;
+
+background:var(--white);
+
+border:1.5px solid var(--border);
+
+border-radius:18px;
+
+font-size:15px;
 
 font-weight:500;
 
-color:#9CA3AF;
+color:var(--text);
+
+outline:none;
+
+cursor:pointer;
+
+box-shadow:var(--shadow);
+
+transition:.25s;
 
 }
 
-.amount-card hr{
+.package-select:focus{
 
-border:none;
+border-color:var(--primary);
 
-border-top:1px solid var(--border);
+box-shadow:0 0 0 4px rgba(47,107,255,.10);
 
-margin:18px 0;
+}
+
+.hidden{
+
+display:none !important;
 
 } 
 /* ==========================================
-   WALLET
+   WALLET CARD
 ========================================== */
 
-.wallet-row{
+.wallet-card{
 
 display:flex;
 
@@ -450,17 +417,21 @@ align-items:center;
 
 justify-content:space-between;
 
-padding-top:4px;
+margin-top:18px;
+
+padding:18px;
+
+background:var(--white);
+
+border:1px solid var(--border);
+
+border-radius:20px;
+
+box-shadow:var(--shadow);
 
 }
 
-.wallet-left{
-
-display:flex;
-
-align-items:center;
-
-gap:8px;
+.wallet-card span{
 
 font-size:14px;
 
@@ -470,7 +441,7 @@ color:var(--sub);
 
 }
 
-.wallet-balance{
+.wallet-card strong{
 
 font-size:18px;
 
@@ -481,7 +452,7 @@ color:var(--text);
 }
 
 /* ==========================================
-CONTINUE BUTTON
+   CONTINUE BUTTON
 ========================================== */
 
 .continue-btn{
@@ -489,6 +460,8 @@ CONTINUE BUTTON
 width:100%;
 
 height:58px;
+
+margin-top:10px;
 
 border:none;
 
@@ -512,8 +485,6 @@ box-shadow:0 12px 28px rgba(47,107,255,.25);
 
 transition:.25s;
 
-margin-top:8px;
-
 }
 
 .continue-btn:hover{
@@ -529,14 +500,8 @@ transform:scale(.98);
 }
 
 /* ==========================================
-LOADING
+   LOADING OVERLAY
 ========================================== */
-
-.hidden{
-
-display:none !important;
-
-}
 
 .loading-overlay{
 
@@ -568,9 +533,9 @@ z-index:9999;
 
 .loader{
 
-width:52px;
+width:54px;
 
-height:52px;
+height:54px;
 
 border:5px solid #E5E7EB;
 
@@ -605,7 +570,7 @@ color:var(--text);
 }
 
 /* ==========================================
-MESSAGE BOX
+   MESSAGE BOX
 ========================================== */
 
 .message-box{
@@ -641,32 +606,14 @@ z-index:10000;
 }
 
 /* ==========================================
-MOBILE
+   MOBILE
 ========================================== */
 
 @media (max-width:480px){
 
 .container{
 
-padding:18px 16px 34px;
-
-}
-
-.top-bar{
-
-margin-bottom:26px;
-
-}
-
-.top-bar h1{
-
-font-size:26px;
-
-}
-
-.top-bar p{
-
-font-size:14px;
+padding:18px 16px 36px;
 
 }
 
@@ -678,19 +625,13 @@ gap:12px;
 
 .provider{
 
-height:82px;
+height:60px;
+
+font-size:15px;
 
 }
 
-.provider img{
-
-width:48px;
-
-height:48px;
-
-}
-
-.phone-section input{
+.smartcard-input{
 
 height:56px;
 
@@ -698,19 +639,22 @@ font-size:15px;
 
 }
 
-.amount-card{
+.package-select{
 
-padding:18px;
+height:56px;
 
-}
-
-.amount-input input{
-
-font-size:26px;
+font-size:15px;
 
 }
 
-.continue-btn{
+.wallet-card{
+
+padding:16px;
+
+}
+
+.continue-btn,
+.verify-btn{
 
 height:56px;
 
@@ -721,7 +665,7 @@ font-size:16px;
 }
 
 /* ==========================================
-FINAL POLISH
+   FINAL POLISH
 ========================================== */
 
 ::-webkit-scrollbar{
@@ -731,7 +675,8 @@ display:none;
 }
 
 button,
-input{
+input,
+select{
 
 font-family:inherit;
 

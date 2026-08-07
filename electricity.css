@@ -1,6 +1,5 @@
 /* ==========================================
-   NOVAPAY AIRTIME
-   REBUILT BY CHATGPT
+   NOVAPAY ELECTRICITY
 ========================================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
@@ -10,7 +9,7 @@
 --primary:#2F6BFF;
 --primary-light:#4B7DFF;
 
---bg:#F5F7FF;
+--bg:#F5F8FF;
 
 --white:#FFFFFF;
 
@@ -34,12 +33,6 @@ box-sizing:border-box;
 
 }
 
-html{
-
-scroll-behavior:smooth;
-
-}
-
 body{
 
 font-family:"Poppins",sans-serif;
@@ -49,8 +42,6 @@ background:var(--bg);
 color:var(--text);
 
 -webkit-font-smoothing:antialiased;
-
-overflow-x:hidden;
 
 }
 
@@ -62,7 +53,7 @@ margin:auto;
 
 min-height:100vh;
 
-padding:24px 22px 40px;
+padding:24px 20px 40px;
 
 }
 
@@ -78,19 +69,19 @@ align-items:center;
 
 gap:18px;
 
-margin-bottom:34px;
+margin-bottom:30px;
 
 }
 
 .back-btn{
 
-width:60px;
+width:56px;
 
-height:60px;
+height:56px;
 
 border:none;
 
-border-radius:20px;
+border-radius:18px;
 
 background:var(--white);
 
@@ -100,7 +91,7 @@ align-items:center;
 
 justify-content:center;
 
-font-size:28px;
+font-size:20px;
 
 color:var(--primary);
 
@@ -109,8 +100,6 @@ cursor:pointer;
 box-shadow:var(--shadow);
 
 transition:.25s;
-
-flex-shrink:0;
 
 }
 
@@ -122,23 +111,19 @@ transform:scale(.96);
 
 .top-bar h1{
 
-font-size:30px;
+font-size:28px;
 
 font-weight:700;
 
 line-height:1.2;
 
-color:var(--text);
-
 }
 
 .top-bar p{
 
-margin-top:6px;
+margin-top:4px;
 
-font-size:16px;
-
-line-height:1.5;
+font-size:15px;
 
 color:var(--sub);
 
@@ -150,41 +135,43 @@ SECTION
 
 section{
 
-margin-bottom:34px;
+margin-bottom:28px;
 
 }
 
 section h2{
 
-font-size:18px;
+font-size:17px;
 
 font-weight:700;
 
-margin-bottom:18px;
+margin-bottom:16px;
 
 }
 
 /* ==========================================
-PROVIDERS
+DISTRIBUTION COMPANY
 ========================================== */
 
 .providers{
 
 display:grid;
 
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(2,1fr);
 
-gap:16px;
+gap:14px;
 
 }
 
 .provider{
 
-height:92px;
+height:64px;
 
 background:var(--white);
 
-border-radius:22px;
+border:2px solid transparent;
+
+border-radius:18px;
 
 display:flex;
 
@@ -192,9 +179,11 @@ align-items:center;
 
 justify-content:center;
 
-cursor:pointer;
+font-size:15px;
 
-border:2px solid transparent;
+font-weight:600;
+
+cursor:pointer;
 
 box-shadow:var(--shadow);
 
@@ -202,21 +191,13 @@ transition:.25s;
 
 }
 
-.provider img{
-
-width:54px;
-
-height:54px;
-
-object-fit:contain;
-
-}
-
 .provider.active{
+
+background:#EEF4FF;
 
 border-color:var(--primary);
 
-background:#F7FAFF;
+color:var(--primary);
 
 }
 
@@ -226,62 +207,80 @@ transform:scale(.97);
 
 } 
 /* ==========================================
-PHONE NUMBER
+   METER TYPE
 ========================================== */
 
-.section-title{
+.meter-types{
 
-display:flex;
+display:grid;
 
-align-items:center;
+grid-template-columns:repeat(2,1fr);
 
-justify-content:space-between;
-
-margin-bottom:14px;
+gap:14px;
 
 }
 
-.section-title h2{
+.meter-type{
 
-margin:0;
-
-}
-
-.beneficiary-btn{
+height:58px;
 
 border:none;
 
-background:#EEF4FF;
+border-radius:18px;
 
-color:var(--primary);
-
-padding:10px 16px;
-
-border-radius:14px;
-
-font-size:13px;
-
-font-weight:600;
-
-cursor:pointer;
+background:var(--white);
 
 display:flex;
 
 align-items:center;
 
-gap:8px;
+justify-content:center;
+
+gap:10px;
+
+font-size:15px;
+
+font-weight:600;
+
+color:var(--text);
+
+cursor:pointer;
+
+box-shadow:var(--shadow);
 
 transition:.25s;
 
 }
 
-.beneficiary-btn:active{
+.meter-type i{
 
-transform:scale(.97);
+font-size:17px;
+
+color:var(--primary);
 
 }
 
-.phone-section input{
+.meter-type.active{
+
+background:#EEF4FF;
+
+border:2px solid var(--primary);
+
+color:var(--primary);
+
+}
+
+.meter-type:active{
+
+transform:scale(.98);
+
+}
+
+/* ==========================================
+   METER NUMBER
+========================================== */
+
+.meter-input{
 
 width:100%;
 
@@ -289,11 +288,11 @@ height:58px;
 
 padding:0 18px;
 
-background:var(--white);
-
 border:1.5px solid var(--border);
 
 border-radius:18px;
+
+background:var(--white);
 
 font-size:16px;
 
@@ -309,7 +308,7 @@ box-shadow:var(--shadow);
 
 }
 
-.phone-section input:focus{
+.meter-input:focus{
 
 border-color:var(--primary);
 
@@ -317,59 +316,134 @@ box-shadow:0 0 0 4px rgba(47,107,255,.10);
 
 }
 
-.phone-section input::placeholder{
+.meter-input::placeholder{
 
 color:#9CA3AF;
-
-font-weight:400;
-
-}
-
-.save-beneficiary{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-margin-top:16px;
-
-font-size:14px;
-
-font-weight:500;
-
-color:var(--sub);
-
-cursor:pointer;
-
-user-select:none;
-
-}
-
-.save-beneficiary input{
-
-width:18px;
-
-height:18px;
-
-accent-color:var(--primary);
-
-cursor:pointer;
 
 }
 
 /* ==========================================
-TOP UP
+   VERIFY BUTTON
+========================================== */
+
+.verify-btn{
+
+width:100%;
+
+height:56px;
+
+margin-top:16px;
+
+border:none;
+
+border-radius:18px;
+
+background:linear-gradient(
+135deg,
+var(--primary-light),
+var(--primary)
+);
+
+color:#FFFFFF;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+box-shadow:0 12px 24px rgba(47,107,255,.20);
+
+transition:.25s;
+
+}
+
+.verify-btn:active{
+
+transform:scale(.98);
+
+}
+
+/* ==========================================
+   CUSTOMER CARD
+========================================== */
+
+.customer-card{
+
+background:var(--white);
+
+border-radius:22px;
+
+padding:18px;
+
+border:1px solid var(--border);
+
+box-shadow:var(--shadow);
+
+}
+
+.customer-row{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:flex-start;
+
+padding:10px 0;
+
+border-bottom:1px solid #EEF2F7;
+
+}
+
+.customer-row:last-child{
+
+border-bottom:none;
+
+padding-bottom:0;
+
+}
+
+.customer-row span{
+
+font-size:14px;
+
+color:var(--sub);
+
+}
+
+.customer-row strong{
+
+font-size:15px;
+
+font-weight:600;
+
+color:var(--text);
+
+text-align:right;
+
+max-width:60%;
+
+word-break:break-word;
+
+}
+
+.hidden{
+
+display:none !important;
+
+} 
+/* ==========================================
+   TOP UP CARD
 ========================================== */
 
 .amount-card{
 
 background:var(--white);
 
-border-radius:24px;
+border-radius:22px;
 
-padding:22px;
+padding:20px;
 
 border:1px solid var(--border);
 
@@ -415,8 +489,6 @@ font-weight:700;
 
 color:var(--text);
 
-padding:0;
-
 }
 
 .amount-input input::placeholder{
@@ -437,7 +509,8 @@ border-top:1px solid var(--border);
 
 margin:18px 0;
 
-} 
+}
+
 /* ==========================================
    WALLET
 ========================================== */
@@ -449,8 +522,6 @@ display:flex;
 align-items:center;
 
 justify-content:space-between;
-
-padding-top:4px;
 
 }
 
@@ -481,7 +552,7 @@ color:var(--text);
 }
 
 /* ==========================================
-CONTINUE BUTTON
+   CONTINUE BUTTON
 ========================================== */
 
 .continue-btn{
@@ -512,13 +583,7 @@ box-shadow:0 12px 28px rgba(47,107,255,.25);
 
 transition:.25s;
 
-margin-top:8px;
-
-}
-
-.continue-btn:hover{
-
-transform:translateY(-2px);
+margin-top:10px;
 
 }
 
@@ -529,25 +594,17 @@ transform:scale(.98);
 }
 
 /* ==========================================
-LOADING
+   LOADING
 ========================================== */
-
-.hidden{
-
-display:none !important;
-
-}
 
 .loading-overlay{
 
 position:fixed;
 
 top:0;
-
 left:0;
 
 width:100%;
-
 height:100%;
 
 background:rgba(255,255,255,.92);
@@ -568,9 +625,9 @@ z-index:9999;
 
 .loader{
 
-width:52px;
+width:54px;
 
-height:52px;
+height:54px;
 
 border:5px solid #E5E7EB;
 
@@ -605,7 +662,7 @@ color:var(--text);
 }
 
 /* ==========================================
-MESSAGE BOX
+   MESSAGE BOX
 ========================================== */
 
 .message-box{
@@ -641,32 +698,14 @@ z-index:10000;
 }
 
 /* ==========================================
-MOBILE
+   MOBILE
 ========================================== */
 
 @media (max-width:480px){
 
 .container{
 
-padding:18px 16px 34px;
-
-}
-
-.top-bar{
-
-margin-bottom:26px;
-
-}
-
-.top-bar h1{
-
-font-size:26px;
-
-}
-
-.top-bar p{
-
-font-size:14px;
+padding:18px 16px 36px;
 
 }
 
@@ -678,23 +717,17 @@ gap:12px;
 
 .provider{
 
-height:82px;
+height:60px;
+
+font-size:14px;
 
 }
 
-.provider img{
+.meter-type{
 
-width:48px;
+height:54px;
 
-height:48px;
-
-}
-
-.phone-section input{
-
-height:56px;
-
-font-size:15px;
+font-size:14px;
 
 }
 
@@ -710,7 +743,8 @@ font-size:26px;
 
 }
 
-.continue-btn{
+.continue-btn,
+.verify-btn{
 
 height:56px;
 
@@ -721,7 +755,7 @@ font-size:16px;
 }
 
 /* ==========================================
-FINAL POLISH
+   FINAL POLISH
 ========================================== */
 
 ::-webkit-scrollbar{

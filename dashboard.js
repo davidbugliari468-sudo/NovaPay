@@ -304,21 +304,21 @@ dataBtn?.addEventListener("click", () => {
 
 });
 
-electricityBtn?.addEventListener("click", () => {
+electricityBtn.addEventListener("click", () => {
 
-    comingSoon("Electricity");
+    window.location.href = "electricity.html";
 
 });
 
 tvBtn?.addEventListener("click", () => {
 
-    comingSoon("TV Subscription");
+    window.location.href = "tv.html";
 
 });
 
 bettingBtn?.addEventListener("click", () => {
 
-    comingSoon("Betting");
+    window.location.href = "betting.html";
 
 });
 

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>NovaPay | TV Subscription</title>
+
+<link
+rel="stylesheet"
+href="tv.css">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Header -->
+
+<header class="top-bar">
+
+<button
+id="backBtn"
+class="back-btn">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<div>
+
+<h1>Buy TV Subscription</h1>
+
+<p>Pay your cable TV bills easily.</p>
+
+</div>
+
+</header>
+
+<!-- TV Provider -->
+
+<section>
+
+<h2>TV Provider</h2>
+
+<div class="providers">
+
+<div
+class="provider active"
+data-provider="gotv">
+
+GOtv
+
+</div>
+
+<div
+class="provider"
+data-provider="dstv">
+
+DStv
+
+</div>
+
+<div
+class="provider"
+data-provider="startimes">
+
+Startimes
+
+</div>
+
+<div
+class="provider"
+data-provider="showmax">
+
+Showmax
+
+</div>
+
+</div>
+
+</section> 
+    <!-- ==========================
+         SMARTCARD NUMBER
+    ========================== -->
+
+    <section>
+
+        <h2>Smartcard Number</h2>
+
+        <input
+            type="text"
+            id="smartcardNumber"
+            class="smartcard-input"
+            placeholder="Enter smartcard number"
+            autocomplete="off">
+
+        <button
+            id="verifyCardBtn"
+            class="verify-btn">
+
+            Verify Smartcard
+
+        </button>
+
+    </section>
+
+    <!-- ==========================
+         CUSTOMER DETAILS
+    ========================== -->
+
+    <section
+        id="customerCard"
+        class="customer-card hidden">
+
+        <div class="customer-row">
+
+            <span>Customer Name</span>
+
+            <strong id="customerName">
+
+                —
+
+            </strong>
+
+        </div>
+
+        <div class="customer-row">
+
+            <span>Current Package</span>
+
+            <strong id="currentPackage">
+
+                —
+
+            </strong>
+
+        </div>
+
+        <div class="customer-row">
+
+            <span>Status</span>
+
+            <strong id="customerStatus">
+
+                —
+
+            </strong>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         PACKAGE
+    ========================== -->
+
+    <section
+        id="packageSection"
+        class="hidden">
+
+        <h2>Select Package</h2>
+
+        <select
+            id="packageSelect"
+            class="package-select">
+
+            <option value="">
+                Select Package
+            </option>
+
+            <option value="gotv-max">
+                GOtv Max — ₦8,500
+            </option>
+
+            <option value="gotv-jolli">
+                GOtv Jolli — ₦5,800
+            </option>
+
+            <option value="gotv-jinja">
+                GOtv Jinja — ₦3,900
+            </option>
+
+        </select>
+
+        <div class="wallet-card">
+
+            <span>
+
+                💳 Wallet Balance
+
+            </span>
+
+            <strong id="walletBalance">
+
+                ₦0.00
+
+            </strong>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================
+         CONTINUE
+    ========================== -->
+
+    <button
+        id="continueBtn"
+        class="continue-btn hidden">
+
+        Continue
+
+    </button>
+
+    <!-- ==========================
+         LOADING
+    ========================== -->
+
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden">
+
+        <div class="loader"></div>
+
+        <p>
+
+            Please wait...
+
+        </p>
+
+    </div>
+
+    <!-- ==========================
+         MESSAGE
+    ========================== -->
+
+    <div
+        id="messageBox"
+        class="message-box hidden">
+
+    </div>
+
+</div>
+
+<script
+type="module"
+src="tv.js"></script>
+
+</body>
+</html>
