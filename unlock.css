@@ -1,0 +1,189 @@
+/* ==========================================
+   NOVAPAY UNLOCK
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0F172A;
+    color:#fff;
+    min-height:100vh;
+    overflow:hidden;
+}
+
+/* ==========================================
+   HELP BUTTON
+========================================== */
+
+.help-btn{
+    position:fixed;
+    top:25px;
+    right:20px;
+    background:#2563EB;
+    color:#fff;
+    border:none;
+    border-radius:50px;
+    padding:12px 22px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(37,99,235,.35);
+}
+
+/* ==========================================
+   MAIN
+========================================== */
+
+.unlock-container{
+    width:100%;
+    max-width:420px;
+    margin:auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:70px 25px 35px;
+}
+
+/* ==========================================
+   AVATAR
+========================================== */
+
+.avatar{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    overflow:hidden;
+    border:4px solid #2563EB;
+    margin-bottom:22px;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ==========================================
+   TEXT
+========================================== */
+
+#welcomeText{
+    font-size:36px;
+    font-weight:700;
+    text-align:center;
+}
+
+.subtitle{
+    margin-top:14px;
+    color:#94A3B8;
+    font-size:18px;
+    text-align:center;
+}
+
+/* ==========================================
+   PIN BOXES
+========================================== */
+
+.pin-boxes{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:45px;
+}
+
+.pin-box{
+    width:52px;
+    height:58px;
+    border-radius:16px;
+    background:#1E293B;
+    border:2px solid #334155;
+    transition:.25s;
+}
+
+.pin-box.active{
+    border-color:#2563EB;
+    background:#233876;
+}
+
+/* ==========================================
+   KEYPAD
+========================================== */
+
+.number-pad{
+    margin-top:70px;
+    display:grid;
+    grid-template-columns:repeat(3,90px);
+    gap:22px;
+    justify-content:center;
+}
+
+.num-btn{
+    width:90px;
+    height:90px;
+    border:none;
+    border-radius:22px;
+    background:#1E293B;
+    color:#fff;
+    font-size:34px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.num-btn:active{
+    transform:scale(.94);
+    background:#2563EB;
+}
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+.password-login{
+    margin-top:40px;
+    background:none;
+    border:none;
+    color:#3B82F6;
+    font-size:19px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media(max-width:430px){
+
+    .unlock-container{
+        padding:60px 20px 25px;
+    }
+
+    #welcomeText{
+        font-size:30px;
+    }
+
+    .pin-box{
+        width:46px;
+        height:52px;
+    }
+
+    .number-pad{
+        grid-template-columns:repeat(3,82px);
+        gap:18px;
+    }
+
+    .num-btn{
+        width:82px;
+        height:82px;
+        font-size:30px;
+    }
+
+}

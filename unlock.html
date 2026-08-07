@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>NovaPay</title>
+
+    <link
+        rel="stylesheet"
+        href="unlock.css">
+
+</head>
+
+<body>
+
+    <!-- ==========================
+         GET HELP
+    ========================== -->
+
+    <button
+        id="helpBtn"
+        class="help-btn">
+
+        💬 Get Help
+
+    </button>
+
+
+    <!-- ==========================
+         MAIN CONTAINER
+    ========================== -->
+
+    <main class="unlock-container">
+
+        <!-- Avatar -->
+
+        <div class="avatar">
+
+            <img
+                id="userAvatar"
+                src="images/default-avatar.png"
+                alt="User">
+
+        </div>
+
+
+        <!-- Welcome -->
+
+        <h1
+            id="welcomeText">
+
+            Hello
+
+        </h1>
+
+        <p class="subtitle">
+
+            Sign in with your Login PIN
+
+        </p>
+
+
+        <!-- PIN BOXES -->
+
+        <div
+            class="pin-boxes">
+
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+
+        </div>
+
+
+        <!-- NUMBER PAD -->
+
+        <div
+            class="number-pad">
+
+            <button class="num-btn" data-number="1">1</button>
+            <button class="num-btn" data-number="2">2</button>
+            <button class="num-btn" data-number="3">3</button>
+
+            <button class="num-btn" data-number="4">4</button>
+            <button class="num-btn" data-number="5">5</button>
+            <button class="num-btn" data-number="6">6</button>
+
+            <button class="num-btn" data-number="7">7</button>
+            <button class="num-btn" data-number="8">8</button>
+            <button class="num-btn" data-number="9">9</button>
+
+            <div></div>
+
+            <button
+                class="num-btn"
+                data-number="0">
+
+                0
+
+            </button>
+
+            <button
+                id="deleteBtn"
+                class="num-btn">
+
+                ⌫
+
+            </button>
+
+        </div>
+
+
+        <!-- PASSWORD LOGIN -->
+
+        <button
+            id="passwordLoginBtn"
+            class="password-login">
+
+            Login with Password
+
+        </button>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="unlock.js">
+
+    </script>
+
+</body>
+
+</html>

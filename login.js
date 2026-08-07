@@ -73,14 +73,12 @@ form.addEventListener("submit", async function (e) {
         );
 
         await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+    auth,
+    email,
+    password
+);
 
-        alert("Login successful!");
-
-        window.location.href = "dashboard.html";
+window.location.href = "pin-check.html";
 
     } catch (error) {
 
