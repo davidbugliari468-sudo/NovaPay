@@ -14,8 +14,11 @@ import {
 
 import {
     doc,
-    getDoc
+    getDoc,
+    collection,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
 
 // ======================================
 // ELEMENTS
@@ -44,7 +47,7 @@ const moreBtn = document.getElementById("moreBtn");
 const inviteBtn = document.getElementById("inviteBtn");
 
 const viewAllTransactionsBtn =
-document.getElementById("viewAllTransactionsBtn");
+    document.getElementById("viewAllTransactionsBtn");
 
 const walletBtn = document.getElementById("walletBtn");
 const payBillsBtn = document.getElementById("payBillsBtn");
@@ -54,17 +57,23 @@ const modal = document.getElementById("customModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalMessage = document.getElementById("modalMessage");
 
+const recentTransactionsContainer =
+    document.getElementById("recentTransactionsContainer");
+
+
 // ======================================
 // VARIABLES
 // ======================================
 
 let balance = 0;
-let balanceVisible = true; 
+let balanceVisible = true;
+
+
 // ======================================
 // MODAL
 // ======================================
 
-function showModal(title, message){
+function showModal(title, message) {
 
     modalTitle.textContent = title;
     modalMessage.textContent = message;
@@ -78,9 +87,9 @@ window.closeModal = () => {
 
 };
 
-modal?.addEventListener("click",(e)=>{
+modal?.addEventListener("click", (e) => {
 
-    if(e.target===modal){
+    if (e.target === modal) {
 
         closeModal();
 
@@ -88,36 +97,38 @@ modal?.addEventListener("click",(e)=>{
 
 });
 
+
 // ======================================
 // FORMAT MONEY
 // ======================================
 
-function formatMoney(amount){
+function formatMoney(amount) {
 
-    return "₦" + Number(amount).toLocaleString("en-NG",{
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
+    return "₦" + Number(amount).toLocaleString("en-NG", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
 
 }
+
 
 // ======================================
 // GREETING
 // ======================================
 
-function updateGreeting(){
+function updateGreeting() {
 
     const hour = new Date().getHours();
 
-    if(hour < 12){
+    if (hour < 12) {
 
         greetingText.textContent = "☀️ Good Morning";
 
-    }else if(hour < 18){
+    } else if (hour < 18) {
 
         greetingText.textContent = "🌤 Good Afternoon";
 
-    }else{
+    } else {
 
         greetingText.textContent = "🌙 Good Evening";
 
@@ -127,29 +138,34 @@ function updateGreeting(){
 
 updateGreeting();
 
+
 // ======================================
 // HIDE / SHOW BALANCE
 // ======================================
 
-hideBalanceBtn?.addEventListener("click",()=>{
+hideBalanceBtn?.addEventListener("click", () => {
 
     balanceVisible = !balanceVisible;
 
-    if(balanceVisible){
+    if (balanceVisible) {
 
         walletBalance.textContent = formatMoney(balance);
-        hideBalanceBtn.innerHTML =
-        `Hide <i class="fa-regular fa-eye"></i>`;
 
-    }else{
+        hideBalanceBtn.innerHTML =
+            `Hide <i class="fa-regular fa-eye"></i>`;
+
+    } else {
 
         walletBalance.textContent = "••••••";
+
         hideBalanceBtn.innerHTML =
-        `Show <i class="fa-regular fa-eye-slash"></i>`;
+            `Show <i class="fa-regular fa-eye-slash"></i>`;
 
     }
 
-}); 
+});
+
+
 // ======================================
 // LOAD USER
 // ======================================
@@ -159,6 +175,7 @@ onAuthStateChanged(auth, async (user) => {
     if (!user) {
 
         window.location.href = "login.html";
+
         return;
 
     }
@@ -176,7 +193,7 @@ onAuthStateChanged(auth, async (user) => {
             userName.textContent =
                 data.fullName || user.email.split("@")[0];
 
-            balance = data.walletBalance || 0;
+            balance = Number(data.walletBalance || 0);
 
             if (balanceVisible) {
 
@@ -197,6 +214,12 @@ onAuthStateChanged(auth, async (user) => {
 
         }
 
+        // ======================================
+        // LOAD RECENT TRANSACTIONS
+        // ======================================
+
+        await loadRecentTransactions(user.uid);
+
     } catch (error) {
 
         console.error(error);
@@ -208,7 +231,9 @@ onAuthStateChanged(auth, async (user) => {
 
     }
 
-}); 
+});
+
+
 // ======================================
 // NAVIGATION
 // ======================================
@@ -243,6 +268,7 @@ viewAllTransactionsBtn?.addEventListener("click", () => {
 
 });
 
+
 // ======================================
 // HEADER
 // ======================================
@@ -261,6 +287,8 @@ notificationBtn?.addEventListener("click", () => {
     window.location.href = "notifications.html";
 
 });
+
+
 // ======================================
 // BOTTOM NAVIGATION
 // ======================================
@@ -276,14 +304,14 @@ walletBtn?.addEventListener("click", () => {
 
 payBillsBtn?.addEventListener("click", () => {
 
-    
+});
 
-}); 
+
 // ======================================
 // QUICK SERVICES
 // ======================================
 
-function comingSoon(feature){
+function comingSoon(feature) {
 
     showModal(
         feature,
@@ -304,7 +332,7 @@ dataBtn?.addEventListener("click", () => {
 
 });
 
-electricityBtn.addEventListener("click", () => {
+electricityBtn?.addEventListener("click", () => {
 
     window.location.href = "electricity.html";
 
@@ -332,19 +360,528 @@ inviteBtn?.addEventListener("click", () => {
 
     comingSoon("Invite & Earn");
 
-}); 
+});
+
+
 // ======================================
 // RECENT TRANSACTIONS
 // ======================================
 
-// This will be connected to Firebase
-// in the next rebuild.
+async function loadRecentTransactions(uid) {
 
-const recentTransactionsContainer =
-document.getElementById("recentTransactionsContainer");
+    if (!recentTransactionsContainer) {
+
+        return;
+
+    }
+
+    // Small loading state
+    recentTransactionsContainer.innerHTML = `
+        <div class="transaction-card">
+            <div class="transaction-icon">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+
+            <div class="transaction-details">
+                <h4>Loading Transactions</h4>
+                <p>Your recent transactions are loading...</p>
+            </div>
+        </div>
+    `;
+
+    try {
+
+        const transactionsRef =
+            collection(db, "transactions");
+
+        const snapshot =
+            await getDocs(transactionsRef);
+
+        const transactions = [];
+
+        snapshot.forEach((docSnap) => {
+
+            const data = docSnap.data();
+
+            // Only this logged-in user's transactions
+            if (data.uid === uid) {
+
+                transactions.push({
+                    id: docSnap.id,
+                    ...data
+                });
+
+            }
+
+        });
+
+
+        // ======================================
+        // NEWEST FIRST
+        // ======================================
+
+        transactions.sort((a, b) => {
+
+            return getTransactionDateValue(b) -
+                   getTransactionDateValue(a);
+
+        });
+
+
+        // Only show the latest 3 on dashboard
+        const recent =
+            transactions.slice(0, 3);
+
+
+        if (recent.length === 0) {
+
+            showNoTransactions();
+
+            return;
+
+        }
+
+
+        recentTransactionsContainer.innerHTML = "";
+
+        recent.forEach((transaction) => {
+
+            recentTransactionsContainer.appendChild(
+                createRecentTransaction(transaction)
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load recent transactions:",
+            error
+        );
+
+        recentTransactionsContainer.innerHTML = `
+            <div class="transaction-card">
+                <div class="transaction-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+
+                <div class="transaction-details">
+                    <h4>Unable to Load</h4>
+                    <p>Please try again later.</p>
+                </div>
+            </div>
+        `;
+
+    }
+
+}
+
+
+// ======================================
+// TRANSACTION DATE
+// ======================================
+
+function getTransactionDateValue(transaction) {
+
+    const timestamp =
+        transaction.completedAt ||
+        transaction.createdAt;
+
+    if (!timestamp) {
+
+        return 0;
+
+    }
+
+    if (typeof timestamp.toMillis === "function") {
+
+        return timestamp.toMillis();
+
+    }
+
+    if (typeof timestamp.toDate === "function") {
+
+        return timestamp.toDate().getTime();
+
+    }
+
+    if (timestamp.seconds !== undefined) {
+
+        return timestamp.seconds * 1000;
+
+    }
+
+    const date = new Date(timestamp);
+
+    return isNaN(date.getTime())
+        ? 0
+        : date.getTime();
+
+}
+
+
+// ======================================
+// TRANSACTION DATE FORMAT
+// ======================================
+
+function formatTransactionDate(transaction) {
+
+    const timestamp =
+        transaction.completedAt ||
+        transaction.createdAt;
+
+    let date;
+
+    if (!timestamp) {
+
+        date = new Date();
+
+    } else if (typeof timestamp.toDate === "function") {
+
+        date = timestamp.toDate();
+
+    } else if (typeof timestamp.toMillis === "function") {
+
+        date = new Date(timestamp.toMillis());
+
+    } else if (timestamp.seconds !== undefined) {
+
+        date = new Date(timestamp.seconds * 1000);
+
+    } else {
+
+        date = new Date(timestamp);
+
+    }
+
+    if (isNaN(date.getTime())) {
+
+        date = new Date();
+
+    }
+
+    const dateText =
+        date.toLocaleDateString("en-NG", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+
+    const timeText =
+        date.toLocaleTimeString("en-NG", {
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+    return `${dateText} · ${timeText}`;
+
+}
+
+
+// ======================================
+// TRANSACTION TYPE
+// ======================================
+
+function getTransactionType(transaction) {
+
+    return String(
+        transaction.type || ""
+    )
+    .trim()
+    .toUpperCase();
+
+}
+
+
+// ======================================
+// MONEY IN
+// ======================================
+
+function isMoneyIn(transaction) {
+
+    const type =
+        getTransactionType(transaction);
+
+    return (
+        type === "DEPOSIT" ||
+        type === "CREDIT" ||
+        type === "CREDIT_ALERT"
+    );
+
+}
+
+
+// ======================================
+// TRANSACTION TITLE
+// ======================================
+
+function getTransactionTitle(transaction) {
+
+    const type =
+        getTransactionType(transaction);
+
+    switch (type) {
+
+        case "DEPOSIT":
+        case "CREDIT":
+        case "CREDIT_ALERT":
+            return "Credit Alert";
+
+        case "AIRTIME":
+            return "Airtime";
+
+        case "DATA":
+            return "Data";
+
+        case "ELECTRICITY":
+            return "Electricity";
+
+        case "TV":
+        case "DSTV":
+        case "GOTV":
+        case "STARTIMES":
+            return "TV";
+
+        case "BETTING":
+            return "Betting";
+
+        case "TRANSFER":
+        case "BANK_TRANSFER":
+            return "Transfer";
+
+        default:
+            return "Transaction";
+
+    }
+
+}
+
+
+// ======================================
+// TRANSACTION ICON
+// ======================================
+
+function getTransactionIcon(transaction) {
+
+    const type =
+        getTransactionType(transaction);
+
+    switch (type) {
+
+        case "DEPOSIT":
+        case "CREDIT":
+        case "CREDIT_ALERT":
+            return "fa-arrow-down";
+
+        case "AIRTIME":
+            return "fa-mobile-screen";
+
+        case "DATA":
+            return "fa-wifi";
+
+        case "ELECTRICITY":
+            return "fa-bolt";
+
+        case "TV":
+        case "DSTV":
+        case "GOTV":
+        case "STARTIMES":
+            return "fa-tv";
+
+        case "BETTING":
+            return "fa-futbol";
+
+        case "TRANSFER":
+        case "BANK_TRANSFER":
+            return "fa-money-bill-transfer";
+
+        default:
+            return "fa-receipt";
+
+    }
+
+}
+
+
+// ======================================
+// TRANSACTION ICON CLASS
+// ======================================
+
+function getTransactionIconClass(transaction) {
+
+    const type =
+        getTransactionType(transaction);
+
+    if (
+        type === "DEPOSIT" ||
+        type === "CREDIT" ||
+        type === "CREDIT_ALERT"
+    ) {
+
+        return "credit";
+
+    }
+
+    return "debit";
+
+}
+
+
+// ======================================
+// TRANSACTION STATUS
+// ======================================
+
+function getTransactionStatus(transaction) {
+
+    const status =
+        String(
+            transaction.status || ""
+        )
+        .trim()
+        .toUpperCase();
+
+    if (
+        status === "SUCCESS" ||
+        status === "SUCCESSFUL" ||
+        status === "COMPLETED" ||
+        status === "COMPLETE" ||
+        status === "PAID"
+    ) {
+
+        return "Successful";
+
+    }
+
+    if (
+        status === "FAILED" ||
+        status === "FAIL" ||
+        status === "CANCELLED" ||
+        status === "CANCELED"
+    ) {
+
+        return "Failed";
+
+    }
+
+    return "Pending";
+
+}
+
+
+// ======================================
+// CREATE RECENT TRANSACTION
+// ======================================
+
+function createRecentTransaction(transaction) {
+
+    const card =
+        document.createElement("div");
+
+    card.className =
+        "transaction-card";
+
+
+    const title =
+        getTransactionTitle(transaction);
+
+    const icon =
+        getTransactionIcon(transaction);
+
+    const iconClass =
+        getTransactionIconClass(transaction);
+
+    const status =
+        getTransactionStatus(transaction);
+
+    const amount =
+        Math.abs(Number(transaction.amount || 0));
+
+    const moneyInTransaction =
+        isMoneyIn(transaction);
+
+    const sign =
+        moneyInTransaction
+            ? "+"
+            : "-";
+
+
+    card.innerHTML = `
+
+        <div class="transaction-icon ${iconClass}">
+            <i class="fa-solid ${icon}"></i>
+        </div>
+
+        <div class="transaction-details">
+
+            <h4>
+                ${title}
+            </h4>
+
+            <p>
+                ${formatTransactionDate(transaction)}
+                ·
+                ${status}
+            </p>
+
+        </div>
+
+        <div class="transaction-amount ${
+            moneyInTransaction
+                ? "money-in"
+                : "money-out"
+        }">
+
+            ${sign} ${formatMoney(amount)}
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+// ======================================
+// NO TRANSACTIONS
+// ======================================
+
+function showNoTransactions() {
+
+    recentTransactionsContainer.innerHTML = `
+
+        <div class="transaction-card">
+
+            <div class="transaction-icon">
+
+                <i class="fa-solid fa-receipt"></i>
+
+            </div>
+
+            <div class="transaction-details">
+
+                <h4>
+                    No Transactions Yet
+                </h4>
+
+                <p>
+                    Your recent transactions will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
 
 // ======================================
 // DASHBOARD READY
 // ======================================
 
-console.log("✅ NovaPay Dashboard V2 Loaded");
+console.log(
+    "✅ NovaPay Dashboard V2 Loaded"
+);

@@ -940,13 +940,52 @@ function createTransactionCard(
 
         </div>
 
-    `;
+        `;
+
+
+    // ======================================
+    // OPEN TRANSACTION RECEIPT
+    // ======================================
+
+    item.addEventListener("click", () => {
+
+        const selectedTransaction = {
+
+            title: getTitle(transaction),
+
+            amount: Math.abs(
+                Number(transaction.amount || 0)
+            ),
+
+            type: isMoneyIn(transaction)
+                ? "in"
+                : "out",
+
+            status: getStatus(transaction),
+
+            date:
+                `${formatDate(transaction)} · ${formatTime(transaction)}`,
+
+            id:
+                transaction.transactionReference ||
+                transaction.paymentReference ||
+                transaction.id ||
+                "--"
+
+        };
+
+        localStorage.setItem(
+            "selectedTransaction",
+            JSON.stringify(selectedTransaction)
+        );
+
+        window.location.href = "receipt.html";
+
+    });
 
 
     return item;
-
 }
-
 
 /* =========================================================
    SUMMARY
