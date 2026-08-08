@@ -19,19 +19,50 @@
 
 <body>
 
-    <div class="loader-container">
+    <div class="novapay-loading">
 
-        <div class="loader"></div>
+    <div class="novapay-brand">
+        NovaPay
+    </div>
 
-        <h2>NovaPay</h2>
+    <div class="progress-circle">
 
-        <p>
+        <svg
+            class="progress-ring"
+            viewBox="0 0 120 120"
+        >
 
-            Verifying your account...
+            <circle
+                class="progress-track"
+                cx="60"
+                cy="60"
+                r="50"
+            ></circle>
 
-        </p>
+            <circle
+                class="progress-bar"
+                cx="60"
+                cy="60"
+                r="50"
+            ></circle>
+
+        </svg>
+
+        <div class="progress-content">
+
+            <span id="progress-number">
+                0
+            </span>
+
+            <span class="progress-percent">
+                %
+            </span>
+
+        </div>
 
     </div>
+
+</div>
 
     <script
         type="module"

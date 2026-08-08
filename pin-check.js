@@ -36,7 +36,6 @@ onAuthStateChanged(auth, async (user) => {
         window.location.href = "login.html";
 
         return;
-
     }
 
     currentUser = user;
@@ -61,21 +60,23 @@ async function checkUser() {
         );
 
         const userSnap =
-        await getDoc(userRef);
+            await getDoc(userRef);
+
 
         if (!userSnap.exists()) {
 
             alert("User account not found.");
 
             window.location.href =
-            "login.html";
+                "login.html";
 
             return;
-
         }
 
+
         userData =
-        userSnap.data();
+            userSnap.data();
+
 
         decideNextStep();
 
@@ -91,11 +92,8 @@ async function checkUser() {
 
 }
 
-console.log("✅ PIN CHECK MODULE 1 READY");
+
 /* ==========================================
-   NOVAPAY
-   PIN CHECK
-   MODULE 2
    DECISION ENGINE
 ========================================== */
 
@@ -110,6 +108,7 @@ function decideNextStep() {
         userData.loginPin &&
         userData.loginPin.length === 6;
 
+
     /* ------------------------------
        TRUSTED DEVICE
     ------------------------------ */
@@ -119,26 +118,179 @@ function decideNextStep() {
             `trustedDevice_${currentUser.uid}`
         ) === "true";
 
+
     /* ------------------------------
-       FIRST LOGIN
+       DETERMINE DESTINATION
     ------------------------------ */
+
+    let destination;
+
 
     if (!hasPin) {
 
-        window.location.href =
+        destination =
             "login-pin.html";
+
+    } else {
+
+        destination =
+            "unlock.html";
+
+    }
+
+
+    /* ------------------------------
+       START NOVAPAY LOADER
+    ------------------------------ */
+
+    startNovaPayLoader(destination);
+
+}
+
+
+/* ==========================================
+   NOVAPAY CIRCLE LOADER
+========================================== */
+
+function startNovaPayLoader(destination) {
+
+    const progressNumber =
+        document.getElementById(
+            "progress-number"
+        );
+
+    const progressBar =
+        document.querySelector(
+            ".progress-bar"
+        );
+
+
+    /* ------------------------------
+       SAFETY CHECK
+    ------------------------------ */
+
+    if (!progressNumber || !progressBar) {
+
+        window.location.href =
+            destination;
 
         return;
 
     }
 
+
     /* ------------------------------
-       USER HAS PIN
+       CIRCLE SETTINGS
     ------------------------------ */
 
-    window.location.href =
-        "unlock.html";
+    const circleLength = 314.16;
+
+    const totalTime = 1800;
+
+    const startTime =
+        performance.now();
+
+
+    /* ------------------------------
+       PROGRESS ANIMATION
+    ------------------------------ */
+
+    function animateProgress(currentTime) {
+
+        const elapsed =
+            currentTime - startTime;
+
+
+        let progress =
+            Math.min(
+                elapsed / totalTime,
+                1
+            );
+
+
+        /* ------------------------------
+           SMOOTH PROGRESS
+        ------------------------------ */
+
+        const percentage =
+            Math.round(
+                progress * 100
+            );
+
+
+        progressNumber.textContent =
+            percentage;
+
+
+        const offset =
+            circleLength -
+            (percentage / 100) *
+            circleLength;
+
+
+        progressBar.style.strokeDashoffset =
+            offset;
+
+
+        /* ------------------------------
+           CONTINUE
+        ------------------------------ */
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                animateProgress
+            );
+
+            return;
+
+        }
+
+
+        /* ------------------------------
+           COMPLETE
+        ------------------------------ */
+
+        progressNumber.textContent =
+            "✓";
+
+
+        progressNumber.style.fontSize =
+            "28px";
+
+        progressNumber.style.color =
+            "#2563EB";
+
+
+        /* ------------------------------
+           SHORT FINISH MOMENT
+        ------------------------------ */
+
+        setTimeout(() => {
+
+            window.location.href =
+                destination;
+
+        }, 180);
+
+    }
+
+
+    /* ------------------------------
+       START
+    ------------------------------ */
+
+    requestAnimationFrame(
+        animateProgress
+    );
 
 }
 
-console.log("✅ PIN CHECK MODULE 2 READY");
+
+/* ==========================================
+   MODULE READY
+========================================== */
+
+console.log(
+    "✅ NovaPay PIN CHECK READY"
+);

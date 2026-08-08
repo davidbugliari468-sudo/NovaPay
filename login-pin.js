@@ -366,11 +366,6 @@ console.log("✅ MODULE 3 READY");
    TRUSTED DEVICE CHECK
 ========================================== */
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-
 /* ==========================================
    AUTO LOGIN
 ========================================== */

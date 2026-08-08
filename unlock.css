@@ -1,189 +1,408 @@
 /* ==========================================
    NOVAPAY UNLOCK
+   CLEAN WHITE MOBILE DESIGN
 ========================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#0F172A;
-    color:#fff;
-    min-height:100vh;
-    overflow:hidden;
+html,
+body {
+    width: 100%;
+    min-height: 100%;
 }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #ffffff;
+    color: #111827;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+}
+
 
 /* ==========================================
    HELP BUTTON
 ========================================== */
 
-.help-btn{
-    position:fixed;
-    top:25px;
-    right:20px;
-    background:#2563EB;
-    color:#fff;
-    border:none;
-    border-radius:50px;
-    padding:12px 22px;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow:0 8px 25px rgba(37,99,235,.35);
+.help-btn {
+    position: fixed;
+
+    top: 18px;
+    right: 16px;
+
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    padding: 8px 14px;
+
+    background: #ffffff;
+
+    color: #2563EB;
+
+    border: 1.5px solid #D9E4FA;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 14px rgba(15, 23, 42, 0.07);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
+
+.help-btn:active {
+    transform: scale(0.96);
+
+    box-shadow:
+        0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
 
 /* ==========================================
-   MAIN
+   MAIN CONTAINER
 ========================================== */
 
-.unlock-container{
-    width:100%;
-    max-width:420px;
-    margin:auto;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    padding:70px 25px 35px;
+.unlock-container {
+    width: 100%;
+    max-width: 430px;
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    padding:
+        38px
+        18px
+        30px;
 }
+
 
 /* ==========================================
    AVATAR
 ========================================== */
 
-.avatar{
-    width:110px;
-    height:110px;
-    border-radius:50%;
-    overflow:hidden;
-    border:4px solid #2563EB;
-    margin-bottom:22px;
+.avatar {
+    position: relative;
+
+    width: 92px;
+    height: 92px;
+
+    flex-shrink: 0;
+
+    margin-top: 18px;
+    margin-bottom: 20px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #EEF4FF;
+
+    border: 3px solid #2563EB;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.avatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+
+/* USER PHOTO */
+
+.avatar img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
 }
+
 
 /* ==========================================
-   TEXT
+   WELCOME TEXT
 ========================================== */
 
-#welcomeText{
-    font-size:36px;
-    font-weight:700;
-    text-align:center;
+#welcomeText {
+    width: 100%;
+
+    color: #111827;
+
+    font-size: clamp(28px, 7vw, 34px);
+
+    line-height: 1.15;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    letter-spacing: -0.7px;
 }
 
-.subtitle{
-    margin-top:14px;
-    color:#94A3B8;
-    font-size:18px;
-    text-align:center;
+
+/* ==========================================
+   SUBTITLE
+========================================== */
+
+.subtitle {
+    width: 100%;
+
+    margin-top: 10px;
+
+    color: #64748B;
+
+    font-size: 17px;
+
+    line-height: 1.45;
+
+    text-align: center;
 }
+
 
 /* ==========================================
    PIN BOXES
 ========================================== */
 
-.pin-boxes{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin-top:45px;
+.pin-boxes {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 34px;
+
+    width: 100%;
 }
 
-.pin-box{
-    width:52px;
-    height:58px;
-    border-radius:16px;
-    background:#1E293B;
-    border:2px solid #334155;
-    transition:.25s;
+
+.pin-box {
+    width: clamp(42px, 11vw, 52px);
+    height: clamp(50px, 13vw, 58px);
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    background: #F7F9FC;
+
+    border: 2px solid #D9E2F0;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
-.pin-box.active{
-    border-color:#2563EB;
-    background:#233876;
+
+.pin-box.active {
+    border-color: #2563EB;
+
+    background: #EEF4FF;
+
+    transform: translateY(-2px);
 }
+
 
 /* ==========================================
-   KEYPAD
+   NUMBER PAD
 ========================================== */
 
-.number-pad{
-    margin-top:70px;
-    display:grid;
-    grid-template-columns:repeat(3,90px);
-    gap:22px;
-    justify-content:center;
+.number-pad {
+    width: 100%;
+
+    margin-top: 42px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 82px));
+
+    justify-content: center;
+
+    gap: 15px 18px;
 }
 
-.num-btn{
-    width:90px;
-    height:90px;
-    border:none;
-    border-radius:22px;
-    background:#1E293B;
-    color:#fff;
-    font-size:34px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.num-btn:active{
-    transform:scale(.94);
-    background:#2563EB;
-}
 
 /* ==========================================
-   PASSWORD
+   NUMBER BUTTON
 ========================================== */
 
-.password-login{
-    margin-top:40px;
-    background:none;
-    border:none;
-    color:#3B82F6;
-    font-size:19px;
-    font-weight:700;
-    cursor:pointer;
+.num-btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    border: 1px solid #E3E8F0;
+
+    border-radius: 21px;
+
+    background: #F7F9FC;
+
+    color: #111827;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.04);
+
+    transition:
+        transform 0.12s ease,
+        background 0.12s ease,
+        border-color 0.12s ease;
 }
 
+
+.num-btn:active {
+    transform: scale(0.94);
+
+    background: #2563EB;
+
+    border-color: #2563EB;
+
+    color: #ffffff;
+}
+
+
 /* ==========================================
-   MOBILE
+   PASSWORD LOGIN
 ========================================== */
 
-@media(max-width:430px){
+.password-login {
+    margin-top: 25px;
 
-    .unlock-container{
-        padding:60px 20px 25px;
+    background: transparent;
+
+    border: none;
+
+    color: #2563EB;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   SMALL PHONES
+========================================== */
+
+@media (max-width: 380px) {
+
+    .unlock-container {
+        padding:
+            30px
+            14px
+            24px;
     }
 
-    #welcomeText{
-        font-size:30px;
+    .avatar {
+        width: 82px;
+        height: 82px;
+
+        margin-bottom: 17px;
     }
 
-    .pin-box{
-        width:46px;
-        height:52px;
+    .subtitle {
+        font-size: 16px;
     }
 
-    .number-pad{
-        grid-template-columns:repeat(3,82px);
-        gap:18px;
+    .pin-boxes {
+        gap: 8px;
+
+        margin-top: 29px;
     }
 
-    .num-btn{
-        width:82px;
-        height:82px;
-        font-size:30px;
+    .number-pad {
+        margin-top: 35px;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 76px));
+
+        gap: 13px 15px;
     }
 
+    .num-btn {
+        border-radius: 19px;
+
+        font-size: 27px;
+    }
+
+    .help-btn {
+        top: 14px;
+        right: 12px;
+
+        min-height: 36px;
+
+        padding: 7px 12px;
+
+        font-size: 12px;
+    }
+}
+
+
+/* ==========================================
+   VERY SMALL HEIGHT SCREENS
+========================================== */
+
+@media (max-height: 700px) {
+
+    .unlock-container {
+        padding-top: 24px;
+    }
+
+    .avatar {
+        width: 76px;
+        height: 76px;
+
+        margin-top: 12px;
+        margin-bottom: 14px;
+    }
+
+    .pin-boxes {
+        margin-top: 25px;
+    }
+
+    .number-pad {
+        margin-top: 28px;
+
+        gap: 10px 14px;
+    }
+
+    .password-login {
+        margin-top: 18px;
+    }
 }
