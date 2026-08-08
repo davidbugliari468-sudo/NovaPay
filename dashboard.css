@@ -1,1049 +1,1220 @@
-/* ==========================================
-   NOVAPAY DASHBOARD V2
-   FOUNDATION
-========================================== */
+/* =========================================================
+   NOVAPAY — MOBILE DASHBOARD REBUILD
+   ========================================================= */
+
+:root {
+    --blue: #2f6df6;
+    --blue-dark: #215de0;
+
+    --text: #111827;
+    --muted: #6b7280;
+    --light-muted: #94a3b8;
+
+    --page: #f6f8fd;
+    --white: #ffffff;
+
+    --green: #16b364;
+    --red: #ef4444;
+
+    --card-radius: 24px;
+
+    --shadow:
+        0 8px 25px rgba(31, 55, 90, 0.055);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-:root {
-
-    --primary: #2F6BFF;
-    --primary-dark: #1E5CFF;
-
-    --background: #F5F7FC;
-
-    --white: #FFFFFF;
-
-    --text: #111827;
-
-    --subtext: #7B8794;
-
-    --border: #E8EDF5;
-
-    --shadow-sm:
-        0 8px 20px rgba(15, 23, 42, .05);
-
-    --shadow-md:
-        0 15px 35px rgba(15, 23, 42, .08);
-
-    --shadow-lg:
-        0 25px 55px rgba(47, 107, 255, .18);
-
-    --radius: 24px;
-
+    -webkit-tap-highlight-color: transparent;
 }
 
 html {
-
-    scroll-behavior: smooth;
-
+    width: 100%;
+    min-height: 100%;
 }
 
 body {
+    width: 100%;
+    min-height: 100vh;
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background: var(--background);
-
+    background: var(--page);
     color: var(--text);
 
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    padding-bottom: 91px;
+
     overflow-x: hidden;
-
-    -webkit-font-smoothing: antialiased;
-
 }
 
 button {
-
-    border: none;
-
-    background: none;
-
+    border: 0;
+    outline: none;
     font: inherit;
-
     cursor: pointer;
-
 }
 
-img {
 
-    display: block;
-
-    max-width: 100%;
-
-}
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
 
 .dashboard-container {
+    width: 100%;
+    max-width: 760px;
 
+    margin: 0 auto;
+
+    padding:
+        26px
+        18px
+        25px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dashboard-header {
     width: 100%;
 
-    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    margin: auto;
+    gap: 12px;
 
-    padding: 22px 20px 120px;
-
+    margin-bottom: 22px;
 }
 
-/* ==========================================
-   PART 2
-   HEADER
-========================================== */
-.dashboard-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-start;
-
-    margin-bottom:12px;
-
-}
-
-.header-left{
-
-    flex:1;
-
-    min-width:0;
-
-    padding-right:16px;
-
+.header-left {
+    min-width: 0;
+    flex: 1;
 }
 
 .greeting-text {
+    color: var(--muted);
 
-    font-size: 16px;
+    font-size: 23px;
+    line-height: 1.1;
 
     font-weight: 500;
 
-    color: var(--subtext);
+    margin-bottom: 5px;
 
-    margin-bottom: 6px;
-
+    white-space: nowrap;
 }
 
-.user-name{
+.user-name {
+    width: 100%;
+    max-width: 100%;
 
-    font-size:18px;
+    color: var(--text);
 
-    font-weight:600px;
+    font-size: 23px;
+    line-height: 1.1;
 
-    line-height:1.2;
+    font-weight: 800;
 
-    white-space:nowrap;
+    letter-spacing: -0.4px;
 
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.header-right{
+.header-right {
+    display: flex;
+    align-items: center;
 
-    display:flex;
+    gap: 8px;
 
-    align-items:center;
-
-    gap:12px;
-
-    flex-shrink:0;
-
+    flex-shrink: 0;
 }
-    
 
 .header-icon {
-
-    width: 42px;
-
-    height: 42px;
+    width: 48px;
+    height: 48px;
 
     border-radius: 50%;
 
     background: var(--white);
+    color: var(--blue);
 
     display: flex;
-
-    justify-content: center;
-
     align-items: center;
-
-    color: var(--primary);
-
-    box-shadow: var(--shadow-sm);
-
-    transition: .25s ease;
-
-}
-
-.header-icon i {
+    justify-content: center;
 
     font-size: 18px;
 
+    box-shadow:
+        0 5px 18px rgba(30, 55, 90, 0.055);
+
+    transition: transform .15s ease;
 }
 
 .header-icon:active {
-
-    transform: scale(.95);
-
+    transform: scale(.94);
 }
 
 .profile-icon {
+    background: var(--blue);
+    color: var(--white);
+}
 
-    background: var(--primary);
+
+/* =========================================================
+   BALANCE CARD
+   ========================================================= */
+
+.wallet-card {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+
+    min-height: 274px;
+
+    padding: 25px 25px 23px;
+
+    border-radius: 27px;
 
     color: var(--white);
 
-} 
-/* ==========================================
-   PART 3
-   WALLET CARD
-========================================== */
-
-.wallet-card{
-
-    position:relative;
-
-    overflow:hidden;
-
-    background: linear-gradient(
-    135deg,
-    #3D7BFF 0%,
-    #2F6BFF 55%,
-    #2563EB 100%
-);
-
-    border-radius:30px;
-
-    padding: 22px 22px;
-margin: 16px 0 26px;
-
-    box-shadow:0 20px 45px rgba(47,107,255,.22);
-
-}
-
-.wallet-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:220px;
-
-    height:220px;
-
-    top:-90px;
-
-    right:-80px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.08);
-
-}
-
-.wallet-card::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:170px;
-
-    height:170px;
-
-    left:-60px;
-
-    bottom:-70px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.05);
-
-}
-
-.wallet-top{
-
-    position:relative;
-
-    z-index:2;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:14px;
-
-}
-
-.balance-title{
-
-    color:#FFFFFF;
-
-    font-size:16px;
-
-    font-weight:500;
-
-}
-
-.hide-balance-btn{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
-    background:none;
-
-    color:#FFFFFF;
-
-    font-size:16px;
-
-    font-weight:500;
-
-}
-
-.wallet-balance{
-
-    position:relative;
-
-    z-index:2;
-
-    color:#FFFFFF;
-
-    font-size:44px;
-
-    font-weight:800;
-
-    line-height:1;
-
-    margin-bottom:20px;
-
-}
-
-.wallet-actions{
-
-    position:relative;
-
-    z-index:2;
-
-    display:flex;
-
-    gap:16px;
-
-}
-
-.wallet-primary-btn{
-
-    flex:1;
-
-    height:50px;
-
-    border-radius:20px;
-
-    background:#FFFFFF;
-
-    color:#2F6BFF;
-
-    font-size:18px;
-
-    font-weight:700;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:8px;
-
-}
-
-.wallet-secondary-btn{
-
-    flex:1;
-
-    height:62px;
-
-    border-radius:20px;
-
-    background:rgba(255,255,255,.12);
-
-    border:1px solid rgba(255,255,255,.22);
-
-    color:#FFFFFF;
-
-    font-size:20px;
-
-    font-weight:600;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:8px;
-
-}
-
-/* ==========================================
-   PART 4
-   QUICK SERVICES
-========================================== */
-
-.services-section{
-
-    margin-bottom:34px;
-
-}
-
-.section-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:18px;
-
-}
-
-.section-header h2{
-
-    font-size:22px;
-
-    font-weight:700;
-
-    color:var(--text);
-
-}
-
-.text-button{
-
-    color:var(--primary);
-
-    font-size:15px;
-
-    font-weight:700;
-
-}
-
-.services-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:14px;
-
-}
-
-.service-card{
-
-    background:var(--white);
-
-    border-radius:22px;
-
-    height:104px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:10px;
-
-    box-shadow:var(--shadow-sm);
-
-    transition:.25s ease;
-
-}
-
-.service-card:active{
-
-    transform:scale(.97);
-
-}
-
-.service-icon{
-
-    width:48px;
-
-    height:48px;
-
-    border-radius:16px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-.service-icon i{
-
-    font-size:20px;
-
-}
-
-.service-card span{
-
-    font-size:13px;
-
-    font-weight:600;
-
-    color:#374151;
-
-}
-
-/* Service Colors */
-
-.airtime{
-
-    background:#E8F0FF;
-
-    color:#2F6BFF;
-
-}
-
-.data{
-
-    background:#EAFBF2;
-
-    color:#22C55E;
-
-}
-
-.electricity{
-
-    background:#FFF7E8;
-
-    color:#F59E0B;
-
-}
-
-.tv{
-
-    background:#F3ECFF;
-
-    color:#8B5CF6;
-
-}
-
-.betting{
-
-    background:#FFEAF5;
-
-    color:#EC4899;
-
-}
-
-.more{
-
-    background:#EEF2F7;
-
-    color:#6B7280;
-
-} 
-/* ==========================================
-   PART 5
-   RECENT TRANSACTIONS
-========================================== */
-
-.transactions-section{
-
-    margin-bottom:34px;
-
-}
-
-.transactions-section .section-header{
-
-    margin-bottom:18px;
-
-}
-
-#recentTransactionsContainer{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:14px;
-
-}
-
-.transaction-card{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    padding:18px;
-
-    background:var(--white);
-
-    border-radius:22px;
-
-    box-shadow:var(--shadow-sm);
-
-}
-
-.transaction-icon{
-
-    width:54px;
-
-    height:54px;
-
-    border-radius:18px;
-
-    background:#E8F0FF;
-
-    color:var(--primary);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    flex-shrink:0;
-
-}
-
-.transaction-icon i{
-
-    font-size:21px;
-
-}
-
-.transaction-details{
-
-    flex:1;
-
-}
-
-.transaction-details h4{
-
-    font-size:17px;
-
-    font-weight:700;
-
-    color:var(--text);
-
-    margin-bottom:5px;
-
-}
-
-.transaction-details p{
-
-    font-size:14px;
-
-    color:var(--subtext);
-
-    line-height:1.5;
-
-} 
-/* ==========================================
-   PART 6
-   INVITE & EARN
-========================================== */
-
-.invite-section{
-
-    margin-bottom:34px;
-
-}
-
-.invite-card{
-
-    position:relative;
-
-    overflow:hidden;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    background:linear-gradient(
-        135deg,
-        #2F6BFF 0%,
-        #2563EB 55%,
-        #1D4ED8 100%
-    );
-
-    border-radius:28px;
-
-    padding:24px;
-
-    box-shadow:var(--shadow-lg);
-
-}
-
-.invite-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:180px;
-
-    height:180px;
-
-    right:-70px;
-
-    top:-70px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.08);
-
-}
-
-.invite-left{
-
-    position:relative;
-
-    z-index:2;
-
-    max-width:60%;
-
-}
-
-.invite-left h2{
-
-    font-size:22px;
-
-    font-weight:700;
-
-    color:#FFFFFF;
-
-    margin-bottom:10px;
-
-}
-
-.invite-left p{
-
-    font-size:14px;
-
-    line-height:1.5;
-
-    color:rgba(255,255,255,.92);
-
-    margin-bottom:18px;
-
-}
-
-.invite-btn{
-
-    width:120px;
-
-    height:46px;
-
-    border-radius:15px;
-
-    background:#FFFFFF;
-
-    color:var(--primary);
-
-    font-size:15px;
-
-    font-weight:700;
-
-    box-shadow:0 8px 18px rgba(0,0,0,.08);
-
-}
-
-.invite-right{
-
-    position:relative;
-
-    z-index:2;
-
-}
-
-.gift-image{
-
-    width:90px;
-
-    height:90px;
-
-    object-fit:contain;
-
-} 
-/* ==========================================
-   PART 7
-   BOTTOM NAVIGATION
-========================================== */
-
-.bottom-nav{
-
-    position:fixed;
-
-    left:50%;
-
-    bottom:0;
-
-    transform:translateX(-50%);
-
-    width:100%;
-
-    max-width:500px;
-
-    height:82px;
-
-    background:var(--white);
-
-    border-top-left-radius:28px;
-
-    border-top-right-radius:28px;
-
-    display:flex;
-
-    justify-content:space-around;
-
-    align-items:center;
+    background:
+        linear-gradient(
+            135deg,
+            #3979f8 0%,
+            #2f6df4 50%,
+            #2561e3 100%
+        );
 
     box-shadow:
-        0 -10px 28px rgba(15,23,42,.08);
+        0 15px 32px rgba(47, 109, 246, .18);
 
-    z-index:1000;
-
+    margin-bottom: 29px;
 }
 
-.nav-item{
+.wallet-decoration {
+    position: absolute;
 
-    flex:1;
+    border-radius: 50%;
 
-    height:100%;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:6px;
-
-    color:#9CA3AF;
-
-    transition:.25s ease;
-
+    pointer-events: none;
 }
 
-.nav-item i{
+.wallet-decoration-one {
+    width: 300px;
+    height: 300px;
 
-    font-size:21px;
+    right: -120px;
+    top: -165px;
 
+    background:
+        rgba(255, 255, 255, .075);
 }
 
-.nav-item span{
+.wallet-decoration-two {
+    width: 280px;
+    height: 280px;
 
-    font-size:12px;
+    left: -190px;
+    bottom: -210px;
 
-    font-weight:600;
-
+    background:
+        rgba(255, 255, 255, .055);
 }
 
-.nav-item.active{
+.wallet-top {
+    position: relative;
+    z-index: 2;
 
-    color:var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    gap: 10px;
 }
 
-.nav-item:active{
+.balance-title {
+    font-size: 17px;
+    font-weight: 500;
 
-    transform:scale(.95);
-
-} 
-/* ==========================================
-   PART 8
-   MODAL
-========================================== */
-
-.modal{
-
-    position:fixed;
-
-    inset:0;
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:24px;
-
-    background:rgba(15,23,42,.45);
-
-    backdrop-filter:blur(6px);
-
-    z-index:9999;
-
+    color:
+        rgba(255, 255, 255, .9);
 }
 
-.modal-content{
+.hide-balance-btn {
+    background: transparent;
 
-    width:100%;
+    color: var(--white);
 
-    max-width:360px;
+    display: flex;
+    align-items: center;
 
-    background:var(--white);
+    gap: 7px;
 
-    border-radius:26px;
-
-    padding:28px 24px;
-
-    text-align:center;
-
-    box-shadow:0 25px 60px rgba(15,23,42,.18);
-
+    font-size: 16px;
+    font-weight: 500;
 }
 
-.modal-content h2{
-
-    font-size:24px;
-
-    margin-bottom:12px;
-
+.hide-balance-btn i {
+    font-size: 17px;
 }
 
-.modal-content p{
+.wallet-balance {
+    position: relative;
+    z-index: 2;
 
-    color:var(--subtext);
+    margin-top: 17px;
 
-    line-height:1.6;
+    font-size: 43px;
+    line-height: 1;
 
-    margin-bottom:24px;
+    font-weight: 750;
 
+    letter-spacing: -1.2px;
+
+    white-space: nowrap;
 }
 
-.modal-button{
+.wallet-actions {
+    position: relative;
+    z-index: 2;
 
-    width:100%;
+    width: 100%;
 
-    height:52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
-    border-radius:16px;
+    gap: 14px;
 
-    background:var(--primary);
-
-    color:#fff;
-
-    font-weight:700;
-
-} 
-/* ==========================================
-   PART 9
-   RESPONSIVE
-========================================== */
-
-@media (max-width:480px){
-
-.dashboard-container{
-
-    padding:20px 18px 110px;
-
+    margin-top: 31px;
 }
 
-.user-name{
+.wallet-primary-btn,
+.wallet-secondary-btn {
+    width: 100%;
+    height: 58px;
 
-    font-size:28px;
+    border-radius: 19px;
 
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.wallet-balance{
+    gap: 8px;
 
-    font-size:40px;
-
-}
-
-.wallet-actions{
-
-    gap:10px;
-
-}
-
-.wallet-secondary-btn{
-
-    width:120px;
-
-}
-
-.service-card{
-
-    height:96px;
-
-}
-
-.gift-image{
-
-    width:80px;
-
-    height:80px;
-
-}
-
-} 
-/* ==========================================
-   PART 10
-   FINAL POLISH
-========================================== */
-
-button{
-
-    transition:.25s ease;
-
-}
-
-button:active{
-
-    transform:scale(.96);
-
-}
-
-.service-card,
-.transaction-card,
-.wallet-card,
-.invite-card{
+    font-size: 17px;
+    font-weight: 700;
 
     transition:
-    transform .25s ease,
-    box-shadow .25s ease;
-
+        transform .15s ease;
 }
 
-.service-card:hover,
-.transaction-card:hover{
-
-    transform:translateY(-2px);
-
+.wallet-primary-btn:active,
+.wallet-secondary-btn:active {
+    transform: scale(.97);
 }
 
-::-webkit-scrollbar{
+.wallet-primary-btn {
+    background: var(--white);
+    color: var(--blue);
+}
 
-    display:none;
+.wallet-primary-btn i {
+    font-size: 18px;
+}
 
+.wallet-secondary-btn {
+    color: var(--white);
+
+    background:
+        rgba(255, 255, 255, .09);
+
+    border:
+        1px solid rgba(255, 255, 255, .28);
+}
+
+.wallet-secondary-btn i {
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.services-section,
+.transactions-section,
+.invite-section {
+    width: 100%;
+
+    margin-bottom: 29px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.section-header h2 {
+    color: var(--text);
+
+    font-size: 24px;
+    line-height: 1.1;
+
+    font-weight: 750;
+
+    letter-spacing: -.5px;
+}
+
+.text-button {
+    background: transparent;
+
+    color: var(--blue);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   QUICK SERVICES
+   ========================================================= */
+
+.services-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 11px;
+}
+
+.service-card {
+    width: 100%;
+
+    height: 142px;
+
+    border-radius: 22px;
+
+    background: var(--white);
+
+    box-shadow: var(--shadow);
+
+    color: var(--text);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 11px;
+
+    transition: transform .15s ease;
+}
+
+.service-card:active {
+    transform: scale(.96);
+}
+
+.service-icon {
+    width: 57px;
+    height: 57px;
+
+    border-radius: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+.service-card span {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+
+/* SERVICE ICONS */
+
+.service-icon.airtime {
+    background: #eaf1ff;
+    color: #3975e9;
+}
+
+.service-icon.data {
+    background: #e8faf0;
+    color: #1eb568;
+}
+
+.service-icon.electricity {
+    background: #fff6e4;
+    color: #f2a900;
+}
+
+.service-icon.tv {
+    background: #f3eaff;
+    color: #8957e3;
+}
+
+.service-icon.betting {
+    background: #ffe8f3;
+    color: #e33184;
+}
+
+.service-icon.more {
+    background: #eef1f6;
+    color: #697386;
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+   ========================================================= */
+
+#recentTransactionsContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+.transaction-card {
+    width: 100%;
+
+    min-height: 106px;
+
+    padding: 16px 17px;
+
+    border-radius: 22px;
+
+    background: var(--white);
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+.transaction-icon {
+    width: 60px;
+    height: 60px;
+
+    flex-shrink: 0;
+
+    border-radius: 18px;
+
+    background: #eaf1ff;
+    color: var(--blue);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+.transaction-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.transaction-details h4 {
+    color: var(--text);
+
+    font-size: 16px;
+    font-weight: 750;
+
+    margin-bottom: 4px;
+}
+
+.transaction-details p {
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.transaction-amount {
+    flex-shrink: 0;
+
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 650;
+
+    text-align: right;
+}
+
+.transaction-amount.credit,
+.amount-credit {
+    color: var(--green);
+}
+
+.transaction-amount.debit,
+.amount-debit {
+    color: var(--text);
+}
+
+.transaction-status {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.empty-transaction {
+    min-height: 105px;
+}
+
+
+/* =========================================================
+   INVITE & EARN
+   ========================================================= */
+
+.invite-card {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+
+    min-height: 218px;
+
+    padding: 24px 21px;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3778f8 0%,
+            #2d6af0 55%,
+            #245fdf 100%
+        );
+
+    color: var(--white);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    box-shadow:
+        0 14px 30px rgba(47, 109, 246, .16);
+}
+
+.invite-decoration {
+    position: absolute;
+
+    width: 270px;
+    height: 270px;
+
+    right: -125px;
+    top: -150px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, .07);
+}
+
+.invite-left {
+    position: relative;
+    z-index: 3;
+
+    max-width: 58%;
+}
+
+.invite-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        rgba(255, 255, 255, .68);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.invite-left h2 {
+    font-size: 25px;
+    line-height: 1.1;
+
+    font-weight: 750;
+
+    margin-bottom: 9px;
+}
+
+.invite-left p {
+    color:
+        rgba(255, 255, 255, .88);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.invite-btn {
+    height: 47px;
+
+    min-width: 126px;
+
+    margin-top: 16px;
+
+    padding: 0 18px;
+
+    border-radius: 15px;
+
+    background: var(--white);
+    color: var(--blue);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    transition: transform .15s ease;
+}
+
+.invite-btn:active {
+    transform: scale(.96);
+}
+
+
+/* =========================================================
+   GIFT GRAPHIC
+   ========================================================= */
+
+.invite-right {
+    position: relative;
+    z-index: 3;
+
+    width: 145px;
+    height: 160px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gift-box {
+    position: relative;
+
+    width: 92px;
+    height: 76px;
+
+    margin-top: 25px;
+
+    border-radius: 8px 8px 12px 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.28),
+            rgba(255,255,255,.10)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.28);
+
+    box-shadow:
+        0 12px 25px rgba(0,0,0,.12);
+}
+
+.gift-ribbon-vertical {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+
+    width: 14px;
+
+    transform: translateX(-50%);
+
+    background:
+        rgba(255,255,255,.45);
+}
+
+.gift-ribbon-horizontal {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 18px;
+
+    height: 13px;
+
+    background:
+        rgba(255,255,255,.42);
+}
+
+.gift-bow {
+    position: absolute;
+
+    width: 58px;
+    height: 28px;
+
+    left: 50%;
+    top: -25px;
+
+    transform: translateX(-50%);
+}
+
+.gift-bow span {
+    position: absolute;
+
+    width: 32px;
+    height: 22px;
+
+    top: 3px;
+
+    border-radius:
+        50% 50% 50% 10px;
+
+    background:
+        rgba(255,255,255,.48);
+}
+
+.gift-bow span:first-child {
+    left: 0;
+
+    transform:
+        rotate(-28deg);
+}
+
+.gift-bow span:last-child {
+    right: 0;
+
+    transform:
+        scaleX(-1)
+        rotate(-28deg);
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottom-nav {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 100;
+
+    height: 82px;
+
+    padding:
+        7px
+        12px
+        max(7px, env(safe-area-inset-bottom));
+
+    background:
+        rgba(255,255,255,.98);
+
+    border-top:
+        1px solid #e8edf4;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    box-shadow:
+        0 -7px 24px rgba(30,55,90,.045);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+}
+
+.nav-item {
+    background: transparent;
+
+    color: #9aa3b2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.nav-item i {
+    font-size: 21px;
+}
+
+.nav-item.active {
+    color: var(--blue);
+}
+
+.nav-item:active {
+    transform: scale(.95);
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(15,23,42,.45);
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 360px;
+
+    padding: 26px 22px 22px;
+
+    border-radius: 23px;
+
+    background: var(--white);
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 50px rgba(15,23,42,.18);
+}
+
+.modal-icon {
+    width: 52px;
+    height: 52px;
+
+    margin: 0 auto 13px;
+
+    border-radius: 50%;
+
+    background: #edf3ff;
+    color: var(--blue);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.modal-content p {
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    margin-bottom: 19px;
+}
+
+.modal-button {
+    width: 100%;
+    height: 48px;
+
+    border-radius: 13px;
+
+    background: var(--blue);
+    color: var(--white);
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 390px) {
+
+    .dashboard-container {
+        padding:
+            23px
+            14px
+            24px;
+    }
+
+    .dashboard-header {
+        margin-bottom: 20px;
+    }
+
+    .greeting-text,
+    .user-name {
+        font-size: 21px;
+    }
+
+    .header-right {
+        gap: 6px;
+    }
+
+    .header-icon {
+        width: 43px;
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+    .wallet-card {
+        min-height: 260px;
+
+        padding:
+            23px
+            20px
+            21px;
+
+        border-radius: 25px;
+    }
+
+    .balance-title {
+        font-size: 15px;
+    }
+
+    .hide-balance-btn {
+        font-size: 14px;
+    }
+
+    .wallet-balance {
+        font-size: 37px;
+
+        margin-top: 15px;
+    }
+
+    .wallet-actions {
+        gap: 9px;
+
+        margin-top: 28px;
+    }
+
+    .wallet-primary-btn,
+    .wallet-secondary-btn {
+        height: 55px;
+
+        border-radius: 17px;
+
+        font-size: 15px;
+    }
+
+    .section-header h2 {
+        font-size: 22px;
+    }
+
+    .text-button {
+        font-size: 14px;
+    }
+
+    .services-grid {
+        gap: 9px;
+    }
+
+    .service-card {
+        height: 132px;
+
+        border-radius: 20px;
+
+        gap: 9px;
+    }
+
+    .service-icon {
+        width: 53px;
+        height: 53px;
+
+        border-radius: 17px;
+
+        font-size: 21px;
+    }
+
+    .service-card span {
+        font-size: 14px;
+    }
+
+    .transaction-card {
+        min-height: 98px;
+
+        padding: 14px;
+
+        border-radius: 20px;
+
+        gap: 11px;
+    }
+
+    .transaction-icon {
+        width: 54px;
+        height: 54px;
+
+        border-radius: 17px;
+
+        font-size: 20px;
+    }
+
+    .transaction-details h4 {
+        font-size: 15px;
+    }
+
+    .transaction-details p {
+        font-size: 12px;
+    }
+
+    .transaction-amount {
+        font-size: 13px;
+    }
+
+    .invite-card {
+        min-height: 205px;
+
+        padding: 21px 18px;
+
+        border-radius: 24px;
+    }
+
+    .invite-left {
+        max-width: 57%;
+    }
+
+    .invite-left h2 {
+        font-size: 22px;
+    }
+
+    .invite-left p {
+        font-size: 12px;
+    }
+
+    .invite-btn {
+        height: 44px;
+
+        min-width: 112px;
+
+        font-size: 13px;
+    }
+
+    .invite-right {
+        width: 125px;
+    }
+
+    .gift-box {
+        width: 78px;
+        height: 65px;
+    }
+
+    .gift-ribbon-vertical {
+        width: 11px;
+    }
+
+    .gift-ribbon-horizontal {
+        top: 16px;
+        height: 11px;
+    }
+
+    .gift-bow {
+        transform:
+            translateX(-50%)
+            scale(.86);
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+    .dashboard-container {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .greeting-text,
+    .user-name {
+        font-size: 19px;
+    }
+
+    .header-icon {
+        width: 39px;
+        height: 39px;
+    }
+
+    .wallet-balance {
+        font-size: 33px;
+    }
+
+    .wallet-primary-btn,
+    .wallet-secondary-btn {
+        font-size: 13px;
+    }
+
+    .service-card {
+        height: 124px;
+    }
+
+    .service-icon {
+        width: 49px;
+        height: 49px;
+    }
+
+    .service-card span {
+        font-size: 13px;
+    }
 }

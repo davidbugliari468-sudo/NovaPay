@@ -3,105 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Add Money | NovaPay</title>
 
     <link rel="stylesheet" href="add-money.css">
 </head>
+
 <body>
 
-    <!-- Header -->
+    <!-- ==============================
+         HEADER
+    =============================== -->
+
     <header class="header">
 
-        <button id="backBtn" class="back-btn">
+        <button id="backBtn" class="back-btn" aria-label="Go back">
             ←
         </button>
 
         <h2>Add Money</h2>
 
-        <div></div>
+        <div class="header-space"></div>
 
     </header>
 
-    <!-- Container -->
+
+    <!-- ==============================
+         MAIN
+    =============================== -->
+
     <main class="container">
 
-        <!-- Wallet Card -->
+
+        <!-- ==============================
+             BALANCE
+        =============================== -->
+
         <section class="wallet-card">
 
-            <p>Available Balance</p>
+            <div class="balance-label">
+                Available Balance
+            </div>
 
             <h1 id="walletBalance">
                 ₦0.00
             </h1>
 
+            <div class="balance-status">
+                Wallet balance
+            </div>
+
         </section>
 
-        <!-- Amount -->
+
+        <!-- ==============================
+             AMOUNT
+        =============================== -->
+
         <section class="amount-section">
 
-            <label>
-                Enter Amount
+            <label for="amount">
+                How much do you want to add?
             </label>
 
             <div class="input-box">
 
-                <span>₦</span>
+                <span class="currency">
+                    ₦
+                </span>
 
                 <input
                     type="number"
                     id="amount"
                     placeholder="0.00"
                     min="100"
+                    inputmode="decimal"
                 >
 
             </div>
 
         </section>
 
-        <!-- Quick Amount -->
+
+        <!-- ==============================
+             QUICK AMOUNTS
+        =============================== -->
+
         <section class="quick-section">
 
-            <h3>Quick Select</h3>
+            <div class="section-heading">
+                Quick amount
+            </div>
 
             <div class="quick-grid">
 
-                <button class="quickBtn" data-amount="500">₦500</button>
+                <button class="quickBtn" data-amount="500">
+                    ₦500
+                </button>
 
-                <button class="quickBtn" data-amount="1000">₦1,000</button>
+                <button class="quickBtn" data-amount="1000">
+                    ₦1,000
+                </button>
 
-                <button class="quickBtn" data-amount="2000">₦2,000</button>
+                <button class="quickBtn" data-amount="2000">
+                    ₦2,000
+                </button>
 
-                <button class="quickBtn" data-amount="5000">₦5,000</button>
+                <button class="quickBtn" data-amount="5000">
+                    ₦5,000
+                </button>
 
-                <button class="quickBtn" data-amount="10000">₦10,000</button>
+                <button class="quickBtn" data-amount="10000">
+                    ₦10,000
+                </button>
 
-                <button class="quickBtn" data-amount="20000">₦20,000</button>
+                <button class="quickBtn" data-amount="20000">
+                    ₦20,000
+                </button>
 
             </div>
 
         </section>
 
-        <!-- Payment Method -->
 
-        <section class="payment-card">
+        <!-- ==============================
+             PAYMENT METHOD
+        =============================== -->
 
-            <h3>Payment Method</h3>
+        <section class="payment-section">
 
-            <p>🏦 Secure Payment via Monnify</p>
+            <div class="section-heading">
+                Payment method
+            </div>
+
+
+            <div class="payment-card">
+
+                <div class="payment-icon">
+                    ✓
+                </div>
+
+
+                <div class="payment-info">
+
+                    <h3>
+                        Pay with Monnify
+                    </h3>
+
+                    <p>
+                        Secure payment
+                    </p>
+
+                    <span>
+                        Card • Bank Transfer • USSD
+                    </span>
+
+                </div>
+
+
+                <div class="payment-check">
+                    ✓
+                </div>
+
+            </div>
+
+
+            <!-- Future virtual account -->
+
+            <div class="bank-transfer-card">
+
+                <div class="bank-icon">
+                    🏦
+                </div>
+
+                <div class="bank-info">
+
+                    <h3>
+                        Bank Transfer
+                    </h3>
+
+                    <p>
+                        Your personal NovaPay account
+                    </p>
+
+                    <span>
+                        Coming soon
+                    </span>
+
+                </div>
+
+            </div>
 
         </section>
 
-        <!-- Continue -->
 
-        <button id="continueBtn" class="continue-btn">
+        <!-- ==============================
+             CONTINUE
+        =============================== -->
 
+        <button
+            id="continueBtn"
+            class="continue-btn"
+        >
             Continue
-
         </button>
+
+
+        <p class="secure-note">
+            🔒 Your payment is securely processed by Monnify
+        </p>
 
     </main>
 
-    <!-- Modal -->
+
+    <!-- ==============================
+         MODAL
+    =============================== -->
 
     <div id="customModal" class="modal">
 
@@ -112,14 +229,17 @@
             <p id="modalMessage"></p>
 
             <button onclick="closeModal()">
-
                 OK
-
             </button>
 
         </div>
 
     </div>
+
+
+    <!-- ==============================
+         JAVASCRIPT
+    =============================== -->
 
     <script type="module" src="add-money.js"></script>
 
