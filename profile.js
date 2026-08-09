@@ -1,6 +1,5 @@
 /* ==========================================
    NOVAPAY SETTINGS
-   MODULE 1
 ========================================== */
 
 import { auth, db } from "./firebase.js";
@@ -15,30 +14,35 @@ import {
     getDoc
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+
 /* ==========================================
    ELEMENTS
 ========================================== */
 
-const backBtn = document.getElementById("backBtn");
+const backBtn =
+    document.getElementById("backBtn");
 
-const logoutBtn = document.getElementById("logoutBtn");
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
 const personalInformationBtn =
-document.getElementById("personalInformationBtn");
+    document.getElementById("personalInformationBtn");
 
 const userName =
-document.getElementById("userName");
+    document.getElementById("userName");
 
 const userEmail =
-document.getElementById("userEmail");
+    document.getElementById("userEmail");
 
 const userPoints =
-document.getElementById("userPoints");
+    document.getElementById("userPoints");
 
 const userRewards =
-document.getElementById("userRewards");
+    document.getElementById("userRewards");
+
 
 let currentUser = null;
+
 
 /* ==========================================
    BACK BUTTON
@@ -46,9 +50,11 @@ let currentUser = null;
 
 backBtn?.addEventListener("click", () => {
 
-    window.location.href = "dashboard.html";
+    window.location.href =
+        "dashboard.html";
 
 });
+
 
 /* ==========================================
    PERSONAL INFORMATION
@@ -57,9 +63,10 @@ backBtn?.addEventListener("click", () => {
 personalInformationBtn?.addEventListener("click", () => {
 
     window.location.href =
-    "personal-information.html";
+        "personal-information.html";
 
 });
+
 
 /* ==========================================
    LOGOUT
@@ -67,140 +74,466 @@ personalInformationBtn?.addEventListener("click", () => {
 
 logoutBtn?.addEventListener("click", async () => {
 
-    try{
+    /*
+     * Ask the user before logging out.
+     * OK = Yes
+     * Cancel = No
+     */
 
-        await signOut(auth);
+    const confirmed =
+        window.confirm(
+            "Are you sure you want to logout?"
+        );
 
-        window.location.href =
-        "login.html";
 
-    }
+    /* User selected No */
 
-    catch(error){
-
-        console.error(error);
-
-    }
-
-});
-
-console.log("✅ Module 1 Loaded");
-/* ==========================================
-   MODULE 2
-   LOAD USER PROFILE
-========================================== */
-
-onAuthStateChanged(auth, async (user) => {
-
-    if (!user) {
-
-        window.location.href = "login.html";
+    if (!confirmed) {
 
         return;
 
     }
 
-    currentUser = user;
 
-    userEmail.textContent = user.email;
+    /* User selected Yes */
 
     try {
 
-        const userRef = doc(
-            db,
-            "users",
-            user.uid
+        await signOut(auth);
+
+        window.location.href =
+            "login.html";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Logout Error:",
+            error
         );
-
-        const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
-
-            const data = userSnap.data();
-
-            userName.textContent =
-                data.fullName || "NovaPay User";
-
-            userPoints.textContent =
-                `${data.points || 0} Points`;
-
-            userRewards.textContent =
-                `${data.rewards || 0} Rewards`;
-
-        } else {
-
-            userName.textContent = "NovaPay User";
-
-            userPoints.textContent = "0 Points";
-
-            userRewards.textContent = "0 Rewards";
-
-        }
-
-    } catch (error) {
-
-        console.error("Profile Error:", error);
 
     }
 
 });
 
-console.log("✅ Module 2 Loaded");
+
+console.log("✅ Logout system ready");
+
+
 /* ==========================================
-   MODULE 3
+   LOAD USER PROFILE
+========================================== */
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        /* ----------------------------------
+           AUTH CHECK
+        ---------------------------------- */
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser = user;
+
+
+        /* ----------------------------------
+           DEFAULT USER INFORMATION
+        ---------------------------------- */
+
+        if (userEmail) {
+
+            userEmail.textContent =
+                user.email || "";
+
+        }
+
+
+        /*
+         * Prevent Loading... from staying
+         * on the screen.
+         */
+
+        if (userName) {
+
+            userName.textContent =
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "NovaPay User";
+
+        }
+
+
+        if (userPoints) {
+
+            userPoints.textContent =
+                "0 Points";
+
+        }
+
+
+        if (userRewards) {
+
+            userRewards.textContent =
+                "0 Rewards";
+
+        }
+
+
+        /* ----------------------------------
+           LOAD FIRESTORE USER
+        ---------------------------------- */
+
+        try {
+
+            const userRef =
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                );
+
+
+            const userSnap =
+                await getDoc(userRef);
+
+
+            if (!userSnap.exists()) {
+
+                console.warn(
+                    "NovaPay user document not found."
+                );
+
+                updateLoginPinButton(false);
+
+                return;
+
+            }
+
+
+            const data =
+                userSnap.data();
+
+
+            /* --------------------------------
+               NAME
+            -------------------------------- */
+
+            if (userName) {
+
+                userName.textContent =
+                    data.fullName ||
+                    user.displayName ||
+                    user.email?.split("@")[0] ||
+                    "NovaPay User";
+
+            }
+
+
+            /* --------------------------------
+               POINTS
+            -------------------------------- */
+
+            if (userPoints) {
+
+                userPoints.textContent =
+                    `${data.points || 0} Points`;
+
+            }
+
+
+            /* --------------------------------
+               REWARDS
+            -------------------------------- */
+
+            if (userRewards) {
+
+                userRewards.textContent =
+                    `${data.rewards || 0} Rewards`;
+
+            }
+
+
+            /* --------------------------------
+               LOGIN PIN
+            -------------------------------- */
+
+            const hasLoginPin =
+                data.loginPinCreated === true;
+
+
+            updateLoginPinButton(
+                hasLoginPin
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Profile Error:",
+                error
+            );
+
+
+            /*
+             * Keep the profile usable even if
+             * Firestore temporarily fails.
+             */
+
+            if (userName) {
+
+                userName.textContent =
+                    user.displayName ||
+                    user.email?.split("@")[0] ||
+                    "NovaPay User";
+
+            }
+
+
+            updateLoginPinButton(false);
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   UPDATE LOGIN PIN BUTTON
+========================================== */
+
+function updateLoginPinButton(
+    hasLoginPin
+) {
+
+    const loginPinLink =
+        document.querySelector(
+            'a[href="login-pin.html"]'
+        );
+
+
+    if (!loginPinLink) {
+
+        console.warn(
+            "Login PIN link was not found."
+        );
+
+        return;
+
+    }
+
+
+    const newText =
+        hasLoginPin
+            ? "Change Login PIN"
+            : "Login PIN";
+
+
+    /*
+     * Walk through ALL text nodes inside
+     * the link.
+     *
+     * This means the icon, arrow and other
+     * HTML elements stay untouched.
+     */
+
+    const walker =
+        document.createTreeWalker(
+            loginPinLink,
+            NodeFilter.SHOW_TEXT
+        );
+
+
+    const textNodes = [];
+
+    let node;
+
+
+    while (
+        node =
+        walker.nextNode()
+    ) {
+
+        textNodes.push(node);
+
+    }
+
+
+    let changed = false;
+
+
+    /* ----------------------------------
+       Find existing Login PIN text
+    ---------------------------------- */
+
+    for (
+        const textNode of textNodes
+    ) {
+
+        const text =
+            textNode.textContent.trim();
+
+
+        if (
+            text === "Login PIN" ||
+            text === "Change Login PIN"
+        ) {
+
+            textNode.textContent =
+                textNode.textContent.replace(
+                    text,
+                    newText
+                );
+
+            changed = true;
+
+            break;
+
+        }
+
+    }
+
+
+    /* ----------------------------------
+       Safety fallback
+    ---------------------------------- */
+
+    if (!changed) {
+
+        /*
+         * Look for a common text element
+         * inside the link.
+         */
+
+        const possibleTextElement =
+            loginPinLink.querySelector(
+                "span, p, div"
+            );
+
+
+        if (possibleTextElement) {
+
+            possibleTextElement.textContent =
+                newText;
+
+            return;
+
+        }
+
+
+        /*
+         * Last fallback:
+         * preserve the link's HTML as much
+         * as possible and add the label.
+         */
+
+        const label =
+            document.createElement("span");
+
+        label.textContent =
+            newText;
+
+        loginPinLink.appendChild(
+            label
+        );
+
+    }
+
+
+    console.log(
+        hasLoginPin
+            ? "🔐 Change Login PIN enabled"
+            : "🔐 Login PIN enabled"
+    );
+
+}
+
+
+/* ==========================================
    SETTINGS NAVIGATION
 ========================================== */
 
 const menuItems = {
 
-    loginPin: document.querySelector(
-        'a[href="login-pin.html"]'
-    ),
+    loginPin:
+        document.querySelector(
+            'a[href="login-pin.html"]'
+        ),
 
-    transactionPin: document.querySelector(
-        'a[href="transaction-pin.html"]'
-    ),
+    transactionPin:
+        document.querySelector(
+            'a[href="transaction-pin.html"]'
+        ),
 
-    notifications: document.querySelector(
-        'a[href="notifications.html"]'
-    ),
+    notifications:
+        document.querySelector(
+            'a[href="notifications.html"]'
+        ),
 
-    language: document.querySelector(
-        'a[href="language.html"]'
-    ),
+    language:
+        document.querySelector(
+            'a[href="language.html"]'
+        ),
 
-    help: document.querySelector(
-        'a[href="help.html"]'
-    ),
+    help:
+        document.querySelector(
+            'a[href="help.html"]'
+        ),
 
-    support: document.querySelector(
-        'a[href="contact-support.html"]'
-    ),
+    support:
+        document.querySelector(
+            'a[href="contact-support.html"]'
+        ),
 
-    privacy: document.querySelector(
-        'a[href="privacy-policy.html"]'
-    ),
+    privacy:
+        document.querySelector(
+            'a[href="privacy-policy.html"]'
+        ),
 
-    terms: document.querySelector(
-        'a[href="terms.html"]'
-    ),
+    terms:
+        document.querySelector(
+            'a[href="terms.html"]'
+        ),
 
-    about: document.querySelector(
-        'a[href="about.html"]'
-    )
+    about:
+        document.querySelector(
+            'a[href="about.html"]'
+        )
 
 };
 
-Object.values(menuItems).forEach(item => {
+
+Object.values(
+    menuItems
+).forEach(item => {
 
     if (!item) return;
 
-    item.addEventListener("click", () => {
+    item.addEventListener(
+        "click",
+        () => {
 
-        console.log("Opening:", item.href);
+            console.log(
+                "Opening:",
+                item.href
+            );
 
-    });
+        }
+    );
 
 });
 
-console.log("✅ Module 3 Loaded");
+
+console.log(
+    "✅ NovaPay Profile Ready"
+);

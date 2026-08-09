@@ -1,7 +1,7 @@
 /* ==========================================
    NOVAPAY
-   CREATE LOGIN PIN
-   MODULE 1
+   LOGIN PIN
+   CREATE + CHANGE
 ========================================== */
 
 import { auth, db } from "./firebase.js";
@@ -22,19 +22,19 @@ import {
 ========================================== */
 
 const pageTitle =
-document.getElementById("pageTitle");
+    document.getElementById("pageTitle");
 
 const pageSubtitle =
-document.getElementById("pageSubtitle");
+    document.getElementById("pageSubtitle");
 
 const deleteBtn =
-document.getElementById("deleteBtn");
+    document.getElementById("deleteBtn");
 
 const pinBoxes =
-document.querySelectorAll(".pin-box");
+    document.querySelectorAll(".pin-box");
 
 const numberButtons =
-document.querySelectorAll(".num-btn");
+    document.querySelectorAll(".num-btn");
 
 
 /* ==========================================
@@ -43,73 +43,202 @@ document.querySelectorAll(".num-btn");
 
 let currentUser = null;
 
+let savedPin = "";
+
 let firstPin = "";
 
 let enteredPin = "";
 
-let confirmMode = false;
-
 let loading = false;
 
 
+/*
+ * CREATE MODE
+ *
+ * create-current
+ * create-confirm
+ *
+ * CHANGE MODE
+ *
+ * change-current
+ * change-new
+ * change-confirm
+ */
+
+let mode = "create";
+
+let step = "create-new";
+
+
 /* ==========================================
-   CHECK LOGIN
+   CHECK URL MODE
 ========================================== */
 
-onAuthStateChanged(auth, async (user) => {
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
 
-    if (!user) {
 
-        window.location.href = "login.html";
+const changeMode =
+    urlParams.get("mode") === "change";
 
-        return;
+
+if (changeMode) {
+
+    mode = "change";
+
+    step = "change-current";
+
+}
+
+
+/* ==========================================
+   AUTH CHECK
+========================================== */
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser = user;
+
+        await loadUser();
 
     }
-
-    currentUser = user;
-
-    await loadUser();
-
-});
+);
 
 
 /* ==========================================
    LOAD USER
 ========================================== */
 
-async function loadUser(){
+async function loadUser() {
 
-    try{
+    try {
 
-        const userRef = doc(
-            db,
-            "users",
-            currentUser.uid
-        );
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
 
         const userSnap =
-        await getDoc(userRef);
+            await getDoc(userRef);
 
-        if(!userSnap.exists()){
 
-            alert("User account not found.");
+        if (!userSnap.exists()) {
+
+            alert(
+                "User account not found."
+            );
 
             window.location.href =
-            "login.html";
+                "login.html";
 
             return;
 
         }
 
-        initializeKeypad();
+
+        const data =
+            userSnap.data();
+
+
+        savedPin =
+            typeof data.loginPin === "string"
+                ? data.loginPin.trim()
+                : "";
+
+
+        const hasExistingPin =
+            data.loginPinCreated === true &&
+            /^\d{6}$/.test(savedPin);
+
+
+        /*
+         * CHANGE MODE
+         */
+
+        if (mode === "change") {
+
+            if (!hasExistingPin) {
+
+                /*
+                 * User tried to open
+                 * Change PIN without
+                 * having a PIN.
+                 */
+
+                mode = "create";
+
+                step = "create-new";
+
+
+                setCreateScreen();
+
+                return;
+
+            }
+
+
+            setChangeCurrentScreen();
+
+            return;
+
+        }
+
+
+        /*
+         * CREATE MODE
+         */
+
+        if (hasExistingPin) {
+
+            /*
+             * If a PIN already exists,
+             * don't create another one
+             * accidentally.
+             */
+
+            mode = "change";
+
+            step = "change-current";
+
+
+            setChangeCurrentScreen();
+
+            return;
+
+        }
+
+
+        setCreateScreen();
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "LOGIN PIN LOAD ERROR:",
+            error
+        );
 
-        alert(error.message);
+        alert(
+            "Unable to load Login PIN settings."
+        );
 
     }
 
@@ -117,93 +246,261 @@ async function loadUser(){
 
 
 /* ==========================================
-   INITIALIZE
+   SCREEN — CREATE
 ========================================== */
 
-function initializeKeypad(){
+function setCreateScreen() {
 
-    console.log("✅ Create PIN Ready");
+    if (pageTitle) {
 
-} 
+        pageTitle.textContent =
+            "Create Login PIN";
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            "Create a secure 6-digit PIN to protect your account.";
+
+    }
+
+
+    clearPin();
+
+}
+
+
 /* ==========================================
-   NOVAPAY
-   CREATE LOGIN PIN
-   MODULE 2
-   PIN ENGINE
+   SCREEN — CREATE CONFIRM
 ========================================== */
 
-numberButtons.forEach(button => {
+function setCreateConfirmScreen() {
 
-    button.addEventListener("click", () => {
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            "Confirm Login PIN";
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            "Enter the same 6-digit PIN again.";
+
+    }
+
+
+    clearPin();
+
+}
+
+
+/* ==========================================
+   SCREEN — CHANGE CURRENT
+========================================== */
+
+function setChangeCurrentScreen() {
+
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            "Change Login PIN";
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            "Enter your current 6-digit PIN.";
+
+    }
+
+
+    clearPin();
+
+}
+
+
+/* ==========================================
+   SCREEN — CHANGE NEW
+========================================== */
+
+function setChangeNewScreen() {
+
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            "Create New Login PIN";
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            "Enter a new 6-digit PIN.";
+
+    }
+
+
+    clearPin();
+
+}
+
+
+/* ==========================================
+   SCREEN — CHANGE CONFIRM
+========================================== */
+
+function setChangeConfirmScreen() {
+
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            "Confirm New Login PIN";
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            "Enter your new 6-digit PIN again.";
+
+    }
+
+
+    clearPin();
+
+}
+
+
+/* ==========================================
+   NUMBER PAD
+========================================== */
+
+numberButtons.forEach(
+    (button) => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if (loading) return;
+
+
+                const number =
+                    button.dataset.number;
+
+
+                if (
+                    number === undefined ||
+                    number === null
+                ) {
+                    return;
+                }
+
+
+                if (
+                    enteredPin.length >= 6
+                ) {
+                    return;
+                }
+
+
+                enteredPin += number;
+
+                updatePinBoxes();
+
+
+                if (
+                    enteredPin.length === 6
+                ) {
+
+                    loading = true;
+
+
+                    setTimeout(
+                        processPin,
+                        250
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ==========================================
+   DELETE
+========================================== */
+
+deleteBtn?.addEventListener(
+    "click",
+    () => {
 
         if (loading) return;
 
-        const number = button.dataset.number;
 
-        if (!number) return;
+        if (!enteredPin.length) {
+            return;
+        }
 
-        if (enteredPin.length >= 6) return;
 
-        enteredPin += number;
+        enteredPin =
+            enteredPin.slice(0, -1);
+
 
         updatePinBoxes();
 
-        if (enteredPin.length === 6) {
-
-            loading = true;
-
-            setTimeout(() => {
-
-                processPin();
-
-            }, 250);
-
-        }
-
-    });
-
-});
-
-
-deleteBtn.addEventListener("click", () => {
-
-    if (loading) return;
-
-    if (enteredPin.length === 0) return;
-
-    enteredPin =
-    enteredPin.slice(0,-1);
-
-    updatePinBoxes();
-
-});
+    }
+);
 
 
 /* ==========================================
    UPDATE PIN BOXES
 ========================================== */
 
-function updatePinBoxes(){
+function updatePinBoxes() {
 
-    pinBoxes.forEach((box,index)=>{
+    pinBoxes.forEach(
+        (box, index) => {
 
-        if(index < enteredPin.length){
+            if (
+                index <
+                enteredPin.length
+            ) {
 
-            box.innerHTML="●";
+                box.innerHTML =
+                    "●";
 
-            box.classList.add("active");
+                box.classList.add(
+                    "active"
+                );
+
+            }
+
+            else {
+
+                box.innerHTML =
+                    "";
+
+                box.classList.remove(
+                    "active"
+                );
+
+            }
 
         }
-
-        else{
-
-            box.innerHTML="";
-
-            box.classList.remove("active");
-
-        }
-
-    });
+    );
 
 }
 
@@ -212,11 +509,11 @@ function updatePinBoxes(){
    CLEAR PIN
 ========================================== */
 
-function clearPin(){
+function clearPin() {
 
-    enteredPin="";
+    enteredPin = "";
 
-    loading=false;
+    loading = false;
 
     updatePinBoxes();
 
@@ -227,130 +524,450 @@ function clearPin(){
    SHAKE
 ========================================== */
 
-function shakeBoxes(){
+function shakeBoxes() {
 
     const container =
-    document.querySelector(".pin-boxes");
+        document.querySelector(
+            ".pin-boxes"
+        );
 
-    container.classList.add("shake");
 
-    setTimeout(()=>{
+    if (!container) return;
 
-        container.classList.remove("shake");
 
-    },400);
+    container.classList.remove(
+        "shake"
+    );
+
+
+    void container.offsetWidth;
+
+
+    container.classList.add(
+        "shake"
+    );
+
+
+    setTimeout(
+        () => {
+
+            container.classList.remove(
+                "shake"
+            );
+
+        },
+        450
+    );
 
 }
 
 
-console.log("✅ MODULE 2 READY"); 
 /* ==========================================
-   NOVAPAY
-   CREATE LOGIN PIN
-   MODULE 3
-   CREATE & CONFIRM PIN
+   PROCESS PIN
 ========================================== */
 
 async function processPin() {
 
-    /* ------------------------------
-       FIRST PIN ENTRY
-    ------------------------------ */
+    /*
+     * ========================================
+     * CREATE MODE
+     * ========================================
+     */
 
-    if (!confirmMode) {
+    if (mode === "create") {
 
-        firstPin = enteredPin;
-
-        enteredPin = "";
-
-        loading = false;
-
-        confirmMode = true;
-
-        pageTitle.textContent =
-        "Confirm Login PIN";
-
-        pageSubtitle.textContent =
-        "Enter the same 6-digit PIN again.";
-
-        updatePinBoxes();
+        await processCreatePin();
 
         return;
 
     }
 
-    /* ------------------------------
-       PIN MISMATCH
-    ------------------------------ */
 
-    if (enteredPin !== firstPin) {
+    /*
+     * ========================================
+     * CHANGE MODE
+     * ========================================
+     */
 
-        shakeBoxes();
+    await processChangePin();
 
-        pageTitle.textContent =
-        "PINs Don't Match";
+}
 
-        pageSubtitle.textContent =
-        "Create your Login PIN again.";
 
-        setTimeout(() => {
+/* ==========================================
+   CREATE PIN
+========================================== */
 
-            confirmMode = false;
+async function processCreatePin() {
 
-            firstPin = "";
+    /*
+     * FIRST ENTRY
+     */
 
-            clearPin();
+    if (step === "create-new") {
 
-            pageTitle.textContent =
-            "Create Login PIN";
+        firstPin =
+            enteredPin;
 
-            pageSubtitle.textContent =
-            "Create a secure 6-digit PIN to protect your account.";
 
-        }, 700);
+        step =
+            "create-confirm";
+
+
+        setCreateConfirmScreen();
 
         return;
 
     }
 
-    /* ------------------------------
-       SAVE PIN
-    ------------------------------ */
+
+    /*
+     * CONFIRM ENTRY
+     */
+
+    if (step === "create-confirm") {
+
+        if (
+            enteredPin !== firstPin
+        ) {
+
+            shakeBoxes();
+
+
+            if (pageTitle) {
+
+                pageTitle.textContent =
+                    "PINs Don't Match";
+
+            }
+
+
+            if (pageSubtitle) {
+
+                pageSubtitle.textContent =
+                    "Please create your Login PIN again.";
+
+            }
+
+
+            setTimeout(
+                () => {
+
+                    firstPin = "";
+
+                    step =
+                        "create-new";
+
+                    setCreateScreen();
+
+                },
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        await saveNewPin(
+            firstPin
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   CHANGE PIN
+========================================== */
+
+async function processChangePin() {
+
+    /*
+     * CURRENT PIN
+     */
+
+    if (
+        step === "change-current"
+    ) {
+
+        if (
+            enteredPin !== savedPin
+        ) {
+
+            shakeBoxes();
+
+
+            if (pageSubtitle) {
+
+                pageSubtitle.textContent =
+                    "Incorrect current PIN. Try again.";
+
+            }
+
+
+            setTimeout(
+                clearPin,
+                600
+            );
+
+
+            return;
+
+        }
+
+
+        step =
+            "change-new";
+
+
+        setChangeNewScreen();
+
+        return;
+
+    }
+
+
+    /*
+     * NEW PIN
+     */
+
+    if (
+        step === "change-new"
+    ) {
+
+        firstPin =
+            enteredPin;
+
+
+        /*
+         * Don't allow the
+         * exact same PIN.
+         */
+
+        if (
+            firstPin === savedPin
+        ) {
+
+            shakeBoxes();
+
+
+            if (pageSubtitle) {
+
+                pageSubtitle.textContent =
+                    "Your new PIN must be different from the current PIN.";
+
+            }
+
+
+            setTimeout(
+                () => {
+
+                    clearPin();
+
+                    setChangeNewScreen();
+
+                },
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        step =
+            "change-confirm";
+
+
+        setChangeConfirmScreen();
+
+        return;
+
+    }
+
+
+    /*
+     * CONFIRM NEW PIN
+     */
+
+    if (
+        step === "change-confirm"
+    ) {
+
+        if (
+            enteredPin !== firstPin
+        ) {
+
+            shakeBoxes();
+
+
+            if (pageTitle) {
+
+                pageTitle.textContent =
+                    "PINs Don't Match";
+
+            }
+
+
+            if (pageSubtitle) {
+
+                pageSubtitle.textContent =
+                    "Please enter your new PIN again.";
+
+            }
+
+
+            setTimeout(
+                () => {
+
+                    step =
+                        "change-new";
+
+                    firstPin = "";
+
+                    setChangeNewScreen();
+
+                },
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        await saveNewPin(
+            firstPin
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   SAVE PIN
+========================================== */
+
+async function saveNewPin(newPin) {
 
     try {
 
-        const userRef = doc(
-            db,
-            "users",
-            currentUser.uid
+        loading = true;
+
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
+
+        await updateDoc(
+            userRef,
+            {
+
+                loginPin:
+                    newPin,
+
+                loginPinCreated:
+                    true,
+
+                loginPinUpdatedAt:
+                    new Date()
+
+            }
         );
 
-        await updateDoc(userRef, {
 
-            loginPin: firstPin,
+        /*
+         * Remove old trusted-device
+         * value because the new system
+         * does not use it.
+         */
 
-            loginPinCreated: true,
-
-            loginPinUpdatedAt:
-                new Date()
-
-        });
-
-        localStorage.setItem(
-            `trustedDevice_${currentUser.uid}`,
-            "true"
+        localStorage.removeItem(
+            `trustedDevice_${currentUser.uid}`
         );
 
-        window.location.href =
-        "dashboard.html";
+
+        /*
+         * Clear any app-lock state.
+         */
+
+        localStorage.removeItem(
+            `novaPayLock_${currentUser.uid}`
+        );
+
+
+        /*
+         * SUCCESS
+         */
+
+        if (pageTitle) {
+
+            pageTitle.textContent =
+                mode === "change"
+                    ? "Login PIN Changed"
+                    : "Login PIN Created";
+
+        }
+
+
+        if (pageSubtitle) {
+
+            pageSubtitle.textContent =
+                mode === "change"
+                    ? "Your Login PIN has been changed successfully."
+                    : "Your Login PIN has been created successfully.";
+
+        }
+
+
+        pinBoxes.forEach(
+            (box) => {
+
+                box.style.background =
+                    "#2563EB";
+
+                box.style.borderColor =
+                    "#2563EB";
+
+            }
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.replace(
+                    "dashboard.html"
+                );
+
+            },
+            700
+        );
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "SAVE LOGIN PIN ERROR:",
+            error
+        );
 
-        alert(error.message);
+        loading = false;
+
+        alert(
+            "Unable to save your Login PIN. Please try again."
+        );
 
         clearPin();
 
@@ -358,35 +975,11 @@ async function processPin() {
 
 }
 
-console.log("✅ MODULE 3 READY"); 
-/* ==========================================
-   NOVAPAY
-   LOGIN
-   MODULE 2
-   TRUSTED DEVICE CHECK
-========================================== */
 
 /* ==========================================
-   AUTO LOGIN
+   READY
 ========================================== */
 
-onAuthStateChanged(auth, (user) => {
-
-    if (!user) return;
-
-    const trustedDevice =
-        localStorage.getItem(
-            `trustedDevice_${user.uid}`
-        ) === "true";
-
-    if (trustedDevice) {
-
-        window.location.replace(
-            "unlock.html"
-        );
-
-    }
-
-});
-
-console.log("✅ Trusted Device Ready");
+console.log(
+    "✅ NovaPay Login PIN Ready"
+);

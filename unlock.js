@@ -1,7 +1,7 @@
 /* ==========================================
    NOVAPAY
    UNLOCK
-   MODULE 1
+   LOGIN PIN VERIFICATION
 ========================================== */
 
 import { auth, db } from "./firebase.js";
@@ -22,25 +22,25 @@ import {
 ========================================== */
 
 const welcomeText =
-document.getElementById("welcomeText");
+    document.getElementById("welcomeText");
 
 const userAvatar =
-document.getElementById("userAvatar");
+    document.getElementById("userAvatar");
 
 const helpBtn =
-document.getElementById("helpBtn");
+    document.getElementById("helpBtn");
 
 const passwordLoginBtn =
-document.getElementById("passwordLoginBtn");
+    document.getElementById("passwordLoginBtn");
 
 const deleteBtn =
-document.getElementById("deleteBtn");
+    document.getElementById("deleteBtn");
 
 const pinBoxes =
-document.querySelectorAll(".pin-box");
+    document.querySelectorAll(".pin-box");
 
 const numberButtons =
-document.querySelectorAll(".num-btn");
+    document.querySelectorAll(".num-btn");
 
 
 /* ==========================================
@@ -53,88 +53,141 @@ let savedPin = "";
 
 let enteredPin = "";
 
-let userData = null;
-
 let loading = false;
 
 
 /* ==========================================
-   CHECK LOGIN
+   AUTH CHECK
 ========================================== */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+    auth,
+    async (user) => {
 
-    if (!user) {
+        if (!user) {
 
-        window.location.href = "login.html";
+            window.location.href =
+                "login.html";
 
-        return;
+            return;
+
+        }
+
+
+        currentUser = user;
+
+        await loadUser();
 
     }
-
-    currentUser = user;
-
-    await loadUser();
-
-});
+);
 
 
 /* ==========================================
    LOAD USER
 ========================================== */
 
-async function loadUser(){
+async function loadUser() {
 
-    try{
+    try {
 
         const userRef =
-        doc(
-            db,
-            "users",
-            currentUser.uid
-        );
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
 
         const snap =
-        await getDoc(userRef);
+            await getDoc(userRef);
 
-        if(!snap.exists()){
 
-            alert("Account not found.");
+        if (!snap.exists()) {
 
             await signOut(auth);
+
+            window.location.href =
+                "login.html";
 
             return;
 
         }
 
-        userData =
-        snap.data();
+
+        const data =
+            snap.data();
+
 
         savedPin =
-        userData.loginPin || "";
+            typeof data.loginPin === "string"
+                ? data.loginPin.trim()
+                : "";
 
-        welcomeText.textContent =
-        `Hello, ${
-            userData.fullName ||
-            currentUser.email.split("@")[0]
-        }`;
 
-        if(userData.photoURL){
+        /*
+         * Safety:
+         * If this account doesn't actually have
+         * a valid 6-digit PIN, send it to PIN creation.
+         */
 
-            userAvatar.src =
-            userData.photoURL;
+        if (!/^\d{6}$/.test(savedPin)) {
+
+            window.location.replace(
+                "login-pin.html"
+            );
+
+            return;
 
         }
 
-        initializeKeypad();
+
+        const displayName =
+            data.fullName ||
+            currentUser.displayName ||
+            (
+                currentUser.email
+                    ? currentUser.email.split("@")[0]
+                    : "NovaPay User"
+            );
+
+
+        if (welcomeText) {
+
+            welcomeText.textContent =
+                `Hello, ${displayName}`;
+
+        }
+
+
+        if (
+            userAvatar &&
+            data.photoURL
+        ) {
+
+            userAvatar.src =
+                data.photoURL;
+
+        }
+
+
+        clearPin();
+
+        console.log(
+            "✅ NovaPay Unlock Ready"
+        );
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "UNLOCK LOAD ERROR:",
+            error
+        );
 
-        alert(error.message);
+        alert(
+            "Unable to load your account. Please try again."
+        );
 
     }
 
@@ -142,65 +195,85 @@ async function loadUser(){
 
 
 /* ==========================================
-   INITIALIZE
+   NUMBER PAD
 ========================================== */
 
-function initializeKeypad(){
+numberButtons.forEach(
+    (button) => {
 
-    console.log("✅ Unlock Ready");
+        button.addEventListener(
+            "click",
+            () => {
 
-} /* ==========================================
-   NOVAPAY
-   UNLOCK
-   MODULE 2
-   PIN ENGINE
+                if (loading) return;
+
+                const number =
+                    button.dataset.number;
+
+
+                if (
+                    number === undefined ||
+                    number === null
+                ) {
+                    return;
+                }
+
+
+                if (
+                    enteredPin.length >= 6
+                ) {
+                    return;
+                }
+
+
+                enteredPin += number;
+
+                updatePinBoxes();
+
+
+                if (
+                    enteredPin.length === 6
+                ) {
+
+                    loading = true;
+
+                    setTimeout(
+                        verifyPin,
+                        250
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ==========================================
+   DELETE
 ========================================== */
 
-numberButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
+deleteBtn?.addEventListener(
+    "click",
+    () => {
 
         if (loading) return;
 
-        const number = button.dataset.number;
+        if (!enteredPin.length) {
+            return;
+        }
 
-        if (number === undefined) return;
 
-        if (enteredPin.length >= 6) return;
+        enteredPin =
+            enteredPin.slice(0, -1);
 
-        enteredPin += number;
 
         updatePinBoxes();
 
-        if (enteredPin.length === 6) {
-
-            loading = true;
-
-            setTimeout(() => {
-
-                verifyPin();
-
-            }, 250);
-
-        }
-
-    });
-
-});
-
-
-deleteBtn.addEventListener("click", () => {
-
-    if (loading) return;
-
-    if (enteredPin.length === 0) return;
-
-    enteredPin =
-    enteredPin.slice(0, -1);
-
-    updatePinBoxes();
-
-});
+    }
+);
 
 
 /* ==========================================
@@ -209,29 +282,42 @@ deleteBtn.addEventListener("click", () => {
 
 function updatePinBoxes() {
 
-    pinBoxes.forEach((box, index) => {
+    pinBoxes.forEach(
+        (box, index) => {
 
-        if (index < enteredPin.length) {
+            if (
+                index <
+                enteredPin.length
+            ) {
 
-            box.innerHTML = "●";
+                box.innerHTML =
+                    "●";
 
-            box.classList.add("active");
+                box.classList.add(
+                    "active"
+                );
 
-        } else {
+            }
 
-            box.innerHTML = "";
+            else {
 
-            box.classList.remove("active");
+                box.innerHTML =
+                    "";
+
+                box.classList.remove(
+                    "active"
+                );
+
+            }
 
         }
-
-    });
+    );
 
 }
 
 
 /* ==========================================
-   RESET PIN
+   CLEAR PIN
 ========================================== */
 
 function clearPin() {
@@ -246,30 +332,48 @@ function clearPin() {
 
 
 /* ==========================================
-   SHAKE ANIMATION
+   SHAKE
 ========================================== */
 
 function shakePinBoxes() {
 
     const container =
-    document.querySelector(".pin-boxes");
+        document.querySelector(
+            ".pin-boxes"
+        );
 
-    container.classList.add("shake");
 
-    setTimeout(() => {
+    if (!container) return;
 
-        container.classList.remove("shake");
 
-    }, 500);
+    container.classList.remove(
+        "shake"
+    );
+
+
+    void container.offsetWidth;
+
+
+    container.classList.add(
+        "shake"
+    );
+
+
+    setTimeout(
+        () => {
+
+            container.classList.remove(
+                "shake"
+            );
+
+        },
+        500
+    );
 
 }
 
 
-console.log("✅ Module 2 Loaded");
 /* ==========================================
-   NOVAPAY
-   UNLOCK
-   MODULE 3
    VERIFY PIN
 ========================================== */
 
@@ -277,202 +381,187 @@ async function verifyPin() {
 
     try {
 
-        /* ------------------------------
-           CHECK PIN
-        ------------------------------ */
-
-        if (enteredPin !== savedPin) {
+        if (
+            enteredPin !== savedPin
+        ) {
 
             shakePinBoxes();
 
-            setTimeout(() => {
 
-                clearPin();
+            setTimeout(
+                clearPin,
+                500
+            );
 
-            }, 500);
 
             return;
 
         }
 
-        /* ------------------------------
-           TRUST THIS DEVICE
-        ------------------------------ */
 
-        localStorage.setItem(
-            `trustedDevice_${currentUser.uid}`,
-            "true"
+        /*
+         * Correct PIN
+         */
+
+        pinBoxes.forEach(
+            (box) => {
+
+                box.style.background =
+                    "#2563EB";
+
+                box.style.borderColor =
+                    "#2563EB";
+
+            }
         );
 
-        localStorage.setItem(
-            "trustedUser",
-            currentUser.uid
+
+        /*
+         * Remove any previous
+         * app-lock flag.
+         */
+
+        localStorage.removeItem(
+            `novaPayLock_${currentUser.uid}`
         );
 
-        /* ------------------------------
-           SUCCESS ANIMATION
-        ------------------------------ */
 
-        pinBoxes.forEach(box => {
+        setTimeout(
+            () => {
 
-            box.style.background = "#2563EB";
-            box.style.borderColor = "#2563EB";
+                window.location.replace(
+                    "dashboard.html"
+                );
 
-        });
-
-        /* ------------------------------
-           GO TO DASHBOARD
-        ------------------------------ */
-
-        setTimeout(() => {
-
-            window.location.href =
-            "dashboard.html";
-
-        }, 600);
+            },
+            450
+        );
 
     }
 
     catch (error) {
 
-        console.error(error);
-
-        alert(error.message);
+        console.error(
+            "PIN VERIFY ERROR:",
+            error
+        );
 
         clearPin();
+
+        alert(
+            "Unable to verify PIN. Please try again."
+        );
 
     }
 
 }
 
-console.log("✅ Module 3 Loaded");
+
 /* ==========================================
-   NOVAPAY
-   UNLOCK
-   MODULE 4
-   TRUSTED DEVICE
+   LOGIN WITH PASSWORD
 ========================================== */
 
-/* ------------------------------
-   LOGIN WITH PASSWORD
------------------------------- */
+passwordLoginBtn?.addEventListener(
+    "click",
+    async () => {
 
-passwordLoginBtn?.addEventListener("click", async () => {
+        try {
 
-    try {
+            /*
+             * This is intentional:
+             * "Login with Password" means
+             * completely leave the current session.
+             */
 
-        /* Remove this device trust */
+            localStorage.removeItem(
+                `novaPayLock_${currentUser?.uid}`
+            );
 
-        localStorage.removeItem(
-            `trustedDevice_${currentUser.uid}`
-        );
 
-        localStorage.removeItem(
-            "trustedUser"
-        );
+            await signOut(auth);
 
-        /* Sign out */
 
-        await signOut(auth);
+            window.location.href =
+                "login.html";
 
-        /* Go back to login */
+        }
 
-        window.location.href = "login.html";
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to return to password login."
+            );
+
+        }
 
     }
-
-    catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-
-    }
-
-});
+);
 
 
-/* ------------------------------
-   GET HELP
------------------------------- */
+/* ==========================================
+   HELP
+========================================== */
 
-helpBtn?.addEventListener("click", () => {
+helpBtn?.addEventListener(
+    "click",
+    () => {
 
-    alert(
+        alert(
 `NovaPay Help
 
 • Forgot your PIN?
 Tap "Login with Password".
 
-• If you're using a new phone,
-log in with your email and password first.
+• Correct PIN
+Enter your 6-digit Login PIN to continue.
 
 Need more help?
 Contact NovaPay Support.`
-    );
+        );
 
-});
+    }
+);
 
 
-/* ------------------------------
-   AUTO TRUST CHECK
------------------------------- */
-
-function isTrustedDevice() {
-
-    return (
-        localStorage.getItem(
-            `trustedDevice_${currentUser.uid}`
-        ) === "true"
-    );
-
-}
-
-console.log("✅ Module 4 Loaded");
 /* ==========================================
-   NOVAPAY
-   UNLOCK
-   MODULE 5
-   FINAL INITIALIZATION
+   PREVENT RIGHT CLICK
 ========================================== */
 
-/* ------------------------------
-   PREVENT RIGHT CLICK
------------------------------- */
+document.addEventListener(
+    "contextmenu",
+    (event) => {
 
-document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-});
+        event.preventDefault();
 
-/* ------------------------------
+    }
+);
+
+
+/* ==========================================
    PREVENT DRAGGING
------------------------------- */
+========================================== */
 
-document.addEventListener("dragstart", (e) => {
-    e.preventDefault();
-});
+document.addEventListener(
+    "dragstart",
+    (event) => {
 
-/* ------------------------------
-   PRELOAD
------------------------------- */
+        event.preventDefault();
 
-window.addEventListener("load", () => {
+    }
+);
 
-    pinBoxes.forEach(box => {
 
-        box.classList.remove("active");
+/* ==========================================
+   INITIAL LOAD
+========================================== */
 
-        box.innerHTML = "";
+window.addEventListener(
+    "load",
+    () => {
 
-    });
+        clearPin();
 
-});
-
-/* ------------------------------
-   APP READY
------------------------------- */
-
-console.log("==================================");
-console.log(" NovaPay Unlock Ready");
-console.log(" User:", currentUser);
-console.log("==================================");
+    }
+);

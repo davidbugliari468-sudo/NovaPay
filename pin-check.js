@@ -21,7 +21,6 @@ import {
 ========================================== */
 
 let currentUser = null;
-
 let userData = null;
 
 
@@ -34,8 +33,8 @@ onAuthStateChanged(auth, async (user) => {
     if (!user) {
 
         window.location.href = "login.html";
-
         return;
+
     }
 
     currentUser = user;
@@ -53,11 +52,13 @@ async function checkUser() {
 
     try {
 
-        const userRef = doc(
-            db,
-            "users",
-            currentUser.uid
-        );
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
 
         const userSnap =
             await getDoc(userRef);
@@ -71,6 +72,7 @@ async function checkUser() {
                 "login.html";
 
             return;
+
         }
 
 
@@ -84,9 +86,14 @@ async function checkUser() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "PIN CHECK ERROR:",
+            error
+        );
 
-        alert(error.message);
+        alert(
+            "Unable to check your Login PIN. Please try again."
+        );
 
     }
 
@@ -99,197 +106,41 @@ async function checkUser() {
 
 function decideNextStep() {
 
-    /* ------------------------------
-       CHECK IF PIN EXISTS
-    ------------------------------ */
+    const savedPin =
+        typeof userData.loginPin === "string"
+            ? userData.loginPin.trim()
+            : "";
+
 
     const hasPin =
         userData.loginPinCreated === true &&
-        userData.loginPin &&
-        userData.loginPin.length === 6;
+        /^\d{6}$/.test(savedPin);
 
 
-    /* ------------------------------
-       TRUSTED DEVICE
-    ------------------------------ */
-
-    const trustedDevice =
-        localStorage.getItem(
-            `trustedDevice_${currentUser.uid}`
-        ) === "true";
-
-
-    /* ------------------------------
-       DETERMINE DESTINATION
-    ------------------------------ */
-
-    let destination;
-
+    /*
+     * NO LOGIN PIN
+     * First-time user
+     */
 
     if (!hasPin) {
 
-        destination =
-            "login-pin.html";
-
-    } else {
-
-        destination =
-            "unlock.html";
-
-    }
-
-
-    /* ------------------------------
-       START NOVAPAY LOADER
-    ------------------------------ */
-
-    startNovaPayLoader(destination);
-
-}
-
-
-/* ==========================================
-   NOVAPAY CIRCLE LOADER
-========================================== */
-
-function startNovaPayLoader(destination) {
-
-    const progressNumber =
-        document.getElementById(
-            "progress-number"
-        );
-
-    const progressBar =
-        document.querySelector(
-            ".progress-bar"
-        );
-
-
-    /* ------------------------------
-       SAFETY CHECK
-    ------------------------------ */
-
-    if (!progressNumber || !progressBar) {
-
         window.location.href =
-            destination;
+            "login-pin.html";
 
         return;
 
     }
 
 
-    /* ------------------------------
-       CIRCLE SETTINGS
-    ------------------------------ */
+    /*
+     * LOGIN PIN EXISTS
+     */
 
-    const circleLength = 314.16;
-
-    const totalTime = 1800;
-
-    const startTime =
-        performance.now();
-
-
-    /* ------------------------------
-       PROGRESS ANIMATION
-    ------------------------------ */
-
-    function animateProgress(currentTime) {
-
-        const elapsed =
-            currentTime - startTime;
-
-
-        let progress =
-            Math.min(
-                elapsed / totalTime,
-                1
-            );
-
-
-        /* ------------------------------
-           SMOOTH PROGRESS
-        ------------------------------ */
-
-        const percentage =
-            Math.round(
-                progress * 100
-            );
-
-
-        progressNumber.textContent =
-            percentage;
-
-
-        const offset =
-            circleLength -
-            (percentage / 100) *
-            circleLength;
-
-
-        progressBar.style.strokeDashoffset =
-            offset;
-
-
-        /* ------------------------------
-           CONTINUE
-        ------------------------------ */
-
-        if (progress < 1) {
-
-            requestAnimationFrame(
-                animateProgress
-            );
-
-            return;
-
-        }
-
-
-        /* ------------------------------
-           COMPLETE
-        ------------------------------ */
-
-        progressNumber.textContent =
-            "✓";
-
-
-        progressNumber.style.fontSize =
-            "28px";
-
-        progressNumber.style.color =
-            "#2563EB";
-
-
-        /* ------------------------------
-           SHORT FINISH MOMENT
-        ------------------------------ */
-
-        setTimeout(() => {
-
-            window.location.href =
-                destination;
-
-        }, 180);
-
-    }
-
-
-    /* ------------------------------
-       START
-    ------------------------------ */
-
-    requestAnimationFrame(
-        animateProgress
-    );
+    window.location.href =
+        "unlock.html";
 
 }
 
-
-/* ==========================================
-   MODULE READY
-========================================== */
 
 console.log(
     "✅ NovaPay PIN CHECK READY"
