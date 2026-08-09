@@ -885,3 +885,156 @@ function showNoTransactions() {
 console.log(
     "✅ NovaPay Dashboard V2 Loaded"
 );
+/* ======================================
+   NOVAPAY APP LOCK
+   LOCK WHEN APP GOES TO BACKGROUND
+====================================== */
+
+let novaPayAppLocked = false;
+
+
+/* --------------------------------------
+   GET CURRENT USER
+-------------------------------------- */
+
+function getNovaPayLockKey() {
+
+    const user =
+        auth.currentUser;
+
+    if (!user) {
+        return null;
+    }
+
+    return `novaPayLock_${user.uid}`;
+
+}
+
+
+/* --------------------------------------
+   CHECK IF NOVAPAY IS ALREADY LOCKED
+-------------------------------------- */
+
+function checkNovaPayLock() {
+
+    const lockKey =
+        getNovaPayLockKey();
+
+    if (!lockKey) {
+        return;
+    }
+
+
+    if (
+        localStorage.getItem(lockKey) === "true"
+    ) {
+
+        novaPayAppLocked = true;
+
+        window.location.replace(
+            "unlock.html"
+        );
+
+    }
+
+}
+
+
+/* --------------------------------------
+   APP GOES INTO BACKGROUND
+-------------------------------------- */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState === "hidden"
+        ) {
+
+            const lockKey =
+                getNovaPayLockKey();
+
+
+            if (!lockKey) {
+                return;
+            }
+
+
+            /*
+             * Mark NovaPay as locked.
+             */
+
+            localStorage.setItem(
+                lockKey,
+                "true"
+            );
+
+
+            novaPayAppLocked = true;
+
+        }
+
+    }
+);
+
+
+/* --------------------------------------
+   APP RETURNS TO FOREGROUND
+-------------------------------------- */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState !== "visible"
+        ) {
+
+            return;
+
+        }
+
+
+        if (!novaPayAppLocked) {
+
+            return;
+
+        }
+
+
+        /*
+         * Send the user to the
+         * existing 6-digit PIN page.
+         */
+
+        window.location.replace(
+            "unlock.html"
+        );
+
+    }
+);
+
+
+/* --------------------------------------
+   INITIAL CHECK
+-------------------------------------- */
+
+onAuthStateChanged(
+    auth,
+    (user) => {
+
+        if (!user) {
+            return;
+        }
+
+
+        checkNovaPayLock();
+
+    }
+);
+
+
+console.log(
+    "🔐 NovaPay App Lock Ready"
+);
