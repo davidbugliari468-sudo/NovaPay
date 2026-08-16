@@ -1,5 +1,6 @@
 // ======================================
 // NovaPay Add Money
+// Secure Backend Version
 // ======================================
 
 import { auth, db } from "./firebase.js";
@@ -17,16 +18,33 @@ import {
 // Elements
 // ======================================
 
-const backBtn = document.getElementById("backBtn");
-const walletBalance = document.getElementById("walletBalance");
-const amountInput = document.getElementById("amount");
-const continueBtn = document.getElementById("continueBtn");
+const backBtn =
+    document.getElementById("backBtn");
 
-const modal = document.getElementById("customModal");
-const modalTitle = document.getElementById("modalTitle");
-const modalMessage = document.getElementById("modalMessage");
+const walletBalance =
+    document.getElementById("walletBalance");
 
-const quickButtons = document.querySelectorAll(".quickBtn");
+const amountInput =
+    document.getElementById("amount");
+
+const continueBtn =
+    document.getElementById("continueBtn");
+
+const modal =
+    document.getElementById("customModal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalMessage =
+    document.getElementById("modalMessage");
+
+const quickButtons =
+    document.querySelectorAll(".quickBtn");
+
+// ======================================
+// Variables
+// ======================================
 
 let currentUser = null;
 let balance = 0;
@@ -39,14 +57,13 @@ function showModal(title, message) {
 
     modalTitle.textContent = title;
     modalMessage.textContent = message;
-    modal.style.display = "flex";
 
+    modal.style.display = "flex";
 }
 
 window.closeModal = function () {
 
     modal.style.display = "none";
-
 };
 
 // ======================================
@@ -55,11 +72,11 @@ window.closeModal = function () {
 
 function formatMoney(amount) {
 
-    return "₦" + Number(amount).toLocaleString("en-NG", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-
+    return "₦" +
+        Number(amount).toLocaleString("en-NG", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
 }
 
 // ======================================
@@ -69,39 +86,45 @@ function formatMoney(amount) {
 onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
+
         window.location.href = "login.html";
         return;
     }
 
     currentUser = user;
-console.log("Current Auth UID:", user.uid);
-console.log("Current Email:", user.email);
+
     try {
 
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        const userRef =
+            doc(db, "users", user.uid);
+
+        const userSnap =
+            await getDoc(userRef);
 
         if (userSnap.exists()) {
 
-            const userData = userSnap.data();
+            const userData =
+                userSnap.data();
 
-            balance = userData.walletBalance || 0;
+            balance =
+                userData.walletBalance || 0;
 
-            walletBalance.textContent = formatMoney(balance);
-
+            walletBalance.textContent =
+                formatMoney(balance);
         }
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Wallet loading error:",
+            error
+        );
 
         showModal(
             "Error",
             "Unable to load your wallet."
         );
-
     }
-
 });
 
 // ======================================
@@ -112,108 +135,164 @@ quickButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        amountInput.value = button.dataset.amount;
-
+        amountInput.value =
+            button.dataset.amount;
     });
 
 });
 
 // ======================================
-// Continue
+// Continue / Create Payment
 // ======================================
 
-continueBtn.addEventListener("click", async () => {
+continueBtn.addEventListener(
+    "click",
+    async () => {
 
-    const amount = Number(amountInput.value);
+        const amount =
+            Number(amountInput.value);
 
-    if (!amount || amount < 100) {
+        // ------------------------------
+        // Validate amount
+        // ------------------------------
 
-        showModal(
-            "Invalid Amount",
-            "Minimum funding amount is ₦100."
-        );
+        if (!amount || amount < 100) {
 
-        return;
-
-    }
-
-    if (!currentUser) {
-
-        showModal(
-            "Authentication Error",
-            "Please login again."
-        );
-
-        return;
-
-    }
-
-    continueBtn.disabled = true;
-    continueBtn.textContent = "Please wait...";
-
-    try {
-
-        const response = await fetch(
-            "https://novapay-server.onrender.com/api/create-payment",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-
-                    amount: amount,
-
-                    customerName:
-                        currentUser.displayName ||
-                        "NovaPay User",
-
-                    customerEmail:
-                        currentUser.email,
-
-                    uid:
-                        currentUser.uid
-
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-
-            throw new Error(
-                data.message || "Unable to create payment."
+            showModal(
+                "Invalid Amount",
+                "Minimum funding amount is ₦100."
             );
 
+            return;
         }
 
-        window.location.href = data.checkoutUrl;
+        // ------------------------------
+        // Check authentication
+        // ------------------------------
 
-    } catch (error) {
+        if (!currentUser) {
 
-        console.error(error);
+            showModal(
+                "Authentication Error",
+                "Please login again."
+            );
 
-        showModal(
-            "Payment Error",
-            error.message || "Unable to connect to payment server."
-        );
+            return;
+        }
 
-    } finally {
+        continueBtn.disabled = true;
+        continueBtn.textContent =
+            "Please wait...";
 
-        continueBtn.disabled = false;
-        continueBtn.textContent = "Continue";
+        try {
 
+            // --------------------------
+            // Get Firebase ID token
+            // --------------------------
+
+            const idToken =
+                await currentUser.getIdToken();
+
+            // --------------------------
+            // Send secure request
+            // --------------------------
+
+            const response =
+                await fetch(
+                    "https://novapay-server.onrender.com/api/create-payment",
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${idToken}`
+                        },
+
+                        // IMPORTANT:
+                        // We intentionally do NOT send
+                        // uid, customerEmail or
+                        // customerName here.
+                        //
+                        // The Render backend obtains
+                        // the authenticated user's
+                        // identity from Firebase.
+
+                        body: JSON.stringify({
+
+                            amount: amount
+
+                        })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            // --------------------------
+            // Handle backend response
+            // --------------------------
+
+            if (
+                !response.ok ||
+                !data.success
+            ) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to create payment."
+                );
+            }
+
+            // --------------------------
+            // Open Monnify checkout
+            // --------------------------
+
+            if (!data.checkoutUrl) {
+
+                throw new Error(
+                    "Payment checkout link was not received."
+                );
+            }
+
+            window.location.href =
+                data.checkoutUrl;
+
+        } catch (error) {
+
+            console.error(
+                "Payment error:",
+                error
+            );
+
+            showModal(
+                "Payment Error",
+                error.message ||
+                "Unable to connect to payment server."
+            );
+
+        } finally {
+
+            continueBtn.disabled = false;
+
+            continueBtn.textContent =
+                "Continue";
+        }
     }
-
-});
+);
 
 // ======================================
 // Back
 // ======================================
 
-backBtn.addEventListener("click", () => {
+backBtn.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "dashboard.html";
-
-});
+        window.location.href =
+            "dashboard.html";
+    }
+);
