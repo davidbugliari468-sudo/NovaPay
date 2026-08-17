@@ -449,6 +449,58 @@ img{
     line-height:1.4;
     color:var(--subtext);
 }
+/* =========================================================
+   TRANSACTION COLORS
+   MATCH TRANSACTION HISTORY
+========================================================= */
+
+/* Transaction amount */
+
+.transaction-amount{
+    flex-shrink:0;
+    font-size:17px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.transaction-amount.money-in{
+    color:#16B978;
+}
+
+.transaction-amount.money-out{
+    color:#E94B4B;
+}
+
+
+/* Transaction status */
+
+.transaction-details .status-successful{
+    color:#16B978;
+    font-weight:600;
+}
+
+.transaction-details .status-pending{
+    color:#F59E0B;
+    font-weight:600;
+}
+
+.transaction-details .status-failed{
+    color:#E94B4B;
+    font-weight:600;
+}
+
+
+/* Transaction icon direction */
+
+.transaction-icon.credit{
+    background:#EAFBF2;
+    color:#16B978;
+}
+
+.transaction-icon.debit{
+    background:#FFECEC;
+    color:#E94B4B;
+}
 
 /* =========================================================
    INVITE & EARN — COMPACT 3-ROW STYLE
