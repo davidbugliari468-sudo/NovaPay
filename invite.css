@@ -1,0 +1,1339 @@
+/* =========================================
+   NOVAPAY — INVITE & EARN
+   Frontend-only styling
+   ========================================= */
+
+:root {
+    --novapay-blue: #2563eb;
+    --novapay-blue-dark: #1d4ed8;
+    --novapay-blue-soft: #eff6ff;
+
+    --novapay-green: #10b981;
+    --novapay-green-dark: #059669;
+    --novapay-green-soft: #ecfdf5;
+
+    --background: #f6f8fc;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    --text: #111827;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+
+    --border: #e5e7eb;
+    --border-soft: #eef2f7;
+
+    --warning: #f59e0b;
+    --warning-soft: #fffbeb;
+
+    --danger: #ef4444;
+    --danger-soft: #fef2f2;
+
+    --shadow:
+        0 4px 18px rgba(15, 23, 42, 0.05);
+
+    --radius-lg: 20px;
+    --radius-md: 15px;
+    --radius-sm: 11px;
+}
+
+
+/* =========================================
+   RESET
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    min-height: 100%;
+    background: var(--background);
+    scroll-behavior: smooth;
+}
+
+
+body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+button {
+    font: inherit;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================
+   APP
+   ========================================= */
+
+.app {
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 92px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.page-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0 16px;
+
+    background:
+        rgba(246, 248, 252, 0.94);
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+
+.page-header h1 {
+    font-size: 18px;
+    font-weight: 750;
+    letter-spacing: -0.2px;
+}
+
+
+.back-btn,
+.help-btn {
+    width: 40px;
+    height: 40px;
+
+    border: 0;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--surface);
+    color: var(--text);
+
+    box-shadow:
+        0 2px 8px rgba(15, 23, 42, 0.06);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+
+.back-btn:active,
+.help-btn:active {
+    transform: scale(0.94);
+}
+
+
+.back-btn span {
+    font-size: 30px;
+    line-height: 1;
+    margin-top: -3px;
+}
+
+
+.help-btn {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+
+/* =========================================
+   PAGE CONTENT
+   ========================================= */
+
+.page-content {
+    width: 100%;
+    max-width: 620px;
+
+    margin: 0 auto;
+
+    padding:
+        18px 16px 32px;
+}
+
+
+/* =========================================
+   HERO
+   ========================================= */
+
+.hero-card {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 24px;
+
+    border-radius: var(--radius-lg);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--novapay-blue),
+            var(--novapay-blue-dark)
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 12px 28px rgba(37, 99, 235, 0.18);
+}
+
+
+.hero-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    right: -70px;
+    top: -70px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.hero-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+    height: 110px;
+
+    right: 45px;
+    bottom: -70px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(16, 185, 129, 0.18);
+}
+
+
+.hero-icon {
+    position: relative;
+    z-index: 1;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.16);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+}
+
+
+.hero-icon span {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+.hero-text {
+    position: relative;
+    z-index: 1;
+}
+
+
+.hero-text h2 {
+    max-width: 330px;
+
+    font-size: 25px;
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+}
+
+
+.hero-text p {
+    max-width: 440px;
+
+    margin-top: 10px;
+
+    color:
+        rgba(255, 255, 255, 0.82);
+
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+.hero-reward {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+
+    margin-top: 22px;
+    padding-top: 17px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.18);
+}
+
+
+.hero-reward span {
+    font-size: 13px;
+    color:
+        rgba(255, 255, 255, 0.75);
+}
+
+
+.hero-reward strong {
+    font-size: 25px;
+    font-weight: 850;
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   SECTIONS
+   ========================================= */
+
+.section {
+    margin-top: 22px;
+}
+
+
+.section-title {
+    margin-bottom: 12px;
+}
+
+
+.section-title h2 {
+    font-size: 18px;
+    font-weight: 800;
+
+    letter-spacing: -0.25px;
+}
+
+
+.section-heading-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+}
+
+
+.section-heading-row h2 {
+    margin-top: 3px;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    letter-spacing: -0.25px;
+}
+
+
+.small-label {
+    display: block;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+
+    color: var(--text-light);
+}
+
+
+.limit-label {
+    padding:
+        6px 10px;
+
+    border-radius: 999px;
+
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+
+    font-size: 12px;
+    font-weight: 750;
+}
+
+
+/* =========================================
+   HOW IT WORKS
+   ========================================= */
+
+.steps-card {
+    padding: 18px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    background:
+        var(--surface);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.step {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 14px;
+}
+
+
+.step-number {
+    flex: 0 0 auto;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+.step-content {
+    padding-top: 2px;
+}
+
+
+.step-content h3 {
+    font-size: 14px;
+    font-weight: 750;
+}
+
+
+.step-content p {
+    margin-top: 4px;
+
+    color: var(--text-secondary);
+
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+
+.step-line {
+    width: 1px;
+    height: 20px;
+
+    margin:
+        4px 0 4px 17px;
+
+    background:
+        var(--border);
+}
+
+
+/* =========================================
+   INVITATION CODE
+   ========================================= */
+
+.code-card {
+    margin-top: 22px;
+
+    padding: 20px;
+
+    border-radius: var(--radius-lg);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f8fbff
+        );
+
+    border:
+        1px solid #dbeafe;
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.code-header h2 {
+    margin-top: 4px;
+
+    font-size: 22px;
+    font-weight: 850;
+
+    letter-spacing: 1px;
+
+    color:
+        var(--novapay-blue);
+}
+
+
+.code-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+.code-description {
+    margin-top: 10px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.code-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 16px;
+}
+
+
+.copy-btn,
+.share-btn {
+    min-height: 46px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+.copy-btn:active,
+.share-btn:active {
+    transform: scale(0.98);
+}
+
+
+.copy-btn {
+    border:
+        1px solid #bfdbfe;
+
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+}
+
+
+.share-btn {
+    border: 0;
+
+    background:
+        var(--novapay-blue);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 7px 16px rgba(37, 99, 235, 0.16);
+}
+
+
+/* =========================================
+   PROGRESS
+   ========================================= */
+
+.progress-card {
+    padding: 18px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    background:
+        var(--surface);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.progress-top div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.progress-top strong {
+    font-size: 14px;
+}
+
+
+.progress-top span {
+    color:
+        var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+.progress-percent {
+    color:
+        var(--novapay-blue);
+
+    font-size: 13px !important;
+}
+
+
+.progress-track {
+    width: 100%;
+    height: 9px;
+
+    margin-top: 16px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background:
+        #e8eef8;
+}
+
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--novapay-blue),
+            var(--novapay-green)
+        );
+
+    transition:
+        width 0.4s ease;
+}
+
+
+.milestones {
+    display: grid;
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+
+.milestone {
+    text-align: center;
+}
+
+
+.milestone-dot {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin:
+        0 auto 7px;
+
+    border-radius: 50%;
+
+    background:
+        #eef2f7;
+
+    color:
+        var(--text-light);
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+.milestone strong {
+    display: block;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+.milestone span {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        var(--text-light);
+
+    font-size: 10px;
+}
+
+
+.milestone.active .milestone-dot {
+    background:
+        var(--novapay-green-soft);
+
+    color:
+        var(--novapay-green-dark);
+
+    border:
+        1px solid #a7f3d0;
+}
+
+
+.milestone.active strong {
+    color:
+        var(--novapay-green-dark);
+}
+
+
+/* =========================================
+   EARNINGS
+   ========================================= */
+
+.earnings-card {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 22px;
+    padding: 17px;
+
+    border-radius: var(--radius-lg);
+
+    background:
+        var(--novapay-green-soft);
+
+    border:
+        1px solid #d1fae5;
+}
+
+
+.earnings-icon {
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        #d1fae5;
+
+    color:
+        var(--novapay-green-dark);
+
+    font-size: 18px;
+    font-weight: 850;
+}
+
+
+.earnings-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.earnings-info span {
+    color:
+        var(--text-secondary);
+
+    font-size: 11px;
+}
+
+
+.earnings-info strong {
+    color:
+        var(--novapay-green-dark);
+
+    font-size: 17px;
+}
+
+
+.history-btn {
+    margin-left: auto;
+
+    border: 0;
+
+    background: transparent;
+
+    color:
+        var(--novapay-green-dark);
+
+    font-size: 12px;
+    font-weight: 750;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   REFERRAL HISTORY
+   ========================================= */
+
+.history-card {
+    min-height: 210px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    background:
+        var(--surface);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.empty-history {
+    max-width: 290px;
+
+    text-align: center;
+}
+
+
+.empty-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin:
+        0 auto 12px;
+
+    border-radius: 50%;
+
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+
+    font-size: 23px;
+    font-weight: 700;
+}
+
+
+.empty-history h3 {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+.empty-history p {
+    margin-top: 6px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+
+.invite-now-btn {
+    min-height: 42px;
+
+    margin-top: 16px;
+    padding:
+        0 20px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background:
+        var(--novapay-blue);
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   FILTER
+   ========================================= */
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        7px 10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 9px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-secondary);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   FAQ
+   ========================================= */
+
+.faq-section {
+    margin-top: 22px;
+}
+
+
+.faq-card {
+    overflow: hidden;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    background:
+        var(--surface);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.faq-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding:
+        17px 16px;
+
+    border: 0;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    text-align: left;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+
+.faq-item:last-child {
+    border-bottom: 0;
+}
+
+
+.faq-item > span:last-child {
+    color:
+        var(--text-light);
+
+    font-size: 18px;
+}
+
+
+/* =========================================
+   TERMS
+   ========================================= */
+
+.terms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding:
+        22px 0 10px;
+
+    color:
+        var(--text-light);
+
+    font-size: 11px;
+}
+
+
+.terms button {
+    border: 0;
+
+    background: transparent;
+
+    color:
+        var(--text-light);
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+   ========================================= */
+
+.bottom-nav {
+    position: fixed;
+    z-index: 50;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height:
+        calc(68px + env(safe-area-inset-bottom));
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+
+    padding:
+        9px 8px env(safe-area-inset-bottom);
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border-top:
+        1px solid var(--border);
+
+    box-shadow:
+        0 -5px 20px rgba(15, 23, 42, 0.05);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+
+.nav-item {
+    min-width: 64px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 3px 6px;
+
+    border: 0;
+
+    background: transparent;
+
+    color:
+        var(--text-light);
+
+    font-size: 10px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+
+.nav-icon {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 18px;
+}
+
+
+.nav-item.active {
+    color:
+        var(--novapay-blue);
+}
+
+
+.nav-item.active .nav-icon {
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (min-width: 700px) {
+
+    .page-content {
+        padding:
+            24px 22px 40px;
+    }
+
+
+    .hero-card {
+        padding: 30px;
+    }
+
+
+    .hero-text h2 {
+        font-size: 29px;
+    }
+
+
+    .hero-text p {
+        font-size: 15px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 360px) {
+
+    .page-content {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+
+    .hero-card {
+        padding: 20px;
+    }
+
+
+    .hero-text h2 {
+        font-size: 22px;
+    }
+
+
+    .hero-reward strong {
+        font-size: 22px;
+    }
+
+
+    .code-card,
+    .progress-card,
+    .earnings-card,
+    .history-card,
+    .steps-card {
+        border-radius: 16px;
+    }
+
+
+    .milestone strong {
+        font-size: 11px;
+    }
+
+
+    .milestone span {
+        font-size: 9px;
+    }
+
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+   ========================================= */
+
+button:focus-visible,
+a:focus-visible {
+    outline:
+        3px solid rgba(37, 99, 235, 0.25);
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        transition:
+            none !important;
+    }
+
+}

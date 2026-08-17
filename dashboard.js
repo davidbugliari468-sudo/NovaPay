@@ -874,19 +874,14 @@ walletBtn?.addEventListener(
     }
 );
 
-
 payBillsBtn?.addEventListener(
     "click",
     () => {
-
-        showModal(
-            "Pay Bills",
-            "Pay Bills will be available in a future NovaPay update."
+        navigateWithinNovaPay(
+            "pay-bills.html"
         );
-
     }
 );
-
 
 // ======================================
 // QUICK SERVICES
@@ -968,25 +963,23 @@ moreBtn?.addEventListener(
     "click",
     () => {
 
-        comingSoon(
-            "More Services"
+        navigateWithinNovaPay(
+            "more-services.html"
         );
 
     }
 );
-
 
 inviteBtn?.addEventListener(
     "click",
     () => {
 
-        comingSoon(
-            "Invite & Earn"
+        navigateWithinNovaPay(
+            "invite.html"
         );
 
     }
 );
-
 
 // ======================================
 // END OF PART 1

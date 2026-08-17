@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <title>Payments & Services - NovaPay</title>
+
+    <link rel="stylesheet" href="pay-bills.css">
+</head>
+
+<body>
+
+    <div class="pay-bills-page">
+
+        <!-- =========================================
+             HEADER
+             ========================================= -->
+
+        <header class="page-header">
+
+            <button
+                type="button"
+                class="back-button"
+                id="backButton"
+                aria-label="Go back"
+            >
+                <span aria-hidden="true">‹</span>
+            </button>
+
+            <h1>Payments &amp; Services</h1>
+
+            <button
+                type="button"
+                class="search-header-button"
+                id="headerSearchButton"
+                aria-label="Search services"
+            >
+                <span aria-hidden="true">⌕</span>
+            </button>
+
+        </header>
+
+
+        <!-- =========================================
+             MAIN CONTENT
+             ========================================= -->
+
+        <main class="services-content">
+
+            <!-- INTRO -->
+
+            <section class="intro-section">
+
+                <h2>
+                    Pay your bills and access
+                    <span>NovaPay services</span>
+                </h2>
+
+                <p>
+                    Quickly and securely.
+                </p>
+
+            </section>
+
+
+            <!-- =====================================
+                 SEARCH
+                 ===================================== -->
+
+            <div
+                class="service-search"
+                id="serviceSearch"
+            >
+
+                <span
+                    class="search-icon"
+                    aria-hidden="true"
+                >
+                    ⌕
+                </span>
+
+                <input
+                    type="search"
+                    id="serviceSearchInput"
+                    placeholder="Search services..."
+                    autocomplete="off"
+                    aria-label="Search services"
+                >
+
+            </div>
+
+
+            <!-- =====================================
+                 QUICK SERVICES
+                 ===================================== -->
+
+            <section class="service-section">
+
+                <div class="section-title">
+                    <h2>Quick Services</h2>
+                </div>
+
+
+                <div class="quick-services-grid">
+
+
+                    <!-- AIRTIME -->
+
+                    <button
+                        type="button"
+                        class="service-card active-service"
+                        data-service="airtime"
+                        data-url="airtime.html"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            📱
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>Airtime</strong>
+
+                            <small>
+                                Buy airtime for all networks
+                            </small>
+
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- DATA -->
+
+                    <button
+                        type="button"
+                        class="service-card active-service"
+                        data-service="data"
+                        data-url="data.html"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            📶
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>Data</strong>
+
+                            <small>
+                                Buy data plans affordable
+                            </small>
+
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- ELECTRICITY -->
+
+                    <button
+                        type="button"
+                        class="service-card active-service"
+                        data-service="electricity"
+                        data-url="electricity.html"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            ⚡
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>Electricity</strong>
+
+                            <small>
+                                Pay your electricity bills
+                            </small>
+
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- TV -->
+
+                    <button
+                        type="button"
+                        class="service-card active-service"
+                        data-service="tv"
+                        data-url="tv.html"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            📺
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>TV</strong>
+
+                            <small>
+                                Pay for your TV subscriptions
+                            </small>
+
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- BETTING -->
+
+                    <button
+                        type="button"
+                        class="service-card active-service"
+                        data-service="betting"
+                        data-url="betting.html"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            ⚽
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>Betting</strong>
+
+                            <small>
+                                Fund your betting wallet
+                            </small>
+
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- NOVAPAY ATM CARD -->
+
+                    <button
+                        type="button"
+                        class="service-card coming-service"
+                        data-service="atm-card"
+                        data-status="coming-soon"
+                    >
+
+                        <span class="service-icon blue-icon">
+                            💳
+                        </span>
+
+                        <span class="service-content">
+
+                            <strong>NovaPay ATM Card</strong>
+
+                            <small>
+                                Your NovaPay card for everyday payments
+                            </small>
+
+                            <span class="status-badge coming-badge">
+                                Coming Soon
+                            </span>
+
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 OTHER SERVICES
+                 ===================================== -->
+
+            <section class="service-section other-services-section">
+
+                <div class="section-title">
+                    <h2>Other Services</h2>
+                </div>
+
+
+                <div class="other-services-list">
+
+
+                    <!-- INTERNET -->
+
+                    <button
+                        type="button"
+                        class="other-service-card unavailable-service"
+                        data-service="internet"
+                        data-status="temporarily-unavailable"
+                    >
+
+                        <span class="other-service-icon">
+                            🌐
+                        </span>
+
+                        <span class="other-service-content">
+
+                            <strong>
+                                Internet Services
+                            </strong>
+
+                            <small>
+                                Internet &amp; broadband payments
+                            </small>
+
+                        </span>
+
+                        <span class="status-badge unavailable-badge">
+                            Temporarily<br>
+                            Not Available
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- EDUCATION -->
+
+                    <button
+                        type="button"
+                        class="other-service-card unavailable-service"
+                        data-service="education"
+                        data-status="temporarily-unavailable"
+                    >
+
+                        <span class="other-service-icon">
+                            🎓
+                        </span>
+
+                        <span class="other-service-content">
+
+                            <strong>
+                                Education &amp; Exams
+                            </strong>
+
+                            <small>
+                                Pay school fees, WAEC, JAMB and more
+                            </small>
+
+                        </span>
+
+                        <span class="status-badge unavailable-badge">
+                            Temporarily<br>
+                            Not Available
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- GOVERNMENT -->
+
+                    <button
+                        type="button"
+                        class="other-service-card unavailable-service"
+                        data-service="government"
+                        data-status="temporarily-unavailable"
+                    >
+
+                        <span class="other-service-icon">
+                            🏛️
+                        </span>
+
+                        <span class="other-service-content">
+
+                            <strong>
+                                Government Payments
+                            </strong>
+
+                            <small>
+                                Taxes, levies and other government services
+                            </small>
+
+                        </span>
+
+                        <span class="status-badge unavailable-badge">
+                            Temporarily<br>
+                            Not Available
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <!-- OTHER BILLS -->
+
+                    <button
+                        type="button"
+                        class="other-service-card unavailable-service"
+                        data-service="other-bills"
+                        data-status="temporarily-unavailable"
+                    >
+
+                        <span class="other-service-icon">
+                            🧾
+                        </span>
+
+                        <span class="other-service-content">
+
+                            <strong>
+                                Other Bills &amp; Services
+                            </strong>
+
+                            <small>
+                                More bill payment options
+                            </small>
+
+                        </span>
+
+                        <span class="status-badge unavailable-badge">
+                            Temporarily<br>
+                            Not Available
+                        </span>
+
+                        <span class="service-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 SECURITY NOTICE
+                 ===================================== -->
+
+            <section class="security-notice">
+
+                <div class="security-icon">
+                    🛡️
+                </div>
+
+                <div>
+
+                    <h3>
+                        Safe. Secure. Reliable.
+                    </h3>
+
+                    <p>
+                        Your payments are protected with
+                        NovaPay security.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 EMPTY SEARCH MESSAGE
+                 ===================================== -->
+
+            <div
+                class="no-results"
+                id="noResults"
+                hidden
+            >
+
+                <div class="no-results-icon">
+                    🔍
+                </div>
+
+                <h3>
+                    No services found
+                </h3>
+
+                <p>
+                    Try searching for another service.
+                </p>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+         ========================================= -->
+
+    <script src="pay-bills.js"></script>
+
+</body>
+</html>
