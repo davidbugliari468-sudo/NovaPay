@@ -2,9 +2,30 @@ window.onload = () => {
     window.scrollTo(0, 0);
 };
 
+
 // ======================================
-// NOVAPAY DASHBOARD V3
+// NOVAPAY DASHBOARD V4
 // ======================================
+//
+// Fresh rebuild.
+//
+// Preserved:
+// - Firebase authentication
+// - User profile
+// - Wallet balance
+// - Recent transactions
+// - Backend transaction API
+// - Dashboard navigation
+// - Existing modal system
+//
+// Rebuilt:
+// - Internal navigation handling
+// - App lock handling
+// - Transaction direction/status rendering
+// - Timestamp normalization
+//
+// ======================================
+
 
 import { auth, db } from "./firebase.js";
 
@@ -19,102 +40,313 @@ import {
 
 
 // ======================================
-// ELEMENTS
+// DOM ELEMENTS
 // ======================================
 
-const userName = document.getElementById("userName");
-const greetingText = document.getElementById("greetingText");
+const userName =
+    document.getElementById("userName");
 
-const walletBalance = document.getElementById("walletBalance");
-const hideBalanceBtn = document.getElementById("hideBalance");
+const greetingText =
+    document.getElementById("greetingText");
 
-const supportBtn = document.getElementById("supportBtn");
-const notificationBtn = document.getElementById("notificationBtn");
-const profileBtn = document.getElementById("profileBtn");
+const walletBalance =
+    document.getElementById("walletBalance");
 
-const addMoneyBtn = document.getElementById("addMoneyBtn");
-const historyBtn = document.getElementById("historyBtn");
+const hideBalanceBtn =
+    document.getElementById("hideBalance");
 
-const airtimeBtn = document.getElementById("airtimeBtn");
-const dataBtn = document.getElementById("dataBtn");
-const electricityBtn = document.getElementById("electricityBtn");
-const tvBtn = document.getElementById("tvBtn");
-const bettingBtn = document.getElementById("bettingBtn");
-const moreBtn = document.getElementById("moreBtn");
+const supportBtn =
+    document.getElementById("supportBtn");
 
-const inviteBtn = document.getElementById("inviteBtn");
+const notificationBtn =
+    document.getElementById("notificationBtn");
+
+const profileBtn =
+    document.getElementById("profileBtn");
+
+const addMoneyBtn =
+    document.getElementById("addMoneyBtn");
+
+const historyBtn =
+    document.getElementById("historyBtn");
+
+const airtimeBtn =
+    document.getElementById("airtimeBtn");
+
+const dataBtn =
+    document.getElementById("dataBtn");
+
+const electricityBtn =
+    document.getElementById("electricityBtn");
+
+const tvBtn =
+    document.getElementById("tvBtn");
+
+const bettingBtn =
+    document.getElementById("bettingBtn");
+
+const moreBtn =
+    document.getElementById("moreBtn");
+
+const inviteBtn =
+    document.getElementById("inviteBtn");
 
 const viewAllTransactionsBtn =
-    document.getElementById("viewAllTransactionsBtn");
+    document.getElementById(
+        "viewAllTransactionsBtn"
+    );
 
-const walletBtn = document.getElementById("walletBtn");
-const payBillsBtn = document.getElementById("payBillsBtn");
-const profileNavBtn = document.getElementById("profileNavBtn");
+const walletBtn =
+    document.getElementById("walletBtn");
 
-const modal = document.getElementById("customModal");
-const modalTitle = document.getElementById("modalTitle");
-const modalMessage = document.getElementById("modalMessage");
+const payBillsBtn =
+    document.getElementById("payBillsBtn");
+
+const profileNavBtn =
+    document.getElementById(
+        "profileNavBtn"
+    );
+
+const modal =
+    document.getElementById(
+        "customModal"
+    );
+
+const modalTitle =
+    document.getElementById(
+        "modalTitle"
+    );
+
+const modalMessage =
+    document.getElementById(
+        "modalMessage"
+    );
 
 const recentTransactionsContainer =
-    document.getElementById("recentTransactionsContainer");
+    document.getElementById(
+        "recentTransactionsContainer"
+    );
 
 
 // ======================================
-// VARIABLES
+// DASHBOARD STATE
 // ======================================
 
 let balance = 0;
+
 let balanceVisible = true;
+
+
+// ======================================
+// INTERNAL NAVIGATION STATE
+// ======================================
+//
+// This value is kept in sessionStorage.
+//
+// It means:
+// "The current page is intentionally
+// navigating to another NovaPay page."
+//
+// It does NOT mean the user has
+// backgrounded the app.
+//
+// ======================================
+
+const INTERNAL_NAVIGATION_KEY =
+    "novaPayInternalNavigation";
+
+
+// ======================================
+// MARK INTERNAL NAVIGATION
+// ======================================
+
+function markInternalNavigation() {
+
+    try {
+
+        sessionStorage.setItem(
+            INTERNAL_NAVIGATION_KEY,
+            "true"
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "NovaPay navigation state could not be saved:",
+            error
+        );
+
+    }
+}
+
+
+// ======================================
+// CHECK INTERNAL NAVIGATION
+// ======================================
+
+function hasInternalNavigationFlag() {
+
+    try {
+
+        return (
+            sessionStorage.getItem(
+                INTERNAL_NAVIGATION_KEY
+            ) === "true"
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "NovaPay navigation state could not be read:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+// ======================================
+// CLEAR INTERNAL NAVIGATION
+// ======================================
+
+function clearInternalNavigationFlag() {
+
+    try {
+
+        sessionStorage.removeItem(
+            INTERNAL_NAVIGATION_KEY
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "NovaPay navigation state could not be cleared:",
+            error
+        );
+
+    }
+}
+
+
+// ======================================
+// NAVIGATE INSIDE NOVAPAY
+// ======================================
+//
+// Every Dashboard link to another
+// NovaPay page goes through this function.
+//
+// This is what prevents normal internal
+// navigation from being mistaken for
+// the user leaving NovaPay.
+//
+// ======================================
+
+function navigateWithinNovaPay(
+    destination
+) {
+
+    markInternalNavigation();
+
+    window.location.assign(
+        destination
+    );
+
+}
 
 
 // ======================================
 // MODAL
 // ======================================
 
-function showModal(title, message) {
+function showModal(
+    title,
+    message
+) {
 
     if (modalTitle) {
-        modalTitle.textContent = title;
+
+        modalTitle.textContent =
+            title;
+
     }
+
 
     if (modalMessage) {
-        modalMessage.textContent = message;
+
+        modalMessage.textContent =
+            message;
+
     }
 
+
     if (modal) {
-        modal.style.display = "flex";
+
+        modal.style.display =
+            "flex";
+
     }
+
 }
 
 
 window.closeModal = () => {
 
     if (modal) {
-        modal.style.display = "none";
+
+        modal.style.display =
+            "none";
+
     }
 
 };
 
 
-modal?.addEventListener("click", (e) => {
+modal?.addEventListener(
+    "click",
+    (event) => {
 
-    if (e.target === modal) {
-        closeModal();
+        if (
+            event.target === modal
+        ) {
+
+            closeModal();
+
+        }
+
     }
-
-});
+);
 
 
 // ======================================
-// FORMAT MONEY
+// MONEY FORMAT
 // ======================================
 
-function formatMoney(amount) {
+function formatMoney(
+    amount
+) {
 
-    return "₦" + Number(amount).toLocaleString("en-NG", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+    const numericAmount =
+        Number(amount);
+
+    const safeAmount =
+        Number.isFinite(
+            numericAmount
+        )
+            ? numericAmount
+            : 0;
+
+
+    return (
+        "₦" +
+        safeAmount.toLocaleString(
+            "en-NG",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        )
+    );
 
 }
 
@@ -125,19 +357,29 @@ function formatMoney(amount) {
 
 function updateGreeting() {
 
-    const hour = new Date().getHours();
+    if (!greetingText) {
+        return;
+    }
+
+
+    const hour =
+        new Date().getHours();
+
 
     if (hour < 12) {
 
-        greetingText.textContent = "☀️ Good Morning";
+        greetingText.textContent =
+            "☀️ Good Morning";
 
     } else if (hour < 18) {
 
-        greetingText.textContent = "🌤 Good Afternoon";
+        greetingText.textContent =
+            "🌤 Good Afternoon";
 
     } else {
 
-        greetingText.textContent = "🌙 Good Evening";
+        greetingText.textContent =
+            "🌙 Good Evening";
 
     }
 
@@ -151,193 +393,292 @@ updateGreeting();
 // HIDE / SHOW BALANCE
 // ======================================
 
-hideBalanceBtn?.addEventListener("click", () => {
+hideBalanceBtn?.addEventListener(
+    "click",
+    () => {
 
-    balanceVisible = !balanceVisible;
-
-    if (balanceVisible) {
-
-        walletBalance.textContent = formatMoney(balance);
-
-        hideBalanceBtn.innerHTML =
-            `Hide <i class="fa-regular fa-eye"></i>`;
-
-    } else {
-
-        walletBalance.textContent = "••••••";
-
-        hideBalanceBtn.innerHTML =
-            `Show <i class="fa-regular fa-eye-slash"></i>`;
-
-    }
-
-});
+        balanceVisible =
+            !balanceVisible;
 
 
-// ======================================
-// LOAD USER
-// ======================================
+        if (balanceVisible) {
 
-onAuthStateChanged(auth, async (user) => {
-
-    if (!user) {
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-    try {
-
-        // --------------------------------------
-        // USER PROFILE / BALANCE
-        // --------------------------------------
-
-        const userRef = doc(db, "users", user.uid);
-
-        const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
-
-            const data = userSnap.data();
-
-            userName.textContent =
-                data.fullName || user.email.split("@")[0];
-
-            balance = Number(data.walletBalance || 0);
-
-            if (balanceVisible) {
+            if (walletBalance) {
 
                 walletBalance.textContent =
                     formatMoney(balance);
 
             }
 
+
+            hideBalanceBtn.innerHTML =
+                `Hide <i class="fa-regular fa-eye"></i>`;
+
         } else {
 
-            userName.textContent =
-                user.email.split("@")[0];
+            if (walletBalance) {
 
-            balance = 0;
+                walletBalance.textContent =
+                    "••••••";
 
-            walletBalance.textContent =
-                formatMoney(balance);
+            }
+
+
+            hideBalanceBtn.innerHTML =
+                `Show <i class="fa-regular fa-eye-slash"></i>`;
+
+        }
+
+    }
+);
+
+
+// ======================================
+// AUTHENTICATED USER
+// ======================================
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
 
         }
 
 
-        // --------------------------------------
-        // RECENT TRANSACTIONS
-        //
-        // IMPORTANT:
-        // Transactions are now loaded through
-        // the authenticated backend.
-        // The frontend does NOT send a UID.
-        // --------------------------------------
+        try {
 
-        await loadRecentTransactions();
+            // ----------------------------------
+            // USER PROFILE
+            // ----------------------------------
 
-    } catch (error) {
+            const userRef =
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                );
 
-        console.error(
-            "NovaPay dashboard error:",
-            error
-        );
 
-        showModal(
-            "Dashboard Error",
-            "Unable to load your dashboard right now."
+            const userSnap =
+                await getDoc(
+                    userRef
+                );
+
+
+            if (
+                userSnap.exists()
+            ) {
+
+                const data =
+                    userSnap.data();
+
+
+                if (userName) {
+
+                    userName.textContent =
+                        data.fullName ||
+                        user.email?.split("@")[0] ||
+                        "User";
+
+                }
+
+
+                balance =
+                    Number(
+                        data.walletBalance ||
+                        0
+                    );
+
+
+            } else {
+
+                if (userName) {
+
+                    userName.textContent =
+                        user.email?.split("@")[0] ||
+                        "User";
+
+                }
+
+
+                balance = 0;
+
+            }
+
+
+            if (
+                balanceVisible &&
+                walletBalance
+            ) {
+
+                walletBalance.textContent =
+                    formatMoney(balance);
+
+            }
+
+
+            // ----------------------------------
+            // RECENT TRANSACTIONS
+            // ----------------------------------
+
+            await loadRecentTransactions();
+
+
+        } catch (error) {
+
+            console.error(
+                "NovaPay dashboard error:",
+                error
+            );
+
+
+            showModal(
+                "Dashboard Error",
+                "Unable to load your dashboard right now."
+            );
+
+        }
+
+    }
+);
+
+
+// ======================================
+// DASHBOARD NAVIGATION
+// ======================================
+
+profileBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "profile.html"
         );
 
     }
+);
 
-});
+
+profileNavBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "profile.html"
+        );
+
+    }
+);
+
+
+addMoneyBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "add-money.html"
+        );
+
+    }
+);
+
+
+historyBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "transaction-history.html"
+        );
+
+    }
+);
+
+
+viewAllTransactionsBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "transaction-history.html"
+        );
+
+    }
+);
 
 
 // ======================================
-// NAVIGATION
+// HEADER ACTIONS
 // ======================================
 
-profileBtn?.addEventListener("click", () => {
+supportBtn?.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "profile.html";
+        showModal(
+            "Live Support",
+            "Live Support will be available in a future NovaPay update."
+        );
 
-});
-
-
-profileNavBtn?.addEventListener("click", () => {
-
-    window.location.href = "profile.html";
-
-});
-
-
-addMoneyBtn?.addEventListener("click", () => {
-
-    window.location.href = "add-money.html";
-
-});
+    }
+);
 
 
-historyBtn?.addEventListener("click", () => {
+notificationBtn?.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "transaction-history.html";
+        navigateWithinNovaPay(
+            "notifications.html"
+        );
 
-});
-
-
-viewAllTransactionsBtn?.addEventListener("click", () => {
-
-    window.location.href = "transaction-history.html";
-
-});
-
-
-// ======================================
-// HEADER
-// ======================================
-
-supportBtn?.addEventListener("click", () => {
-
-    showModal(
-        "Live Support",
-        "Live Support will be available in a future NovaPay update."
-    );
-
-});
-
-
-notificationBtn?.addEventListener("click", () => {
-
-    window.location.href = "notifications.html";
-
-});
+    }
+);
 
 
 // ======================================
 // BOTTOM NAVIGATION
 // ======================================
 
-walletBtn?.addEventListener("click", () => {
+walletBtn?.addEventListener(
+    "click",
+    () => {
 
-    showModal(
-        "Wallet",
-        "Wallet page is coming soon."
-    );
+        showModal(
+            "Wallet",
+            "Wallet page is coming soon."
+        );
 
-});
+    }
+);
 
 
-payBillsBtn?.addEventListener("click", () => {
+payBillsBtn?.addEventListener(
+    "click",
+    () => {
 
-});
+        showModal(
+            "Pay Bills",
+            "Pay Bills will be available in a future NovaPay update."
+        );
+
+    }
+);
 
 
 // ======================================
 // QUICK SERVICES
 // ======================================
 
-function comingSoon(feature) {
+function comingSoon(
+    feature
+) {
 
     showModal(
         feature,
@@ -347,70 +688,100 @@ function comingSoon(feature) {
 }
 
 
-airtimeBtn?.addEventListener("click", () => {
+airtimeBtn?.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "airtime.html";
+        navigateWithinNovaPay(
+            "airtime.html"
+        );
 
-});
-
-
-dataBtn?.addEventListener("click", () => {
-
-    window.location.href = "data.html";
-
-});
+    }
+);
 
 
-electricityBtn?.addEventListener("click", () => {
+dataBtn?.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "electricity.html";
+        navigateWithinNovaPay(
+            "data.html"
+        );
 
-});
-
-
-tvBtn?.addEventListener("click", () => {
-
-    window.location.href = "tv.html";
-
-});
+    }
+);
 
 
-bettingBtn?.addEventListener("click", () => {
+electricityBtn?.addEventListener(
+    "click",
+    () => {
 
-    window.location.href = "betting.html";
+        navigateWithinNovaPay(
+            "electricity.html"
+        );
 
-});
-
-
-moreBtn?.addEventListener("click", () => {
-
-    comingSoon("More Services");
-
-});
+    }
+);
 
 
-inviteBtn?.addEventListener("click", () => {
+tvBtn?.addEventListener(
+    "click",
+    () => {
 
-    comingSoon("Invite & Earn");
+        navigateWithinNovaPay(
+            "tv.html"
+        );
 
-});
+    }
+);
 
 
+bettingBtn?.addEventListener(
+    "click",
+    () => {
+
+        navigateWithinNovaPay(
+            "betting.html"
+        );
+
+    }
+);
+
+
+moreBtn?.addEventListener(
+    "click",
+    () => {
+
+        comingSoon(
+            "More Services"
+        );
+
+    }
+);
+
+
+inviteBtn?.addEventListener(
+    "click",
+    () => {
+
+        comingSoon(
+            "Invite & Earn"
+        );
+
+    }
+);
 // ======================================
 // RECENT TRANSACTIONS
 // ======================================
 //
 // SECURITY:
-// The frontend no longer reads the entire
-// transactions collection.
 //
-// It obtains a Firebase ID token and sends
-// that token to the backend.
+// The frontend does NOT send a UID.
 //
-// Backend:
-//   1. verifies Firebase token
-//   2. gets authenticated req.uid
-//   3. queries only that user's transactions
+// It sends the Firebase ID token.
+//
+// The backend verifies the token and
+// determines the authenticated user's UID.
 //
 // ======================================
 
@@ -423,21 +794,32 @@ async function loadRecentTransactions() {
 
     recentTransactionsContainer.innerHTML = `
         <div class="transaction-card">
+
             <div class="transaction-icon">
                 <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
 
             <div class="transaction-details">
-                <h4>Loading Transactions</h4>
-                <p>Your recent transactions are loading...</p>
+
+                <h4>
+                    Loading Transactions
+                </h4>
+
+                <p>
+                    Your recent transactions are loading...
+                </p>
+
             </div>
+
         </div>
     `;
 
 
     try {
 
-        const user = auth.currentUser;
+        const user =
+            auth.currentUser;
+
 
         if (!user) {
 
@@ -448,39 +830,48 @@ async function loadRecentTransactions() {
         }
 
 
-        // --------------------------------------
-        // GET VERIFIED FIREBASE ID TOKEN
-        // --------------------------------------
+        // ----------------------------------
+        // FIREBASE ID TOKEN
+        // ----------------------------------
 
         const idToken =
             await user.getIdToken();
 
 
-        // --------------------------------------
-        // CALL SECURE BACKEND
-        // --------------------------------------
+        // ----------------------------------
+        // SECURE BACKEND REQUEST
+        // ----------------------------------
 
-        const response = await fetch(
-            "https://novapay-server.onrender.com/api/transactions?limit=50",
-            {
-                method: "GET",
+        const response =
+            await fetch(
+                "https://novapay-server.onrender.com/api/transactions?limit=50",
+                {
+                    method: "GET",
 
-                headers: {
-                    "Authorization":
-                        `Bearer ${idToken}`,
+                    headers: {
 
-                    "Content-Type":
-                        "application/json"
+                        "Authorization":
+                            `Bearer ${idToken}`,
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    cache:
+                        "no-store"
+
                 }
-            }
-        );
+            );
 
 
         let result;
 
+
         try {
 
-            result = await response.json();
+            result =
+                await response.json();
 
         } catch {
 
@@ -491,10 +882,24 @@ async function loadRecentTransactions() {
         }
 
 
-        if (!response.ok || !result.success) {
+        if (
+            !response.ok
+        ) {
 
             throw new Error(
-                result.message ||
+                result?.message ||
+                `Server error (${response.status}).`
+            );
+
+        }
+
+
+        if (
+            !result?.success
+        ) {
+
+            throw new Error(
+                result?.message ||
                 "Unable to load transactions."
             );
 
@@ -502,30 +907,43 @@ async function loadRecentTransactions() {
 
 
         const transactions =
-            Array.isArray(result.transactions)
+            Array.isArray(
+                result.transactions
+            )
                 ? result.transactions
                 : [];
 
 
-        // --------------------------------------
-        // BACKEND ALREADY FILTERED BY UID
-        // --------------------------------------
+        // ----------------------------------
+        // SORT NEWEST FIRST
+        // ----------------------------------
 
-        transactions.sort((a, b) => {
+        transactions.sort(
+            (a, b) => {
 
-            return getTransactionDateValue(b) -
-                   getTransactionDateValue(a);
+                return (
+                    getTransactionDateValue(b) -
+                    getTransactionDateValue(a)
+                );
 
-        });
-
-
-        // Dashboard only shows latest 3.
-
-        const recent =
-            transactions.slice(0, 3);
+            }
+        );
 
 
-        if (recent.length === 0) {
+        // ----------------------------------
+        // DASHBOARD ONLY SHOWS 3
+        // ----------------------------------
+
+        const recentTransactions =
+            transactions.slice(
+                0,
+                3
+            );
+
+
+        if (
+            recentTransactions.length === 0
+        ) {
 
             showNoTransactions();
 
@@ -534,36 +952,53 @@ async function loadRecentTransactions() {
         }
 
 
-        recentTransactionsContainer.innerHTML = "";
+        recentTransactionsContainer.innerHTML =
+            "";
 
 
-        recent.forEach((transaction) => {
+        recentTransactions.forEach(
+            transaction => {
 
-            recentTransactionsContainer.appendChild(
-                createRecentTransaction(transaction)
-            );
+                const card =
+                    createRecentTransaction(
+                        transaction
+                    );
 
-        });
+
+                recentTransactionsContainer
+                    .appendChild(card);
+
+            }
+        );
 
 
     } catch (error) {
 
         console.error(
-            "Failed to load recent transactions:",
+            "NovaPay recent transactions error:",
             error
         );
 
 
         recentTransactionsContainer.innerHTML = `
             <div class="transaction-card">
+
                 <div class="transaction-icon">
-                    <i class="fa-solid fa-receipt"></i>
+                    <i class="fa-solid fa-circle-exclamation"></i>
                 </div>
 
                 <div class="transaction-details">
-                    <h4>Unable to Load</h4>
-                    <p>Please try again later.</p>
+
+                    <h4>
+                        Unable to Load
+                    </h4>
+
+                    <p>
+                        Please try again later.
+                    </p>
+
                 </div>
+
             </div>
         `;
 
@@ -573,58 +1008,285 @@ async function loadRecentTransactions() {
 
 
 // ======================================
-// TRANSACTION DATE
+// TIMESTAMP → MILLISECONDS
+// ======================================
+//
+// Handles the timestamp formats that can
+// arrive from the backend.
+//
 // ======================================
 
-function getTransactionDateValue(transaction) {
-
-    const timestamp =
-        transaction.completedAt ||
-        transaction.createdAt;
-
+function timestampToMilliseconds(
+    timestamp
+) {
 
     if (!timestamp) {
         return 0;
     }
 
 
+    // Firebase Timestamp instance
+
     if (
         typeof timestamp.toMillis ===
         "function"
     ) {
 
-        return timestamp.toMillis();
+        const value =
+            timestamp.toMillis();
+
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
 
     }
 
+
+    // Firebase Timestamp with toDate()
 
     if (
         typeof timestamp.toDate ===
         "function"
     ) {
 
-        return timestamp.toDate().getTime();
+        const date =
+            timestamp.toDate();
+
+
+        const value =
+            date?.getTime();
+
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
 
     }
 
+
+    // Firestore JSON timestamp
 
     if (
         timestamp.seconds !==
         undefined
     ) {
 
-        return timestamp.seconds * 1000;
+        const seconds =
+            Number(
+                timestamp.seconds
+            );
+
+
+        if (
+            Number.isFinite(seconds)
+        ) {
+
+            return seconds * 1000;
+
+        }
 
     }
 
 
+    // Firestore JSON using _seconds
+
+    if (
+        timestamp._seconds !==
+        undefined
+    ) {
+
+        const seconds =
+            Number(
+                timestamp._seconds
+            );
+
+
+        if (
+            Number.isFinite(seconds)
+        ) {
+
+            return seconds * 1000;
+
+        }
+
+    }
+
+
+    // Milliseconds
+
+    if (
+        timestamp.milliseconds !==
+        undefined
+    ) {
+
+        const milliseconds =
+            Number(
+                timestamp.milliseconds
+            );
+
+
+        if (
+            Number.isFinite(
+                milliseconds
+            )
+        ) {
+
+            return milliseconds;
+
+        }
+
+    }
+
+
+    // Numeric timestamp
+
+    if (
+        typeof timestamp ===
+        "number"
+    ) {
+
+        if (
+            Number.isFinite(timestamp)
+        ) {
+
+            /*
+             * Values around 1e12 are
+             * milliseconds.
+             *
+             * Smaller Unix timestamps
+             * are seconds.
+             */
+
+            if (
+                timestamp > 100000000000
+            ) {
+
+                return timestamp;
+
+            }
+
+
+            return timestamp * 1000;
+
+        }
+
+    }
+
+
+    // String timestamp
+
+    if (
+        typeof timestamp ===
+        "string"
+    ) {
+
+        const numeric =
+            Number(timestamp);
+
+
+        if (
+            Number.isFinite(numeric)
+        ) {
+
+            if (
+                numeric > 100000000000
+            ) {
+
+                return numeric;
+
+            }
+
+
+            if (
+                numeric > 1000000000
+            ) {
+
+                return numeric * 1000;
+
+            }
+
+        }
+
+
+        const parsed =
+            new Date(
+                timestamp
+            ).getTime();
+
+
+        return Number.isFinite(
+            parsed
+        )
+            ? parsed
+            : 0;
+
+    }
+
+
+    return 0;
+
+}
+
+
+// ======================================
+// TRANSACTION DATE VALUE
+// ======================================
+
+function getTransactionDateValue(
+    transaction
+) {
+
+    const timestamp =
+        transaction?.completedAt ||
+        transaction?.createdAt ||
+        transaction?.updatedAt;
+
+
+    return timestampToMilliseconds(
+        timestamp
+    );
+
+}
+
+
+// ======================================
+// TRANSACTION DATE OBJECT
+// ======================================
+
+function getTransactionDate(
+    transaction
+) {
+
+    const milliseconds =
+        getTransactionDateValue(
+            transaction
+        );
+
+
+    if (!milliseconds) {
+        return null;
+    }
+
+
     const date =
-        new Date(timestamp);
+        new Date(
+            milliseconds
+        );
 
 
-    return isNaN(date.getTime())
-        ? 0
-        : date.getTime();
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return null;
+
+    }
+
+
+    return date;
 
 }
 
@@ -633,53 +1295,19 @@ function getTransactionDateValue(transaction) {
 // TRANSACTION DATE FORMAT
 // ======================================
 
-function formatTransactionDate(transaction) {
+function formatTransactionDate(
+    transaction
+) {
 
-    const timestamp =
-        transaction.completedAt ||
-        transaction.createdAt;
-
-    let date;
-
-
-    if (!timestamp) {
-
-        date = new Date();
-
-    } else if (
-        typeof timestamp.toDate ===
-        "function"
-    ) {
-
-        date = timestamp.toDate();
-
-    } else if (
-        typeof timestamp.toMillis ===
-        "function"
-    ) {
-
-        date =
-            new Date(timestamp.toMillis());
-
-    } else if (
-        timestamp.seconds !==
-        undefined
-    ) {
-
-        date =
-            new Date(timestamp.seconds * 1000);
-
-    } else {
-
-        date =
-            new Date(timestamp);
-
-    }
+    const date =
+        getTransactionDate(
+            transaction
+        );
 
 
-    if (isNaN(date.getTime())) {
+    if (!date) {
 
-        date = new Date();
+        return "Date unavailable";
 
     }
 
@@ -688,9 +1316,15 @@ function formatTransactionDate(transaction) {
         date.toLocaleDateString(
             "en-NG",
             {
-                day: "numeric",
-                month: "short",
-                year: "numeric"
+                day:
+                    "numeric",
+
+                month:
+                    "short",
+
+                year:
+                    "numeric"
+
             }
         );
 
@@ -699,13 +1333,19 @@ function formatTransactionDate(transaction) {
         date.toLocaleTimeString(
             "en-NG",
             {
-                hour: "numeric",
-                minute: "2-digit"
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+
             }
         );
 
 
-    return `${dateText} · ${timeText}`;
+    return (
+        `${dateText} · ${timeText}`
+    );
 
 }
 
@@ -714,10 +1354,14 @@ function formatTransactionDate(transaction) {
 // TRANSACTION TYPE
 // ======================================
 
-function getTransactionType(transaction) {
+function getTransactionType(
+    transaction
+) {
 
     return String(
-        transaction.type || ""
+        transaction?.type ||
+        transaction?.category ||
+        ""
     )
         .trim()
         .toUpperCase();
@@ -726,19 +1370,64 @@ function getTransactionType(transaction) {
 
 
 // ======================================
-// MONEY IN
+// TRANSACTION DIRECTION
+// ======================================
+//
+// We prefer an explicit backend direction
+// when it exists.
+//
+// Otherwise known credit types are
+// treated as money-in.
+//
 // ======================================
 
-function isMoneyIn(transaction) {
+function isMoneyIn(
+    transaction
+) {
+
+    const direction =
+        String(
+            transaction?.direction ||
+            transaction?.flow ||
+            ""
+        )
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        direction === "IN" ||
+        direction === "CREDIT" ||
+        direction === "CREDITED"
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        direction === "OUT" ||
+        direction === "DEBIT" ||
+        direction === "DEBITED"
+    ) {
+
+        return false;
+
+    }
+
 
     const type =
-        getTransactionType(transaction);
+        getTransactionType(
+            transaction
+        );
 
 
     return (
         type === "DEPOSIT" ||
         type === "CREDIT" ||
-        type === "CREDIT_ALERT"
+        type === "CREDIT_ALERT" ||
+        type === "TRANSFER_IN"
     );
 
 }
@@ -748,49 +1437,73 @@ function isMoneyIn(transaction) {
 // TRANSACTION TITLE
 // ======================================
 
-function getTransactionTitle(transaction) {
+function getTransactionTitle(
+    transaction
+) {
 
     const type =
-        getTransactionType(transaction);
+        getTransactionType(
+            transaction
+        );
 
 
     switch (type) {
 
         case "DEPOSIT":
+
         case "CREDIT":
+
         case "CREDIT_ALERT":
+
             return "Credit Alert";
 
 
         case "AIRTIME":
+
             return "Airtime";
 
 
         case "DATA":
+
             return "Data";
 
 
         case "ELECTRICITY":
+
+        case "POWER":
+
             return "Electricity";
 
 
         case "TV":
+
         case "DSTV":
+
         case "GOTV":
+
         case "STARTIMES":
+
             return "TV";
 
 
         case "BETTING":
+
             return "Betting";
 
 
         case "TRANSFER":
+
         case "BANK_TRANSFER":
+
+        case "TRANSFER_IN":
+
+        case "TRANSFER_OUT":
+
             return "Transfer";
 
 
         default:
+
             return "Transaction";
 
     }
@@ -802,49 +1515,73 @@ function getTransactionTitle(transaction) {
 // TRANSACTION ICON
 // ======================================
 
-function getTransactionIcon(transaction) {
+function getTransactionIcon(
+    transaction
+) {
 
     const type =
-        getTransactionType(transaction);
+        getTransactionType(
+            transaction
+        );
 
 
     switch (type) {
 
         case "DEPOSIT":
+
         case "CREDIT":
+
         case "CREDIT_ALERT":
+
             return "fa-arrow-down";
 
 
         case "AIRTIME":
+
             return "fa-mobile-screen";
 
 
         case "DATA":
+
             return "fa-wifi";
 
 
         case "ELECTRICITY":
+
+        case "POWER":
+
             return "fa-bolt";
 
 
         case "TV":
+
         case "DSTV":
+
         case "GOTV":
+
         case "STARTIMES":
+
             return "fa-tv";
 
 
         case "BETTING":
+
             return "fa-futbol";
 
 
         case "TRANSFER":
+
         case "BANK_TRANSFER":
+
+        case "TRANSFER_IN":
+
+        case "TRANSFER_OUT":
+
             return "fa-money-bill-transfer";
 
 
         default:
+
             return "fa-receipt";
 
     }
@@ -853,51 +1590,28 @@ function getTransactionIcon(transaction) {
 
 
 // ======================================
-// TRANSACTION ICON CLASS
-// ======================================
-
-function getTransactionIconClass(transaction) {
-
-    const type =
-        getTransactionType(transaction);
-
-
-    if (
-        type === "DEPOSIT" ||
-        type === "CREDIT" ||
-        type === "CREDIT_ALERT"
-    ) {
-
-        return "credit";
-
-    }
-
-
-    return "debit";
-
-}
-
-
-// ======================================
 // TRANSACTION STATUS
 // ======================================
 
-function getTransactionStatus(transaction) {
+function getTransactionStatus(
+    transaction
+) {
 
-    const status =
+    const rawStatus =
         String(
-            transaction.status || ""
+            transaction?.status ||
+            ""
         )
             .trim()
             .toUpperCase();
 
 
     if (
-        status === "SUCCESS" ||
-        status === "SUCCESSFUL" ||
-        status === "COMPLETED" ||
-        status === "COMPLETE" ||
-        status === "PAID"
+        rawStatus === "SUCCESS" ||
+        rawStatus === "SUCCESSFUL" ||
+        rawStatus === "COMPLETED" ||
+        rawStatus === "COMPLETE" ||
+        rawStatus === "PAID"
     ) {
 
         return "Successful";
@@ -906,10 +1620,11 @@ function getTransactionStatus(transaction) {
 
 
     if (
-        status === "FAILED" ||
-        status === "FAIL" ||
-        status === "CANCELLED" ||
-        status === "CANCELED"
+        rawStatus === "FAILED" ||
+        rawStatus === "FAIL" ||
+        rawStatus === "CANCELLED" ||
+        rawStatus === "CANCELED" ||
+        rawStatus === "REVERSED"
     ) {
 
         return "Failed";
@@ -920,46 +1635,56 @@ function getTransactionStatus(transaction) {
     return "Pending";
 
 }
-
-
 // ======================================
-// CREATE RECENT TRANSACTION
+// TRANSACTION CARD
 // ======================================
 
-function createRecentTransaction(transaction) {
+function createRecentTransaction(
+    transaction
+) {
 
     const card =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     card.className =
         "transaction-card";
 
 
-    const title =
-        getTransactionTitle(transaction);
-
-
-    const icon =
-        getTransactionIcon(transaction);
-
-
-    const iconClass =
-        getTransactionIconClass(transaction);
-
-
-    const status =
-        getTransactionStatus(transaction);
-
-
     const amount =
         Math.abs(
-            Number(transaction.amount || 0)
+            Number(
+                transaction?.amount ||
+                transaction?.amountPaid ||
+                0
+            )
         );
 
 
     const moneyInTransaction =
-        isMoneyIn(transaction);
+        isMoneyIn(
+            transaction
+        );
+
+
+    const title =
+        getTransactionTitle(
+            transaction
+        );
+
+
+    const icon =
+        getTransactionIcon(
+            transaction
+        );
+
+
+    const status =
+        getTransactionStatus(
+            transaction
+        );
 
 
     const sign =
@@ -968,31 +1693,86 @@ function createRecentTransaction(transaction) {
             : "-";
 
 
+    /*
+     * These classes are deliberately
+     * aligned with the transaction-history
+     * color system.
+     *
+     * money-in  → green
+     * money-out → red
+     */
+
+    const amountClass =
+        moneyInTransaction
+            ? "money-in"
+            : "money-out";
+
+
+    /*
+     * Status class allows dashboard.css
+     * to display the same state colors.
+     */
+
+    const statusClass =
+        status === "Successful"
+            ? "status-successful"
+            : status === "Failed"
+                ? "status-failed"
+                : "status-pending";
+
+
+    const iconClass =
+        moneyInTransaction
+            ? "credit"
+            : "debit";
+
+
     card.innerHTML = `
 
-        <div class="transaction-icon ${iconClass}">
-            <i class="fa-solid ${icon}"></i>
+        <div
+            class="transaction-icon ${iconClass}"
+        >
+
+            <i
+                class="fa-solid ${icon}"
+            ></i>
+
         </div>
 
-        <div class="transaction-details">
+
+        <div
+            class="transaction-details"
+        >
 
             <h4>
-                ${title}
+                ${escapeHTML(title)}
             </h4>
 
+
             <p>
-                ${formatTransactionDate(transaction)}
+
+                ${escapeHTML(
+                    formatTransactionDate(
+                        transaction
+                    )
+                )}
+
                 ·
-                ${status}
+
+                <span
+                    class="${statusClass}"
+                >
+                    ${escapeHTML(status)}
+                </span>
+
             </p>
 
         </div>
 
-        <div class="transaction-amount ${
-            moneyInTransaction
-                ? "money-in"
-                : "money-out"
-        }">
+
+        <div
+            class="transaction-amount ${amountClass}"
+        >
 
             ${sign} ${formatMoney(amount)}
 
@@ -1001,35 +1781,104 @@ function createRecentTransaction(transaction) {
     `;
 
 
+    /*
+     * Recent transactions on Dashboard
+     * are informational.
+     *
+     * Transaction History remains the
+     * full transaction-detail page.
+     */
+
     return card;
 
 }
 
 
 // ======================================
-// NO TRANSACTIONS
+// ESCAPE HTML
+// ======================================
+//
+// Transaction data comes from the backend.
+// Escape values before inserting them into
+// innerHTML.
+//
+// ======================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+// ======================================
+// EMPTY TRANSACTION STATE
 // ======================================
 
 function showNoTransactions() {
 
+    if (
+        !recentTransactionsContainer
+    ) {
+
+        return;
+
+    }
+
+
     recentTransactionsContainer.innerHTML = `
 
-        <div class="transaction-card">
+        <div
+            class="transaction-card"
+        >
 
-            <div class="transaction-icon">
+            <div
+                class="transaction-icon"
+            >
 
-                <i class="fa-solid fa-receipt"></i>
+                <i
+                    class="fa-solid fa-receipt"
+                ></i>
 
             </div>
 
-            <div class="transaction-details">
+
+            <div
+                class="transaction-details"
+            >
 
                 <h4>
                     No Transactions Yet
                 </h4>
 
+
                 <p>
-                    Your recent transactions will appear here.
+                    Your recent transactions
+                    will appear here.
                 </p>
 
             </div>
@@ -1042,66 +1891,86 @@ function showNoTransactions() {
 
 
 // ======================================
-// DASHBOARD READY
+// APP LOCK
+// ======================================
+//
+// IMPORTANT:
+//
+// A normal navigation from one NovaPay
+// page to another must NOT lock the user.
+//
+// Example:
+//
+// Dashboard → Airtime
+// Airtime → Dashboard
+// Dashboard → Data
+// Data → Dashboard
+//
+// These are internal NovaPay navigations.
+//
+// Backgrounding/minimizing NovaPay is
+// different and should lock the session.
+//
 // ======================================
 
-console.log(
-    "✅ NovaPay Dashboard V3 Loaded"
-);
+const LOCK_KEY_PREFIX =
+    "novaPayLock_";
+
+
+let appLockTriggered =
+    false;
 
 
 // ======================================
-// NOVAPAY APP LOCK
+// USER LOCK KEY
 // ======================================
 
-let novaPayAppLocked = false;
-
-
-// ======================================
-// GET CURRENT USER
-// ======================================
-
-function getNovaPayLockKey() {
+function getLockKey() {
 
     const user =
         auth.currentUser;
 
 
     if (!user) {
+
         return null;
+
     }
 
 
-    return `novaPayLock_${user.uid}`;
+    return (
+        LOCK_KEY_PREFIX +
+        user.uid
+    );
 
 }
 
 
 // ======================================
-// CHECK IF NOVAPAY IS ALREADY LOCKED
+// MARK INTERNAL NAVIGATION
+// ======================================
+//
+// This flag exists only for the current
+// browser session.
+//
+// It is NOT the lock itself.
+//
 // ======================================
 
-function checkNovaPayLock() {
+function markInternalNavigation() {
 
-    const lockKey =
-        getNovaPayLockKey();
+    try {
 
+        sessionStorage.setItem(
+            INTERNAL_NAVIGATION_KEY,
+            "true"
+        );
 
-    if (!lockKey) {
-        return;
-    }
+    } catch (error) {
 
-
-    if (
-        localStorage.getItem(lockKey) ===
-        "true"
-    ) {
-
-        novaPayAppLocked = true;
-
-
-        window.location.replace(
-            "unlock.html"
+        console.warn(
+            "NovaPay navigation marker error:",
+            error
         );
 
     }
@@ -1110,48 +1979,176 @@ function checkNovaPayLock() {
 
 
 // ======================================
-// APP GOES INTO BACKGROUND
+// CHECK INTERNAL NAVIGATION
+// ======================================
+
+function isInternalNavigation() {
+
+    try {
+
+        return (
+            sessionStorage.getItem(
+                INTERNAL_NAVIGATION_KEY
+            ) === "true"
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "NovaPay navigation check error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+// ======================================
+// CLEAR INTERNAL NAVIGATION
+// ======================================
+
+function clearInternalNavigation() {
+
+    try {
+
+        sessionStorage.removeItem(
+            INTERNAL_NAVIGATION_KEY
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "NovaPay navigation cleanup error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ======================================
+// LOCK APPLICATION
+// ======================================
+
+function lockNovaPay() {
+
+    const lockKey =
+        getLockKey();
+
+
+    if (!lockKey) {
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        lockKey,
+        "true"
+    );
+
+
+    appLockTriggered =
+        true;
+
+}
+
+
+// ======================================
+// UNLOCK APPLICATION
+// ======================================
+//
+// This function is intentionally available
+// globally so unlock.html can use it if it
+// calls window.unlockNovaPay().
+//
+// ======================================
+
+window.unlockNovaPay = () => {
+
+    const lockKey =
+        getLockKey();
+
+
+    if (lockKey) {
+
+        localStorage.removeItem(
+            lockKey
+        );
+
+    }
+
+
+    appLockTriggered =
+        false;
+
+};
+
+
+// ======================================
+// PAGE VISIBILITY
+// ======================================
+//
+// ONE listener.
+//
+// The previous implementation had multiple
+// visibilitychange handlers. This replacement
+// uses one central handler.
+//
 // ======================================
 
 document.addEventListener(
     "visibilitychange",
     () => {
+
+        /*
+         * ----------------------------------
+         * PAGE BECOMES HIDDEN
+         * ----------------------------------
+         */
 
         if (
             document.visibilityState ===
             "hidden"
         ) {
 
-            const lockKey =
-                getNovaPayLockKey();
+            /*
+             * If NovaPay is intentionally
+             * navigating internally, do NOT
+             * create a lock.
+             */
 
+            if (
+                isInternalNavigation()
+            ) {
 
-            if (!lockKey) {
                 return;
+
             }
 
 
-            localStorage.setItem(
-                lockKey,
-                "true"
-            );
+            /*
+             * Otherwise the Dashboard is being
+             * backgrounded.
+             */
 
+            lockNovaPay();
 
-            novaPayAppLocked = true;
+            return;
 
         }
 
-    }
-);
 
-
-// ======================================
-// APP RETURNS TO FOREGROUND
-// ======================================
-
-document.addEventListener(
-    "visibilitychange",
-    () => {
+        /*
+         * ----------------------------------
+         * PAGE BECOMES VISIBLE
+         * ----------------------------------
+         */
 
         if (
             document.visibilityState !==
@@ -1163,11 +2160,73 @@ document.addEventListener(
         }
 
 
-        if (!novaPayAppLocked) {
+        /*
+         * If we arrived here because the
+         * Dashboard is navigating internally,
+         * clear the marker and do nothing.
+         */
+
+        if (
+            isInternalNavigation()
+        ) {
+
+            clearInternalNavigation();
+
+            appLockTriggered =
+                false;
 
             return;
 
         }
+
+
+        /*
+         * If the app was genuinely locked,
+         * send the user through the PIN screen.
+         */
+
+        const lockKey =
+            getLockKey();
+
+
+        if (!lockKey) {
+
+            return;
+
+        }
+
+
+        const isLocked =
+            localStorage.getItem(
+                lockKey
+            ) === "true";
+
+
+        if (!isLocked) {
+
+            appLockTriggered =
+                false;
+
+            return;
+
+        }
+
+
+        /*
+         * Don't repeatedly redirect.
+         */
+
+        if (
+            appLockTriggered
+        ) {
+
+            return;
+
+        }
+
+
+        appLockTriggered =
+            true;
 
 
         window.location.replace(
@@ -1179,7 +2238,80 @@ document.addEventListener(
 
 
 // ======================================
-// INITIAL APP LOCK CHECK
+// INITIAL LOCK CHECK
+// ======================================
+//
+// This checks a lock that already existed
+// before Dashboard loaded.
+//
+// Internal navigation is excluded.
+//
+// ======================================
+
+function checkExistingLock() {
+
+    const lockKey =
+        getLockKey();
+
+
+    if (!lockKey) {
+
+        return;
+
+    }
+
+
+    if (
+        isInternalNavigation()
+    ) {
+
+        clearInternalNavigation();
+
+        appLockTriggered =
+            false;
+
+        return;
+
+    }
+
+
+    const isLocked =
+        localStorage.getItem(
+            lockKey
+        ) === "true";
+
+
+    if (!isLocked) {
+
+        appLockTriggered =
+            false;
+
+        return;
+
+    }
+
+
+    appLockTriggered =
+        true;
+
+
+    window.location.replace(
+        "unlock.html"
+    );
+
+}
+// ======================================
+// AUTHENTICATION / INITIAL LOCK STARTUP
+// ======================================
+//
+// This listener is intentionally separate
+// from the main dashboard user-loading
+// listener.
+//
+// Its only responsibility is checking whether
+// this session was already locked before the
+// Dashboard loaded.
+//
 // ======================================
 
 onAuthStateChanged(
@@ -1191,12 +2323,102 @@ onAuthStateChanged(
         }
 
 
-        checkNovaPayLock();
+        /*
+         * If Dashboard was reached through
+         * normal NovaPay navigation, do not
+         * show the PIN screen.
+         */
+
+        if (
+            isInternalNavigation()
+        ) {
+
+            clearInternalNavigation();
+
+            appLockTriggered =
+                false;
+
+            return;
+
+        }
+
+
+        /*
+         * Otherwise check whether a previous
+         * background event locked the account.
+         */
+
+        checkExistingLock();
 
     }
 );
 
 
+// ======================================
+// PAGE EXIT SAFETY
+// ======================================
+//
+// We deliberately DO NOT lock NovaPay from
+// beforeunload/pagehide.
+//
+// Those events also occur during normal
+// navigation between NovaPay pages.
+//
+// The visibilitychange handler above is the
+// single source of truth for background lock.
+// ======================================
+
+
+// ======================================
+// MODAL ESCAPE SUPPORT
+// ======================================
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Escape" &&
+            modal &&
+            modal.style.display === "flex"
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+// ======================================
+// FINAL DASHBOARD STARTUP
+// ======================================
+
 console.log(
-    "🔐 NovaPay App Lock Ready"
+    "======================================"
+);
+
+console.log(
+    "NovaPay Dashboard V4 initialized"
+);
+
+console.log(
+    "Secure transaction history: ENABLED"
+);
+
+console.log(
+    "Internal navigation protection: ENABLED"
+);
+
+console.log(
+    "Background app lock: ENABLED"
+);
+
+console.log(
+    "Dashboard transaction direction styling: ENABLED"
+);
+
+console.log(
+    "======================================"
 );
