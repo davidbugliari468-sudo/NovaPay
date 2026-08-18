@@ -2,158 +2,454 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
 
-<meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - NovaPay</title>
 
-<title>Create Account | NovaPay</title>
-
-<link rel="stylesheet" href="auth.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="auth.css">
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<a href="index.html" class="logo">
+        <!-- LOGO -->
 
-<span>Nova</span>Pay
+        <a href="index.html" class="logo">
+            Nova<span>Pay</span>
+        </a>
 
-</a>
 
-<h2>Create Account</h2>
+        <!-- TITLE -->
 
-<p>
+        <h2 id="registerTitle">
+            Create Account
+        </h2>
 
-Create your account in less than one minute.
+        <p id="registerDescription">
+            Create your NovaPay account in two simple steps.
+        </p>
 
-</p>
 
-<form id="registerForm">
+        <!-- PROGRESS -->
 
-<div class="input-group">
+        <div
+            id="registerProgress"
+            style="
+                text-align:center;
+                font-size:12px;
+                color:#64748b;
+                margin-bottom:16px;
+            "
+        >
+            Step 1 of 2
+        </div>
 
-<label>Email Address</label>
 
-<input
-type="email"
-id="email"
-placeholder="Enter your email"
-required>
+        <!-- ERROR -->
 
-</div>
+        <div
+            id="errorMessage"
+            class="error-message"
+            style="display:none;"
+        ></div>
 
-<div class="input-group">
 
-<label>Password</label>
+        <!-- SUCCESS -->
 
-<div class="password-box">
+        <div
+            id="successMessage"
+            class="success-message"
+            style="display:none;"
+        ></div>
 
-<input
-type="password"
-id="password"
-placeholder="Create password"
-required>
 
-<button
-type="button"
-onclick="togglePassword('password',this)">
+        <!-- ======================================
+             STEP 1
+        ======================================= -->
 
-Show
+        <div id="step1">
 
-</button>
 
-</div>
+            <!-- NICKNAME -->
 
-<div id="strength">
+            <div class="input-group">
 
-Password Strength
+                <label for="nickname">
+                    Nickname
+                </label>
 
-</div>
+                <input
+                    type="text"
+                    id="nickname"
+                    name="nickname"
+                    placeholder="Enter your nickname"
+                    autocomplete="nickname"
+                    maxlength="30"
+                    required
+                >
 
-</div>
+            </div>
 
-<div class="input-group">
 
-<label>Confirm Password</label>
+            <!-- FIRST NAME -->
 
-<div class="password-box">
+            <div class="input-group">
 
-<input
-type="password"
-id="confirmPassword"
-placeholder="Confirm password"
-required>
+                <label for="firstName">
+                    First Name
+                </label>
 
-<button
-type="button"
-onclick="togglePassword('confirmPassword',this)">
+                <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Enter your first name"
+                    autocomplete="given-name"
+                    maxlength="50"
+                    required
+                >
 
-Show
+            </div>
 
-</button>
 
-</div>
+            <!-- MIDDLE NAME -->
 
-</div>
+            <div class="input-group">
 
-<div class="terms">
+                <label for="middleName">
+                    Middle Name
+                </label>
 
-<input
-type="checkbox"
-required>
+                <input
+                    type="text"
+                    id="middleName"
+                    name="middleName"
+                    placeholder="Enter your middle name"
+                    autocomplete="additional-name"
+                    maxlength="50"
+                >
 
-<label>
+            </div>
 
-I agree to
 
-<a href="terms.html">
+            <!-- SURNAME -->
 
-Terms
+            <div class="input-group">
 
-</a>
+                <label for="surname">
+                    Surname
+                </label>
 
-and
+                <input
+                    type="text"
+                    id="surname"
+                    name="surname"
+                    placeholder="Enter your surname"
+                    autocomplete="family-name"
+                    maxlength="50"
+                    required
+                >
 
-<a href="privacy.html">
+            </div>
 
-Privacy
 
-</a>
+            <!-- EMAIL -->
 
-</label>
+            <div class="input-group">
 
-</div>
+                <label for="email">
+                    Email Address
+                </label>
 
-<button
-id="registerBtn"
-type="submit">
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    autocomplete="email"
+                    required
+                >
 
-Create Account
+            </div>
 
-</button>
 
-<div class="bottom-text">
+            <!-- PHONE -->
 
-Already have an account?
+            <div class="input-group">
 
-<a href="login.html">
+                <label for="phone">
+                    Phone Number
+                </label>
 
-Login
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    maxlength="20"
+                    required
+                >
 
-</a>
+            </div>
 
-</div>
 
-</form>
+            <!-- NEXT -->
 
-</div>
+            <button
+                type="button"
+                id="nextStepBtn"
+                style="
+                    width:100%;
+                    height:46px;
+                    border:none;
+                    border-radius:11px;
+                    background:#2563eb;
+                    color:#fff;
+                    font-size:14px;
+                    font-weight:650;
+                    cursor:pointer;
+                    margin-top:5px;
+                "
+            >
+                Continue
+            </button>
 
-<script type="module" src="register.js"></script>
+        </div>
+
+
+        <!-- ======================================
+             STEP 2
+        ======================================= -->
+
+        <div
+            id="step2"
+            style="display:none;"
+        >
+
+
+            <!-- PASSWORD -->
+
+            <div class="input-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        data-target="password"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+                <div id="passwordStrength">
+                    Use at least 8 characters.
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="input-group">
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Enter your password again"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        data-target="confirmPassword"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TERMS -->
+
+            <div class="terms">
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                >
+
+                <label for="terms">
+
+                    I agree to NovaPay's
+
+                    <a href="terms.html">
+                        Terms & Conditions
+                    </a>
+
+                    and
+
+                    <a href="privacy-policy.html">
+                        Privacy Policy
+                    </a>.
+
+                </label>
+
+            </div>
+
+
+            <!-- BACK -->
+
+            <button
+                type="button"
+                id="backStepBtn"
+                style="
+                    width:100%;
+                    height:42px;
+                    border:1px solid #dfe3e8;
+                    border-radius:11px;
+                    background:#fff;
+                    color:#334155;
+                    font-size:14px;
+                    font-weight:600;
+                    cursor:pointer;
+                    margin-bottom:9px;
+                "
+            >
+                Back
+            </button>
+
+
+            <!-- CREATE ACCOUNT -->
+
+            <button
+                type="button"
+                id="registerBtn"
+            >
+                Create Account
+            </button>
+
+        </div>
+
+
+        <!-- ======================================
+             SUCCESS SCREEN
+        ======================================= -->
+
+        <div
+            id="successScreen"
+            style="
+                display:none;
+                text-align:center;
+            "
+        >
+
+            <div
+                style="
+                    width:62px;
+                    height:62px;
+                    margin:0 auto 14px;
+                    border-radius:50%;
+                    background:#eff6ff;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:30px;
+                "
+            >
+                ✓
+            </div>
+
+            <h2>
+                Account Created Successfully
+            </h2>
+
+            <p>
+                Welcome to NovaPay,
+                <strong id="successNickname"></strong>.
+            </p>
+
+            <button
+                type="button"
+                id="continueBtn"
+                style="
+                    width:100%;
+                    height:46px;
+                    border:none;
+                    border-radius:11px;
+                    background:#2563eb;
+                    color:#fff;
+                    font-size:14px;
+                    font-weight:650;
+                    cursor:pointer;
+                "
+            >
+                Continue to NovaPay
+            </button>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div
+            id="loginLink"
+            class="bottom-text"
+        >
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- REGISTRATION JS -->
+
+    <script
+        type="module"
+        src="register.js"
+    ></script>
 
 </body>
 
