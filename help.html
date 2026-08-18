@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Help Centre - NovaPay</title>
+
+    <link
+        rel="stylesheet"
+        href="help.css"
+    >
+</head>
+
+
+<body>
+
+    <div class="help-page">
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
+        <header class="help-header">
+
+            <button
+                id="backBtn"
+                class="back-btn"
+                type="button"
+                aria-label="Go back"
+            >
+                ←
+            </button>
+
+            <h1>Help Centre</h1>
+
+        </header>
+
+
+        <!-- =========================
+             SEARCH
+        ========================== -->
+
+        <section class="help-search">
+
+            <div class="search-box">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    id="helpSearch"
+                    type="search"
+                    placeholder="Search for help..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             TRANSACTIONS
+        ========================== -->
+
+        <section class="help-section">
+
+            <h2>Transactions</h2>
+
+            <div class="help-card">
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Pending transaction"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            ⏳
+                        </span>
+
+                        <span>
+                            Pending transaction
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Failed transaction"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            ❌
+                        </span>
+
+                        <span>
+                            Failed transaction
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Transfer not received"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            💸
+                        </span>
+
+                        <span>
+                            I transferred money but didn't receive it
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Money deducted but service not received"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            ⚠️
+                        </span>
+
+                        <span>
+                            Money was deducted but service wasn't received
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Wrong amount deducted"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            💰
+                        </span>
+
+                        <span>
+                            Wrong amount deducted
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ACCOUNT & SECURITY
+        ========================== -->
+
+        <section class="help-section">
+
+            <h2>Account & Security</h2>
+
+            <div class="help-card">
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Account verification"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            ✅
+                        </span>
+
+                        <span>
+                            Account verification
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Account limits"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            📊
+                        </span>
+
+                        <span>
+                            Account limits
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Forgot PIN or password"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            🔐
+                        </span>
+
+                        <span>
+                            Forgot PIN / password
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Suspicious activity"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            🛡️
+                        </span>
+
+                        <span>
+                            Suspicious activity
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PAYMENTS
+        ========================== -->
+
+        <section class="help-section">
+
+            <h2>Payments</h2>
+
+            <div class="help-card">
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Airtime problem"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            📱
+                        </span>
+
+                        <span>
+                            Airtime problem
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Data problem"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            📶
+                        </span>
+
+                        <span>
+                            Data problem
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Electricity payment problem"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            ⚡
+                        </span>
+
+                        <span>
+                            Electricity payment problem
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="TV payment problem"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            📺
+                        </span>
+
+                        <span>
+                            TV payment problem
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="help-item"
+                    type="button"
+                    data-topic="Betting payment problem"
+                >
+
+                    <div class="item-left">
+
+                        <span class="item-icon">
+                            🎯
+                        </span>
+
+                        <span>
+                            Betting payment problem
+                        </span>
+
+                    </div>
+
+                    <span class="item-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             LIVE CHAT
+        ========================== -->
+
+        <section class="live-chat-section">
+
+            <div class="live-chat-card">
+
+                <div class="live-chat-icon">
+                    💬
+                </div>
+
+
+                <div class="live-chat-content">
+
+                    <h2>Live Chat</h2>
+
+                    <p>
+                        Chat with NovaPay Support
+                        when live chat becomes available.
+                    </p>
+
+                </div>
+
+
+                <span class="coming-soon">
+                    Coming Soon
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             NO RESULTS
+        ========================== -->
+
+        <div
+            id="noResults"
+            class="no-results"
+            hidden
+        >
+
+            <div class="no-results-icon">
+                🔍
+            </div>
+
+            <h2>No results found</h2>
+
+            <p>
+                Try searching with a different
+                word or phrase.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <script
+        type="module"
+        src="help.js"
+    ></script>
+
+</body>
+
+</html>

@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>NovaPay | Settings</title>
+    <title>NovaPay | Profile</title>
 
     <link rel="stylesheet" href="profile.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
 
     <link rel="preconnect"
           href="https://fonts.gstatic.com"
@@ -23,33 +23,38 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
 </head>
+
 
 <body>
 
 <div class="settings-page">
 
-    <!-- Header -->
+    <!-- ==========================
+         HEADER
+    ========================== -->
 
     <header class="settings-header">
 
         <button
             id="backBtn"
-            class="back-btn">
+            class="back-btn"
+            type="button">
 
             <i class="fa-solid fa-arrow-left"></i>
 
         </button>
 
-        <h1>Settings</h1>
+        <h1>Profile</h1>
 
         <div class="header-placeholder"></div>
 
     </header>
 
 
-    <!-- Profile Card -->
+    <!-- ==========================
+         PROFILE
+    ========================== -->
 
     <section class="profile-card">
 
@@ -64,19 +69,13 @@
 
             </div>
 
+
             <div class="profile-info">
 
                 <h2 id="userName">
-
                     Loading...
-
                 </h2>
 
-                <p id="userEmail">
-
-                    Loading...
-
-                </p>
 
                 <div class="profile-stats">
 
@@ -85,26 +84,27 @@
                         <i class="fa-solid fa-star"></i>
 
                         <span id="userPoints">
-
                             0 Points
-
                         </span>
 
                     </div>
 
-                    <div class="stat-divider"></div>
 
-                    <div class="stat-item">
+                    <!--
+                        Rewards is intentionally kept in the HTML
+                        connection area for compatibility with the
+                        existing profile.js.
 
-                        <i class="fa-solid fa-gift"></i>
+                        It is visually hidden by CSS/JS design and
+                        is not displayed in the profile header.
+                    -->
 
-                        <span id="userRewards">
-
-                            0 Rewards
-
-                        </span>
-
-                    </div>
+                    <span
+                        id="userRewards"
+                        class="profile-rewards-hidden"
+                        aria-hidden="true">
+                        0 Rewards
+                    </span>
 
                 </div>
 
@@ -112,16 +112,21 @@
 
         </div>
 
+
         <button
             id="personalInformationBtn"
-            class="profile-arrow">
+            class="profile-arrow"
+            type="button">
 
             <i class="fa-solid fa-chevron-right"></i>
 
         </button>
 
-    </section> 
-        <!-- ==========================
+    </section>
+
+
+
+    <!-- ==========================
          ACCOUNT
     ========================== -->
 
@@ -131,13 +136,16 @@
 
         <div class="settings-card">
 
-            <a href="personal-information.html" class="settings-item">
+
+            <a
+                href="personal-information.html"
+                class="settings-item">
 
                 <div class="item-left">
 
                     <i class="fa-solid fa-user"></i>
 
-                    <span>Personal Information</span>
+                    <span>Personal Info</span>
 
                 </div>
 
@@ -145,59 +153,33 @@
 
             </a>
 
-            <a href="kyc.html" class="settings-item">
 
-                <div class="item-left">
+            <!--
+                Account Limits remains the existing destination
+                for now, but the user-facing label is Upgrade.
+            -->
 
-                    <i class="fa-solid fa-id-card"></i>
-
-                    <span>KYC Verification</span>
-
-                </div>
-
-                <span class="coming-soon">
-
-                    Coming Soon
-
-                </span>
-
-            </a>
-
-            <a href="account-limits.html" class="settings-item">
+            <a
+                href="upgrade.html"
+                class="settings-item">
 
                 <div class="item-left">
 
                     <i class="fa-solid fa-chart-column"></i>
 
-                    <span>Account Limits</span>
-
+                    <span>Upgrade</span>
+                 
                 </div>
 
                 <i class="fa-solid fa-chevron-right"></i>
 
             </a>
 
-            <a href="#" class="settings-item">
-
-                <div class="item-left">
-
-                    <i class="fa-solid fa-building-columns"></i>
-
-                    <span>Business Account</span>
-
-                </div>
-
-                <span class="coming-soon">
-
-                    Coming Soon
-
-                </span>
-
-            </a>
 
         </div>
 
     </section>
+
 
 
     <!-- ==========================
@@ -210,8 +192,10 @@
 
         <div class="settings-card">
 
-            <a href="login-pin.html"
-               class="settings-item">
+
+            <a
+                href="login-pin.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -225,8 +209,10 @@
 
             </a>
 
-            <a href="transaction-pin.html"
-               class="settings-item">
+
+            <a
+                href="transaction-pin.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -240,8 +226,10 @@
 
             </a>
 
-            <a href="#"
-               class="settings-item">
+
+            <a
+                href="#"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -252,32 +240,19 @@
                 </div>
 
                 <span class="coming-soon">
-
                     Coming Soon
-
                 </span>
 
             </a>
 
-            <a href="change-password.html"
-               class="settings-item">
-
-                <div class="item-left">
-
-                    <i class="fa-solid fa-key"></i>
-
-                    <span>Change Password</span>
-
-                </div>
-
-                <i class="fa-solid fa-chevron-right"></i>
-
-            </a>
 
         </div>
 
-    </section> 
-        <!-- ==========================
+    </section>
+
+
+
+    <!-- ==========================
          REWARDS
     ========================== -->
 
@@ -287,7 +262,10 @@
 
         <div class="settings-card">
 
-            <a href="my-points.html" class="settings-item">
+
+            <a
+                href="my-points.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -301,7 +279,10 @@
 
             </a>
 
-            <a href="achievements.html" class="settings-item">
+
+            <a
+                href="achievements.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -315,9 +296,12 @@
 
             </a>
 
+
         </div>
 
     </section>
+
+
 
     <!-- ==========================
          PREFERENCES
@@ -329,7 +313,10 @@
 
         <div class="settings-card">
 
-            <a href="notifications.html" class="settings-item">
+
+            <a
+                href="notifications.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -343,21 +330,74 @@
 
             </a>
 
-            <a href="language.html" class="settings-item">
 
-                <div class="item-left">
+            <div class="language-wrapper">
 
-                    <i class="fa-solid fa-language"></i>
+    <button
+        id="languageBtn"
+        class="settings-item language-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="languageDropdown"
+    >
 
-                    <span>Language</span>
+        <div class="item-left">
 
-                </div>
+            <i class="fa-solid fa-language"></i>
 
-                <i class="fa-solid fa-chevron-right"></i>
+            <span>Language</span>
 
-            </a>
+        </div>
 
-            <a href="#" class="settings-item">
+        <div class="language-current">
+
+            <span>English (UK)</span>
+
+            <i class="fa-solid fa-chevron-down"></i>
+
+        </div>
+
+    </button>
+
+
+    <div
+        id="languageDropdown"
+        class="language-dropdown"
+        hidden
+    >
+
+        <button
+            type="button"
+            class="language-option active"
+            data-language="English (UK)"
+        >
+
+            <span class="language-flag">
+                🇬🇧
+            </span>
+
+            <span class="language-details">
+
+                <strong>English (UK)</strong>
+
+                <small>
+                    United Kingdom 🇬🇧
+                </small>
+
+            </span>
+
+            <i class="fa-solid fa-check"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+            <a
+                href="#"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -368,16 +408,17 @@
                 </div>
 
                 <span class="coming-soon">
-
                     Coming Soon
-
                 </span>
 
             </a>
 
+
         </div>
 
     </section>
+
+
 
     <!-- ==========================
          SUPPORT
@@ -389,7 +430,10 @@
 
         <div class="settings-card">
 
-            <a href="help.html" class="settings-item">
+
+            <a
+                href="help.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -403,7 +447,10 @@
 
             </a>
 
-            <a href="contact-support.html" class="settings-item">
+
+            <a
+                href="contact-support.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -417,9 +464,12 @@
 
             </a>
 
+
         </div>
 
     </section>
+
+
 
     <!-- ==========================
          LEGAL
@@ -431,7 +481,10 @@
 
         <div class="settings-card">
 
-            <a href="privacy-policy.html" class="settings-item">
+
+            <a
+                href="privacy-policy.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -445,13 +498,16 @@
 
             </a>
 
-            <a href="terms.html" class="settings-item">
+
+            <a
+                href="terms.html"
+                class="settings-item">
 
                 <div class="item-left">
 
                     <i class="fa-solid fa-file-contract"></i>
 
-                    <span>Terms & Conditions</span>
+                    <span>Terms &amp; Conditions</span>
 
                 </div>
 
@@ -459,7 +515,10 @@
 
             </a>
 
-            <a href="about.html" class="settings-item">
+
+            <a
+                href="about.html"
+                class="settings-item">
 
                 <div class="item-left">
 
@@ -473,9 +532,12 @@
 
             </a>
 
+
         </div>
 
     </section>
+
+
 
     <!-- ==========================
          LOGOUT
@@ -485,7 +547,8 @@
 
         <button
             id="logoutBtn"
-            class="logout-btn">
+            class="logout-btn"
+            type="button">
 
             <i class="fa-solid fa-right-from-bracket"></i>
 
@@ -495,9 +558,15 @@
 
     </section>
 
+
 </div>
 
-<script type="module" src="profile.js"></script>
+
+
+<script
+    type="module"
+    src="profile.js">
+</script>
 
 </body>
 

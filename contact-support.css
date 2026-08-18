@@ -1,0 +1,396 @@
+/* =========================================
+   NOVAPAY — CONTACT SUPPORT
+   Compact mobile design
+   ========================================= */
+
+:root {
+    --primary: #2563eb;
+    --primary-light: #eef4ff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --background: #f7f9fc;
+    --white: #ffffff;
+    --coming-bg: #fff4df;
+    --coming-text: #c98216;
+}
+
+
+/* RESET */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* PAGE */
+
+.support-page {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px 30px;
+}
+
+
+/* HEADER */
+
+.support-header {
+    position: relative;
+
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.support-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+.back-btn {
+    position: absolute;
+    left: 0;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: var(--white);
+    color: var(--primary);
+
+    font-size: 30px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+
+/* INTRO */
+
+.support-intro {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    padding: 30px 4px 25px;
+}
+
+.support-icon {
+    flex: 0 0 auto;
+
+    width: 72px;
+    height: 72px;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 34px;
+}
+
+.intro-text h2 {
+    font-size: 23px;
+    font-weight: 750;
+
+    margin-bottom: 5px;
+
+    letter-spacing: -0.5px;
+}
+
+.intro-text p {
+    color: var(--muted);
+
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+
+/* SECTION TITLE */
+
+.support-section h3 {
+    color: #64748b;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    margin: 3px 0 12px 4px;
+}
+
+
+/* =========================================
+   COMPACT SUPPORT CARD
+   ========================================= */
+
+.support-card {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        54px
+        minmax(0, 1fr)
+        auto
+        18px;
+
+    align-items: center;
+
+    column-gap: 13px;
+
+    min-height: 92px;
+
+    padding: 14px 15px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background: var(--white);
+
+    text-align: left;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.035);
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.support-card:active {
+    transform: scale(0.99);
+}
+
+
+/* CARD ICON */
+
+.card-icon {
+    width: 54px;
+    height: 54px;
+
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+.message-icon {
+    background: #eaf1ff;
+}
+
+.email-icon {
+    background: #eaf8f1;
+}
+
+.security-icon {
+    background: #fff0f1;
+}
+
+
+/* CARD CONTENT */
+
+.card-content {
+    min-width: 0;
+}
+
+.card-content h4 {
+    color: var(--text);
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    margin-bottom: 4px;
+}
+
+.card-content p {
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+
+/* COMING SOON */
+
+.status {
+    align-self: center;
+
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    background: var(--coming-bg);
+    color: var(--coming-text);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* ARROW */
+
+.arrow {
+    color: #94a3b8;
+
+    font-size: 28px;
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* =========================================
+   NOVAPAY SUPPORT NOTICE
+   ========================================= */
+
+.support-notice {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    margin-top: 20px;
+    padding: 17px;
+
+    border: 1px solid #dbe7ff;
+    border-radius: 18px;
+
+    background: #eef4ff;
+}
+
+.notice-icon {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.support-notice h3 {
+    color: var(--primary);
+
+    font-size: 17px;
+    font-weight: 700;
+
+    margin-bottom: 4px;
+}
+
+.support-notice p {
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+    .support-page {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .support-card {
+        grid-template-columns:
+            48px
+            minmax(0, 1fr)
+            auto
+            14px;
+
+        column-gap: 10px;
+
+        min-height: 86px;
+
+        padding: 12px;
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 14px;
+
+        font-size: 22px;
+    }
+
+    .card-content h4 {
+        font-size: 15px;
+    }
+
+    .card-content p {
+        font-size: 12px;
+    }
+
+    .status {
+        padding: 5px 7px;
+        font-size: 10px;
+    }
+
+    .arrow {
+        font-size: 24px;
+    }
+}

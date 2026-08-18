@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Upgrade Account - NovaPay</title>
+
+    <link
+        rel="stylesheet"
+        href="upgrade.css"
+    >
+</head>
+
+<body>
+
+    <div class="upgrade-page">
+
+        <!-- HEADER -->
+
+        <header class="upgrade-header">
+
+            <button
+                id="backBtn"
+                class="back-btn"
+                type="button"
+                aria-label="Go back"
+            >
+                ←
+            </button>
+
+            <h1>Upgrade Account</h1>
+
+        </header>
+
+
+        <!-- INTRO -->
+
+        <section class="upgrade-intro">
+
+            <div class="upgrade-icon">
+                ↑
+            </div>
+
+            <h2>Choose your account tier</h2>
+
+            <p>
+                Upgrade your NovaPay account to access
+                higher account limits and additional
+                verification levels.
+            </p>
+
+        </section>
+
+
+        <!-- TIERS -->
+
+        <main class="tiers">
+
+
+            <!-- TIER 1 -->
+
+            <section class="tier-card current">
+
+                <div class="tier-header">
+
+                    <div>
+
+                        <span class="tier-label">
+                            TIER 1
+                        </span>
+
+                        <h2>Free</h2>
+
+                    </div>
+
+                    <span class="tier-status">
+                        Current
+                    </span>
+
+                </div>
+
+
+                <p class="tier-description">
+                    Your account starts at Tier 1 when
+                    you register with NovaPay.
+                </p>
+
+
+                <div class="tier-divider"></div>
+
+
+                <div class="tier-details">
+
+                    <div class="detail-row">
+
+                        <span>Verification</span>
+
+                        <strong>
+                            Basic registration
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>Use</span>
+
+                        <strong>
+                            Pay for available services
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>Limit</span>
+
+                        <strong>
+                            ₦50,000 – ₦100,000
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="tier-button current-button"
+                    type="button"
+                    disabled
+                >
+                    Current Tier
+                </button>
+
+            </section>
+
+
+            <!-- TIER 2 -->
+
+            <section class="tier-card">
+
+                <div class="tier-header">
+
+                    <div>
+
+                        <span class="tier-label">
+                            TIER 2
+                        </span>
+
+                        <h2>Verified</h2>
+
+                    </div>
+
+                </div>
+
+
+                <p class="tier-description">
+                    Complete additional verification to
+                    increase your account limits.
+                </p>
+
+
+                <div class="tier-divider"></div>
+
+
+                <div class="tier-details">
+
+                    <div class="detail-row">
+
+                        <span>Verification</span>
+
+                        <strong>
+                            KYC + Proof of Address
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>Limit</span>
+
+                        <strong>
+                            ₦200,000 – ₦500,000
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="tier-button"
+                    type="button"
+                    data-tier="2"
+                >
+                    Upgrade to Tier 2
+                </button>
+
+            </section>
+
+
+            <!-- TIER 3 -->
+
+            <section class="tier-card featured">
+
+                <div class="tier-header">
+
+                    <div>
+
+                        <span class="tier-label">
+                            TIER 3
+                        </span>
+
+                        <h2>Advanced</h2>
+
+                    </div>
+
+                    <span class="recommended">
+                        Higher Limit
+                    </span>
+
+                </div>
+
+
+                <p class="tier-description">
+                    Complete advanced identity verification
+                    for a higher daily account limit.
+                </p>
+
+
+                <div class="tier-divider"></div>
+
+
+                <div class="tier-details">
+
+                    <div class="detail-row">
+
+                        <span>Verification</span>
+
+                        <strong>
+                            KYC + NIN + Face Verification
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>Daily Limit</span>
+
+                        <strong>
+                            Up to ₦5,000,000
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="tier-button"
+                    type="button"
+                    data-tier="3"
+                >
+                    Upgrade to Tier 3
+                </button>
+
+            </section>
+
+
+        </main>
+
+
+        <!-- NOTICE -->
+
+        <section class="upgrade-notice">
+
+            <div class="notice-icon">
+                ℹ️
+            </div>
+
+            <div>
+
+                <h3>Verification matters</h3>
+
+                <p>
+                    Your account limits and available
+                    services may depend on your verification
+                    level and applicable requirements.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+    <script src="upgrade.js"></script>
+
+</body>
+
+</html>

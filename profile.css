@@ -619,4 +619,167 @@ a{
 
 -webkit-tap-highlight-color:transparent;
 
+} 
+/* =========================================
+   NOVAPAY — LANGUAGE DROPDOWN
+   ========================================= */
+
+.language-wrapper {
+    position: relative;
+}
+
+
+.language-button {
+    width: 100%;
+
+    border: none;
+
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+
+.language-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #667085;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.language-current i {
+    color: #98a2b3;
+
+    font-size: 12px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.language-button[aria-expanded="true"]
+.language-current i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================
+   DROPDOWN
+   ========================================= */
+
+.language-dropdown {
+    position: relative;
+
+    width: calc(100% - 20px);
+
+    margin: -2px auto 8px;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+
+.language-dropdown[hidden] {
+    display: none;
+}
+
+
+.language-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    font-family: inherit;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+
+.language-option.active {
+    background: #eef4ff;
+}
+
+
+.language-option:active {
+    transform: scale(0.99);
+}
+
+
+/* FLAG */
+
+.language-flag {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f5f7fa;
+
+    font-size: 18px;
+}
+
+
+/* LANGUAGE TEXT */
+
+.language-details {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.language-details strong {
+    color: #111827;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.language-details small {
+    color: #667085;
+
+    font-size: 11px;
+}
+
+
+/* CHECK */
+
+.language-option > i {
+    color: #2563eb;
+
+    font-size: 14px;
 }

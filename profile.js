@@ -536,4 +536,129 @@ Object.values(
 
 console.log(
     "✅ NovaPay Profile Ready"
+); 
+/* ==========================================
+   LANGUAGE DROPDOWN
+========================================== */
+
+const languageBtn =
+    document.getElementById("languageBtn");
+
+const languageDropdown =
+    document.getElementById("languageDropdown");
+
+const languageOption =
+    document.querySelector(".language-option");
+
+const selectedLanguage =
+    document.querySelector(".language-current span");
+
+
+/* ------------------------------------------
+   OPEN / CLOSE DROPDOWN
+------------------------------------------ */
+
+languageBtn?.addEventListener(
+    "click",
+    () => {
+
+        const isOpen =
+            languageBtn.getAttribute(
+                "aria-expanded"
+            ) === "true";
+
+
+        languageBtn.setAttribute(
+            "aria-expanded",
+            String(!isOpen)
+        );
+
+
+        if (languageDropdown) {
+
+            languageDropdown.hidden =
+                isOpen;
+
+        }
+
+    }
+);
+
+
+/* ------------------------------------------
+   SELECT LANGUAGE
+------------------------------------------ */
+
+languageOption?.addEventListener(
+    "click",
+    () => {
+
+        const language =
+            languageOption.dataset.language ||
+            "English (UK)";
+
+
+        if (selectedLanguage) {
+
+            selectedLanguage.textContent =
+                language;
+
+        }
+
+
+        if (languageDropdown) {
+
+            languageDropdown.hidden =
+                true;
+
+        }
+
+
+        languageBtn?.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+    }
+);
+
+
+/* ------------------------------------------
+   CLOSE WHEN CLICKING OUTSIDE
+------------------------------------------ */
+
+document.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            !languageBtn ||
+            !languageDropdown
+        ) {
+            return;
+        }
+
+
+        if (
+            !languageBtn.contains(event.target) &&
+            !languageDropdown.contains(event.target)
+        ) {
+
+            languageDropdown.hidden =
+                true;
+
+
+            languageBtn.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+    }
+);
+
+
+console.log(
+    "🌐 NovaPay Language Selector Ready"
 );

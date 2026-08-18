@@ -3,178 +3,197 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Personal Information | NovaPay</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="personal-information.css">
+    <title>Personal Information - NovaPay</title>
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="personal-information.css"
+    >
 </head>
 
 <body>
 
-<div class="container">
+    <div class="personal-page">
 
-    <!-- Header -->
+        <!-- HEADER -->
 
-    <header class="page-header">
+        <header class="personal-header">
 
-        <button class="back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
+            <button
+                class="back-btn"
+                type="button"
+                onclick="history.back()"
+                aria-label="Go back"
+            >
+                ←
+            </button>
 
-        <h1>Personal Information</h1>
+            <h1>Personal Information</h1>
 
-    </header>
+        </header>
 
-    <!-- Profile Photo -->
 
-    <section class="profile-photo-card">
+        <!-- PROFILE -->
 
-        <div class="profile-avatar">
-            <i class="fa-solid fa-user"></i>
-        </div>
+        <section class="profile-summary">
 
-        <h2>John Anderson</h2>
-
-        <p>Manage your personal information</p>
-
-        <button class="change-photo-btn">
-            <i class="fa-solid fa-camera"></i>
-            Change Photo
-            <small>(Coming Soon)</small>
-        </button>
-
-    </section>
-
-    <!-- Personal Details -->
-
-    <h3 class="section-title">
-        Personal Details
-    </h3>
-
-    <div class="info-card"> 
-                <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-user"></i>
+            <div class="profile-avatar">
+                <span>👤</span>
             </div>
 
-            <div class="info-content">
-                <label>Full Name</label>
-                <input type="text" placeholder="Enter your full name">
-            </div>
-        </div>
+            <h2>Personal Information</h2>
 
-        <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-envelope"></i>
-            </div>
+            <p>Your account information</p>
 
-            <div class="info-content">
-                <label>Email Address</label>
-                <input type="email" placeholder="Enter your email address">
-            </div>
-        </div>
+        </section>
 
-        <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-phone"></i>
-            </div>
 
-            <div class="info-content">
-                <label>Phone Number</label>
-                <input type="tel" placeholder="Enter your phone number">
-            </div>
-        </div>
+        <!-- PERSONAL DETAILS -->
 
-    </div>
+        <section class="information-section">
 
-    <!-- Additional Information -->
+            <h3>PERSONAL DETAILS</h3>
 
-    <h3 class="section-title">
-        Additional Information
-    </h3>
+            <div class="information-card">
 
-    <div class="info-card"> 
-                <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-cake-candles"></i>
-            </div>
+                <div class="information-row">
 
-            <div class="info-content">
-                <label>Date of Birth</label>
-                <input type="date">
-            </div>
-        </div>
+                    <div class="row-icon">
+                        👤
+                    </div>
 
-        <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-venus-mars"></i>
-            </div>
+                    <div class="row-content">
 
-            <div class="info-content">
-                <label>Gender</label>
+                        <span>Full Name</span>
 
-                <select>
-                    <option value="">Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Prefer not to say</option>
-                </select>
-            </div>
-        </div>
+                        <strong>
+                            Not available
+                        </strong>
 
-    </div>
+                    </div>
 
-    <!-- Address -->
+                </div>
 
-    <h3 class="section-title">
-        Address
-    </h3>
 
-    <div class="info-card"> 
-                <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-house"></i>
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        📧
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Email</span>
+
+                        <strong>
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        📱
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Phone Number</span>
+
+                        <strong>
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="info-content">
-                <label>Residential Address</label>
-                <input type="text" placeholder="Enter your residential address">
+        </section>
+
+
+        <!-- ACCOUNT INFORMATION -->
+
+        <section class="information-section">
+
+            <h3>ACCOUNT</h3>
+
+            <div class="information-card">
+
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        🆔
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>User ID</span>
+
+                        <strong>
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        📅
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Date Joined</span>
+
+                        <strong>
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        🛡️
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Verification</span>
+
+                        <strong class="tier-status">
+                            Tier 1 · Basic
+                        </strong>
+
+                    </div>
+
+                </div>
+
             </div>
-        </div>
 
-        <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-location-dot"></i>
-            </div>
+        </section>
 
-            <div class="info-content">
-                <label>State</label>
-                <input type="text" placeholder="Enter your state">
-            </div>
-        </div>
 
-        <div class="info-item">
-            <div class="info-icon">
-                <i class="fa-solid fa-earth-africa"></i>
-            </div>
-
-            <div class="info-content">
-                <label>Country</label>
-                <input type="text" placeholder="Enter your country">
-            </div>
-        </div>
-
-    </div>
-
-    <button class="save-btn">
-        <i class="fa-solid fa-floppy-disk"></i>
-        Save Changes
-    </button> 
     </div>
 
 </body>
+
 </html>

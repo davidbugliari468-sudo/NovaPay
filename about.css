@@ -1,0 +1,364 @@
+/* =========================================
+   NOVAPAY — ABOUT
+   ========================================= */
+
+:root {
+    --primary: #2563eb;
+    --primary-light: #eef4ff;
+    --text: #111827;
+    --muted: #667085;
+    --border: #e5e7eb;
+    --background: #f7f9fc;
+    --white: #ffffff;
+}
+
+
+/* RESET */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* PAGE */
+
+.about-page {
+    width: 100%;
+    max-width: 720px;
+
+    margin: 0 auto;
+
+    padding: 0 16px 35px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.about-header {
+    position: relative;
+
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.about-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+
+    letter-spacing: -0.4px;
+}
+
+
+.back-btn {
+    position: absolute;
+    left: 0;
+
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: var(--white);
+    color: var(--primary);
+
+    font-size: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================
+   NOVAPAY INTRO
+   ========================================= */
+
+.about-intro {
+    padding: 30px 4px 24px;
+
+    text-align: center;
+}
+
+
+.novapay-logo {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.18);
+}
+
+
+.about-intro h2 {
+    font-size: 25px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+}
+
+
+.about-intro p {
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+.version {
+    display: inline-block;
+
+    margin-top: 10px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   CONTENT
+   ========================================= */
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* =========================================
+   ABOUT SECTION
+   ========================================= */
+
+.about-section {
+    padding: 18px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 17px;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+
+.about-section h2 {
+    margin-bottom: 8px;
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+
+.about-section p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   SERVICES
+   ========================================= */
+
+.service-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+.service-item {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 48px;
+
+    padding: 9px 10px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #edf0f4;
+}
+
+
+.service-item span {
+    width: 28px;
+    height: 28px;
+
+    flex: 0 0 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: var(--primary-light);
+
+    font-size: 15px;
+}
+
+
+.service-item p {
+    color: var(--text);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.about-footer {
+    margin-top: 18px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    background: var(--primary-light);
+
+    border: 1px solid #dbe7ff;
+
+    border-radius: 17px;
+}
+
+
+.about-footer strong {
+    color: var(--primary);
+
+    font-size: 15px;
+}
+
+
+.about-footer p {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+    .about-page {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+
+    .about-header {
+        height: 68px;
+    }
+
+
+    .about-header h1 {
+        font-size: 20px;
+    }
+
+
+    .about-intro h2 {
+        font-size: 22px;
+    }
+
+
+    .about-section {
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+
+    .about-section h2 {
+        font-size: 15px;
+    }
+
+
+    .about-section p {
+        font-size: 12.5px;
+    }
+
+
+    .service-list {
+        grid-template-columns: 1fr;
+    }
+}

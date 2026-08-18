@@ -1,0 +1,455 @@
+/* =========================================
+   NOVAPAY — UPGRADE ACCOUNT
+   ========================================= */
+
+:root {
+    --primary: #2563eb;
+    --primary-light: #eef4ff;
+    --text: #111827;
+    --muted: #667085;
+    --border: #e5e7eb;
+    --background: #f7f9fc;
+    --white: #ffffff;
+    --green: #16a34a;
+}
+
+
+/* RESET */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* PAGE */
+
+.upgrade-page {
+    width: 100%;
+    max-width: 720px;
+
+    margin: 0 auto;
+
+    padding: 0 16px 35px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.upgrade-header {
+    position: relative;
+
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.upgrade-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+
+    letter-spacing: -0.4px;
+}
+
+.back-btn {
+    position: absolute;
+    left: 0;
+
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: var(--white);
+    color: var(--primary);
+
+    font-size: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================
+   INTRO
+   ========================================= */
+
+.upgrade-intro {
+    padding: 28px 4px 22px;
+}
+
+.upgrade-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 14px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.upgrade-intro h2 {
+    font-size: 22px;
+    font-weight: 800;
+
+    letter-spacing: -0.4px;
+
+    margin-bottom: 8px;
+}
+
+.upgrade-intro p {
+    color: var(--muted);
+
+    font-size: 14px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================
+   TIERS
+   ========================================= */
+
+.tiers {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* =========================================
+   TIER CARD
+   ========================================= */
+
+.tier-card {
+    padding: 18px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+.tier-card.current {
+    border-color: #cbdcff;
+}
+
+.tier-card.featured {
+    border-color: #b9d0ff;
+    box-shadow:
+        0 6px 20px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================
+   TIER HEADER
+   ========================================= */
+
+.tier-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.tier-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.tier-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+
+    letter-spacing: -0.3px;
+}
+
+
+/* STATUS */
+
+.tier-status {
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    background: #ecfdf3;
+
+    color: var(--green);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.recommended {
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   DESCRIPTION
+   ========================================= */
+
+.tier-description {
+    margin-top: 8px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   DIVIDER
+   ========================================= */
+
+.tier-divider {
+    height: 1px;
+
+    margin: 15px 0;
+
+    background: var(--border);
+}
+
+
+/* =========================================
+   DETAILS
+   ========================================= */
+
+.tier-details {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.detail-row span {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.detail-row strong {
+    max-width: 60%;
+
+    color: var(--text);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+
+    text-align: right;
+}
+
+
+/* =========================================
+   BUTTON
+   ========================================= */
+
+.tier-button {
+    width: 100%;
+
+    min-height: 46px;
+
+    margin-top: 16px;
+
+    border: none;
+    border-radius: 13px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.tier-button:active {
+    transform: scale(0.99);
+}
+
+.current-button {
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    cursor: default;
+}
+
+
+/* =========================================
+   NOTICE
+   ========================================= */
+
+.upgrade-notice {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-top: 18px;
+
+    padding: 16px;
+
+    background: var(--primary-light);
+
+    border: 1px solid #dbe7ff;
+
+    border-radius: 17px;
+}
+
+.notice-icon {
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    font-size: 17px;
+}
+
+.upgrade-notice h3 {
+    margin-bottom: 3px;
+
+    color: var(--primary);
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.upgrade-notice p {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+    .upgrade-page {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .upgrade-header {
+        height: 68px;
+    }
+
+    .upgrade-header h1 {
+        font-size: 20px;
+    }
+
+    .upgrade-intro h2 {
+        font-size: 20px;
+    }
+
+    .tier-card {
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+    .tier-header h2 {
+        font-size: 18px;
+    }
+
+    .detail-row strong {
+        max-width: 55%;
+    }
+}
