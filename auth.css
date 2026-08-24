@@ -1,325 +1,632 @@
-/* ==========================================
-   NovaPay Authentication
-   Registration / Login
-   Clean Responsive Design
-========================================== */
+/* =========================================================
+   NOVAPAY REGISTRATION
+   Clean mobile-first blue design
+   Matches the current 3-step register.html
+========================================================= */
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --bg: #f8fafc;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --blue-light: #eff6ff;
+
+    --bg: #f5f7fb;
     --white: #ffffff;
-    --text: #0f172a;
-    --gray: #64748b;
-    --border: #dfe3e8;
-    --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+    --text: #111827;
+    --muted: #6b7280;
+
+    --border: #dfe3ea;
+
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+
+    --shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
 }
 
 
-/* ==========================================
-   BODY
-========================================== */
+/* =========================================================
+   PAGE
+========================================================= */
+
+html {
+    min-height: 100%;
+}
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Arial, sans-serif;
-
-    background: var(--bg);
-
-    color: var(--text);
-
     min-height: 100vh;
 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    background: var(--bg);
+    color: var(--text);
 
-    padding: 22px 14px 30px;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    padding: 24px 14px 40px;
+
+    -webkit-font-smoothing: antialiased;
 }
 
 
-/* ==========================================
-   MAIN AUTH CONTAINER
-========================================== */
+/* =========================================================
+   MAIN CARD
+========================================================= */
 
 .container {
+    position: relative;
+
     width: 100%;
-    max-width: 390px;
+    max-width: 430px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
 
     background: var(--white);
 
-    border-radius: 18px;
+    border-radius: 28px;
 
     box-shadow: var(--shadow);
 
-    padding: 21px 20px 20px;
+    padding: 0 22px 30px;
 }
 
 
-/* ==========================================
+/* =========================================================
+   BLUE TOP AREA
+========================================================= */
+
+.container::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 235px;
+
+    background: var(--blue);
+
+    border-radius: 0 0 50% 50% / 0 0 28% 28%;
+
+    z-index: 0;
+}
+
+
+/* =========================================================
    LOGO
-========================================== */
+========================================================= */
 
 .logo {
+    position: relative;
+    z-index: 2;
+
     display: block;
 
-    text-align: center;
+    width: fit-content;
 
-    text-decoration: none;
+    margin: 0 auto;
 
-    font-size: 30px;
+    padding-top: 48px;
 
+    color: var(--white);
+
+    font-size: 36px;
     line-height: 1;
 
-    font-weight: 750;
+    font-weight: 800;
 
-    color: var(--text);
+    letter-spacing: -1.5px;
 
-    margin-bottom: 13px;
+    text-decoration: none;
 }
 
 .logo span {
-    color: var(--primary);
+    color: var(--white);
 }
 
 
-/* ==========================================
-   TITLE
-========================================== */
+/* =========================================================
+   HEADER
+========================================================= */
 
-h2 {
+.registration-header {
+    position: relative;
+    z-index: 2;
+
     text-align: center;
 
-    font-size: 23px;
+    padding-top: 105px;
 
-    line-height: 1.2;
+    margin-bottom: 22px;
+}
 
-    margin-bottom: 6px;
+.registration-header h1 {
+    max-width: 360px;
+
+    margin: 0 auto 10px;
+
+    color: var(--text);
+
+    font-size: 36px;
+    line-height: 1.12;
+
+    font-weight: 800;
+
+    letter-spacing: -1.4px;
+}
+
+.registration-header p {
+    color: var(--muted);
+
+    font-size: 17px;
+    line-height: 1.45;
 }
 
 
-/* ==========================================
-   DESCRIPTION
-========================================== */
+/* =========================================================
+   PROGRESS
+========================================================= */
 
-.container > p {
+.register-progress {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 auto 30px;
+
+    width: fit-content;
+
+    padding: 9px 18px;
+
+    border-radius: 999px;
+
+    background: var(--blue-light);
+
+    color: var(--blue);
+
+    font-size: 15px;
+
+    font-weight: 750;
+
     text-align: center;
-
-    color: var(--gray);
-
-    font-size: 13px;
-
-    line-height: 1.4;
-
-    margin-bottom: 17px;
 }
 
 
-/* ==========================================
-   FORM FIELDS
-========================================== */
+/* =========================================================
+   STEPS
+========================================================= */
+
+.registration-step {
+    width: 100%;
+}
+
+.registration-step[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.sr-only {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+========================================================= */
 
 .input-group {
-    margin-bottom: 10px;
+    width: 100%;
+
+    margin-bottom: 20px;
 }
 
 .input-group label {
     display: block;
 
-    font-size: 12.5px;
-
-    line-height: 1.2;
-
-    font-weight: 650;
-
-    margin-bottom: 5px;
+    margin-bottom: 9px;
 
     color: var(--text);
+
+    font-size: 16px;
+
+    line-height: 1.25;
+
+    font-weight: 700;
 }
 
 
-/* ==========================================
-   NORMAL INPUTS
-========================================== */
+/* =========================================================
+   INPUTS
+========================================================= */
 
 .input-group input {
+    display: block;
+
     width: 100%;
+    height: 58px;
 
-    height: 43px;
+    padding: 0 18px;
 
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
 
-    border-radius: 10px;
+    border-radius: 17px;
 
-    padding: 0 12px;
-
-    font-size: 14px;
+    background: var(--white);
 
     color: var(--text);
 
-    background: #ffffff;
+    font-family: inherit;
+
+    font-size: 16px;
 
     outline: none;
 
     transition:
         border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 }
 
 .input-group input::placeholder {
-    color: #a1a8b3;
+    color: #9ca3af;
 }
 
 .input-group input:focus {
-    border-color: var(--primary);
+    border-color: var(--blue);
 
     box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.08);
+        0 0 0 4px rgba(37, 99, 235, 0.10);
+}
+
+.input-group input:disabled {
+    background: #f3f4f6;
+
+    cursor: not-allowed;
 }
 
 
-/* ==========================================
-   PASSWORD BOX
-========================================== */
+/* =========================================================
+   BUTTONS
+========================================================= */
 
-.password-box {
-    width: 100%;
-
-    height: 43px;
-
-    display: flex;
-
-    align-items: center;
-
-    border: 1px solid var(--border);
-
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    overflow: hidden;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.password-box:focus-within {
-    border-color: var(--primary);
-
-    box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.08);
-}
-
-.password-box input {
-    flex: 1;
+.primary-button {
+    display: block;
 
     width: 100%;
+    min-height: 58px;
 
-    height: 100%;
+    margin-top: 8px;
+
+    padding: 0 22px;
 
     border: none;
 
-    outline: none;
+    border-radius: 17px;
 
-    padding: 0 12px;
+    background: var(--blue);
 
-    font-size: 14px;
+    color: var(--white);
 
-    color: var(--text);
+    font-family: inherit;
 
-    background: transparent;
-}
+    font-size: 17px;
 
-.password-box input::placeholder {
-    color: #a1a8b3;
-}
-
-.password-box button {
-    flex-shrink: 0;
-
-    border: none;
-
-    background: transparent;
-
-    color: var(--primary);
-
-    font-size: 12.5px;
-
-    font-weight: 650;
+    font-weight: 750;
 
     cursor: pointer;
 
-    padding: 0 12px;
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease,
+        opacity 0.2s ease;
 }
 
-.password-box button:hover {
-    color: var(--primary-dark);
+.primary-button:hover {
+    background: var(--blue-dark);
+}
+
+.primary-button:active {
+    transform: scale(0.985);
+}
+
+.primary-button:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none;
 }
 
 
-/* ==========================================
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
+.secondary-button {
+    display: block;
+
+    width: 100%;
+    min-height: 50px;
+
+    margin-top: 12px;
+
+    padding: 0 18px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    background: var(--white);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.secondary-button:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   PASSWORD BOX
+========================================================= */
+
+.password-box {
+    position: relative;
+
+    width: 100%;
+}
+
+.password-box input {
+    padding-right: 82px;
+}
+
+.show-password {
+    position: absolute;
+
+    top: 50%;
+    right: 10px;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 8px 11px;
+
+    background: var(--blue-light);
+
+    color: var(--blue);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.show-password:hover {
+    background: #dbeafe;
+}
+
+
+/* =========================================================
    PASSWORD STRENGTH
-========================================== */
+========================================================= */
 
-#passwordStrength {
-    margin-top: 4px;
+.password-strength {
+    margin-top: 7px;
 
-    font-size: 11px;
+    color: var(--muted);
 
-    line-height: 1.2;
+    font-size: 12px;
 
-    color: var(--gray);
+    line-height: 1.4;
 }
 
 
-/* ==========================================
+/* =========================================================
+   PASSWORD REQUIREMENTS
+========================================================= */
+
+.password-requirements {
+    margin: 8px 0 18px;
+
+    padding: 15px;
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 15px;
+
+    background: var(--blue-light);
+}
+
+.password-requirements p {
+    margin-bottom: 8px;
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 750;
+}
+
+.password-requirements ul {
+    padding-left: 18px;
+}
+
+.password-requirements li {
+    margin-bottom: 5px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+.password-requirements li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   FIELD MESSAGE
+========================================================= */
+
+.field-message {
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+.field-message.success {
+    color: var(--success);
+}
+
+.field-message.error {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   SECURITY NOTICE
+========================================================= */
+
+.security-notice {
+    margin: 16px 0;
+
+    padding: 14px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 15px;
+
+    background: var(--blue-light);
+}
+
+.security-notice strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--blue-dark);
+
+    font-size: 13px;
+}
+
+.security-notice p {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   reCAPTCHA
+========================================================= */
+
+.recaptcha-section {
+    width: 100%;
+
+    margin: 18px 0;
+}
+
+#recaptcha-container {
+    width: 100%;
+
+    min-height: 10px;
+}
+
+
+/* =========================================================
    TERMS
-========================================== */
+========================================================= */
 
 .terms {
     display: flex;
 
     align-items: flex-start;
 
-    gap: 8px;
+    gap: 9px;
 
-    margin: 12px 0 15px;
-
-    font-size: 11.5px;
-
-    line-height: 1.4;
-
-    color: var(--gray);
+    margin: 18px 0;
 }
 
-.terms input {
-    width: 16px;
-    height: 16px;
+.terms input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
 
-    flex-shrink: 0;
+    margin-top: 2px;
 
-    margin-top: 1px;
+    flex: 0 0 auto;
 
-    accent-color: var(--primary);
-}
+    accent-color: var(--blue);
 
-.terms label {
     cursor: pointer;
 }
 
+.terms label {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
 .terms a {
-    color: var(--primary);
+    color: var(--blue);
+
+    font-weight: 700;
 
     text-decoration: none;
-
-    font-weight: 650;
 }
 
 .terms a:hover {
@@ -327,70 +634,176 @@ h2 {
 }
 
 
-/* ==========================================
-   REGISTER BUTTON
-========================================== */
+/* =========================================================
+   ERROR
+========================================================= */
 
-#registerBtn {
+.error-message {
     width: 100%;
 
-    height: 46px;
+    margin-bottom: 16px;
 
-    border: none;
+    padding: 13px 14px;
 
-    border-radius: 11px;
+    border: 1px solid #fecaca;
 
-    background: var(--primary);
+    border-radius: 14px;
 
-    color: #ffffff;
+    background: var(--danger-bg);
+
+    color: var(--danger);
+
+    font-size: 13px;
+
+    line-height: 1.45;
+}
+
+.error-message[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.success-message {
+    width: 100%;
+
+    margin-bottom: 16px;
+
+    padding: 13px 14px;
+
+    border: 1px solid #bbf7d0;
+
+    border-radius: 14px;
+
+    background: var(--success-bg);
+
+    color: var(--success);
+
+    font-size: 13px;
+
+    line-height: 1.45;
+}
+
+.success-message[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   REGISTRATION STATUS
+========================================================= */
+
+.registration-status {
+    margin: 12px 0;
+
+    padding: 11px 13px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+.registration-status[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   SUCCESS SCREEN
+========================================================= */
+
+.success-screen {
+    padding: 20px 0 5px;
+
+    text-align: center;
+}
+
+.success-screen[hidden] {
+    display: none !important;
+}
+
+.success-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: var(--success-bg);
+
+    color: var(--success);
+
+    font-size: 30px;
+
+    font-weight: 800;
+}
+
+.success-screen h2 {
+    margin-bottom: 10px;
+
+    color: var(--text);
+
+    font-size: 24px;
+
+    line-height: 1.2;
+}
+
+.success-screen p {
+    margin-bottom: 10px;
+
+    color: var(--muted);
 
     font-size: 14px;
 
-    font-weight: 650;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        opacity 0.2s ease,
-        transform 0.1s ease;
+    line-height: 1.5;
 }
 
-#registerBtn:hover {
-    background: var(--primary-dark);
-}
-
-#registerBtn:active {
-    transform: scale(0.99);
-}
-
-#registerBtn:disabled {
-    opacity: 0.65;
-
-    cursor: not-allowed;
+.success-screen strong {
+    color: var(--text);
 }
 
 
-/* ==========================================
-   BOTTOM LOGIN TEXT
-========================================== */
+/* =========================================================
+   LOGIN LINK
+========================================================= */
 
 .bottom-text {
-    margin-top: 15px;
+    margin-top: 24px;
+
+    padding-bottom: 4px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    line-height: 1.5;
 
     text-align: center;
-
-    font-size: 12.5px;
-
-    color: var(--gray);
 }
 
 .bottom-text a {
-    color: var(--primary);
+    color: var(--blue);
+
+    font-weight: 750;
 
     text-decoration: none;
-
-    font-weight: 650;
 }
 
 .bottom-text a:hover {
@@ -398,249 +811,87 @@ h2 {
 }
 
 
-/* ==========================================
-   ERROR MESSAGE
-========================================== */
-
-.error-message {
-    display: none;
-
-    margin-bottom: 12px;
-
-    padding: 9px 11px;
-
-    border-radius: 9px;
-
-    background: #fef2f2;
-
-    border: 1px solid #fecaca;
-
-    color: #b91c1c;
-
-    font-size: 12px;
-
-    line-height: 1.4;
-}
-
-
-/* ==========================================
-   SUCCESS MESSAGE
-========================================== */
-
-.success-message {
-    display: none;
-
-    margin-bottom: 12px;
-
-    padding: 9px 11px;
-
-    border-radius: 9px;
-
-    background: #f0fdf4;
-
-    border: 1px solid #bbf7d0;
-
-    color: #15803d;
-
-    font-size: 12px;
-
-    line-height: 1.4;
-}
-
-
-/* ==========================================
+/* =========================================================
    MOBILE
-========================================== */
+========================================================= */
 
 @media (max-width: 480px) {
 
     body {
-        padding: 12px 10px 24px;
-
-        align-items: flex-start;
+        padding: 12px 10px 30px;
     }
 
     .container {
-        max-width: 390px;
+        max-width: 100%;
 
-        padding: 19px 17px 18px;
+        border-radius: 25px;
+
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 26px;
+    }
+
+    .container::before {
+        height: 215px;
+    }
+
+    .logo {
+        padding-top: 42px;
+
+        font-size: 33px;
+    }
+
+    .registration-header {
+        padding-top: 96px;
+    }
+
+    .registration-header h1 {
+        font-size: 32px;
+
+        letter-spacing: -1.1px;
+    }
+
+    .registration-header p {
+        font-size: 16px;
+    }
+
+    .register-progress {
+        margin-bottom: 26px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group input {
+        height: 56px;
 
         border-radius: 16px;
     }
 
-    .logo {
-        font-size: 28px;
+    .primary-button {
+        min-height: 57px;
 
-        margin-bottom: 12px;
-    }
-
-    h2 {
-        font-size: 21px;
-    }
-
-    .container > p {
-        font-size: 12.5px;
-
-        margin-bottom: 15px;
-    }
-
-    .input-group {
-        margin-bottom: 9px;
-    }
-
-    .input-group label {
-        font-size: 12px;
-
-        margin-bottom: 4px;
-    }
-
-    .input-group input {
-        height: 41px;
-
-        font-size: 13.5px;
-    }
-
-    .password-box {
-        height: 41px;
-    }
-
-    .password-box input {
-        font-size: 13.5px;
-    }
-
-    .terms {
-        margin-top: 11px;
-
-        margin-bottom: 14px;
-
-        font-size: 11px;
-    }
-
-    #registerBtn {
-        height: 45px;
-
-        font-size: 14px;
-    }
-
-    .bottom-text {
-        margin-top: 14px;
-
-        font-size: 12px;
+        border-radius: 16px;
     }
 }
 
 
-/* ==========================================
-   VERY SMALL PHONES
-========================================== */
+/* =========================================================
+   LARGER SCREENS
+========================================================= */
 
-@media (max-width: 360px) {
+@media (min-width: 700px) {
 
     body {
-        padding-left: 7px;
-        padding-right: 7px;
+        padding-top: 50px;
     }
 
     .container {
-        padding-left: 14px;
-        padding-right: 14px;
+        max-width: 460px;
     }
 
-    .input-group {
-        margin-bottom: 8px;
+    .registration-header h1 {
+        font-size: 38px;
     }
-
-    .input-group input,
-    .password-box {
-        height: 40px;
-    }
-
-    .logo {
-        font-size: 26px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-}
-
-
-/* ==========================================
-   NOVAPAY MODAL
-   Kept for existing authentication pages
-========================================== */
-
-.modal {
-    display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.45);
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 20px;
-
-    z-index: 9999;
-}
-
-.modal-content {
-    background: #ffffff;
-
-    width: 100%;
-
-    max-width: 340px;
-
-    border-radius: 16px;
-
-    padding: 24px;
-
-    text-align: center;
-
-    box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.modal-content h3 {
-    color: var(--primary);
-
-    margin-bottom: 15px;
-}
-
-.modal-content p {
-    color: #555;
-
-    line-height: 1.6;
-
-    font-size: 15px;
-
-    margin-bottom: 20px;
-}
-
-.modal-content button {
-    width: 100%;
-
-    padding: 12px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: var(--primary);
-
-    color: #ffffff;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-}
-
-.modal-content button:hover {
-    background: var(--primary-dark);
 }
