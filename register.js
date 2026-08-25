@@ -1100,105 +1100,252 @@ async function createNovaPayAccount() {
 /* =========================================================
    PASSWORD REQUIREMENTS
 ========================================================= */
+async function createNovaPayAccount() {
 
-function setRequirement(
-    element,
-    valid
-) {
-
-    if (!element) {
+    if (registrationInProgress) {
         return;
     }
 
-    element.classList.toggle(
-        "valid",
-        valid
-    );
-
-    element.setAttribute(
-        "aria-checked",
-        valid ? "true" : "false"
-    );
-}
-
-
-function updatePasswordRequirements() {
-
-    const password =
-        passwordInput?.value || "";
-
-
-    const lengthValid =
-        password.length >= MIN_PASSWORD_LENGTH;
-
-    const uppercaseValid =
-        /[A-Z]/.test(password);
-
-    const lowercaseValid =
-        /[a-z]/.test(password);
-
-    const numberValid =
-        /[0-9]/.test(password);
-
-    const specialValid =
-        /[^A-Za-z0-9]/.test(password);
-
-
-    setRequirement(
-        requirementLength,
-        lengthValid
-    );
-
-    setRequirement(
-        requirementUppercase,
-        uppercaseValid
-    );
-
-    setRequirement(
-        requirementLowercase,
-        lowercaseValid
-    );
-
-    setRequirement(
-        requirementNumber,
-        numberValid
-    );
-
-    setRequirement(
-        requirementSpecial,
-        specialValid
-    );
-
-
-    if (!passwordStrength) {
+    if (!validateSecurityStep()) {
         return;
     }
 
+    if (!registrationProfile) {
+        showError(
+            "Please complete the registration steps first."
+        );
 
-    if (!password) {
-
-        passwordStrength.textContent =
-            "Use at least 8 characters.";
-
+        showProfileStep(1);
         return;
     }
 
+    setProcessing(true);
 
-    if (
-        lengthValid &&
-        uppercaseValid &&
-        lowercaseValid &&
-        numberValid &&
-        specialValid
-    ) {
+    setStatus(
+        "Creating your NovaPay account..."
+    );
 
-        passwordStrength.textContent =
-            "Password meets NovaPay's requirements.";
+    let firebaseUser = null;
 
-    } else {
+    try {
 
-        passwordStrength.textContent =
-            "Password does not meet all requirements.";
+        // =============================================
+        // 1. CREATE FIREBASE ACCOUNT
+        // =============================================
+
+        const credential =
+            await createUserWithEmailAndPassword(
+                auth,
+                registrationProfile.email,
+                passwordInput.value
+            );
+
+        firebaseUser = credential.user;
+
+
+        // =============================================
+        // 2. GET FIREBASE ID TOKEN
+        // =============================================
+
+        const idToken =
+            await firebaseUser.getIdToken(true);
+
+
+        // =============================================
+        // 3. SECURELY CLAIM PHONE NUMBER
+        // =============================================
+
+        setStatus(
+            "Checking your phone number..."
+        );
+
+        const response =
+            await fetch(
+                "https://davidbugliari468-3000.app.github.dev/api/registration/claim-phone",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${idToken}`,
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        phone:
+                            registrationProfile.phone
+                    })
+                }
+            );
+
+
+        let data = null;
+
+        try {
+            data = await response.json();
+        } catch {
+            data = null;
+        }
+
+
+        // =============================================
+        // 4. DUPLICATE PHONE
+        // =============================================
+
+        if (!response.ok) {
+
+            if (
+                response.status === 409 &&
+                data?.error ===
+                    "This phone number is already registered."
+            ) {
+
+                throw new Error(
+                    "PHONE_ALREADY_REGISTERED"
+                );
+            }
+
+            throw new Error(
+                data?.error ||
+                "We could not verify your phone number."
+            );
+        }
+
+
+        // =============================================
+        // 5. CREATE NOVAPAY USER PROFILE
+        // =============================================
+
+        setStatus(
+            "Creating your NovaPay profile..."
+        );
+
+        await createUserDocument(
+            firebaseUser
+        );
+
+
+        // =============================================
+        // 6. SEND EMAIL VERIFICATION
+        // =============================================
+
+        setStatus(
+            "Sending your verification email..."
+        );
+
+        await sendEmailVerification(
+            firebaseUser
+        );
+
+
+        // =============================================
+        // 7. CLEAR PASSWORDS
+        // =============================================
+
+        if (passwordInput) {
+            passwordInput.value = "";
+        }
+
+        if (confirmPasswordInput) {
+            confirmPasswordInput.value = "";
+        }
+
+
+        // =============================================
+        // 8. SIGN OUT UNTIL EMAIL IS VERIFIED
+        // =============================================
+
+        await signOut(auth);
+
+
+        // =============================================
+        // 9. SHOW VERIFICATION SCREEN
+        // =============================================
+
+        if (successNickname) {
+            successNickname.textContent =
+                registrationProfile.nickname;
+        }
+
+        if (verificationStatus) {
+            verificationStatus.textContent =
+                `Your NovaPay account has been created. We sent a verification link to ${registrationProfile.email}. Open your email inbox or Spam/Junk folder and click the verification link. You must verify your email before you can log in.`;
+        }
+
+        if (form) {
+            form.hidden = true;
+        }
+
+        if (successScreen) {
+            successScreen.hidden = false;
+        }
+
+        if (loginLink) {
+            loginLink.hidden = true;
+        }
+
+        showSuccess(
+            "Your NovaPay account has been created. Please verify your email before logging in."
+        );
+
+        setStatus("");
+
+    } catch (error) {
+
+        console.error(
+            "NovaPay registration failed:",
+            error
+        );
+
+
+        // =============================================
+        // DUPLICATE PHONE MESSAGE
+        // =============================================
+
+        if (
+            error?.message ===
+            "PHONE_ALREADY_REGISTERED"
+        ) {
+
+            showError(
+                "This phone number is already registered. Please use another phone number."
+            );
+
+        } else {
+
+            showError(
+                firebaseErrorMessage(error)
+            );
+        }
+
+
+        // =============================================
+        // CLEAN UP FIREBASE SESSION
+        // =============================================
+
+        if (firebaseUser) {
+
+            try {
+                await signOut(auth);
+            } catch (cleanupError) {
+
+                console.error(
+                    "Registration cleanup failed:",
+                    cleanupError
+                );
+            }
+        }
+
+        setStatus("");
+
+    } finally {
+
+        setProcessing(false);
     }
 }
 
