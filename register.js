@@ -1,26 +1,33 @@
-console.log("NovaPay register.js loaded");
 
-/*
-============================================================
- NOVAPAY — SECURE REGISTRATION
-============================================================
+/* =========================================================
+   NOVAPAY — REGISTRATION
+=========================================================
 
- SECURITY MODEL
+   FLOW
 
- - Firebase Authentication owns passwords.
- - Passwords are NEVER stored in Firestore.
- - Firebase UID is the users/{uid} document ID.
- - No client-created wallet balance.
- - No client-created admin privileges.
- - No client-created transaction status.
- - Server timestamps are used.
- - Email verification is required.
- - Registration button is locked while processing.
- - Firebase Auth is the authentication source of truth.
- - No localStorage authentication.
- - Firebase errors are converted to safe user messages.
-============================================================
-*/
+   STEP 1
+   Nickname + First Name
+        ↓
+   STEP 2
+   Surname + Middle Name
+        ↓
+   STEP 3
+   Email + Phone
+        ↓
+   ACCOUNT SECURITY
+   Password + Terms
+        ↓
+   Firebase Authentication
+        ↓
+   Render phone verification
+        ↓
+   Firestore profile
+        ↓
+   Email verification
+        ↓
+   Success
+
+========================================================= */
 
 
 /* =========================================================
@@ -38,9 +45,16 @@ import {
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
-    signOut,
-    onAuthStateChanged
+    signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+
+/* =========================================================
+   BACKEND
+========================================================= */
+
+const BACKEND_URL =
+    "https://novapay-server.onrender.com";
 
 
 /* =========================================================
@@ -92,7 +106,7 @@ const backToStep3Btn =
 
 
 /* =========================================================
-   REGISTRATION
+   REGISTRATION BUTTON
 ========================================================= */
 
 const registerBtn =
@@ -218,23 +232,9 @@ let registrationInProgress = false;
 let registrationProfile = null;
 
 
-/*
-   IMPORTANT:
-
-   These are the three profile steps.
-
-   The password/security screen is kept separate
-   from the three profile steps.
-
-   Therefore the progress indicator remains:
-
-       Step 1 of 3
-       Step 2 of 3
-       Step 3 of 3
-
-   When Step 3 is completed, we show the
-   existing account-security section.
-*/
+/* =========================================================
+   PROFILE STEPS
+========================================================= */
 
 const profileSteps = [
     step1,
@@ -244,7 +244,7 @@ const profileSteps = [
 
 
 /* =========================================================
-   TEXT HELPERS
+   TEXT CLEANING
 ========================================================= */
 
 function cleanText(value, maxLength) {
@@ -256,6 +256,10 @@ function cleanText(value, maxLength) {
 }
 
 
+/* =========================================================
+   EMAIL NORMALIZATION
+========================================================= */
+
 function normalizeEmail(value) {
 
     return String(value || "")
@@ -263,6 +267,10 @@ function normalizeEmail(value) {
         .toLowerCase();
 }
 
+
+/* =========================================================
+   PHONE NORMALIZATION
+========================================================= */
 
 function normalizePhone(value) {
 
@@ -358,7 +366,7 @@ function showSuccess(message) {
 
 
 /* =========================================================
-   STATUS
+   REGISTRATION STATUS
 ========================================================= */
 
 function setStatus(message) {
@@ -379,15 +387,19 @@ function setStatus(message) {
 
 function setProcessing(processing) {
 
-    registrationInProgress = processing;
+    registrationInProgress =
+        processing;
 
     if (registerBtn) {
 
-        registerBtn.disabled = processing;
+        registerBtn.disabled =
+            processing;
 
         registerBtn.setAttribute(
             "aria-busy",
-            processing ? "true" : "false"
+            processing
+                ? "true"
+                : "false"
         );
 
         registerBtn.textContent =
@@ -406,9 +418,9 @@ function setProcessing(processing) {
     ].forEach(button => {
 
         if (button) {
-            button.disabled = processing;
+            button.disabled =
+                processing;
         }
-
     });
 }
 
@@ -429,16 +441,14 @@ function updateProgress() {
 
 
 /* =========================================================
-   PROFILE STEP DISPLAY
+   HIDE ALL PROFILE STEPS
 ========================================================= */
 
 function hideAllProfileSteps() {
 
     profileSteps.forEach(step => {
 
-        if (step) {
-            step.hidden = true;
-        }
+        step.hidden = true;
 
     });
 }
@@ -457,15 +467,20 @@ function showProfileStep(stepNumber) {
         return;
     }
 
-    currentStep = stepNumber;
+    currentStep =
+        stepNumber;
 
     hideAllProfileSteps();
 
     const selectedStep =
-        profileSteps[stepNumber - 1];
+        profileSteps[
+            stepNumber - 1
+        ];
 
     if (selectedStep) {
-        selectedStep.hidden = false;
+
+        selectedStep.hidden =
+            false;
     }
 
     updateProgress();
@@ -500,18 +515,13 @@ function showAccountSecurity() {
     hideAllProfileSteps();
 
     if (accountSecurity) {
-        accountSecurity.hidden = false;
+
+        accountSecurity.hidden =
+            false;
     }
 
-    /*
-       The profile section is complete.
-
-       The progress indicator remains on
-       Step 3 of 3 because this security screen
-       belongs to the final registration stage.
-    */
-
-    currentStep = 3;
+    currentStep =
+        3;
 
     updateProgress();
 
@@ -599,12 +609,6 @@ function validateStep2() {
             MAX_NAME_LENGTH
         );
 
-    const middleName =
-        cleanText(
-            middleNameInput?.value,
-            MAX_NAME_LENGTH
-        );
-
 
     if (!surname) {
 
@@ -617,10 +621,6 @@ function validateStep2() {
         return false;
     }
 
-
-    /*
-       Middle name is intentionally optional.
-    */
 
     return true;
 }
@@ -669,12 +669,6 @@ function validateStep3() {
     }
 
 
-    /*
-       Save only normal profile information.
-
-       Password is deliberately NOT stored here.
-    */
-
     registrationProfile = {
 
         nickname:
@@ -712,7 +706,7 @@ function validateStep3() {
 
 
 /* =========================================================
-   PASSWORD / SECURITY VALIDATION
+   SECURITY VALIDATION
 ========================================================= */
 
 function validateSecurityStep() {
@@ -729,7 +723,7 @@ function validateSecurityStep() {
     if (!passwordIsValid(password)) {
 
         showError(
-            "Your password does not meet NovaPay's security requirements."
+            "Your password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character."
         );
 
         passwordInput?.focus();
@@ -773,7 +767,172 @@ function validateSecurityStep() {
 
 
 /* =========================================================
-   FIREBASE ERROR HANDLING
+   PASSWORD REQUIREMENTS
+========================================================= */
+
+function updatePasswordRequirements() {
+
+    const password =
+        passwordInput?.value || "";
+
+
+    const hasLength =
+        password.length >=
+        MIN_PASSWORD_LENGTH;
+
+    const hasUppercase =
+        /[A-Z]/.test(password);
+
+    const hasLowercase =
+        /[a-z]/.test(password);
+
+    const hasNumber =
+        /[0-9]/.test(password);
+
+    const hasSpecial =
+        /[^A-Za-z0-9]/.test(password);
+
+
+    const updateRequirement =
+        (element, valid) => {
+
+            if (!element) {
+                return;
+            }
+
+            element.classList.toggle(
+                "valid",
+                valid
+            );
+
+            element.classList.toggle(
+                "invalid",
+                !valid
+            );
+
+            element.setAttribute(
+                "aria-checked",
+                valid
+                    ? "true"
+                    : "false"
+            );
+        };
+
+
+    updateRequirement(
+        requirementLength,
+        hasLength
+    );
+
+    updateRequirement(
+        requirementUppercase,
+        hasUppercase
+    );
+
+    updateRequirement(
+        requirementLowercase,
+        hasLowercase
+    );
+
+    updateRequirement(
+        requirementNumber,
+        hasNumber
+    );
+
+    updateRequirement(
+        requirementSpecial,
+        hasSpecial
+    );
+
+
+    if (passwordStrength) {
+
+        if (!password) {
+
+            passwordStrength.textContent =
+                "Use at least 8 characters.";
+
+        } else if (
+            passwordIsValid(password)
+        ) {
+
+            passwordStrength.textContent =
+                "Strong password.";
+
+        } else {
+
+            passwordStrength.textContent =
+                "Password does not meet all requirements.";
+        }
+    }
+}
+
+
+/* =========================================================
+   PASSWORD MATCH
+========================================================= */
+
+function updatePasswordMatch() {
+
+    if (!confirmPasswordMessage) {
+        return;
+    }
+
+    const password =
+        passwordInput?.value || "";
+
+    const confirmPassword =
+        confirmPasswordInput?.value || "";
+
+
+    if (!confirmPassword) {
+
+        confirmPasswordMessage.textContent =
+            "";
+
+        confirmPasswordMessage.classList.remove(
+            "valid",
+            "invalid"
+        );
+
+        return;
+    }
+
+
+    if (
+        password ===
+        confirmPassword
+    ) {
+
+        confirmPasswordMessage.textContent =
+            "Passwords match.";
+
+        confirmPasswordMessage.classList.add(
+            "valid"
+        );
+
+        confirmPasswordMessage.classList.remove(
+            "invalid"
+        );
+
+    } else {
+
+        confirmPasswordMessage.textContent =
+            "Passwords do not match.";
+
+        confirmPasswordMessage.classList.add(
+            "invalid"
+        );
+
+        confirmPasswordMessage.classList.remove(
+            "valid"
+        );
+    }
+}
+
+
+/* =========================================================
+   FIREBASE ERROR MESSAGE
 ========================================================= */
 
 function firebaseErrorMessage(error) {
@@ -815,16 +974,12 @@ function firebaseErrorMessage(error) {
             return "This account has been disabled.";
 
 
-        case "permission-denied":
-
-        case "firestore/permission-denied":
-
-            return "Your account could not be completed because access was denied.";
-
-
         default:
 
-            return "We could not create your account. Please try again.";
+            return (
+                error?.message ||
+                "We could not create your account. Please try again."
+            );
     }
 }
 
@@ -851,18 +1006,6 @@ async function createUserDocument(user) {
     }
 
 
-    /*
-       IMPORTANT:
-
-       Firebase Authentication generates the UID.
-
-       Firestore document:
-
-           users/{Firebase UID}
-
-       This must match the Firestore security rules.
-    */
-
     const userReference =
         doc(
             db,
@@ -870,19 +1013,6 @@ async function createUserDocument(user) {
             user.uid
         );
 
-
-    /*
-       MINIMUM PROFILE ONLY.
-
-       NEVER store:
-
-       - password
-       - wallet balance
-       - admin status
-       - permissions
-       - transaction status
-       - payment status
-    */
 
     await setDoc(
         userReference,
@@ -959,12 +1089,9 @@ async function createNovaPayAccount() {
 
     try {
 
-        /*
-           PASSWORD GOES DIRECTLY TO
-           FIREBASE AUTHENTICATION.
-
-           It is NEVER written to Firestore.
-        */
+        /* =============================================
+           1. CREATE FIREBASE ACCOUNT
+        ============================================= */
 
         const credential =
             await createUserWithEmailAndPassword(
@@ -972,200 +1099,44 @@ async function createNovaPayAccount() {
                 registrationProfile.email,
                 passwordInput.value
             );
-
 
         firebaseUser =
             credential.user;
 
 
-        /*
-           Firebase UID is used as the
-           Firestore document ID.
-        */
-
-        await createUserDocument(
-            firebaseUser
-        );
-
-
-        /*
-           Send verification email.
-        */
-
-        await sendEmailVerification(
-            firebaseUser
-        );
-
-
-        /*
-           Remove password values from
-           the page after successful creation.
-        */
-
-        if (passwordInput) {
-            passwordInput.value = "";
-        }
-
-        if (confirmPasswordInput) {
-            confirmPasswordInput.value = "";
-        }
-
-
-        /* =================================================
-           SUCCESS SCREEN
-        ================================================= */
-
-        if (successNickname) {
-
-            successNickname.textContent =
-                registrationProfile.nickname;
-        }
-
-
-        if (verificationStatus) {
-
-            verificationStatus.textContent =
-                `A verification email has been sent to ${registrationProfile.email}. Please verify your email before using sensitive NovaPay features.`;
-        }
-
-
-        if (form) {
-            form.hidden = true;
-        }
-
-
-        if (successScreen) {
-            successScreen.hidden = false;
-        }
-
-
-        if (loginLink) {
-            loginLink.hidden = true;
-        }
-
-
-        showSuccess(
-            "Your NovaPay account has been created."
-        );
-
-
-        setStatus("");
-
-
-    } catch (error) {
-
-        console.error(
-            "NovaPay registration failed:",
-            error
-        );
-
-
-        /*
-           If Firebase Auth created the user but
-           Firestore/email verification failed,
-           sign the user out of the current session.
-        */
-
-        if (firebaseUser) {
-
-            try {
-
-                await signOut(auth);
-
-            } catch (cleanupError) {
-
-                console.error(
-                    "Registration cleanup failed:",
-                    cleanupError
-                );
-            }
-        }
-
-
-        showError(
-            firebaseErrorMessage(error)
-        );
-
-
-        setStatus("");
-
-
-    } finally {
-
-        setProcessing(false);
-    }
-}
-
-
-/* =========================================================
-   PASSWORD REQUIREMENTS
-========================================================= */
-async function createNovaPayAccount() {
-
-    if (registrationInProgress) {
-        return;
-    }
-
-    if (!validateSecurityStep()) {
-        return;
-    }
-
-    if (!registrationProfile) {
-        showError(
-            "Please complete the registration steps first."
-        );
-
-        showProfileStep(1);
-        return;
-    }
-
-    setProcessing(true);
-
-    setStatus(
-        "Creating your NovaPay account..."
-    );
-
-    let firebaseUser = null;
-
-    try {
-
-        // =============================================
-        // 1. CREATE FIREBASE ACCOUNT
-        // =============================================
-
-        const credential =
-            await createUserWithEmailAndPassword(
-                auth,
-                registrationProfile.email,
-                passwordInput.value
-            );
-
-        firebaseUser = credential.user;
-
-
-        // =============================================
-        // 2. GET FIREBASE ID TOKEN
-        // =============================================
+        /* =============================================
+           2. GET FRESH FIREBASE TOKEN
+        ============================================= */
 
         const idToken =
             await firebaseUser.getIdToken(true);
 
 
-        // =============================================
-        // 3. SECURELY CLAIM PHONE NUMBER
-        // =============================================
+        if (!idToken) {
+
+            throw new Error(
+                "Authentication token was not received."
+            );
+        }
+
+
+        /* =============================================
+           3. CLAIM PHONE THROUGH RENDER
+        ============================================= */
 
         setStatus(
             "Checking your phone number..."
         );
 
+
         const response =
             await fetch(
-                "https://davidbugliari468-3000.app.github.dev/api/registration/claim-phone",
+                `${BACKEND_URL}/api/registration/claim-phone`,
                 {
                     method: "POST",
 
                     headers: {
+
                         "Authorization":
                             `Bearer ${idToken}`,
 
@@ -1179,23 +1150,30 @@ async function createNovaPayAccount() {
                     body: JSON.stringify({
                         phone:
                             registrationProfile.phone
-                    })
+                    }),
+
+                    cache: "no-store"
                 }
             );
 
 
         let data = null;
 
+
         try {
-            data = await response.json();
+
+            data =
+                await response.json();
+
         } catch {
+
             data = null;
         }
 
 
-        // =============================================
-        // 4. DUPLICATE PHONE
-        // =============================================
+        /* =============================================
+           4. CHECK PHONE CLAIM
+        ============================================= */
 
         if (!response.ok) {
 
@@ -1210,6 +1188,7 @@ async function createNovaPayAccount() {
                 );
             }
 
+
             throw new Error(
                 data?.error ||
                 "We could not verify your phone number."
@@ -1217,35 +1196,49 @@ async function createNovaPayAccount() {
         }
 
 
-        // =============================================
-        // 5. CREATE NOVAPAY USER PROFILE
-        // =============================================
+        if (
+            data &&
+            data.success === false
+        ) {
+
+            throw new Error(
+                data.error ||
+                "We could not verify your phone number."
+            );
+        }
+
+
+        /* =============================================
+           5. CREATE FIRESTORE PROFILE
+        ============================================= */
 
         setStatus(
             "Creating your NovaPay profile..."
         );
+
 
         await createUserDocument(
             firebaseUser
         );
 
 
-        // =============================================
-        // 6. SEND EMAIL VERIFICATION
-        // =============================================
+        /* =============================================
+           6. SEND EMAIL VERIFICATION
+        ============================================= */
 
         setStatus(
             "Sending your verification email..."
         );
+
 
         await sendEmailVerification(
             firebaseUser
         );
 
 
-        // =============================================
-        // 7. CLEAR PASSWORDS
-        // =============================================
+        /* =============================================
+           7. CLEAR PASSWORDS
+        ============================================= */
 
         if (passwordInput) {
             passwordInput.value = "";
@@ -1256,44 +1249,53 @@ async function createNovaPayAccount() {
         }
 
 
-        // =============================================
-        // 8. SIGN OUT UNTIL EMAIL IS VERIFIED
-        // =============================================
+        /* =============================================
+           8. SIGN OUT
+        ============================================= */
 
         await signOut(auth);
 
 
-        // =============================================
-        // 9. SHOW VERIFICATION SCREEN
-        // =============================================
+        /* =============================================
+           9. SHOW SUCCESS
+        ============================================= */
 
         if (successNickname) {
+
             successNickname.textContent =
                 registrationProfile.nickname;
         }
 
+
         if (verificationStatus) {
+
             verificationStatus.textContent =
-                `Your NovaPay account has been created. We sent a verification link to ${registrationProfile.email}. Open your email inbox or Spam/Junk folder and click the verification link. You must verify your email before you can log in.`;
+                `A verification email has been sent to ${registrationProfile.email}. Please open your email and click the verification link before logging in.`;
         }
+
 
         if (form) {
             form.hidden = true;
         }
 
+
         if (successScreen) {
             successScreen.hidden = false;
         }
+
 
         if (loginLink) {
             loginLink.hidden = true;
         }
 
+
         showSuccess(
-            "Your NovaPay account has been created. Please verify your email before logging in."
+            "Your NovaPay account has been created successfully."
         );
 
+
         setStatus("");
+
 
     } catch (error) {
 
@@ -1303,9 +1305,9 @@ async function createNovaPayAccount() {
         );
 
 
-        // =============================================
-        // DUPLICATE PHONE MESSAGE
-        // =============================================
+        /* =============================================
+           DUPLICATE PHONE
+        ============================================= */
 
         if (
             error?.message ===
@@ -1324,14 +1326,16 @@ async function createNovaPayAccount() {
         }
 
 
-        // =============================================
-        // CLEAN UP FIREBASE SESSION
-        // =============================================
+        /* =============================================
+           CLEAN UP AUTH SESSION
+        ============================================= */
 
         if (firebaseUser) {
 
             try {
+
                 await signOut(auth);
+
             } catch (cleanupError) {
 
                 console.error(
@@ -1341,7 +1345,9 @@ async function createNovaPayAccount() {
             }
         }
 
+
         setStatus("");
+
 
     } finally {
 
@@ -1351,49 +1357,7 @@ async function createNovaPayAccount() {
 
 
 /* =========================================================
-   PASSWORD MATCH
-========================================================= */
-
-function updatePasswordMatch() {
-
-    if (!confirmPasswordMessage) {
-        return;
-    }
-
-
-    const password =
-        passwordInput?.value || "";
-
-    const confirmPassword =
-        confirmPasswordInput?.value || "";
-
-
-    if (!confirmPassword) {
-
-        confirmPasswordMessage.textContent = "";
-
-        return;
-    }
-
-
-    if (
-        password ===
-        confirmPassword
-    ) {
-
-        confirmPasswordMessage.textContent =
-            "Passwords match.";
-
-    } else {
-
-        confirmPasswordMessage.textContent =
-            "Passwords do not match.";
-    }
-}
-
-
-/* =========================================================
-   PASSWORD EVENTS
+   PASSWORD INPUT EVENTS
 ========================================================= */
 
 passwordInput?.addEventListener(
@@ -1414,7 +1378,7 @@ confirmPasswordInput?.addEventListener(
 
 
 /* =========================================================
-   SHOW / HIDE PASSWORD
+   PASSWORD SHOW / HIDE
 ========================================================= */
 
 document
@@ -1430,30 +1394,31 @@ document
                         button.dataset.target
                     );
 
+
                 if (!target) {
                     return;
                 }
 
 
-                const isHidden =
+                const hidden =
                     target.type === "password";
 
 
                 target.type =
-                    isHidden
+                    hidden
                         ? "text"
                         : "password";
 
 
                 button.textContent =
-                    isHidden
+                    hidden
                         ? "Hide"
                         : "Show";
 
 
                 button.setAttribute(
                     "aria-label",
-                    isHidden
+                    hidden
                         ? "Hide password"
                         : "Show password"
                 );
@@ -1468,7 +1433,10 @@ document
 
 nextStepBtn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1491,7 +1459,10 @@ nextStepBtn?.addEventListener(
 
 nextStep2Btn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1509,12 +1480,15 @@ nextStep2Btn?.addEventListener(
 
 
 /* =========================================================
-   STEP 3 → SECURITY
+   STEP 3 → ACCOUNT SECURITY
 ========================================================= */
 
 nextStep3Btn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1537,7 +1511,10 @@ nextStep3Btn?.addEventListener(
 
 backStep2Btn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1555,7 +1532,10 @@ backStep2Btn?.addEventListener(
 
 backStep3Btn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1573,7 +1553,10 @@ backStep3Btn?.addEventListener(
 
 backToStep3Btn?.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
+
 
         if (registrationInProgress) {
             return;
@@ -1586,7 +1569,7 @@ backToStep3Btn?.addEventListener(
 
 
 /* =========================================================
-   FORM SUBMISSION
+   FORM SUBMIT
 ========================================================= */
 
 form?.addEventListener(
@@ -1594,13 +1577,6 @@ form?.addEventListener(
     async event => {
 
         event.preventDefault();
-
-        /*
-           The form only submits from the
-           account-security stage.
-
-           Firebase registration happens here.
-        */
 
         await createNovaPayAccount();
     }
@@ -1613,45 +1589,12 @@ form?.addEventListener(
 
 continueBtn?.addEventListener(
     "click",
-    () => {
+    event => {
 
-        /*
-           Firebase Authentication remains
-           the authentication authority.
-
-           No localStorage token is created.
-        */
+        event.preventDefault();
 
         window.location.href =
             "login.html";
-    }
-);
-
-
-/* =========================================================
-   FIREBASE AUTH STATE
-========================================================= */
-
-onAuthStateChanged(
-    auth,
-    user => {
-
-        /*
-           Firebase controls authentication state.
-
-           We intentionally do NOT use localStorage
-           as an authentication mechanism.
-        */
-
-        if (!user) {
-            return;
-        }
-
-        /*
-           No privileged action is performed here.
-           Protected pages must independently
-           check Firebase Auth.
-        */
     }
 );
 
@@ -1665,3 +1608,8 @@ showProfileStep(1);
 updatePasswordRequirements();
 
 updatePasswordMatch();
+
+
+console.log(
+    "NovaPay registration initialized successfully."
+);
