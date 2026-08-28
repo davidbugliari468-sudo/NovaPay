@@ -7,47 +7,48 @@ import {
     browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-// =====================================================
-// TEMPORARY NOVAPAY LOGIN DIAGNOSTIC
-// =====================================================
+
+// ============================================================
+// NOVAPAY LOGIN
+// ============================================================
+//
+// Frontend:
+// https://davidbugliari468-sudo.github.io/NovaPay/
+//
+// Backend:
+// https://novapay-server.onrender.com
+//
+// IMPORTANT:
+// The /NovaPay/ path belongs to GitHub Pages.
+// It is NOT added to the backend URL.
+// ============================================================
 
 const BACKEND_URL = "https://novapay-server.onrender.com";
 
-// =====================================================
-// ELEMENTS
-// =====================================================
 
-const form = document.getElementById("loginForm");
-const button = document.getElementById("loginBtn");
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const loginForm = document.getElementById("loginForm");
+const loginBtn = document.getElementById("loginBtn");
 const forgotPassword = document.getElementById("forgotPassword");
 
-// =====================================================
-// SAFETY CHECK
-// =====================================================
 
-if (!form) {
-    console.error("DIAGNOSTIC ERROR: loginForm was not found.");
-}
-
-if (!button) {
-    console.error("DIAGNOSTIC ERROR: loginBtn was not found.");
-}
-
-// =====================================================
+// ============================================================
 // MODAL
-// =====================================================
+// ============================================================
 
 function showModal(title, message) {
     const modal = document.getElementById("customModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const modalButton = document.getElementById("modalButton");
 
     if (!modal) {
         alert(`${title}\n\n${message}`);
         return;
     }
-
-    const modalTitle = document.getElementById("modalTitle");
-    const modalMessage = document.getElementById("modalMessage");
-    const modalButton = document.getElementById("modalButton");
 
     if (modalTitle) {
         modalTitle.textContent = title;
@@ -66,80 +67,79 @@ function showModal(title, message) {
     }
 }
 
-// =====================================================
-// SHOW / HIDE PASSWORD
-// =====================================================
 
-window.togglePassword = function (inputId, toggleButton) {
+// ============================================================
+// PASSWORD VISIBILITY
+// ============================================================
+
+window.togglePassword = function (inputId, button) {
     const input = document.getElementById(inputId);
 
-    if (!input || !toggleButton) {
-        console.error("DIAGNOSTIC: Password elements were not found.");
+    if (!input || !button) {
+        console.error("NovaPay: Password input or toggle button not found.");
         return;
     }
 
     if (input.type === "password") {
         input.type = "text";
-        toggleButton.textContent = "Hide";
+        button.textContent = "Hide";
     } else {
         input.type = "password";
-        toggleButton.textContent = "Show";
+        button.textContent = "Show";
     }
 };
 
-// =====================================================
+
+// ============================================================
 // FORGOT PASSWORD
-// =====================================================
+// ============================================================
 
 if (forgotPassword) {
     forgotPassword.addEventListener("click", (event) => {
         event.preventDefault();
+
         window.location.href = "forgot-password.html";
     });
 }
 
-// =====================================================
-// LOGIN
-// =====================================================
 
-if (form) {
-    form.addEventListener("submit", async (event) => {
+// ============================================================
+// LOGIN
+// ============================================================
+
+if (loginForm) {
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        console.clear();
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const rememberMeInput = document.getElementById("rememberMe");
 
-        console.log("========================================");
-        console.log("NOVAPAY LOGIN DIAGNOSTIC STARTED");
-        console.log("========================================");
-
-        const emailElement = document.getElementById("email");
-        const passwordElement = document.getElementById("password");
-        const rememberElement = document.getElementById("rememberMe");
-
-        if (!emailElement || !passwordElement || !rememberElement) {
-            console.error("DIAGNOSTIC ERROR: Required login fields are missing.");
+        if (!emailInput || !passwordInput || !rememberMeInput) {
+            console.error("NovaPay: Required login elements are missing.");
 
             showModal(
-                "Diagnostic Error",
-                "One or more login form fields could not be found."
+                "Login Error",
+                "The login form is missing a required field."
             );
 
             return;
         }
 
-        const email = emailElement.value.trim();
-        const password = passwordElement.value;
-        const rememberMe = rememberElement.checked;
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const rememberMe = rememberMeInput.checked;
 
-        // -------------------------------------------------
+        // --------------------------------------------------------
         // BASIC VALIDATION
-        // -------------------------------------------------
+        // --------------------------------------------------------
 
         if (!email) {
             showModal(
                 "Login",
                 "Please enter your email address."
             );
+
             return;
         }
 
@@ -148,21 +148,30 @@ if (form) {
                 "Login",
                 "Please enter your password."
             );
+
             return;
         }
 
-        if (button) {
-            button.disabled = true;
-            button.textContent = "Testing...";
+        // --------------------------------------------------------
+        // DISABLE BUTTON
+        // --------------------------------------------------------
+
+        if (loginBtn) {
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Logging in...";
         }
+
+        console.log("NovaPay login started.");
+        console.log("Frontend origin:", window.location.origin);
+        console.log("Backend:", BACKEND_URL);
 
         try {
 
-            // =================================================
-            // TEST 1 — FIREBASE PERSISTENCE
-            // =================================================
+            // ====================================================
+            // STEP 1 — FIREBASE PERSISTENCE
+            // ====================================================
 
-            console.log("TEST 1: Setting Firebase persistence...");
+            console.log("STEP 1: Setting Firebase persistence...");
 
             await setPersistence(
                 auth,
@@ -171,14 +180,14 @@ if (form) {
                     : browserSessionPersistence
             );
 
-            console.log("TEST 1 PASSED: Firebase persistence is working.");
+            console.log("STEP 1 PASSED.");
 
-            // =================================================
-            // TEST 2 — FIREBASE LOGIN
-            // =================================================
 
-            console.log("TEST 2: Attempting Firebase login...");
-            console.log("Email:", email);
+            // ====================================================
+            // STEP 2 — FIREBASE AUTHENTICATION
+            // ====================================================
+
+            console.log("STEP 2: Signing into Firebase...");
 
             const userCredential =
                 await signInWithEmailAndPassword(
@@ -189,16 +198,17 @@ if (form) {
 
             const user = userCredential.user;
 
-            console.log("TEST 2 PASSED: Firebase login successful.");
+            console.log("STEP 2 PASSED.");
             console.log("Firebase UID:", user.uid);
             console.log("Firebase email:", user.email);
             console.log("Email verified:", user.emailVerified);
 
-            // =================================================
-            // TEST 3 — FIREBASE ID TOKEN
-            // =================================================
 
-            console.log("TEST 3: Requesting Firebase ID token...");
+            // ====================================================
+            // STEP 3 — GET FIREBASE ID TOKEN
+            // ====================================================
+
+            console.log("STEP 3: Getting Firebase ID token...");
 
             const idToken = await user.getIdToken(true);
 
@@ -208,65 +218,73 @@ if (form) {
                 );
             }
 
-            console.log("TEST 3 PASSED: Firebase ID token received.");
-            console.log(
-                "Token received:",
-                `${idToken.substring(0, 20)}...`
-            );
+            console.log("STEP 3 PASSED.");
+            console.log("Firebase ID token received.");
 
-            // =================================================
-            // TEST 4 — RENDER BACKEND CONNECTION
-            // =================================================
 
-            const backendUrl =
+            // ====================================================
+            // STEP 4 — CONNECT TO RENDER
+            // ====================================================
+
+            const protectedUrl =
                 `${BACKEND_URL}/api/protected`;
 
-            console.log("TEST 4: Connecting to Render backend...");
-            console.log("Backend URL:", backendUrl);
+            console.log("STEP 4: Connecting to Render...");
+            console.log("Request URL:", protectedUrl);
 
             let response;
 
             try {
                 response = await fetch(
-                    backendUrl,
+                    protectedUrl,
                     {
                         method: "GET",
 
                         headers: {
                             "Authorization": `Bearer ${idToken}`,
                             "Accept": "application/json"
-                        }
+                        },
+
+                        cache: "no-store"
                     }
                 );
             } catch (networkError) {
 
                 console.error(
-                    "TEST 4 FAILED: Browser could not connect to Render.",
+                    "STEP 4 FAILED: Browser could not connect to Render.",
                     networkError
                 );
 
                 showModal(
                     "Backend Connection Failed",
-                    "Firebase login worked, but the browser could not connect to the Render backend. Check the browser Console for the exact error."
+                    "Firebase login was successful, but your browser could not connect to the NovaPay backend.\n\nThis is most likely a CORS or frontend-origin configuration problem.\n\nCheck your Render FRONTEND_ORIGIN setting."
                 );
 
                 return;
             }
 
             console.log(
-                "TEST 4 RESPONSE RECEIVED.",
+                "STEP 4 PASSED: Render responded."
+            );
+
+            console.log(
                 "HTTP status:",
                 response.status
             );
 
-            // =================================================
-            // TEST 5 — READ BACKEND RESPONSE
-            // =================================================
+
+            // ====================================================
+            // STEP 5 — READ RENDER RESPONSE
+            // ====================================================
 
             const responseText = await response.text();
 
             console.log(
-                "TEST 5: Raw backend response:",
+                "STEP 5: Render response received."
+            );
+
+            console.log(
+                "Raw response:",
                 responseText
             );
 
@@ -277,156 +295,225 @@ if (form) {
             } catch (parseError) {
 
                 console.error(
-                    "TEST 5 FAILED: Render did not return valid JSON.",
+                    "STEP 5 FAILED: Backend response was not JSON.",
                     parseError
                 );
 
                 showModal(
-                    "Backend Response Error",
-                    `Render responded with HTTP ${response.status}, but the response was not valid JSON. Check the browser Console.`
+                    "Backend Error",
+                    `The Render server responded with HTTP ${response.status}, but the response was not valid JSON.`
                 );
 
                 return;
             }
 
-            console.log("Parsed backend response:", data);
+            console.log(
+                "Parsed backend response:",
+                data
+            );
 
-            // =================================================
-            // TEST 6 — BACKEND AUTHENTICATION
-            // =================================================
+
+            // ====================================================
+            // STEP 6 — CHECK BACKEND AUTHENTICATION
+            // ====================================================
 
             if (!response.ok) {
 
                 console.error(
-                    "TEST 6 FAILED: Backend returned HTTP error.",
+                    "STEP 6 FAILED: Backend returned an HTTP error.",
                     {
                         status: response.status,
                         data
                     }
                 );
 
+                const backendError =
+                    data?.error ||
+                    "Unknown backend error.";
+
                 showModal(
                     "Backend Authentication Failed",
-                    `Firebase login worked, but Render rejected the request.\n\nHTTP Status: ${response.status}\nBackend Error: ${data.error || "Unknown error"}\n\nCheck the browser Console.`
+                    `Firebase login worked, but Render rejected the request.\n\nHTTP Status: ${response.status}\n\nBackend message: ${backendError}`
                 );
 
                 return;
             }
 
+
             if (!data.success) {
 
                 console.error(
-                    "TEST 6 FAILED: Backend returned success=false.",
+                    "STEP 6 FAILED: Backend returned success=false.",
                     data
                 );
 
                 showModal(
                     "Backend Authentication Failed",
-                    `Firebase login worked, but the backend did not authenticate the user.\n\nBackend Error: ${data.error || "Unknown error"}`
+                    `Firebase login worked, but the backend did not authenticate the user.\n\nBackend message: ${data.error || "Unknown error."}`
                 );
 
                 return;
             }
 
             console.log(
-                "TEST 6 PASSED: Render authenticated the Firebase token."
+                "STEP 6 PASSED: Render verified the Firebase token."
+            );
+
+
+            // ====================================================
+            // STEP 7 — LOGIN COMPLETELY SUCCESSFUL
+            // ====================================================
+
+            console.log("--------------------------------------------");
+            console.log("NOVAPAY LOGIN SUCCESSFUL");
+            console.log("--------------------------------------------");
+
+            console.log(
+                "Authenticated Firebase UID:",
+                user.uid
             );
 
             console.log(
-                "Authenticated backend user:",
+                "Backend user:",
                 data.user
             );
 
-            // =================================================
-            // ALL TESTS PASSED
-            // =================================================
 
-            console.log("========================================");
-            console.log("ALL LOGIN TESTS PASSED");
-            console.log("========================================");
+            // ====================================================
+            // STEP 8 — DASHBOARD REDIRECT
+            // ====================================================
+            //
+            // Using a relative URL keeps the /NovaPay/ GitHub Pages
+            // path automatically.
+            //
+            // Example:
+            // /NovaPay/login.html
+            //       ↓
+            // /NovaPay/dashboard.html
+            // ====================================================
 
-            showModal(
-                "Login Test Successful",
-                "Firebase login works and Render successfully verified the Firebase token.\n\nThe login system itself is working."
-            );
-
-            /*
-             * IMPORTANT:
-             * We deliberately do NOT redirect to dashboard.html
-             * during this diagnostic test.
-             *
-             * We want to see the successful result first.
-             */
+            window.location.href = "dashboard.html";
 
         } catch (error) {
 
-            console.error("========================================");
-            console.error("LOGIN DIAGNOSTIC FAILED");
-            console.error("========================================");
+            console.error("--------------------------------------------");
+            console.error("NOVAPAY LOGIN ERROR");
+            console.error("--------------------------------------------");
 
-            console.error("Error object:", error);
+            console.error("Error:", error);
             console.error("Error code:", error?.code);
             console.error("Error message:", error?.message);
             console.error("Error name:", error?.name);
 
-            let title = "Login Diagnostic Failed";
+            let title = "Login Failed";
             let message =
-                "An unexpected error occurred. Check the browser Console for details.";
+                "We could not complete your login. Please try again.";
+
+            // ----------------------------------------------------
+            // FIREBASE ERRORS
+            // ----------------------------------------------------
 
             switch (error?.code) {
 
                 case "auth/invalid-credential":
-                    title = "Firebase Login Failed";
+
+                    title = "Invalid Login";
                     message =
-                        "Firebase rejected the email/password combination. The Render backend was not reached.";
+                        "The email address or password is incorrect.";
+
                     break;
+
 
                 case "auth/user-not-found":
-                    title = "Firebase User Not Found";
+
+                    title = "Account Not Found";
                     message =
-                        "Firebase could not find an account with this email address.";
+                        "No NovaPay account was found with this email address.";
+
                     break;
+
 
                 case "auth/wrong-password":
-                    title = "Firebase Password Error";
+
+                    title = "Incorrect Password";
                     message =
-                        "Firebase rejected the password.";
+                        "The password you entered is incorrect.";
+
                     break;
+
 
                 case "auth/invalid-email":
+
                     title = "Invalid Email";
                     message =
-                        "Firebase says the email address is invalid.";
+                        "Please enter a valid email address.";
+
                     break;
+
+
+                case "auth/user-disabled":
+
+                    title = "Account Disabled";
+                    message =
+                        "This Firebase account has been disabled.";
+
+                    break;
+
 
                 case "auth/too-many-requests":
+
                     title = "Too Many Attempts";
                     message =
-                        "Firebase temporarily blocked login attempts. Please wait and try again.";
+                        "There have been too many login attempts. Please wait and try again later.";
+
                     break;
+
 
                 case "auth/network-request-failed":
-                    title = "Firebase Network Error";
+
+                    title = "Network Error";
                     message =
-                        "The browser could not communicate with Firebase.";
+                        "The browser could not communicate with Firebase. Please check your internet connection.";
+
                     break;
 
+
+                case "auth/operation-not-allowed":
+
+                    title = "Login Method Disabled";
+                    message =
+                        "Email/password authentication is not currently enabled in Firebase.";
+
+                    break;
+
+
                 default:
+
                     message =
                         error?.message ||
-                        "Unknown error. Check the browser Console.";
+                        "An unexpected error occurred. Please try again.";
+
+                    break;
             }
 
             showModal(title, message);
 
         } finally {
 
-            if (button) {
-                button.disabled = false;
-                button.textContent = "Login";
+            if (loginBtn) {
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Login";
             }
         }
     });
+
+} else {
+
+    console.error(
+        "NovaPay: loginForm was not found."
+    );
 }
 
-console.log("NovaPay diagnostic login.js loaded.");
+console.log(
+    "NovaPay login.js loaded successfully."
+);
