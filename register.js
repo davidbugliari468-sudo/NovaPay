@@ -1,33 +1,4 @@
-
-/* =========================================================
-   NOVAPAY — REGISTRATION
-=========================================================
-
-   FLOW
-
-   STEP 1
-   Nickname + First Name
-        ↓
-   STEP 2
-   Surname + Middle Name
-        ↓
-   STEP 3
-   Email + Phone
-        ↓
-   ACCOUNT SECURITY
-   Password + Terms
-        ↓
-   Firebase Authentication
-        ↓
-   Render phone verification
-        ↓
-   Firestore profile
-        ↓
-   Email verification
-        ↓
-   Success
-
-========================================================= */
+console.log("NovaPay register.js loaded");
 
 
 /* =========================================================
@@ -58,97 +29,83 @@ const BACKEND_URL =
 
 
 /* =========================================================
-   DOM — FORM
+   CONSTANTS
+========================================================= */
+
+const MIN_PASSWORD_LENGTH = 8;
+
+const MAX_NICKNAME_LENGTH = 30;
+
+const MAX_NAME_LENGTH = 50;
+
+const MAX_EMAIL_LENGTH = 254;
+
+const MAX_PHONE_LENGTH = 20;
+
+
+/* =========================================================
+   DOM
 ========================================================= */
 
 const form =
-    document.getElementById("registrationForm");
-
-
-/* =========================================================
-   STEPS
-========================================================= */
-
-const step1 =
-    document.getElementById("step1");
-
-const step2 =
-    document.getElementById("step2");
-
-const step3 =
-    document.getElementById("step3");
-
-const accountSecurity =
-    document.getElementById("accountSecurity");
-
-
-/* =========================================================
-   NAVIGATION BUTTONS
-========================================================= */
-
-const nextStepBtn =
-    document.getElementById("nextStepBtn");
-
-const nextStep2Btn =
-    document.getElementById("nextStep2Btn");
-
-const nextStep3Btn =
-    document.getElementById("nextStep3Btn");
-
-const backStep2Btn =
-    document.getElementById("backStep2Btn");
-
-const backStep3Btn =
-    document.getElementById("backStep3Btn");
-
-const backToStep3Btn =
-    document.getElementById("backToStep3Btn");
-
-
-/* =========================================================
-   REGISTRATION BUTTON
-========================================================= */
+    document.getElementById(
+        "registrationForm"
+    );
 
 const registerBtn =
-    document.getElementById("registerBtn");
+    document.getElementById(
+        "registerBtn"
+    );
 
 const continueBtn =
-    document.getElementById("continueBtn");
+    document.getElementById(
+        "continueBtn"
+    );
+
+const loginLink =
+    document.getElementById(
+        "loginLink"
+    );
 
 
 /* =========================================================
-   UI
+   MESSAGES
+========================================================= */
+
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
+
+const successMessage =
+    document.getElementById(
+        "successMessage"
+    );
+
+const registrationStatus =
+    document.getElementById(
+        "registrationStatus"
+    );
+
+
+/* =========================================================
+   SUCCESS SCREEN
 ========================================================= */
 
 const successScreen =
-    document.getElementById("successScreen");
-
-const loginLink =
-    document.getElementById("loginLink");
-
-const registerProgress =
-    document.getElementById("registerProgress");
-
-const registerTitle =
-    document.getElementById("registerTitle");
-
-const registerDescription =
-    document.getElementById("registerDescription");
-
-const errorMessage =
-    document.getElementById("errorMessage");
-
-const successMessage =
-    document.getElementById("successMessage");
-
-const registrationStatus =
-    document.getElementById("registrationStatus");
+    document.getElementById(
+        "successScreen"
+    );
 
 const successNickname =
-    document.getElementById("successNickname");
+    document.getElementById(
+        "successNickname"
+    );
 
 const verificationStatus =
-    document.getElementById("verificationStatus");
+    document.getElementById(
+        "verificationStatus"
+    );
 
 
 /* =========================================================
@@ -156,31 +113,49 @@ const verificationStatus =
 ========================================================= */
 
 const nicknameInput =
-    document.getElementById("nickname");
+    document.getElementById(
+        "nickname"
+    );
 
 const firstNameInput =
-    document.getElementById("firstName");
+    document.getElementById(
+        "firstName"
+    );
 
 const middleNameInput =
-    document.getElementById("middleName");
+    document.getElementById(
+        "middleName"
+    );
 
 const surnameInput =
-    document.getElementById("surname");
+    document.getElementById(
+        "surname"
+    );
 
 const emailInput =
-    document.getElementById("email");
+    document.getElementById(
+        "email"
+    );
 
 const phoneInput =
-    document.getElementById("phone");
+    document.getElementById(
+        "phone"
+    );
 
 const passwordInput =
-    document.getElementById("password");
+    document.getElementById(
+        "password"
+    );
 
 const confirmPasswordInput =
-    document.getElementById("confirmPassword");
+    document.getElementById(
+        "confirmPassword"
+    );
 
 const termsInput =
-    document.getElementById("terms");
+    document.getElementById(
+        "terms"
+    );
 
 
 /* =========================================================
@@ -188,488 +163,524 @@ const termsInput =
 ========================================================= */
 
 const passwordStrength =
-    document.getElementById("passwordStrength");
+    document.getElementById(
+        "passwordStrength"
+    );
 
 const confirmPasswordMessage =
-    document.getElementById("confirmPasswordMessage");
+    document.getElementById(
+        "confirmPasswordMessage"
+    );
 
 const requirementLength =
-    document.getElementById("requirementLength");
+    document.getElementById(
+        "requirementLength"
+    );
 
 const requirementUppercase =
-    document.getElementById("requirementUppercase");
+    document.getElementById(
+        "requirementUppercase"
+    );
 
 const requirementLowercase =
-    document.getElementById("requirementLowercase");
+    document.getElementById(
+        "requirementLowercase"
+    );
 
 const requirementNumber =
-    document.getElementById("requirementNumber");
+    document.getElementById(
+        "requirementNumber"
+    );
 
 const requirementSpecial =
-    document.getElementById("requirementSpecial");
-
-
-/* =========================================================
-   CONSTANTS
-========================================================= */
-
-const MIN_PASSWORD_LENGTH = 8;
-
-const MAX_NICKNAME_LENGTH = 30;
-const MAX_NAME_LENGTH = 50;
-const MAX_EMAIL_LENGTH = 254;
-const MAX_PHONE_LENGTH = 20;
+    document.getElementById(
+        "requirementSpecial"
+    );
 
 
 /* =========================================================
    STATE
 ========================================================= */
 
-let currentStep = 1;
-
-let registrationInProgress = false;
-
-let registrationProfile = null;
+let registrationInProgress =
+    false;
 
 
 /* =========================================================
-   PROFILE STEPS
+   BASIC CLEANING
 ========================================================= */
 
-const profileSteps = [
-    step1,
-    step2,
-    step3
-].filter(Boolean);
+function cleanText(
+    value,
+    maxLength
+) {
 
-
-/* =========================================================
-   TEXT CLEANING
-========================================================= */
-
-function cleanText(value, maxLength) {
-
-    return String(value || "")
+    return String(
+        value || ""
+    )
         .trim()
         .replace(/\s+/g, " ")
-        .slice(0, maxLength);
+        .slice(
+            0,
+            maxLength
+        );
 }
 
 
-/* =========================================================
-   EMAIL NORMALIZATION
-========================================================= */
+function cleanEmail(
+    value
+) {
 
-function normalizeEmail(value) {
-
-    return String(value || "")
+    return String(
+        value || ""
+    )
         .trim()
-        .toLowerCase();
+        .toLowerCase()
+        .slice(
+            0,
+            MAX_EMAIL_LENGTH
+        );
 }
 
 
-/* =========================================================
-   PHONE NORMALIZATION
-========================================================= */
+function cleanPhone(
+    value
+) {
 
-function normalizePhone(value) {
-
-    return String(value || "")
+    return String(
+        value || ""
+    )
         .trim()
-        .replace(/[^\d+]/g, "")
-        .slice(0, MAX_PHONE_LENGTH);
+        .replace(
+            /[^\d+]/g,
+            ""
+        )
+        .slice(
+            0,
+            MAX_PHONE_LENGTH
+        );
 }
 
 
 /* =========================================================
-   EMAIL VALIDATION
+   ERROR UI
 ========================================================= */
 
-function validEmail(email) {
-
-    if (!email) {
-        return false;
-    }
-
-    if (email.length > MAX_EMAIL_LENGTH) {
-        return false;
-    }
-
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-
-/* =========================================================
-   PASSWORD VALIDATION
-========================================================= */
-
-function passwordIsValid(password) {
-
-    return (
-        password.length >= MIN_PASSWORD_LENGTH &&
-        /[A-Z]/.test(password) &&
-        /[a-z]/.test(password) &&
-        /[0-9]/.test(password) &&
-        /[^A-Za-z0-9]/.test(password)
-    );
-}
-
-
-/* =========================================================
-   ERROR MESSAGE
-========================================================= */
-
-function showError(message) {
+function showError(
+    message
+) {
 
     if (!errorMessage) {
         return;
     }
 
-    errorMessage.textContent = message;
 
-    errorMessage.hidden = false;
+    errorMessage.textContent =
+        message;
 
-    errorMessage.style.display = "block";
+
+    errorMessage.hidden =
+        false;
+
+
+    if (successMessage) {
+
+        successMessage.textContent =
+            "";
+
+        successMessage.hidden =
+            true;
+    }
 }
 
 
-function clearError() {
+function hideError() {
 
     if (!errorMessage) {
         return;
     }
 
-    errorMessage.textContent = "";
 
-    errorMessage.hidden = true;
+    errorMessage.textContent =
+        "";
 
-    errorMessage.style.display = "none";
+    errorMessage.hidden =
+        true;
 }
 
 
 /* =========================================================
-   SUCCESS MESSAGE
+   SUCCESS UI
 ========================================================= */
 
-function showSuccess(message) {
+function showSuccess(
+    message
+) {
 
     if (!successMessage) {
         return;
     }
 
-    successMessage.textContent = message;
 
-    successMessage.hidden = false;
+    successMessage.textContent =
+        message;
 
-    successMessage.style.display = "block";
+
+    successMessage.hidden =
+        false;
+
+
+    if (errorMessage) {
+
+        errorMessage.textContent =
+            "";
+
+        errorMessage.hidden =
+            true;
+    }
+}
+
+
+function hideSuccess() {
+
+    if (!successMessage) {
+        return;
+    }
+
+
+    successMessage.textContent =
+        "";
+
+    successMessage.hidden =
+        true;
 }
 
 
 /* =========================================================
-   REGISTRATION STATUS
+   STATUS UI
 ========================================================= */
 
-function setStatus(message) {
+function setStatus(
+    message
+) {
 
     if (!registrationStatus) {
         return;
     }
 
-    registrationStatus.textContent = message;
 
-    registrationStatus.hidden = !message;
+    registrationStatus.textContent =
+        message;
+
+
+    registrationStatus.hidden =
+        !message;
 }
 
 
 /* =========================================================
-   PROCESSING STATE
+   LOADING STATE
 ========================================================= */
 
-function setProcessing(processing) {
+function setLoading(
+    loading
+) {
 
     registrationInProgress =
-        processing;
-
-    if (registerBtn) {
-
-        registerBtn.disabled =
-            processing;
-
-        registerBtn.setAttribute(
-            "aria-busy",
-            processing
-                ? "true"
-                : "false"
-        );
-
-        registerBtn.textContent =
-            processing
-                ? "Creating Account..."
-                : "Create Account";
-    }
-
-    [
-        nextStepBtn,
-        nextStep2Btn,
-        nextStep3Btn,
-        backStep2Btn,
-        backStep3Btn,
-        backToStep3Btn
-    ].forEach(button => {
-
-        if (button) {
-            button.disabled =
-                processing;
-        }
-    });
-}
+        loading;
 
 
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function updateProgress() {
-
-    if (!registerProgress) {
+    if (!registerBtn) {
         return;
     }
 
-    registerProgress.textContent =
-        `Step ${currentStep} of 3`;
+
+    registerBtn.disabled =
+        loading;
+
+
+    registerBtn.textContent =
+        loading
+            ? "Creating Account..."
+            : "Create Account";
 }
 
 
 /* =========================================================
-   HIDE ALL PROFILE STEPS
+   PASSWORD REQUIREMENTS
 ========================================================= */
 
-function hideAllProfileSteps() {
+function getPasswordRequirements(
+    password
+) {
 
-    profileSteps.forEach(step => {
+    return {
 
-        step.hidden = true;
+        length:
+            password.length >=
+            MIN_PASSWORD_LENGTH,
 
-    });
+        uppercase:
+            /[A-Z]/.test(
+                password
+            ),
+
+        lowercase:
+            /[a-z]/.test(
+                password
+            ),
+
+        number:
+            /[0-9]/.test(
+                password
+            ),
+
+        special:
+            /[^A-Za-z0-9]/.test(
+                password
+            )
+    };
 }
 
 
 /* =========================================================
-   SHOW PROFILE STEP
+   UPDATE PASSWORD REQUIREMENTS
 ========================================================= */
 
-function showProfileStep(stepNumber) {
+function updatePasswordRequirements() {
+
+    const password =
+        passwordInput?.value || "";
+
+
+    const requirements =
+        getPasswordRequirements(
+            password
+        );
+
+
+    if (requirementLength) {
+
+        requirementLength.classList.toggle(
+            "valid",
+            requirements.length
+        );
+    }
+
+
+    if (requirementUppercase) {
+
+        requirementUppercase.classList.toggle(
+            "valid",
+            requirements.uppercase
+        );
+    }
+
+
+    if (requirementLowercase) {
+
+        requirementLowercase.classList.toggle(
+            "valid",
+            requirements.lowercase
+        );
+    }
+
+
+    if (requirementNumber) {
+
+        requirementNumber.classList.toggle(
+            "valid",
+            requirements.number
+        );
+    }
+
+
+    if (requirementSpecial) {
+
+        requirementSpecial.classList.toggle(
+            "valid",
+            requirements.special
+        );
+    }
+
+
+    if (!passwordStrength) {
+        return;
+    }
+
+
+    if (!password) {
+
+        passwordStrength.textContent =
+            "";
+
+        return;
+    }
+
+
+    const score =
+        Object.values(
+            requirements
+        )
+        .filter(Boolean)
+        .length;
+
+
+    if (score === 5) {
+
+        passwordStrength.textContent =
+            "Strong password.";
+
+        passwordStrength.style.color =
+            "#16a34a";
+
+    } else if (score >= 3) {
+
+        passwordStrength.textContent =
+            "Password is almost ready.";
+
+        passwordStrength.style.color =
+            "#ca8a04";
+
+    } else {
+
+        passwordStrength.textContent =
+            "Password needs more requirements.";
+
+        passwordStrength.style.color =
+            "#dc2626";
+    }
+}
+
+
+/* =========================================================
+   PASSWORD MATCH
+========================================================= */
+
+function updatePasswordMatch() {
 
     if (
-        stepNumber < 1 ||
-        stepNumber > 3
+        !passwordInput ||
+        !confirmPasswordInput ||
+        !confirmPasswordMessage
     ) {
         return;
     }
 
-    currentStep =
-        stepNumber;
 
-    hideAllProfileSteps();
+    const password =
+        passwordInput.value;
 
-    const selectedStep =
-        profileSteps[
-            stepNumber - 1
-        ];
 
-    if (selectedStep) {
+    const confirmPassword =
+        confirmPasswordInput.value;
 
-        selectedStep.hidden =
-            false;
+
+    if (!confirmPassword) {
+
+        confirmPasswordMessage.textContent =
+            "";
+
+        confirmPasswordMessage.className =
+            "field-message";
+
+        return;
     }
 
-    updateProgress();
 
-    clearError();
+    if (
+        password ===
+        confirmPassword
+    ) {
 
-    if (registerTitle) {
+        confirmPasswordMessage.textContent =
+            "Passwords match.";
 
-        registerTitle.textContent =
-            "Get your NovaPay account free";
+        confirmPasswordMessage.className =
+            "field-message valid";
+
+    } else {
+
+        confirmPasswordMessage.textContent =
+            "Passwords do not match.";
+
+        confirmPasswordMessage.className =
+            "field-message invalid";
     }
-
-    if (registerDescription) {
-
-        registerDescription.textContent =
-            "Create your account securely.";
-    }
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
 }
 
 
 /* =========================================================
-   SHOW ACCOUNT SECURITY
+   PASSWORD SHOW / HIDE
 ========================================================= */
 
-function showAccountSecurity() {
+function setupPasswordToggles() {
 
-    hideAllProfileSteps();
+    const buttons =
+        document.querySelectorAll(
+            ".np-show-password"
+        );
 
-    if (accountSecurity) {
 
-        accountSecurity.hidden =
-            false;
-    }
+    buttons.forEach(
+        button => {
 
-    currentStep =
-        3;
+            button.addEventListener(
+                "click",
+                () => {
 
-    updateProgress();
+                    const targetId =
+                        button.dataset.target;
 
-    clearError();
 
-    if (registerTitle) {
+                    const input =
+                        document.getElementById(
+                            targetId
+                        );
 
-        registerTitle.textContent =
-            "Secure your account";
-    }
 
-    if (registerDescription) {
+                    if (!input) {
+                        return;
+                    }
 
-        registerDescription.textContent =
-            "Choose a strong password to protect your account.";
-    }
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+                    const showing =
+                        input.type ===
+                        "text";
+
+
+                    input.type =
+                        showing
+                            ? "password"
+                            : "text";
+
+
+                    button.textContent =
+                        showing
+                            ? "Show"
+                            : "Hide";
+
+
+                    button.setAttribute(
+                        "aria-label",
+                        showing
+                            ? "Show password"
+                            : "Hide password"
+                    );
+                }
+            );
+        }
+    );
 }
 
 
 /* =========================================================
-   STEP 1 VALIDATION
+   FORM DATA
 ========================================================= */
 
-function validateStep1() {
+function getFormData() {
 
-    clearError();
-
-    const nickname =
-        cleanText(
-            nicknameInput?.value,
-            MAX_NICKNAME_LENGTH
-        );
-
-    const firstName =
-        cleanText(
-            firstNameInput?.value,
-            MAX_NAME_LENGTH
-        );
-
-
-    if (!nickname) {
-
-        showError(
-            "Please enter your nickname."
-        );
-
-        nicknameInput?.focus();
-
-        return false;
-    }
-
-
-    if (!firstName) {
-
-        showError(
-            "Please enter your first name."
-        );
-
-        firstNameInput?.focus();
-
-        return false;
-    }
-
-
-    return true;
-}
-
-
-/* =========================================================
-   STEP 2 VALIDATION
-========================================================= */
-
-function validateStep2() {
-
-    clearError();
-
-    const surname =
-        cleanText(
-            surnameInput?.value,
-            MAX_NAME_LENGTH
-        );
-
-
-    if (!surname) {
-
-        showError(
-            "Please enter your surname."
-        );
-
-        surnameInput?.focus();
-
-        return false;
-    }
-
-
-    return true;
-}
-
-
-/* =========================================================
-   STEP 3 VALIDATION
-========================================================= */
-
-function validateStep3() {
-
-    clearError();
-
-    const email =
-        normalizeEmail(
-            emailInput?.value
-        );
-
-    const phone =
-        normalizePhone(
-            phoneInput?.value
-        );
-
-
-    if (!validEmail(email)) {
-
-        showError(
-            "Please enter a valid email address."
-        );
-
-        emailInput?.focus();
-
-        return false;
-    }
-
-
-    if (!phone) {
-
-        showError(
-            "Please enter your phone number."
-        );
-
-        phoneInput?.focus();
-
-        return false;
-    }
-
-
-    registrationProfile = {
+    return {
 
         nickname:
             cleanText(
@@ -695,313 +706,170 @@ function validateStep3() {
                 MAX_NAME_LENGTH
             ),
 
-        email,
+        email:
+            cleanEmail(
+                emailInput?.value
+            ),
 
-        phone
+        phone:
+            cleanPhone(
+                phoneInput?.value
+            ),
+
+        password:
+            passwordInput?.value ||
+            "",
+
+        confirmPassword:
+            confirmPasswordInput?.value ||
+            "",
+
+        termsAccepted:
+            Boolean(
+                termsInput?.checked
+            )
     };
-
-
-    return true;
 }
 
 
 /* =========================================================
-   SECURITY VALIDATION
+   FORM VALIDATION
 ========================================================= */
 
-function validateSecurityStep() {
+function validateForm(
+    data
+) {
 
-    clearError();
+    if (!data.nickname) {
 
-    const password =
-        passwordInput?.value || "";
-
-    const confirmPassword =
-        confirmPasswordInput?.value || "";
+        return "Please enter your nickname.";
+    }
 
 
-    if (!passwordIsValid(password)) {
+    if (!data.firstName) {
 
-        showError(
-            "Your password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character."
-        );
+        return "Please enter your first name.";
+    }
 
-        passwordInput?.focus();
 
-        return false;
+    if (!data.surname) {
+
+        return "Please enter your surname.";
+    }
+
+
+    if (!data.email) {
+
+        return "Please enter your email address.";
     }
 
 
     if (
-        password !==
-        confirmPassword
+        data.email.length >
+        MAX_EMAIL_LENGTH
     ) {
 
-        showError(
-            "Your passwords do not match."
+        return "Your email address is too long.";
+    }
+
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if (
+        !emailPattern.test(
+            data.email
+        )
+    ) {
+
+        return "Please enter a valid email address.";
+    }
+
+
+    if (!data.phone) {
+
+        return "Please enter your phone number.";
+    }
+
+
+    const phoneDigits =
+        data.phone.replace(
+            /\D/g,
+            ""
         );
 
-        confirmPasswordInput?.focus();
 
-        return false;
+    if (
+        phoneDigits.length < 7 ||
+        phoneDigits.length > 15
+    ) {
+
+        return "Please enter a valid phone number.";
+    }
+
+
+    if (!data.password) {
+
+        return "Please create a password.";
+    }
+
+
+    const requirements =
+        getPasswordRequirements(
+            data.password
+        );
+
+
+    if (
+        !requirements.length ||
+        !requirements.uppercase ||
+        !requirements.lowercase ||
+        !requirements.number ||
+        !requirements.special
+    ) {
+
+        return (
+            "Your password must contain at least 8 characters, " +
+            "including uppercase, lowercase, a number and a special character."
+        );
     }
 
 
     if (
-        termsInput &&
-        !termsInput.checked
+        data.password !==
+        data.confirmPassword
     ) {
 
-        showError(
+        return "Your passwords do not match.";
+    }
+
+
+    if (!data.termsAccepted) {
+
+        return (
             "Please accept the Terms & Conditions and Privacy Policy."
         );
-
-        termsInput.focus();
-
-        return false;
     }
 
 
-    return true;
+    return null;
 }
 
 
 /* =========================================================
-   PASSWORD REQUIREMENTS
+   FIRESTORE USER PROFILE
 ========================================================= */
 
-function updatePasswordRequirements() {
-
-    const password =
-        passwordInput?.value || "";
-
-
-    const hasLength =
-        password.length >=
-        MIN_PASSWORD_LENGTH;
-
-    const hasUppercase =
-        /[A-Z]/.test(password);
-
-    const hasLowercase =
-        /[a-z]/.test(password);
-
-    const hasNumber =
-        /[0-9]/.test(password);
-
-    const hasSpecial =
-        /[^A-Za-z0-9]/.test(password);
-
-
-    const updateRequirement =
-        (element, valid) => {
-
-            if (!element) {
-                return;
-            }
-
-            element.classList.toggle(
-                "valid",
-                valid
-            );
-
-            element.classList.toggle(
-                "invalid",
-                !valid
-            );
-
-            element.setAttribute(
-                "aria-checked",
-                valid
-                    ? "true"
-                    : "false"
-            );
-        };
-
-
-    updateRequirement(
-        requirementLength,
-        hasLength
-    );
-
-    updateRequirement(
-        requirementUppercase,
-        hasUppercase
-    );
-
-    updateRequirement(
-        requirementLowercase,
-        hasLowercase
-    );
-
-    updateRequirement(
-        requirementNumber,
-        hasNumber
-    );
-
-    updateRequirement(
-        requirementSpecial,
-        hasSpecial
-    );
-
-
-    if (passwordStrength) {
-
-        if (!password) {
-
-            passwordStrength.textContent =
-                "Use at least 8 characters.";
-
-        } else if (
-            passwordIsValid(password)
-        ) {
-
-            passwordStrength.textContent =
-                "Strong password.";
-
-        } else {
-
-            passwordStrength.textContent =
-                "Password does not meet all requirements.";
-        }
-    }
-}
-
-
-/* =========================================================
-   PASSWORD MATCH
-========================================================= */
-
-function updatePasswordMatch() {
-
-    if (!confirmPasswordMessage) {
-        return;
-    }
-
-    const password =
-        passwordInput?.value || "";
-
-    const confirmPassword =
-        confirmPasswordInput?.value || "";
-
-
-    if (!confirmPassword) {
-
-        confirmPasswordMessage.textContent =
-            "";
-
-        confirmPasswordMessage.classList.remove(
-            "valid",
-            "invalid"
-        );
-
-        return;
-    }
-
-
-    if (
-        password ===
-        confirmPassword
-    ) {
-
-        confirmPasswordMessage.textContent =
-            "Passwords match.";
-
-        confirmPasswordMessage.classList.add(
-            "valid"
-        );
-
-        confirmPasswordMessage.classList.remove(
-            "invalid"
-        );
-
-    } else {
-
-        confirmPasswordMessage.textContent =
-            "Passwords do not match.";
-
-        confirmPasswordMessage.classList.add(
-            "invalid"
-        );
-
-        confirmPasswordMessage.classList.remove(
-            "valid"
-        );
-    }
-}
-
-
-/* =========================================================
-   FIREBASE ERROR MESSAGE
-========================================================= */
-
-function firebaseErrorMessage(error) {
-
-    switch (error?.code) {
-
-        case "auth/email-already-in-use":
-
-            return "This email is already registered.";
-
-
-        case "auth/invalid-email":
-
-            return "Please enter a valid email address.";
-
-
-        case "auth/weak-password":
-
-            return "Your password does not meet NovaPay's security requirements.";
-
-
-        case "auth/operation-not-allowed":
-
-            return "Email registration is currently unavailable.";
-
-
-        case "auth/network-request-failed":
-
-            return "Network error. Please check your connection and try again.";
-
-
-        case "auth/too-many-requests":
-
-            return "Too many attempts. Please try again later.";
-
-
-        case "auth/user-disabled":
-
-            return "This account has been disabled.";
-
-
-        default:
-
-            return (
-                error?.message ||
-                "We could not create your account. Please try again."
-            );
-    }
-}
-
-
-/* =========================================================
-   CREATE FIRESTORE USER DOCUMENT
-========================================================= */
-
-async function createUserDocument(user) {
+async function createUserDocument(
+    user,
+    data
+) {
 
     if (!user?.uid) {
 
         throw new Error(
             "Authenticated user identity is unavailable."
-        );
-    }
-
-
-    if (!registrationProfile) {
-
-        throw new Error(
-            "Registration profile is unavailable."
         );
     }
 
@@ -1014,27 +882,33 @@ async function createUserDocument(user) {
         );
 
 
+    /*
+       IMPORTANT:
+
+       Password is NEVER stored here.
+    */
+
     await setDoc(
         userReference,
         {
 
             nickname:
-                registrationProfile.nickname,
+                data.nickname,
 
             firstName:
-                registrationProfile.firstName,
+                data.firstName,
 
             middleName:
-                registrationProfile.middleName,
+                data.middleName,
 
             surname:
-                registrationProfile.surname,
+                data.surname,
 
             email:
-                registrationProfile.email,
+                data.email,
 
             phone:
-                registrationProfile.phone,
+                data.phone,
 
             accountStatus:
                 "pending_verification",
@@ -1050,167 +924,269 @@ async function createUserDocument(user) {
 
 
 /* =========================================================
+   CLAIM PHONE THROUGH RENDER
+========================================================= */
+
+async function claimPhoneOnBackend(
+    firebaseUser,
+    data
+) {
+
+    if (!firebaseUser) {
+
+        throw new Error(
+            "Authenticated user is unavailable."
+        );
+    }
+
+
+    /*
+       Get a fresh Firebase ID token.
+
+       Render verifies this token.
+    */
+
+    const idToken =
+        await firebaseUser.getIdToken(
+            true
+        );
+
+
+    const response =
+        await fetch(
+            `${BACKEND_URL}/api/registration/claim-phone`,
+            {
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        `Bearer ${idToken}`,
+
+                    "Accept":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        phone:
+                            data.phone,
+
+                        nickname:
+                            data.nickname,
+
+                        firstName:
+                            data.firstName,
+
+                        middleName:
+                            data.middleName,
+
+                        surname:
+                            data.surname
+                    })
+            }
+        );
+
+
+    let result =
+        null;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    } catch {
+
+        result =
+            null;
+    }
+
+
+    if (
+        response.status ===
+        409
+    ) {
+
+        throw new Error(
+            "PHONE_ALREADY_REGISTERED"
+        );
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            result?.error ||
+            "The server could not complete registration."
+        );
+    }
+
+
+    if (
+        result?.success ===
+        false
+    ) {
+
+        throw new Error(
+            result.error ||
+            "The server rejected the registration."
+        );
+    }
+
+
+    return result;
+}
+
+
+/* =========================================================
+   FIREBASE ERROR MESSAGES
+========================================================= */
+
+function getFriendlyFirebaseError(
+    error
+) {
+
+    switch (
+        error?.code
+    ) {
+
+        case "auth/email-already-in-use":
+
+            return (
+                "An account already exists with this email address."
+            );
+
+
+        case "auth/invalid-email":
+
+            return (
+                "Please enter a valid email address."
+            );
+
+
+        case "auth/weak-password":
+
+            return (
+                "Your password does not meet NovaPay's security requirements."
+            );
+
+
+        case "auth/operation-not-allowed":
+
+            return (
+                "Email/password registration is currently unavailable."
+            );
+
+
+        case "auth/network-request-failed":
+
+            return (
+                "Network error. Please check your internet connection and try again."
+            );
+
+
+        case "auth/too-many-requests":
+
+            return (
+                "Too many attempts. Please wait a little and try again."
+            );
+
+
+        case "auth/user-disabled":
+
+            return (
+                "This account has been disabled."
+            );
+
+
+        case "permission-denied":
+
+        case "firestore/permission-denied":
+
+            return (
+                "Your account could not be completed because access was denied."
+            );
+
+
+        default:
+
+            return (
+                "Registration could not be completed. Please try again."
+            );
+    }
+}
+
+
+/* =========================================================
    CREATE NOVAPAY ACCOUNT
 ========================================================= */
 
-async function createNovaPayAccount() {
+async function createNovaPayAccount(
+    data
+) {
 
     if (registrationInProgress) {
         return;
     }
 
 
-    if (!validateSecurityStep()) {
-        return;
-    }
+    setLoading(true);
 
+    hideError();
 
-    if (!registrationProfile) {
-
-        showError(
-            "Please complete the registration steps first."
-        );
-
-        showProfileStep(1);
-
-        return;
-    }
-
-
-    setProcessing(true);
+    hideSuccess();
 
     setStatus(
-        "Creating your NovaPay account..."
+        "Creating your secure account..."
     );
 
 
-    let firebaseUser = null;
+    let firebaseUser =
+        null;
 
 
     try {
 
-        /* =============================================
-           1. CREATE FIREBASE ACCOUNT
-        ============================================= */
+        /* =================================================
+           1. CREATE FIREBASE AUTH ACCOUNT
+        ================================================= */
 
         const credential =
             await createUserWithEmailAndPassword(
                 auth,
-                registrationProfile.email,
-                passwordInput.value
+                data.email,
+                data.password
             );
+
 
         firebaseUser =
             credential.user;
 
 
-        /* =============================================
-           2. GET FRESH FIREBASE TOKEN
-        ============================================= */
-
-        const idToken =
-            await firebaseUser.getIdToken(true);
-
-
-        if (!idToken) {
-
-            throw new Error(
-                "Authentication token was not received."
-            );
-        }
-
-
-        /* =============================================
-           3. CLAIM PHONE THROUGH RENDER
-        ============================================= */
+        /* =================================================
+           2. CLAIM PHONE THROUGH RENDER
+        ================================================= */
 
         setStatus(
             "Checking your phone number..."
         );
 
 
-        const response =
-            await fetch(
-                `${BACKEND_URL}/api/registration/claim-phone`,
-                {
-                    method: "POST",
-
-                    headers: {
-
-                        "Authorization":
-                            `Bearer ${idToken}`,
-
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        phone:
-                            registrationProfile.phone
-                    }),
-
-                    cache: "no-store"
-                }
-            );
+        await claimPhoneOnBackend(
+            firebaseUser,
+            data
+        );
 
 
-        let data = null;
-
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch {
-
-            data = null;
-        }
-
-
-        /* =============================================
-           4. CHECK PHONE CLAIM
-        ============================================= */
-
-        if (!response.ok) {
-
-            if (
-                response.status === 409 &&
-                data?.error ===
-                    "This phone number is already registered."
-            ) {
-
-                throw new Error(
-                    "PHONE_ALREADY_REGISTERED"
-                );
-            }
-
-
-            throw new Error(
-                data?.error ||
-                "We could not verify your phone number."
-            );
-        }
-
-
-        if (
-            data &&
-            data.success === false
-        ) {
-
-            throw new Error(
-                data.error ||
-                "We could not verify your phone number."
-            );
-        }
-
-
-        /* =============================================
-           5. CREATE FIRESTORE PROFILE
-        ============================================= */
+        /* =================================================
+           3. CREATE FIRESTORE PROFILE
+        ================================================= */
 
         setStatus(
             "Creating your NovaPay profile..."
@@ -1218,13 +1194,14 @@ async function createNovaPayAccount() {
 
 
         await createUserDocument(
-            firebaseUser
+            firebaseUser,
+            data
         );
 
 
-        /* =============================================
-           6. SEND EMAIL VERIFICATION
-        ============================================= */
+        /* =================================================
+           4. SEND EMAIL VERIFICATION
+        ================================================= */
 
         setStatus(
             "Sending your verification email..."
@@ -1236,66 +1213,80 @@ async function createNovaPayAccount() {
         );
 
 
-        /* =============================================
-           7. CLEAR PASSWORDS
-        ============================================= */
+        /* =================================================
+           5. CLEAR PASSWORDS
+        ================================================= */
 
         if (passwordInput) {
-            passwordInput.value = "";
+
+            passwordInput.value =
+                "";
         }
+
 
         if (confirmPasswordInput) {
-            confirmPasswordInput.value = "";
+
+            confirmPasswordInput.value =
+                "";
         }
 
 
-        /* =============================================
-           8. SIGN OUT
-        ============================================= */
+        /* =================================================
+           6. SIGN OUT
+        ================================================= */
 
-        await signOut(auth);
+        await signOut(
+            auth
+        );
 
 
-        /* =============================================
-           9. SHOW SUCCESS
-        ============================================= */
+        /* =================================================
+           7. SUCCESS SCREEN
+        ================================================= */
 
         if (successNickname) {
 
             successNickname.textContent =
-                registrationProfile.nickname;
+                data.nickname;
         }
 
 
         if (verificationStatus) {
 
             verificationStatus.textContent =
-                `A verification email has been sent to ${registrationProfile.email}. Please open your email and click the verification link before logging in.`;
+                `A verification link has been sent to ${data.email}. Please check your inbox or Spam/Junk folder and verify your email before logging in.`;
         }
 
 
         if (form) {
-            form.hidden = true;
+
+            form.hidden =
+                true;
         }
 
 
         if (successScreen) {
-            successScreen.hidden = false;
+
+            successScreen.hidden =
+                false;
         }
 
 
         if (loginLink) {
-            loginLink.hidden = true;
+
+            loginLink.hidden =
+                true;
         }
 
 
         showSuccess(
-            "Your NovaPay account has been created successfully."
+            "Your NovaPay account has been created. Please verify your email before logging in."
         );
 
 
-        setStatus("");
-
+        setStatus(
+            ""
+        );
 
     } catch (error) {
 
@@ -1305,9 +1296,9 @@ async function createNovaPayAccount() {
         );
 
 
-        /* =============================================
-           DUPLICATE PHONE
-        ============================================= */
+        /*
+           Duplicate phone.
+        */
 
         if (
             error?.message ===
@@ -1321,22 +1312,29 @@ async function createNovaPayAccount() {
         } else {
 
             showError(
-                firebaseErrorMessage(error)
+                getFriendlyFirebaseError(
+                    error
+                )
             );
         }
 
 
-        /* =============================================
-           CLEAN UP AUTH SESSION
-        ============================================= */
+        /*
+           Make sure the Firebase session is not
+           left active after a failed registration.
+        */
 
         if (firebaseUser) {
 
             try {
 
-                await signOut(auth);
+                await signOut(
+                    auth
+                );
 
-            } catch (cleanupError) {
+            } catch (
+                cleanupError
+            ) {
 
                 console.error(
                     "Registration cleanup failed:",
@@ -1346,264 +1344,148 @@ async function createNovaPayAccount() {
         }
 
 
-        setStatus("");
-
+        setStatus(
+            ""
+        );
 
     } finally {
 
-        setProcessing(false);
+        setLoading(
+            false
+        );
     }
 }
 
 
 /* =========================================================
-   PASSWORD INPUT EVENTS
+   FORM SUBMISSION
 ========================================================= */
 
-passwordInput?.addEventListener(
-    "input",
-    () => {
+if (form) {
 
-        updatePasswordRequirements();
+    form.addEventListener(
+        "submit",
+        async event => {
 
-        updatePasswordMatch();
-    }
-);
+            event.preventDefault();
 
 
-confirmPasswordInput?.addEventListener(
-    "input",
-    updatePasswordMatch
-);
+            hideError();
+
+            hideSuccess();
 
 
-/* =========================================================
-   PASSWORD SHOW / HIDE
-========================================================= */
-
-document
-    .querySelectorAll(".show-password")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const target =
-                    document.getElementById(
-                        button.dataset.target
-                    );
+            const data =
+                getFormData();
 
 
-                if (!target) {
-                    return;
-                }
-
-
-                const hidden =
-                    target.type === "password";
-
-
-                target.type =
-                    hidden
-                        ? "text"
-                        : "password";
-
-
-                button.textContent =
-                    hidden
-                        ? "Hide"
-                        : "Show";
-
-
-                button.setAttribute(
-                    "aria-label",
-                    hidden
-                        ? "Hide password"
-                        : "Show password"
+            const validationError =
+                validateForm(
+                    data
                 );
+
+
+            if (validationError) {
+
+                showError(
+                    validationError
+                );
+
+                return;
             }
-        );
-    });
+
+
+            await createNovaPayAccount(
+                data
+            );
+        }
+    );
+}
 
 
 /* =========================================================
-   STEP 1 → STEP 2
+   PASSWORD EVENTS
 ========================================================= */
 
-nextStepBtn?.addEventListener(
-    "click",
-    event => {
+if (passwordInput) {
 
-        event.preventDefault();
+    passwordInput.addEventListener(
+        "input",
+        () => {
 
+            updatePasswordRequirements();
 
-        if (registrationInProgress) {
-            return;
+            updatePasswordMatch();
+
+            hideError();
         }
+    );
+}
 
 
-        if (!validateStep1()) {
-            return;
+if (confirmPasswordInput) {
+
+    confirmPasswordInput.addEventListener(
+        "input",
+        () => {
+
+            updatePasswordMatch();
+
+            hideError();
         }
-
-
-        showProfileStep(2);
-    }
-);
+    );
+}
 
 
 /* =========================================================
-   STEP 2 → STEP 3
+   NORMAL INPUT EVENTS
 ========================================================= */
 
-nextStep2Btn?.addEventListener(
-    "click",
-    event => {
+[
+    nicknameInput,
+    firstNameInput,
+    middleNameInput,
+    surnameInput,
+    emailInput,
+    phoneInput
+]
+    .filter(Boolean)
+    .forEach(
+        input => {
 
-        event.preventDefault();
+            input.addEventListener(
+                "input",
+                () => {
 
-
-        if (registrationInProgress) {
-            return;
+                    hideError();
+                }
+            );
         }
-
-
-        if (!validateStep2()) {
-            return;
-        }
-
-
-        showProfileStep(3);
-    }
-);
+    );
 
 
 /* =========================================================
-   STEP 3 → ACCOUNT SECURITY
+   CONTINUE TO LOGIN
 ========================================================= */
 
-nextStep3Btn?.addEventListener(
-    "click",
-    event => {
+if (continueBtn) {
 
-        event.preventDefault();
+    continueBtn.addEventListener(
+        "click",
+        () => {
 
-
-        if (registrationInProgress) {
-            return;
+            window.location.href =
+                "login.html";
         }
-
-
-        if (!validateStep3()) {
-            return;
-        }
-
-
-        showAccountSecurity();
-    }
-);
-
-
-/* =========================================================
-   STEP 2 → STEP 1
-========================================================= */
-
-backStep2Btn?.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-
-        if (registrationInProgress) {
-            return;
-        }
-
-
-        showProfileStep(1);
-    }
-);
-
-
-/* =========================================================
-   STEP 3 → STEP 2
-========================================================= */
-
-backStep3Btn?.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-
-        if (registrationInProgress) {
-            return;
-        }
-
-
-        showProfileStep(2);
-    }
-);
-
-
-/* =========================================================
-   SECURITY → STEP 3
-========================================================= */
-
-backToStep3Btn?.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-
-        if (registrationInProgress) {
-            return;
-        }
-
-
-        showProfileStep(3);
-    }
-);
-
-
-/* =========================================================
-   FORM SUBMIT
-========================================================= */
-
-form?.addEventListener(
-    "submit",
-    async event => {
-
-        event.preventDefault();
-
-        await createNovaPayAccount();
-    }
-);
-
-
-/* =========================================================
-   SUCCESS → LOGIN
-========================================================= */
-
-continueBtn?.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-        window.location.href =
-            "login.html";
-    }
-);
+    );
+}
 
 
 /* =========================================================
    INITIALIZE
 ========================================================= */
 
-showProfileStep(1);
+setupPasswordToggles();
 
 updatePasswordRequirements();
 

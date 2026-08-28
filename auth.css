@@ -1,7 +1,12 @@
 /* =========================================================
-   NOVAPAY REGISTRATION
-   Clean mobile-first blue design
-   Matches the current 3-step register.html
+   NOVAPAY AUTHENTICATION DESIGN
+   Login + Registration
+   Mobile-first
+========================================================= */
+
+
+/* =========================================================
+   RESET
 ========================================================= */
 
 * {
@@ -10,26 +15,78 @@
     padding: 0;
 }
 
+
+/* =========================================================
+   NOVAPAY COLORS
+========================================================= */
+
 :root {
-    --blue: #2563eb;
-    --blue-dark: #1d4ed8;
-    --blue-light: #eff6ff;
 
-    --bg: #f5f7fb;
-    --white: #ffffff;
+    --blue:
+        #2563eb;
 
-    --text: #111827;
-    --muted: #6b7280;
+    --blue-dark:
+        #1d4ed8;
 
-    --border: #dfe3ea;
+    --blue-light:
+        #eff6ff;
 
-    --danger: #dc2626;
-    --danger-bg: #fef2f2;
+    --blue-soft:
+        #dbeafe;
 
-    --success: #16a34a;
-    --success-bg: #f0fdf4;
+    --background:
+        #f5f7fb;
 
-    --shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+    --white:
+        #ffffff;
+
+    --text:
+        #111827;
+
+    --text-soft:
+        #334155;
+
+    --muted:
+        #6b7280;
+
+    --placeholder:
+        #94a3b8;
+
+    --border:
+        #dfe3ea;
+
+    --border-focus:
+        #2563eb;
+
+    --danger:
+        #dc2626;
+
+    --danger-bg:
+        #fef2f2;
+
+    --success:
+        #16a34a;
+
+    --success-bg:
+        #f0fdf4;
+
+    --shadow:
+        0 18px 45px
+        rgba(
+            15,
+            23,
+            42,
+            0.10
+        );
+
+    --shadow-blue:
+        0 12px 28px
+        rgba(
+            37,
+            99,
+            235,
+            0.20
+        );
 }
 
 
@@ -39,72 +96,140 @@
 
 html {
     min-height: 100%;
+
+    background:
+        var(--background);
 }
 
+
 body {
+
     min-height: 100vh;
 
-    background: var(--bg);
-    color: var(--text);
+    min-height: 100svh;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f8faff 0%,
+            #f5f7fb 100%
+        );
+
+    color:
+        var(--text);
 
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         Roboto,
+        Helvetica,
         Arial,
         sans-serif;
 
-    padding: 24px 14px 40px;
+    -webkit-font-smoothing:
+        antialiased;
 
-    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing:
+        grayscale;
+
+    padding:
+        20px
+        14px
+        30px;
+
+    overflow-x:
+        hidden;
 }
 
 
 /* =========================================================
-   MAIN CARD
+   MAIN AUTH CARD
 ========================================================= */
 
 .container {
-    position: relative;
 
-    width: 100%;
-    max-width: 430px;
+    position:
+        relative;
 
-    margin: 0 auto;
+    width:
+        100%;
 
-    overflow: hidden;
+    max-width:
+        430px;
 
-    background: var(--white);
+    min-height:
+        620px;
 
-    border-radius: 28px;
+    margin:
+        0 auto;
 
-    box-shadow: var(--shadow);
+    padding:
+        42px
+        28px
+        30px;
 
-    padding: 0 22px 30px;
+    background:
+        var(--white);
+
+    border:
+        1px solid
+        rgba(
+            223,
+            227,
+            234,
+            0.85
+        );
+
+    border-radius:
+        28px;
+
+    box-shadow:
+        var(--shadow);
+
+    overflow:
+        hidden;
 }
 
 
 /* =========================================================
-   BLUE TOP AREA
+   SUBTLE BLUE DECORATION
 ========================================================= */
 
 .container::before {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    top: 0;
-    left: 0;
-    right: 0;
+    position:
+        absolute;
 
-    height: 235px;
+    top:
+        -150px;
 
-    background: var(--blue);
+    left:
+        50%;
 
-    border-radius: 0 0 50% 50% / 0 0 28% 28%;
+    width:
+        430px;
 
-    z-index: 0;
+    height:
+        300px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        var(--blue);
+
+    border-radius:
+        50%;
+
+    opacity:
+        0.045;
+
+    pointer-events:
+        none;
 }
 
 
@@ -113,133 +238,144 @@ body {
 ========================================================= */
 
 .logo {
-    position: relative;
-    z-index: 2;
 
-    display: block;
+    position:
+        relative;
 
-    width: fit-content;
+    z-index:
+        1;
 
-    margin: 0 auto;
+    display:
+        block;
 
-    padding-top: 48px;
+    width:
+        fit-content;
 
-    color: var(--white);
+    margin:
+        0 auto 58px;
 
-    font-size: 36px;
-    line-height: 1;
+    color:
+        var(--blue);
 
-    font-weight: 800;
+    font-size:
+        30px;
 
-    letter-spacing: -1.5px;
+    line-height:
+        1;
 
-    text-decoration: none;
+    font-weight:
+        800;
+
+    letter-spacing:
+        -1.3px;
+
+    text-decoration:
+        none;
+
+    transition:
+        opacity 0.2s ease;
 }
+
 
 .logo span {
-    color: var(--white);
+
+    color:
+        var(--text);
+}
+
+
+.logo:hover {
+
+    opacity:
+        0.82;
 }
 
 
 /* =========================================================
-   HEADER
+   MAIN LOGIN HEADING
 ========================================================= */
 
-.registration-header {
-    position: relative;
-    z-index: 2;
+.container > h2 {
 
-    text-align: center;
+    position:
+        relative;
 
-    padding-top: 105px;
+    z-index:
+        1;
 
-    margin-bottom: 22px;
-}
+    margin:
+        0 0 9px;
 
-.registration-header h1 {
-    max-width: 360px;
+    color:
+        var(--text);
 
-    margin: 0 auto 10px;
+    font-size:
+        clamp(
+            28px,
+            7vw,
+            34px
+        );
 
-    color: var(--text);
+    line-height:
+        1.12;
 
-    font-size: 36px;
-    line-height: 1.12;
+    font-weight:
+        800;
 
-    font-weight: 800;
+    letter-spacing:
+        -1.2px;
 
-    letter-spacing: -1.4px;
-}
-
-.registration-header p {
-    color: var(--muted);
-
-    font-size: 17px;
-    line-height: 1.45;
+    text-align:
+        center;
 }
 
 
 /* =========================================================
-   PROGRESS
+   MAIN LOGIN DESCRIPTION
 ========================================================= */
 
-.register-progress {
-    position: relative;
-    z-index: 2;
+.container > p {
 
-    margin: 0 auto 30px;
+    position:
+        relative;
 
-    width: fit-content;
+    z-index:
+        1;
 
-    padding: 9px 18px;
+    margin:
+        0 auto 34px;
 
-    border-radius: 999px;
+    max-width:
+        320px;
 
-    background: var(--blue-light);
+    color:
+        var(--muted);
 
-    color: var(--blue);
+    font-size:
+        14px;
 
-    font-size: 15px;
+    line-height:
+        1.55;
 
-    font-weight: 750;
-
-    text-align: center;
+    text-align:
+        center;
 }
 
 
 /* =========================================================
-   STEPS
+   FORM
 ========================================================= */
 
-.registration-step {
-    width: 100%;
-}
+#loginForm {
 
-.registration-step[hidden] {
-    display: none !important;
-}
+    position:
+        relative;
 
+    z-index:
+        1;
 
-/* =========================================================
-   ACCESSIBILITY
-========================================================= */
-
-.sr-only {
-    position: absolute;
-
-    width: 1px;
-    height: 1px;
-
-    padding: 0;
-    margin: -1px;
-
-    overflow: hidden;
-
-    clip: rect(0, 0, 0, 0);
-
-    white-space: nowrap;
-
-    border: 0;
+    width:
+        100%;
 }
 
 
@@ -248,162 +384,124 @@ body {
 ========================================================= */
 
 .input-group {
-    width: 100%;
 
-    margin-bottom: 20px;
+    width:
+        100%;
+
+    margin:
+        0 0 22px;
 }
 
+
 .input-group label {
-    display: block;
 
-    margin-bottom: 9px;
+    display:
+        block;
 
-    color: var(--text);
+    margin:
+        0 0 8px 2px;
 
-    font-size: 16px;
+    color:
+        var(--text-soft);
 
-    line-height: 1.25;
+    font-size:
+        11px;
 
-    font-weight: 700;
+    line-height:
+        1.2;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.4px;
+
+    text-transform:
+        uppercase;
 }
 
 
 /* =========================================================
-   INPUTS
+   INPUT
 ========================================================= */
 
 .input-group input {
-    display: block;
 
-    width: 100%;
-    height: 58px;
+    width:
+        100%;
 
-    padding: 0 18px;
+    height:
+        54px;
 
-    border: 1.5px solid var(--border);
+    padding:
+        0 16px;
 
-    border-radius: 17px;
+    border:
+        1px solid
+        var(--border);
 
-    background: var(--white);
+    border-radius:
+        15px;
 
-    color: var(--text);
+    outline:
+        none;
 
-    font-family: inherit;
+    background:
+        #f8fafc;
 
-    font-size: 16px;
+    color:
+        var(--text);
 
-    outline: none;
+    font-family:
+        inherit;
+
+    font-size:
+        15px;
+
+    line-height:
+        1;
 
     transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 }
+
 
 .input-group input::placeholder {
-    color: #9ca3af;
+
+    color:
+        var(--placeholder);
+
+    opacity:
+        1;
 }
+
+
+.input-group input:hover {
+
+    border-color:
+        #cbd5e1;
+}
+
 
 .input-group input:focus {
-    border-color: var(--blue);
+
+    border-color:
+        var(--border-focus);
+
+    background:
+        var(--white);
 
     box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.10);
-}
-
-.input-group input:disabled {
-    background: #f3f4f6;
-
-    cursor: not-allowed;
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.primary-button {
-    display: block;
-
-    width: 100%;
-    min-height: 58px;
-
-    margin-top: 8px;
-
-    padding: 0 22px;
-
-    border: none;
-
-    border-radius: 17px;
-
-    background: var(--blue);
-
-    color: var(--white);
-
-    font-family: inherit;
-
-    font-size: 17px;
-
-    font-weight: 750;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.1s ease,
-        opacity 0.2s ease;
-}
-
-.primary-button:hover {
-    background: var(--blue-dark);
-}
-
-.primary-button:active {
-    transform: scale(0.985);
-}
-
-.primary-button:disabled {
-    opacity: 0.55;
-
-    cursor: not-allowed;
-
-    transform: none;
-}
-
-
-/* =========================================================
-   SECONDARY BUTTON
-========================================================= */
-
-.secondary-button {
-    display: block;
-
-    width: 100%;
-    min-height: 50px;
-
-    margin-top: 12px;
-
-    padding: 0 18px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 15px;
-
-    background: var(--white);
-
-    color: var(--text);
-
-    font-family: inherit;
-
-    font-size: 15px;
-
-    font-weight: 700;
-
-    cursor: pointer;
-}
-
-.secondary-button:hover {
-    background: #f8fafc;
+        0 0 0 4px
+        rgba(
+            37,
+            99,
+            235,
+            0.10
+        );
 }
 
 
@@ -412,44 +510,970 @@ body {
 ========================================================= */
 
 .password-box {
-    position: relative;
 
-    width: 100%;
+    position:
+        relative;
+
+    width:
+        100%;
 }
+
 
 .password-box input {
-    padding-right: 82px;
+
+    padding-right:
+        76px;
 }
+
+
+/* =========================================================
+   SHOW / HIDE PASSWORD
+========================================================= */
 
 .show-password {
-    position: absolute;
 
-    top: 50%;
-    right: 10px;
+    position:
+        absolute;
 
-    transform: translateY(-50%);
+    top:
+        50%;
 
-    border: none;
+    right:
+        9px;
 
-    border-radius: 10px;
+    min-width:
+        52px;
 
-    padding: 8px 11px;
+    transform:
+        translateY(-50%);
 
-    background: var(--blue-light);
+    border:
+        0;
 
-    color: var(--blue);
+    border-radius:
+        10px;
 
-    font-family: inherit;
+    padding:
+        8px
+        9px;
 
-    font-size: 13px;
+    background:
+        var(--blue-light);
 
-    font-weight: 700;
+    color:
+        var(--blue);
 
-    cursor: pointer;
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.12s ease;
 }
 
+
 .show-password:hover {
-    background: #dbeafe;
+
+    background:
+        var(--blue-soft);
+}
+
+
+.show-password:active {
+
+    transform:
+        translateY(-50%)
+        scale(0.96);
+}
+
+
+/* =========================================================
+   LOGIN OPTIONS
+========================================================= */
+
+.options {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin:
+        -4px
+        1px
+        24px;
+}
+
+
+/* =========================================================
+   REMEMBER ME
+========================================================= */
+
+.remember {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.3;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+
+.remember input {
+
+    width:
+        17px;
+
+    height:
+        17px;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--blue);
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+#forgotPassword {
+
+    color:
+        var(--blue);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        750;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+    transition:
+        color 0.18s ease;
+}
+
+
+#forgotPassword:hover {
+
+    color:
+        var(--blue-dark);
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+#loginBtn {
+
+    width:
+        100%;
+
+    min-height:
+        54px;
+
+    border:
+        0;
+
+    border-radius:
+        15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-dark)
+        );
+
+    color:
+        var(--white);
+
+    font-family:
+        inherit;
+
+    font-size:
+        15px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1px;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        var(--shadow-blue);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+#loginBtn:hover {
+
+    box-shadow:
+        0 15px 32px
+        rgba(
+            37,
+            99,
+            235,
+            0.27
+        );
+
+    transform:
+        translateY(-1px);
+}
+
+
+#loginBtn:active {
+
+    transform:
+        scale(0.985);
+
+    box-shadow:
+        0 7px 18px
+        rgba(
+            37,
+            99,
+            235,
+            0.20
+        );
+}
+
+
+#loginBtn:disabled {
+
+    opacity:
+        0.58;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   BOTTOM AUTH LINK
+========================================================= */
+
+.bottom-text {
+
+    margin:
+        25px
+        0
+        0;
+
+    padding:
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.5;
+
+    text-align:
+        center;
+}
+
+
+.bottom-text a {
+
+    color:
+        var(--blue);
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+
+    transition:
+        color 0.18s ease;
+}
+
+
+.bottom-text a:hover {
+
+    color:
+        var(--blue-dark);
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   CUSTOM MODAL
+========================================================= */
+
+.modal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        9999;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.48
+        );
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+}
+
+
+.modal-content {
+
+    width:
+        min(
+            100%,
+            360px
+        );
+
+    padding:
+        26px
+        22px
+        22px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.7
+        );
+
+    border-radius:
+        22px;
+
+    background:
+        var(--white);
+
+    box-shadow:
+        0 25px 70px
+        rgba(
+            15,
+            23,
+            42,
+            0.22
+        );
+
+    text-align:
+        center;
+
+    animation:
+        modalIn
+        0.18s ease-out;
+}
+
+
+.modal-content h3 {
+
+    margin:
+        0 0 10px;
+
+    color:
+        var(--text);
+
+    font-size:
+        21px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        800;
+}
+
+
+.modal-content p {
+
+    margin:
+        0 0 20px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        14px;
+
+    line-height:
+        1.55;
+}
+
+
+#modalButton {
+
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    border:
+        0;
+
+    border-radius:
+        13px;
+
+    background:
+        var(--blue);
+
+    color:
+        var(--white);
+
+    font-family:
+        inherit;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.18s ease,
+        transform 0.12s ease;
+}
+
+
+#modalButton:hover {
+
+    background:
+        var(--blue-dark);
+}
+
+
+#modalButton:active {
+
+    transform:
+        scale(0.98);
+}
+
+
+@keyframes modalIn {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(8px)
+            scale(0.98);
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   REGISTRATION DESIGN
+========================================================= */
+
+.nova-register {
+
+    width:
+        min(
+            100%,
+            520px
+        );
+
+    min-height:
+        100svh;
+
+    margin:
+        0 auto;
+
+    padding:
+        max(
+            14px,
+            env(
+                safe-area-inset-top
+            )
+        )
+        14px
+        max(
+            14px,
+            env(
+                safe-area-inset-bottom
+            )
+        );
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    color:
+        var(--text);
+}
+
+
+/* =========================================================
+   REGISTRATION LOGO
+========================================================= */
+
+.nova-register .np-logo {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    align-self:
+        center;
+
+    margin:
+        0
+        auto
+        9px;
+
+    color:
+        var(--blue);
+
+    font-size:
+        27px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -1px;
+
+    text-decoration:
+        none;
+}
+
+
+.nova-register .np-logo span {
+
+    color:
+        var(--text);
+}
+
+
+/* =========================================================
+   REGISTRATION HEADER
+========================================================= */
+
+.nova-register .np-header {
+
+    margin:
+        0
+        0
+        13px;
+
+    text-align:
+        center;
+}
+
+
+.nova-register .np-header h1 {
+
+    margin:
+        0;
+
+    color:
+        var(--text);
+
+    font-size:
+        clamp(
+            23px,
+            6vw,
+            31px
+        );
+
+    line-height:
+        1.1;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.9px;
+}
+
+
+.nova-register .np-header p {
+
+    margin:
+        5px
+        0
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   REGISTRATION CARD
+========================================================= */
+
+.nova-register .np-card {
+
+    width:
+        100%;
+
+    padding:
+        17px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.98
+        );
+
+    border:
+        1px solid
+        #edf0f4;
+
+    border-radius:
+        24px;
+
+    box-shadow:
+        var(--shadow);
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   REGISTRATION GRID
+========================================================= */
+
+.nova-register .np-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        )
+        minmax(
+            0,
+            1fr
+        );
+
+    gap:
+        10px;
+}
+
+
+.nova-register .np-field {
+
+    min-width:
+        0;
+}
+
+
+.nova-register .np-field.full {
+
+    grid-column:
+        1 / -1;
+}
+
+
+/* =========================================================
+   REGISTRATION LABEL
+========================================================= */
+
+.nova-register .np-field label {
+
+    display:
+        block;
+
+    margin:
+        0 0 4px 3px;
+
+    color:
+        var(--text-soft);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.5px;
+}
+
+
+/* =========================================================
+   REGISTRATION INPUT
+========================================================= */
+
+.nova-register .np-field input {
+
+    width:
+        100%;
+
+    height:
+        42px;
+
+    padding:
+        0
+        11px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    outline:
+        none;
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--text);
+
+    font-family:
+        inherit;
+
+    font-size:
+        13px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.nova-register .np-field input::placeholder {
+
+    color:
+        var(--placeholder);
+}
+
+
+.nova-register .np-field input:focus {
+
+    border-color:
+        var(--blue);
+
+    background:
+        var(--white);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            37,
+            99,
+            235,
+            0.10
+        );
+}
+
+
+/* =========================================================
+   REGISTRATION PASSWORD
+========================================================= */
+
+.nova-register .np-password {
+
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+}
+
+
+.nova-register .np-password input {
+
+    padding-right:
+        57px;
+}
+
+
+.nova-register .np-show-password {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    right:
+        6px;
+
+    transform:
+        translateY(-50%);
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--blue);
+
+    padding:
+        6px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        10px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+}
+
+
+.nova-register .np-show-password:active {
+
+    opacity:
+        0.65;
 }
 
 
@@ -457,14 +1481,24 @@ body {
    PASSWORD STRENGTH
 ========================================================= */
 
-.password-strength {
-    margin-top: 7px;
+.nova-register .password-strength {
 
-    color: var(--muted);
+    min-height:
+        13px;
 
-    font-size: 12px;
+    margin:
+        3px
+        2px
+        0;
 
-    line-height: 1.4;
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.25;
 }
 
 
@@ -472,44 +1506,105 @@ body {
    PASSWORD REQUIREMENTS
 ========================================================= */
 
-.password-requirements {
-    margin: 8px 0 18px;
+.nova-register .password-requirements {
 
-    padding: 15px;
+    margin:
+        6px
+        0
+        9px;
 
-    border: 1px solid #dbeafe;
+    padding:
+        8px
+        9px;
 
-    border-radius: 15px;
+    border:
+        1px solid
+        #dbeafe;
 
-    background: var(--blue-light);
+    border-radius:
+        10px;
+
+    background:
+        var(--blue-light);
+
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
 }
 
-.password-requirements p {
-    margin-bottom: 8px;
 
-    color: var(--text);
+.nova-register .password-requirements p {
 
-    font-size: 13px;
+    margin:
+        0 0 5px;
 
-    font-weight: 750;
+    color:
+        var(--text);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
 }
 
-.password-requirements ul {
-    padding-left: 18px;
+
+.nova-register .password-requirements ul {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:
+        3px
+        8px;
+
+    padding:
+        0;
+
+    list-style:
+        none;
 }
 
-.password-requirements li {
-    margin-bottom: 5px;
 
-    color: var(--muted);
+.nova-register .password-requirements li {
 
-    font-size: 12px;
+    margin:
+        0;
 
-    line-height: 1.4;
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+    line-height:
+        1.25;
 }
 
-.password-requirements li:last-child {
-    margin-bottom: 0;
+
+.nova-register .password-requirements li.valid {
+
+    color:
+        var(--success);
+
+    font-weight:
+        700;
+}
+
+
+.nova-register .password-requirements li.valid::before {
+
+    content:
+        "✓ ";
+
+    font-weight:
+        900;
 }
 
 
@@ -517,72 +1612,38 @@ body {
    FIELD MESSAGE
 ========================================================= */
 
-.field-message {
-    margin-top: 7px;
+.nova-register .field-message {
 
-    font-size: 12px;
+    min-height:
+        12px;
 
-    line-height: 1.4;
-}
+    margin:
+        3px
+        2px
+        0;
 
-.field-message.success {
-    color: var(--success);
-}
+    color:
+        var(--muted);
 
-.field-message.error {
-    color: var(--danger);
-}
+    font-size:
+        8px;
 
-
-/* =========================================================
-   SECURITY NOTICE
-========================================================= */
-
-.security-notice {
-    margin: 16px 0;
-
-    padding: 14px;
-
-    border: 1px solid #bfdbfe;
-
-    border-radius: 15px;
-
-    background: var(--blue-light);
-}
-
-.security-notice strong {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--blue-dark);
-
-    font-size: 13px;
-}
-
-.security-notice p {
-    color: var(--muted);
-
-    font-size: 12px;
-
-    line-height: 1.45;
+    line-height:
+        1.25;
 }
 
 
-/* =========================================================
-   reCAPTCHA
-========================================================= */
+.nova-register .field-message.valid {
 
-.recaptcha-section {
-    width: 100%;
-
-    margin: 18px 0;
+    color:
+        var(--success);
 }
 
-#recaptcha-container {
-    width: 100%;
 
-    min-height: 10px;
+.nova-register .field-message.invalid {
+
+    color:
+        var(--danger);
 }
 
 
@@ -590,105 +1651,218 @@ body {
    TERMS
 ========================================================= */
 
-.terms {
-    display: flex;
+.nova-register .np-terms {
 
-    align-items: flex-start;
+    display:
+        flex;
 
-    gap: 9px;
+    align-items:
+        flex-start;
 
-    margin: 18px 0;
+    gap:
+        7px;
+
+    margin:
+        8px
+        0
+        0;
 }
 
-.terms input[type="checkbox"] {
-    width: 19px;
-    height: 19px;
 
-    margin-top: 2px;
+.nova-register .np-terms input {
 
-    flex: 0 0 auto;
+    width:
+        15px;
 
-    accent-color: var(--blue);
+    height:
+        15px;
 
-    cursor: pointer;
+    flex:
+        0
+        0
+        auto;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--blue);
+
+    cursor:
+        pointer;
 }
 
-.terms label {
-    color: var(--muted);
 
-    font-size: 12px;
+.nova-register .np-terms label {
 
-    line-height: 1.5;
+    margin:
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+    line-height:
+        1.4;
 }
 
-.terms a {
-    color: var(--blue);
 
-    font-weight: 700;
+.nova-register .np-terms a {
 
-    text-decoration: none;
+    color:
+        var(--blue);
+
+    font-weight:
+        750;
+
+    text-decoration:
+        none;
 }
 
-.terms a:hover {
-    text-decoration: underline;
+
+.nova-register .np-terms a:hover {
+
+    text-decoration:
+        underline;
 }
 
 
 /* =========================================================
-   ERROR
+   SECURITY NOTICE
 ========================================================= */
 
-.error-message {
-    width: 100%;
+.nova-register .security-notice {
 
-    margin-bottom: 16px;
+    margin:
+        7px
+        0
+        0;
 
-    padding: 13px 14px;
+    padding:
+        8px
+        9px;
 
-    border: 1px solid #fecaca;
+    border:
+        1px solid
+        #dbeafe;
 
-    border-radius: 14px;
+    border-radius:
+        9px;
 
-    background: var(--danger-bg);
+    background:
+        #f8fafc;
 
-    color: var(--danger);
+    color:
+        var(--muted);
 
-    font-size: 13px;
+    font-size:
+        8px;
 
-    line-height: 1.45;
+    line-height:
+        1.3;
 }
 
-.error-message[hidden] {
-    display: none !important;
+
+.nova-register .security-notice strong {
+
+    display:
+        block;
+
+    margin:
+        0 0 2px;
+
+    color:
+        var(--text-soft);
+
+    font-size:
+        9px;
+}
+
+
+.nova-register .security-notice p {
+
+    margin:
+        0;
 }
 
 
 /* =========================================================
-   SUCCESS MESSAGE
+   REGISTRATION ERROR
 ========================================================= */
 
-.success-message {
-    width: 100%;
+.nova-register .error-message {
 
-    margin-bottom: 16px;
+    margin:
+        0
+        0
+        8px;
 
-    padding: 13px 14px;
+    padding:
+        8px
+        10px;
 
-    border: 1px solid #bbf7d0;
+    border:
+        1px solid
+        #fecaca;
 
-    border-radius: 14px;
+    border-radius:
+        9px;
 
-    background: var(--success-bg);
+    background:
+        var(--danger-bg);
 
-    color: var(--success);
+    color:
+        #b91c1c;
 
-    font-size: 13px;
+    font-size:
+        10px;
 
-    line-height: 1.45;
+    line-height:
+        1.35;
+
+    font-weight:
+        650;
 }
 
-.success-message[hidden] {
-    display: none !important;
+
+/* =========================================================
+   REGISTRATION SUCCESS
+========================================================= */
+
+.nova-register .success-message {
+
+    margin:
+        0
+        0
+        8px;
+
+    padding:
+        8px
+        10px;
+
+    border:
+        1px solid
+        #bbf7d0;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--success-bg);
+
+    color:
+        #15803d;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.35;
+
+    font-weight:
+        650;
 }
 
 
@@ -696,202 +1870,573 @@ body {
    REGISTRATION STATUS
 ========================================================= */
 
-.registration-status {
-    margin: 12px 0;
+.nova-register .registration-status {
 
-    padding: 11px 13px;
+    margin:
+        7px
+        0
+        0;
 
-    border-radius: 12px;
+    color:
+        var(--muted);
 
-    background: #f8fafc;
+    font-size:
+        9px;
 
-    color: var(--muted);
+    line-height:
+        1.3;
 
-    font-size: 12px;
-
-    line-height: 1.4;
-
-    text-align: center;
+    text-align:
+        center;
 }
 
-.registration-status[hidden] {
-    display: none !important;
-}
 
+.nova-register .registration-status[hidden] {
 
-/* =========================================================
-   SUCCESS SCREEN
-========================================================= */
-
-.success-screen {
-    padding: 20px 0 5px;
-
-    text-align: center;
-}
-
-.success-screen[hidden] {
-    display: none !important;
-}
-
-.success-icon {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 64px;
-    height: 64px;
-
-    margin: 0 auto 18px;
-
-    border-radius: 50%;
-
-    background: var(--success-bg);
-
-    color: var(--success);
-
-    font-size: 30px;
-
-    font-weight: 800;
-}
-
-.success-screen h2 {
-    margin-bottom: 10px;
-
-    color: var(--text);
-
-    font-size: 24px;
-
-    line-height: 1.2;
-}
-
-.success-screen p {
-    margin-bottom: 10px;
-
-    color: var(--muted);
-
-    font-size: 14px;
-
-    line-height: 1.5;
-}
-
-.success-screen strong {
-    color: var(--text);
+    display:
+        none !important;
 }
 
 
 /* =========================================================
-   LOGIN LINK
+   CREATE ACCOUNT BUTTON
 ========================================================= */
 
-.bottom-text {
-    margin-top: 24px;
+.nova-register .primary-button {
 
-    padding-bottom: 4px;
+    width:
+        100%;
 
-    color: var(--muted);
+    min-height:
+        45px;
 
-    font-size: 14px;
+    margin:
+        9px
+        0
+        0;
 
-    line-height: 1.5;
+    border:
+        0;
 
-    text-align: center;
+    border-radius:
+        12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-dark)
+        );
+
+    color:
+        var(--white);
+
+    font-family:
+        inherit;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(
+            37,
+            99,
+            235,
+            0.20
+        );
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
 }
 
-.bottom-text a {
-    color: var(--blue);
 
-    font-weight: 750;
+.nova-register .primary-button:hover {
 
-    text-decoration: none;
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(
+            37,
+            99,
+            235,
+            0.25
+        );
 }
 
-.bottom-text a:hover {
-    text-decoration: underline;
+
+.nova-register .primary-button:active {
+
+    transform:
+        scale(0.985);
+}
+
+
+.nova-register .primary-button:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
 }
 
 
 /* =========================================================
-   MOBILE
+   REGISTRATION BOTTOM LINK
 ========================================================= */
 
-@media (max-width: 480px) {
+.nova-register .bottom-text {
+
+    margin:
+        10px
+        0
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.35;
+
+    text-align:
+        center;
+}
+
+
+.nova-register .bottom-text a {
+
+    color:
+        var(--blue);
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   REGISTRATION SUCCESS SCREEN
+========================================================= */
+
+.nova-register .success-screen {
+
+    padding:
+        20px
+        10px
+        5px;
+
+    text-align:
+        center;
+}
+
+
+.nova-register .success-screen[hidden] {
+
+    display:
+        none !important;
+}
+
+
+.nova-register .success-icon {
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    margin:
+        0
+        auto
+        12px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #dcfce7;
+
+    color:
+        var(--success);
+
+    font-size:
+        28px;
+
+    font-weight:
+        900;
+}
+
+
+.nova-register .success-screen h2 {
+
+    margin:
+        0
+        0
+        7px;
+
+    color:
+        var(--text);
+
+    font-size:
+        22px;
+
+    line-height:
+        1.2;
+}
+
+
+.nova-register .success-screen p {
+
+    margin:
+        6px
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+    line-height:
+        1.45;
+}
+
+
+.nova-register .success-screen strong {
+
+    color:
+        var(--text);
+}
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+[hidden] {
+
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+
+    outline:
+        3px solid
+        rgba(
+            37,
+            99,
+            235,
+            0.22
+        );
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (
+    max-width: 380px
+) {
 
     body {
-        padding: 12px 10px 30px;
+
+        padding:
+            12px
+            9px
+            20px;
     }
+
 
     .container {
-        max-width: 100%;
 
-        border-radius: 25px;
+        min-height:
+            590px;
 
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-bottom: 26px;
+        padding:
+            34px
+            19px
+            25px;
+
+        border-radius:
+            24px;
     }
 
-    .container::before {
-        height: 215px;
-    }
 
     .logo {
-        padding-top: 42px;
 
-        font-size: 33px;
+        margin-bottom:
+            45px;
+
+        font-size:
+            27px;
     }
 
-    .registration-header {
-        padding-top: 96px;
+
+    .container > h2 {
+
+        font-size:
+            27px;
     }
 
-    .registration-header h1 {
-        font-size: 32px;
 
-        letter-spacing: -1.1px;
+    .container > p {
+
+        margin-bottom:
+            27px;
+
+        font-size:
+            13px;
     }
 
-    .registration-header p {
-        font-size: 16px;
-    }
-
-    .register-progress {
-        margin-bottom: 26px;
-    }
 
     .input-group {
-        margin-bottom: 18px;
+
+        margin-bottom:
+            18px;
     }
+
 
     .input-group input {
-        height: 56px;
 
-        border-radius: 16px;
+        height:
+            51px;
+
+        border-radius:
+            14px;
     }
 
-    .primary-button {
-        min-height: 57px;
 
-        border-radius: 16px;
+    .options {
+
+        gap:
+            8px;
+
+        margin-bottom:
+            20px;
+    }
+
+
+    .remember,
+    #forgotPassword {
+
+        font-size:
+            12px;
+    }
+
+
+    #loginBtn {
+
+        min-height:
+            52px;
     }
 }
 
 
 /* =========================================================
-   LARGER SCREENS
+   SHORT PHONE SCREENS
 ========================================================= */
 
-@media (min-width: 700px) {
+@media (
+    max-height: 700px
+) {
 
     body {
-        padding-top: 50px;
+
+        padding-top:
+            8px;
+
+        padding-bottom:
+            8px;
     }
+
 
     .container {
-        max-width: 460px;
+
+        min-height:
+            auto;
+
+        padding-top:
+            25px;
+
+        padding-bottom:
+            22px;
+
+        border-radius:
+            24px;
     }
 
-    .registration-header h1 {
-        font-size: 38px;
+
+    .logo {
+
+        margin-bottom:
+            34px;
+
+        font-size:
+            26px;
+    }
+
+
+    .container > h2 {
+
+        font-size:
+            26px;
+    }
+
+
+    .container > p {
+
+        margin-bottom:
+            23px;
+
+        font-size:
+            12px;
+    }
+
+
+    .input-group {
+
+        margin-bottom:
+            15px;
+    }
+
+
+    .input-group label {
+
+        margin-bottom:
+            6px;
+
+        font-size:
+            10px;
+    }
+
+
+    .input-group input {
+
+        height:
+            48px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .options {
+
+        margin-bottom:
+            18px;
+    }
+
+
+    #loginBtn {
+
+        min-height:
+            49px;
+    }
+
+
+    .bottom-text {
+
+        margin-top:
+            18px;
+    }
+}
+
+
+/* =========================================================
+   TABLETS / DESKTOP
+========================================================= */
+
+@media (
+    min-width: 700px
+) {
+
+    body {
+
+        padding-top:
+            50px;
+
+        padding-bottom:
+            50px;
+    }
+
+
+    .container {
+
+        max-width:
+            450px;
+    }
+
+
+    .nova-register {
+
+        max-width:
+            540px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    *,
+    *::before,
+    *::after {
+
+        scroll-behavior:
+            auto !important;
+
+        transition:
+            none !important;
+
+        animation:
+            none !important;
     }
 }
