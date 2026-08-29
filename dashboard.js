@@ -15,6 +15,14 @@ import {
 
 
 // ======================================
+// NOVAPAY API
+// ======================================
+
+const API_BASE_URL =
+    "https://novapay-server.onrender.com";
+
+
+// ======================================
 // DOM ELEMENTS
 // ======================================
 
@@ -304,6 +312,36 @@ function formatMoney(
 
 
 // ======================================
+// KOBO → NAIRA
+// ======================================
+
+function koboToNaira(
+    amountKobo
+) {
+
+    const numericKobo =
+        Number(
+            amountKobo
+        );
+
+    if (
+        !Number.isSafeInteger(
+            numericKobo
+        ) ||
+        numericKobo < 0
+    ) {
+
+        return 0;
+
+    }
+
+    return (
+        numericKobo /
+        100
+    );
+
+}
+// ======================================
 // GREETING
 // ======================================
 
@@ -352,6 +390,41 @@ updateGreeting();
 
 
 // ======================================
+// DISPLAY BALANCE
+// ======================================
+
+function updateBalanceDisplay() {
+
+    if (
+        !walletBalance
+    ) {
+
+        return;
+
+    }
+
+    if (
+        balanceVisible
+    ) {
+
+        walletBalance.textContent =
+            formatMoney(
+                balance
+            );
+
+    }
+
+    else {
+
+        walletBalance.textContent =
+            "••••••";
+
+    }
+
+}
+
+
+// ======================================
 // HIDE / SHOW BALANCE
 // ======================================
 
@@ -362,20 +435,11 @@ hideBalanceBtn?.addEventListener(
         balanceVisible =
             !balanceVisible;
 
+        updateBalanceDisplay();
+
         if (
             balanceVisible
         ) {
-
-            if (
-                walletBalance
-            ) {
-
-                walletBalance.textContent =
-                    formatMoney(
-                        balance
-                    );
-
-            }
 
             hideBalanceBtn.innerHTML =
                 `Hide <i class="fa-regular fa-eye"></i>`;
@@ -384,15 +448,6 @@ hideBalanceBtn?.addEventListener(
 
         else {
 
-            if (
-                walletBalance
-            ) {
-
-                walletBalance.textContent =
-                    "••••••";
-
-            }
-
             hideBalanceBtn.innerHTML =
                 `Show <i class="fa-regular fa-eye-slash"></i>`;
 
@@ -400,6 +455,278 @@ hideBalanceBtn?.addEventListener(
 
     }
 );
+
+
+// ======================================
+// FETCH AUTHENTICATED WALLET
+// ======================================
+//
+// IMPORTANT:
+//
+// The frontend does NOT supply the UID.
+//
+// Firebase provides the ID token.
+//
+// The backend extracts the UID from the
+// verified token and reads the authoritative
+// wallet balance.
+// ======================================
+
+async function loadWalletBalance(
+    user
+) {
+
+    if (
+        !user
+    ) {
+
+        throw new Error(
+            "Authentication required."
+        );
+
+    }
+
+
+    const idToken =
+        await Promise.race([
+
+            user.getIdToken(),
+
+            new Promise(
+                (_, reject) => {
+
+                    setTimeout(
+                        () => {
+
+                            reject(
+                                new Error(
+                                    "Authentication token request timed out."
+                                )
+                            );
+
+                        },
+                        8000
+                    );
+
+                }
+            )
+
+        ]);
+
+
+    const controller =
+        new AbortController();
+
+
+    const timeoutId =
+        setTimeout(
+            () => {
+
+                controller.abort();
+
+            },
+            8000
+        );
+
+
+    let response;
+
+
+    try {
+
+        response =
+            await fetch(
+                `${API_BASE_URL}/api/wallet`,
+                {
+
+                    method:
+                        "GET",
+
+                    headers: {
+
+                        "Authorization":
+                            `Bearer ${idToken}`,
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    cache:
+                        "no-store",
+
+                    signal:
+                        controller.signal
+
+                }
+            );
+
+    }
+
+    catch (fetchError) {
+
+        if (
+            fetchError?.name ===
+            "AbortError"
+        ) {
+
+            throw new Error(
+                "Wallet server timed out."
+            );
+
+        }
+
+        throw fetchError;
+
+    }
+
+    finally {
+
+        clearTimeout(
+            timeoutId
+        );
+
+    }
+
+
+    let result;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    }
+
+    catch {
+
+        throw new Error(
+            "Invalid response from NovaPay wallet server."
+        );
+
+    }
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            result?.error ||
+            `Wallet server error (${response.status}).`
+        );
+
+    }
+
+
+    if (
+        !result?.success ||
+        !result?.wallet
+    ) {
+
+        throw new Error(
+            result?.error ||
+            "Unable to load wallet balance."
+        );
+
+    }
+
+
+    const balanceKobo =
+        Number(
+            result.wallet.balanceKobo
+        );
+
+
+    if (
+        !Number.isSafeInteger(
+            balanceKobo
+        ) ||
+        balanceKobo < 0
+    ) {
+
+        throw new Error(
+            "Wallet server returned an invalid balance."
+        );
+
+    }
+
+
+    balance =
+        koboToNaira(
+            balanceKobo
+        );
+
+
+    updateBalanceDisplay();
+
+}
+
+
+// ======================================
+// LOAD USER PROFILE
+// ======================================
+//
+// Profile information may still come from
+// Firestore.
+//
+// Wallet balance does NOT come from the
+// user profile anymore.
+// ======================================
+
+async function loadUserProfile(
+    user
+) {
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
+        );
+
+
+    const userSnap =
+        await getDoc(
+            userRef
+        );
+
+
+    if (
+        userSnap.exists()
+    ) {
+
+        const data =
+            userSnap.data();
+
+
+        if (
+            userName
+        ) {
+
+            userName.textContent =
+                data.nickname ||
+                "User";
+
+        }
+
+    }
+
+    else {
+
+        if (
+            userName
+        ) {
+
+            userName.textContent =
+                "User";
+
+        }
+
+    }
+
+}
 
 
 // ======================================
@@ -421,81 +748,81 @@ onAuthStateChanged(
 
         }
 
+
         try {
 
-            const userRef =
-                doc(
-                    db,
-                    "users",
-                    user.uid
+            // ------------------------------------------
+            // LOAD PROFILE
+            // ------------------------------------------
+
+            try {
+
+                await loadUserProfile(
+                    user
                 );
 
-            const userSnap =
-                await getDoc(
-                    userRef
+            }
+
+            catch (profileError) {
+
+                console.error(
+                    "NovaPay dashboard profile error:",
+                    profileError
                 );
 
-            if (
-                userSnap.exists()
-            ) {
 
-                const data =
-                    userSnap.data();
+                if (
+                    userName
+                ) {
 
-                if (userName) {
+                    userName.textContent =
+                        user.email?.split("@")[0] ||
+                        "User";
 
-    userName.textContent =
-        data.nickname ||
-        "User";
-
-}
-
-                balance =
-                    Number(
-                        data.walletBalance ||
-                        0
-                    );
-
-            }
-
-            else {
-
-                if (userName) {
-
-    userName.textContent =
-        "User";
-
-}
-
-                balance =
-                    0;
+                }
 
             }
 
 
-            if (
-                balanceVisible &&
-                walletBalance
-            ) {
+            // ------------------------------------------
+            // LOAD AUTHORITATIVE WALLET
+            // ------------------------------------------
 
-                walletBalance.textContent =
-                    formatMoney(
-                        balance
-                    );
-
-            }
+            await loadWalletBalance(
+                user
+            );
 
 
-            loadRecentTransactions();
+            // ------------------------------------------
+            // LOAD TRANSACTIONS
+            // ------------------------------------------
+
+            await loadRecentTransactions();
 
         }
 
         catch (error) {
 
             console.error(
-                "NovaPay dashboard profile error:",
+                "NovaPay dashboard wallet loading error:",
                 error
             );
+
+
+            balance =
+                0;
+
+
+            if (
+                walletBalance &&
+                balanceVisible
+            ) {
+
+                walletBalance.textContent =
+                    "₦0.00";
+
+            }
+
 
             if (
                 userName &&
@@ -507,22 +834,6 @@ onAuthStateChanged(
                     "User";
 
             }
-
-            if (
-                walletBalance &&
-                balanceVisible
-            ) {
-
-                walletBalance.textContent =
-                    formatMoney(
-                        balance
-                    );
-
-            }
-
-            console.warn(
-                "NovaPay dashboard will remain interactive despite profile loading error."
-            );
 
         }
 
@@ -850,7 +1161,7 @@ async function loadRecentTransactions() {
 
             response =
                 await fetch(
-                    "https://novapay-server.onrender.com/api/transactions?limit=50",
+                    `${API_BASE_URL}/api/transactions?limit=50`,
                     {
 
                         method:
@@ -928,6 +1239,7 @@ async function loadRecentTransactions() {
 
             throw new Error(
                 result?.message ||
+                result?.error ||
                 `Server error (${response.status}).`
             );
 
@@ -940,6 +1252,7 @@ async function loadRecentTransactions() {
 
             throw new Error(
                 result?.message ||
+                result?.error ||
                 "Unable to load transactions."
             );
 
@@ -1967,6 +2280,10 @@ function runDashboardStartupCheck() {
 
     console.log(
         "Firebase authentication: ENABLED"
+    );
+
+    console.log(
+        "Backend wallet API: ENABLED"
     );
 
     console.log(
