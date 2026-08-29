@@ -1,0 +1,1427 @@
+/* =========================================================
+   NOVAPAY LOGIN
+   Standalone Login stylesheet
+   Does not depend on auth.css
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+
+    min-height: 100vh;
+    min-height: 100svh;
+
+    background:
+        #f5f7fb;
+
+    color:
+        #111827;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+    text-rendering:
+        optimizeLegibility;
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
+.login-page {
+
+    width:
+        min(100%, 460px);
+
+    min-height:
+        100vh;
+
+    min-height:
+        100svh;
+
+    margin:
+        0 auto;
+
+    padding:
+        max(18px, env(safe-area-inset-top))
+        16px
+        max(18px, env(safe-area-inset-bottom));
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.login-logo {
+
+    display:
+        block;
+
+    width:
+        fit-content;
+
+    margin:
+        0 auto 11px;
+
+    color:
+        #2563eb;
+
+    text-decoration:
+        none;
+
+    font-size:
+        30px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -1.3px;
+}
+
+
+.login-logo span {
+
+    color:
+        #111827;
+}
+
+
+/* =========================================================
+   LOGIN HEADER
+========================================================= */
+
+.login-header {
+
+    margin:
+        0 0 17px;
+
+    text-align:
+        center;
+}
+
+
+.login-header h1 {
+
+    margin:
+        0;
+
+    color:
+        #111827;
+
+    font-size:
+        clamp(25px, 7vw, 32px);
+
+    line-height:
+        1.1;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.9px;
+}
+
+
+.login-header p {
+
+    margin:
+        7px 0 0;
+
+    color:
+        #64748b;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card {
+
+    width:
+        100%;
+
+    padding:
+        21px 18px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius:
+        22px;
+
+    box-shadow:
+        0 20px 55px rgba(
+            15,
+            23,
+            42,
+            0.09
+        );
+}
+
+
+/* =========================================================
+   LOGIN FORM
+========================================================= */
+
+#loginForm {
+
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+========================================================= */
+
+.input-group {
+
+    width:
+        100%;
+
+    margin-bottom:
+        13px;
+}
+
+
+.input-group label {
+
+    display:
+        block;
+
+    margin:
+        0 0 6px 2px;
+
+    color:
+        #334155;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input-group input,
+#email,
+#password {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        46px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid #dbe2ea;
+
+    border-radius:
+        12px;
+
+    outline:
+        none;
+
+    background:
+        #f8fafc;
+
+    color:
+        #111827;
+
+    font-size:
+        14px;
+
+    line-height:
+        1;
+
+    transition:
+        border-color .18s ease,
+        background-color .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.input-group input:hover,
+#email:hover,
+#password:hover {
+
+    border-color:
+        #cbd5e1;
+}
+
+
+.input-group input:focus,
+#email:focus,
+#password:focus {
+
+    border-color:
+        #2563eb;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            37,
+            99,
+            235,
+            0.10
+        );
+}
+
+
+.input-group input::placeholder,
+#email::placeholder,
+#password::placeholder {
+
+    color:
+        #94a3b8;
+
+    opacity:
+        1;
+}
+
+
+/* =========================================================
+   PASSWORD CONTAINER
+========================================================= */
+
+.password-wrapper,
+.password-field,
+.password-container {
+
+    position:
+        relative;
+
+    width:
+        100%;
+}
+
+
+/*
+   If the existing HTML uses a password wrapper,
+   leave enough room for the Show button.
+*/
+
+.password-wrapper #password,
+.password-field #password,
+.password-container #password {
+
+    padding-right:
+        62px;
+}
+
+
+/* =========================================================
+   SHOW / HIDE PASSWORD
+========================================================= */
+
+.password-toggle,
+.show-password,
+.toggle-password {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    right:
+        8px;
+
+    transform:
+        translateY(-50%);
+
+    min-width:
+        43px;
+
+    min-height:
+        31px;
+
+    padding:
+        5px 7px;
+
+    border:
+        0;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        #2563eb;
+
+    font-size:
+        11px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+}
+
+
+.password-toggle:hover,
+.show-password:hover,
+.toggle-password:hover {
+
+    background:
+        #eff6ff;
+}
+
+
+.password-toggle:active,
+.show-password:active,
+.toggle-password:active {
+
+    transform:
+        translateY(-50%)
+        scale(.96);
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+.forgot-password,
+#forgotPassword {
+
+    display:
+        block;
+
+    width:
+        fit-content;
+
+    margin:
+        -2px 2px 15px auto;
+
+    color:
+        #2563eb;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+}
+
+
+.forgot-password:hover,
+#forgotPassword:hover {
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   REMEMBER ME
+========================================================= */
+
+.remember-me {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin:
+        0 0 15px;
+
+    color:
+        #64748b;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.3;
+}
+
+
+.remember-me input {
+
+    width:
+        16px;
+
+    height:
+        16px;
+
+    margin:
+        0;
+
+    flex:
+        0 0 16px;
+
+    accent-color:
+        #2563eb;
+
+    cursor:
+        pointer;
+}
+
+
+.remember-me label {
+
+    margin:
+        0;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+#loginBtn,
+.login-button,
+.primary-button {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    padding:
+        0 16px;
+
+    border:
+        0;
+
+    border-radius:
+        12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        14px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 8px 20px rgba(
+            37,
+            99,
+            235,
+            0.20
+        );
+
+    transition:
+        transform .15s ease,
+        background-color .15s ease,
+        box-shadow .15s ease,
+        opacity .15s ease;
+}
+
+
+#loginBtn:hover,
+.login-button:hover,
+.primary-button:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #1e40af
+        );
+
+    box-shadow:
+        0 10px 24px rgba(
+            37,
+            99,
+            235,
+            0.24
+        );
+}
+
+
+#loginBtn:active,
+.login-button:active,
+.primary-button:active {
+
+    transform:
+        translateY(1px);
+
+    box-shadow:
+        0 5px 13px rgba(
+            37,
+            99,
+            235,
+            0.18
+        );
+}
+
+
+#loginBtn:disabled,
+.login-button:disabled,
+.primary-button:disabled {
+
+    opacity:
+        .55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   REGISTER LINK
+========================================================= */
+
+.register-link,
+.create-account,
+.signup-link {
+
+    margin:
+        15px 0 0;
+
+    color:
+        #64748b;
+
+    text-align:
+        center;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.4;
+}
+
+
+.register-link a,
+.create-account a,
+.signup-link a {
+
+    color:
+        #2563eb;
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+}
+
+
+.register-link a:hover,
+.create-account a:hover,
+.signup-link a:hover {
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   CUSTOM MODAL
+========================================================= */
+
+#customModal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        9999;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        18px;
+
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.48
+        );
+
+    backdrop-filter:
+        blur(4px);
+
+    -webkit-backdrop-filter:
+        blur(4px);
+}
+
+
+/* =========================================================
+   MODAL BOX
+========================================================= */
+
+#customModal > div,
+.custom-modal-content,
+.modal-content {
+
+    width:
+        min(
+            100%,
+            380px
+        );
+
+    padding:
+        21px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        0 25px 70px rgba(
+            15,
+            23,
+            42,
+            0.20
+        );
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   MODAL TITLE
+========================================================= */
+
+#modalTitle {
+
+    margin:
+        0 0 8px;
+
+    color:
+        #111827;
+
+    font-size:
+        19px;
+
+    line-height:
+        1.25;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   MODAL MESSAGE
+========================================================= */
+
+#modalMessage {
+
+    margin:
+        0 0 17px;
+
+    color:
+        #64748b;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   MODAL BUTTON
+========================================================= */
+
+#modalButton {
+
+    width:
+        100%;
+
+    min-height:
+        42px;
+
+    padding:
+        0 14px;
+
+    border:
+        0;
+
+    border-radius:
+        11px;
+
+    background:
+        #2563eb;
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color .15s ease,
+        transform .15s ease;
+}
+
+
+#modalButton:hover {
+
+    background:
+        #1d4ed8;
+}
+
+
+#modalButton:active {
+
+    transform:
+        translateY(1px);
+}
+
+
+/* =========================================================
+   GENERIC ERROR MESSAGE
+========================================================= */
+
+.error-message,
+.login-error,
+#errorMessage {
+
+    width:
+        100%;
+
+    margin:
+        9px 0;
+
+    padding:
+        9px 10px;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius:
+        10px;
+
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   GENERIC SUCCESS MESSAGE
+========================================================= */
+
+.success-message,
+.login-success,
+#successMessage {
+
+    width:
+        100%;
+
+    margin:
+        9px 0;
+
+    padding:
+        9px 10px;
+
+    border:
+        1px solid #bbf7d0;
+
+    border-radius:
+        10px;
+
+    background:
+        #f0fdf4;
+
+    color:
+        #166534;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   HIDDEN ELEMENTS
+========================================================= */
+
+[hidden] {
+
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+
+    outline:
+        3px solid rgba(
+            37,
+            99,
+            235,
+            0.25
+        );
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (
+    max-width: 380px
+) {
+
+    .login-page {
+
+        padding-left:
+            10px;
+
+        padding-right:
+            10px;
+    }
+
+
+    .login-card {
+
+        padding:
+            17px 13px;
+
+        border-radius:
+            19px;
+    }
+
+
+    .login-logo {
+
+        font-size:
+            25px;
+
+        margin-bottom:
+            8px;
+    }
+
+
+    .login-header {
+
+        margin-bottom:
+            12px;
+    }
+
+
+    .login-header h1 {
+
+        font-size:
+            23px;
+    }
+
+
+    .login-header p {
+
+        font-size:
+            12px;
+    }
+
+
+    .input-group {
+
+        margin-bottom:
+            10px;
+    }
+
+
+    .input-group label {
+
+        font-size:
+            11px;
+    }
+
+
+    .input-group input,
+    #email,
+    #password {
+
+        height:
+            42px;
+
+        font-size:
+            13px;
+
+        border-radius:
+            10px;
+    }
+
+
+    #loginBtn,
+    .login-button,
+    .primary-button {
+
+        min-height:
+            43px;
+
+        font-size:
+            13px;
+    }
+}
+
+
+/* =========================================================
+   SHORT PHONE
+========================================================= */
+
+@media (
+    max-height: 700px
+) {
+
+    .login-page {
+
+        padding-top:
+            8px;
+
+        padding-bottom:
+            8px;
+    }
+
+
+    .login-logo {
+
+        margin-bottom:
+            6px;
+
+        font-size:
+            23px;
+    }
+
+
+    .login-header {
+
+        margin-bottom:
+            8px;
+    }
+
+
+    .login-header h1 {
+
+        font-size:
+            21px;
+    }
+
+
+    .login-header p {
+
+        margin-top:
+            3px;
+
+        font-size:
+            11px;
+    }
+
+
+    .login-card {
+
+        padding:
+            13px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .input-group {
+
+        margin-bottom:
+            8px;
+    }
+
+
+    .input-group label {
+
+        margin-bottom:
+            3px;
+
+        font-size:
+            9px;
+    }
+
+
+    .input-group input,
+    #email,
+    #password {
+
+        height:
+            36px;
+
+        padding:
+            0 9px;
+
+        border-radius:
+            9px;
+
+        font-size:
+            12px;
+    }
+
+
+    .forgot-password,
+    #forgotPassword {
+
+        margin-bottom:
+            9px;
+
+        font-size:
+            10px;
+    }
+
+
+    .remember-me {
+
+        margin-bottom:
+            9px;
+
+        font-size:
+            9px;
+    }
+
+
+    #loginBtn,
+    .login-button,
+    .primary-button {
+
+        min-height:
+            37px;
+
+        font-size:
+            11px;
+    }
+
+
+    .register-link,
+    .create-account,
+    .signup-link {
+
+        margin-top:
+            8px;
+
+        font-size:
+            9px;
+    }
+}
+
+
+/* =========================================================
+   VERY SHORT PHONE
+========================================================= */
+
+@media (
+    max-height: 600px
+) {
+
+    .login-page {
+
+        padding-top:
+            5px;
+
+        padding-bottom:
+            5px;
+    }
+
+
+    .login-logo {
+
+        font-size:
+            20px;
+
+        margin-bottom:
+            4px;
+    }
+
+
+    .login-header {
+
+        margin-bottom:
+            5px;
+    }
+
+
+    .login-header h1 {
+
+        font-size:
+            19px;
+    }
+
+
+    .login-header p {
+
+        display:
+            none;
+    }
+
+
+    .login-card {
+
+        padding:
+            9px;
+
+        border-radius:
+            16px;
+    }
+
+
+    .input-group {
+
+        margin-bottom:
+            6px;
+    }
+
+
+    .input-group label {
+
+        font-size:
+            8px;
+    }
+
+
+    .input-group input,
+    #email,
+    #password {
+
+        height:
+            33px;
+
+        font-size:
+            11px;
+    }
+
+
+    .forgot-password,
+    #forgotPassword {
+
+        margin-bottom:
+            6px;
+
+        font-size:
+            9px;
+    }
+
+
+    .remember-me {
+
+        margin-bottom:
+            6px;
+
+        font-size:
+            8px;
+    }
+
+
+    #loginBtn,
+    .login-button,
+    .primary-button {
+
+        min-height:
+            34px;
+
+        font-size:
+            10px;
+    }
+
+
+    .register-link,
+    .create-account,
+    .signup-link {
+
+        margin-top:
+            5px;
+
+        font-size:
+            8px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    *,
+    *::before,
+    *::after {
+
+        transition:
+            none !important;
+
+        animation:
+            none !important;
+    }
+}
