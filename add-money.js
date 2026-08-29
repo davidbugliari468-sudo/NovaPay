@@ -1,23 +1,33 @@
 // ======================================
 // NovaPay Add Money
-// Secure Backend Version
+// Secure Paystack Backend Version
 // ======================================
 
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+
 // ======================================
-// API
+// CONFIGURATION
 // ======================================
 
 const API_BASE_URL =
     "https://novapay-server.onrender.com";
 
+const MINIMUM_DEPOSIT =
+    100;
+
+
 // ======================================
-// Elements
+// DOM ELEMENTS
 // ======================================
 
 const backBtn =
@@ -44,19 +54,24 @@ const modalMessage =
 const quickButtons =
     document.querySelectorAll(".quickBtn");
 
+
 // ======================================
-// Variables
+// STATE
 // ======================================
 
 let currentUser = null;
 
 let balance = 0;
 
+
 // ======================================
-// Modal
+// MODAL
 // ======================================
 
-function showModal(title, message) {
+function showModal(
+    title,
+    message
+) {
 
     if (modalTitle) {
 
@@ -82,29 +97,55 @@ function showModal(title, message) {
 }
 
 
-window.closeModal = function () {
+window.closeModal =
+    function () {
 
-    if (modal) {
+        if (modal) {
 
-        modal.style.display =
-            "none";
+            modal.style.display =
+                "none";
+
+        }
+
+    };
+
+
+// ======================================
+// MODAL BACKDROP
+// ======================================
+
+modal?.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            window.closeModal();
+
+        }
 
     }
-
-};
+);
 
 
 // ======================================
-// Format Money
+// FORMAT MONEY
 // ======================================
 
-function formatMoney(amount) {
+function formatMoney(
+    amount
+) {
 
     const numericAmount =
         Number(amount);
 
     const safeAmount =
-        Number.isFinite(numericAmount)
+        Number.isFinite(
+            numericAmount
+        )
             ? numericAmount
             : 0;
 
@@ -123,52 +164,22 @@ function formatMoney(amount) {
 
 
 // ======================================
-// KOBO → NAIRA
-// ======================================
-
-function koboToNaira(amountKobo) {
-
-    const numericKobo =
-        Number(amountKobo);
-
-    if (
-        !Number.isSafeInteger(
-            numericKobo
-        ) ||
-        numericKobo < 0
-    ) {
-
-        throw new Error(
-            "Invalid wallet balance received from server."
-        );
-
-    }
-
-    return (
-        numericKobo / 100
-    );
-
-}
-
-
-// ======================================
-// LOAD WALLET FROM SECURE BACKEND
+// LOAD WALLET BALANCE
 // ======================================
 //
 // IMPORTANT:
 //
-// The frontend does NOT read
-// walletBalance from Firestore.
+// Wallet balance is loaded from the
+// authenticated backend.
 //
-// Firebase authentication provides
-// the ID token.
+// We do NOT use Firestore walletBalance
+// as the authoritative wallet balance.
 //
-// The backend verifies the token,
-// identifies the user and returns
-// the authoritative wallet balance.
 // ======================================
 
-async function loadWalletBalance(user) {
+async function loadWalletBalance(
+    user
+) {
 
     if (!user) {
 
@@ -217,7 +228,7 @@ async function loadWalletBalance(user) {
                 controller.abort();
 
             },
-            8000
+            10000
         );
 
 
@@ -301,7 +312,8 @@ async function loadWalletBalance(user) {
 
 
     if (
-        !response.ok
+        !response.ok ||
+        !result?.success
     ) {
 
         throw new Error(
@@ -313,41 +325,39 @@ async function loadWalletBalance(user) {
     }
 
 
+    const balanceKobo =
+        Number(
+            result.wallet?.balanceKobo
+        );
+
+
     if (
-        !result?.success ||
-        !result?.wallet
+        !Number.isSafeInteger(
+            balanceKobo
+        ) ||
+        balanceKobo < 0
     ) {
 
         throw new Error(
-            result?.error ||
-            result?.message ||
-            "Unable to load wallet balance."
+            "Wallet server returned an invalid balance."
         );
 
     }
 
 
-    const balanceKobo =
-        Number(
-            result.wallet.balanceKobo
-        );
-
-
     balance =
-        koboToNaira(
-            balanceKobo
-        );
+        balanceKobo /
+        100;
 
 
     if (walletBalance) {
 
         walletBalance.textContent =
-            formatMoney(balance);
+            formatMoney(
+                balance
+            );
 
     }
-
-
-    return balance;
 
 }
 
@@ -385,13 +395,9 @@ onAuthStateChanged(
         catch (error) {
 
             console.error(
-                "NovaPay wallet loading error:",
+                "NovaPay Add Money wallet error:",
                 error
             );
-
-
-            balance =
-                0;
 
 
             if (walletBalance) {
@@ -400,13 +406,6 @@ onAuthStateChanged(
                     "₦0.00";
 
             }
-
-
-            showModal(
-                "Wallet Error",
-                error.message ||
-                "Unable to load your wallet."
-            );
 
         }
 
@@ -425,6 +424,9 @@ quickButtons.forEach(
             "click",
             () => {
 
+                const amount =
+                    button.dataset.amount;
+
                 if (!amountInput) {
 
                     return;
@@ -432,12 +434,21 @@ quickButtons.forEach(
                 }
 
 
-                const amount =
-                    button.dataset.amount;
-
-
                 amountInput.value =
                     amount;
+
+
+                amountInput.dispatchEvent(
+                    new Event(
+                        "input",
+                        {
+                            bubbles: true
+                        }
+                    )
+                );
+
+
+                amountInput.focus();
 
             }
         );
@@ -447,31 +458,299 @@ quickButtons.forEach(
 
 
 // ======================================
-// CONTINUE / CREATE PAYMENT
+// CREATE ADD-MONEY PAYMENT
+// ======================================
+//
+// Backend route:
+//
+// POST /api/add-money/create
+//
+// The frontend sends ONLY:
+//
+// {
+//     amount
+// }
+//
+// The backend gets the authenticated
+// UID from the Firebase ID token.
+//
+// ======================================
+
+async function createDeposit(
+    amount
+) {
+
+    if (!currentUser) {
+
+        throw new Error(
+            "Authentication required. Please login again."
+        );
+
+    }
+
+
+    const idToken =
+        await Promise.race([
+
+            currentUser.getIdToken(),
+
+            new Promise(
+                (_, reject) => {
+
+                    setTimeout(
+                        () => {
+
+                            reject(
+                                new Error(
+                                    "Authentication token request timed out."
+                                )
+                            );
+
+                        },
+                        8000
+                    );
+
+                }
+            )
+
+        ]);
+
+
+    const controller =
+        new AbortController();
+
+
+    const timeoutId =
+        setTimeout(
+            () => {
+
+                controller.abort();
+
+            },
+            15000
+        );
+
+
+    let response;
+
+
+    try {
+
+        response =
+            await fetch(
+                `${API_BASE_URL}/api/add-money/create`,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${idToken}`,
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    cache:
+                        "no-store",
+
+                    signal:
+                        controller.signal,
+
+                    body:
+                        JSON.stringify({
+
+                            amount
+
+                        })
+
+                }
+            );
+
+    }
+
+    catch (error) {
+
+        if (
+            error?.name ===
+            "AbortError"
+        ) {
+
+            throw new Error(
+                "Payment server timed out. Please try again."
+            );
+
+        }
+
+
+        throw new Error(
+            "Unable to connect to the payment server."
+        );
+
+    }
+
+    finally {
+
+        clearTimeout(
+            timeoutId
+        );
+
+    }
+
+
+    let result;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    }
+
+    catch {
+
+        throw new Error(
+            "The payment server returned an invalid response."
+        );
+
+    }
+
+
+    if (
+        !response.ok ||
+        !result?.success
+    ) {
+
+        throw new Error(
+            result?.error ||
+            result?.message ||
+            `Payment server error (${response.status}).`
+        );
+
+    }
+
+
+    if (
+        !result.deposit
+    ) {
+
+        throw new Error(
+            "Payment server did not return deposit details."
+        );
+
+    }
+
+
+    return result.deposit;
+
+}
+
+
+// ======================================
+// SHOW TRANSFER ACCOUNT
+// ======================================
+
+function showTransferDetails(
+    deposit
+) {
+
+    const amount =
+        Number(
+            deposit.amount
+        );
+
+
+    const formattedAmount =
+        formatMoney(
+            amount
+        );
+
+
+    const accountName =
+        deposit.accountName ||
+        "Unavailable";
+
+
+    const accountNumber =
+        deposit.accountNumber ||
+        "Unavailable";
+
+
+    const bankName =
+        deposit.bankName ||
+        "Unavailable";
+
+
+    const reference =
+        deposit.reference ||
+        "Unavailable";
+
+
+    const expiry =
+        deposit.accountExpiresAt;
+
+
+    let expiryText =
+        "";
+
+
+    if (expiry) {
+
+        const expiryDate =
+            new Date(
+                expiry
+            );
+
+
+        if (
+            !Number.isNaN(
+                expiryDate.getTime()
+            )
+        ) {
+
+            expiryText =
+                `\n\nAccount expiry: ${expiryDate.toLocaleString(
+                    "en-NG"
+                )}`;
+
+        }
+
+    }
+
+
+    showModal(
+        "Transfer Account Created",
+        `Transfer ${formattedAmount} to the account below.\n\n` +
+        `Bank: ${bankName}\n` +
+        `Account Name: ${accountName}\n` +
+        `Account Number: ${accountNumber}\n\n` +
+        `Reference: ${reference}` +
+        expiryText
+    );
+
+}
+
+
+// ======================================
+// CONTINUE BUTTON
 // ======================================
 
 continueBtn?.addEventListener(
     "click",
     async () => {
 
-        const amount =
-            Number(
-                amountInput?.value
-            );
-
-
-        // ------------------------------
-        // Validate amount
-        // ------------------------------
-
-        if (
-            !Number.isFinite(amount) ||
-            amount < 100
-        ) {
+        if (!amountInput) {
 
             showModal(
-                "Invalid Amount",
-                "Minimum funding amount is ₦100."
+                "Error",
+                "Amount input could not be found."
             );
 
             return;
@@ -479,15 +758,67 @@ continueBtn?.addEventListener(
         }
 
 
-        // ------------------------------
-        // Validate authentication
-        // ------------------------------
+        const rawAmount =
+            String(
+                amountInput.value ||
+                ""
+            )
+                .replace(
+                    /,/g,
+                    ""
+                )
+                .trim();
 
-        if (!currentUser) {
+
+        const amount =
+            Number(
+                rawAmount
+            );
+
+
+        // ----------------------------------
+        // VALIDATE AMOUNT
+        // ----------------------------------
+
+        if (
+            !Number.isFinite(
+                amount
+            )
+        ) {
+
+            showModal(
+                "Invalid Amount",
+                "Please enter a valid amount."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            amount < MINIMUM_DEPOSIT
+        ) {
+
+            showModal(
+                "Invalid Amount",
+                `Minimum funding amount is ${formatMoney(
+                    MINIMUM_DEPOSIT
+                )}.`
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !currentUser
+        ) {
 
             showModal(
                 "Authentication Error",
-                "Please login again."
+                "Your login session is no longer available. Please login again."
             );
 
             return;
@@ -495,239 +826,41 @@ continueBtn?.addEventListener(
         }
 
 
-        // ------------------------------
-        // Validate whole naira amount
-        // ------------------------------
-
-        if (
-            !Number.isInteger(amount)
-        ) {
-
-            showModal(
-                "Invalid Amount",
-                "Please enter a whole naira amount."
-            );
-
-            return;
-
-        }
-
+        // ----------------------------------
+        // LOCK BUTTON
+        // ----------------------------------
 
         continueBtn.disabled =
             true;
 
-
         continueBtn.textContent =
-            "Please wait...";
+            "Creating account...";
 
 
         try {
 
-            // --------------------------
-            // Get Firebase ID token
-            // --------------------------
-
-            const idToken =
-                await Promise.race([
-
-                    currentUser.getIdToken(),
-
-                    new Promise(
-                        (_, reject) => {
-
-                            setTimeout(
-                                () => {
-
-                                    reject(
-                                        new Error(
-                                            "Authentication token request timed out."
-                                        )
-                                    );
-
-                                },
-                                8000
-                            );
-
-                        }
-                    )
-
-                ]);
-
-
-            // --------------------------
-            // Create payment
-            // --------------------------
-            //
-            // IMPORTANT:
-            //
-            // Do NOT send:
-            // - uid
-            // - customerEmail
-            // - customerName
-            //
-            // The backend should obtain
-            // the authenticated identity
-            // from the verified Firebase
-            // ID token.
-            // --------------------------
-
-            const controller =
-                new AbortController();
-
-
-            const timeoutId =
-                setTimeout(
-                    () => {
-
-                        controller.abort();
-
-                    },
-                    15000
+            const deposit =
+                await createDeposit(
+                    amount
                 );
 
 
-            let response;
+            console.log(
+                "NovaPay deposit created:",
+                deposit
+            );
 
 
-            try {
-
-                response =
-                    await fetch(
-                        `${API_BASE_URL}/api/create-payment`,
-                        {
-
-                            method:
-                                "POST",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json",
-
-                                "Authorization":
-                                    `Bearer ${idToken}`,
-
-                                "Accept":
-                                    "application/json"
-
-                            },
-
-                            cache:
-                                "no-store",
-
-                            signal:
-                                controller.signal,
-
-                            body:
-                                JSON.stringify({
-
-                                    amount:
-                                        amount
-
-                                })
-
-                        }
-                    );
-
-            }
-
-            catch (fetchError) {
-
-                if (
-                    fetchError?.name ===
-                    "AbortError"
-                ) {
-
-                    throw new Error(
-                        "Payment server timed out."
-                    );
-
-                }
-
-                throw fetchError;
-
-            }
-
-            finally {
-
-                clearTimeout(
-                    timeoutId
-                );
-
-            }
-
-
-            // --------------------------
-            // Parse response
-            // --------------------------
-
-            let data;
-
-
-            try {
-
-                data =
-                    await response.json();
-
-            }
-
-            catch {
-
-                throw new Error(
-                    "Invalid response from payment server."
-                );
-
-            }
-
-
-            // --------------------------
-            // Handle backend response
-            // --------------------------
-
-            if (
-                !response.ok ||
-                !data?.success
-            ) {
-
-                throw new Error(
-                    data?.message ||
-                    data?.error ||
-                    `Payment server error (${response.status}).`
-                );
-
-            }
-
-
-            // --------------------------
-            // Validate checkout URL
-            // --------------------------
-
-            if (
-                !data.checkoutUrl ||
-                typeof data.checkoutUrl !==
-                "string"
-            ) {
-
-                throw new Error(
-                    "Payment checkout link was not received."
-                );
-
-            }
-
-
-            // --------------------------
-            // Open payment checkout
-            // --------------------------
-
-            window.location.href =
-                data.checkoutUrl;
+            showTransferDetails(
+                deposit
+            );
 
         }
 
         catch (error) {
 
             console.error(
-                "NovaPay payment error:",
+                "NovaPay Add Money payment error:",
                 error
             );
 
@@ -735,7 +868,7 @@ continueBtn?.addEventListener(
             showModal(
                 "Payment Error",
                 error.message ||
-                "Unable to connect to payment server."
+                "Unable to create your payment."
             );
 
         }
@@ -744,7 +877,6 @@ continueBtn?.addEventListener(
 
             continueBtn.disabled =
                 false;
-
 
             continueBtn.textContent =
                 "Continue";
@@ -756,7 +888,7 @@ continueBtn?.addEventListener(
 
 
 // ======================================
-// BACK
+// BACK BUTTON
 // ======================================
 
 backBtn?.addEventListener(
@@ -771,28 +903,7 @@ backBtn?.addEventListener(
 
 
 // ======================================
-// MODAL BACKDROP
-// ======================================
-
-modal?.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target ===
-            modal
-        ) {
-
-            window.closeModal();
-
-        }
-
-    }
-);
-
-
-// ======================================
-// ESC KEY
+// ESCAPE KEY
 // ======================================
 
 document.addEventListener(
@@ -800,22 +911,19 @@ document.addEventListener(
     event => {
 
         if (
-            event.key !==
+            event.key ===
             "Escape"
         ) {
 
-            return;
+            if (
+                modal &&
+                modal.style.display ===
+                "flex"
+            ) {
 
-        }
+                window.closeModal();
 
-
-        if (
-            modal &&
-            modal.style.display ===
-            "flex"
-        ) {
-
-            window.closeModal();
+            }
 
         }
 
@@ -832,13 +940,14 @@ console.log(
 );
 
 console.log(
-    "Firebase authentication: ENABLED"
+    "Paystack backend route:",
+    `${API_BASE_URL}/api/add-money/create`
 );
 
 console.log(
-    "Secure backend wallet loading: ENABLED"
+    "Secure Firebase authentication: ENABLED"
 );
 
 console.log(
-    "Payment creation: ENABLED"
+    "Backend wallet balance: ENABLED"
 );
