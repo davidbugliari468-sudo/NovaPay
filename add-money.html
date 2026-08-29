@@ -2,233 +2,317 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Money | NovaPay</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="add-money.css">
+    <meta
+        name="theme-color"
+        content="#081c15"
+    >
+
+    <meta
+        name="description"
+        content="Securely add money to your NovaPay wallet."
+    >
+
+    <title>Add Money — NovaPay</title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- NovaPay Add Money Styles -->
+    <link
+        rel="stylesheet"
+        href="add-money.css"
+    >
 </head>
 
 <body>
 
-    <!-- ==============================
-         HEADER
-    =============================== -->
+    <!-- ======================================
+         PAGE
+    ======================================= -->
 
-    <header class="header">
+    <main class="add-money-page">
 
-        <button id="backBtn" class="back-btn" aria-label="Go back">
-            ←
-        </button>
+        <!-- ==================================
+             HEADER
+        =================================== -->
 
-        <h2>Add Money</h2>
+        <header class="page-header">
 
-        <div class="header-space"></div>
+            <button
+                type="button"
+                id="backBtn"
+                class="icon-button"
+                aria-label="Go back to dashboard"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
 
-    </header>
-
-
-    <!-- ==============================
-         MAIN
-    =============================== -->
-
-    <main class="container">
-
-
-        <!-- ==============================
-             BALANCE
-        =============================== -->
-
-        <section class="wallet-card">
-
-            <div class="balance-label">
-                Available Balance
+            <div class="header-title">
+                <h1>Add Money</h1>
+                <p>Fund your NovaPay wallet</p>
             </div>
 
-            <h1 id="walletBalance">
-                ₦0.00
-            </h1>
+            <div class="header-spacer"></div>
 
-            <div class="balance-status">
-                Wallet balance
-            </div>
-
-        </section>
+        </header>
 
 
-        <!-- ==============================
-             AMOUNT
-        =============================== -->
+        <!-- ==================================
+             CONTENT
+        =================================== -->
 
-        <section class="amount-section">
+        <section class="content">
 
-            <label for="amount">
-                How much do you want to add?
-            </label>
+            <!-- ==================================
+                 WALLET BALANCE
+            =================================== -->
 
-            <div class="input-box">
+            <section class="balance-card">
 
-                <span class="currency">
-                    ₦
-                </span>
+                <div class="balance-top">
 
-                <input
-                    type="number"
-                    id="amount"
-                    placeholder="0.00"
-                    min="100"
-                    inputmode="decimal"
+                    <div class="balance-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <span class="balance-label">
+                        Current wallet balance
+                    </span>
+
+                </div>
+
+                <div
+                    id="walletBalance"
+                    class="wallet-balance"
+                    aria-live="polite"
                 >
-
-            </div>
-
-        </section>
-
-
-        <!-- ==============================
-             QUICK AMOUNTS
-        =============================== -->
-
-        <section class="quick-section">
-
-            <div class="section-heading">
-                Quick amount
-            </div>
-
-            <div class="quick-grid">
-
-                <button class="quickBtn" data-amount="500">
-                    ₦500
-                </button>
-
-                <button class="quickBtn" data-amount="1000">
-                    ₦1,000
-                </button>
-
-                <button class="quickBtn" data-amount="2000">
-                    ₦2,000
-                </button>
-
-                <button class="quickBtn" data-amount="5000">
-                    ₦5,000
-                </button>
-
-                <button class="quickBtn" data-amount="10000">
-                    ₦10,000
-                </button>
-
-                <button class="quickBtn" data-amount="20000">
-                    ₦20,000
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==============================
-             PAYMENT METHOD
-        =============================== -->
-
-        <section class="payment-section">
-
-            <div class="section-heading">
-                Payment method
-            </div>
-
-
-            <div class="payment-card">
-
-                <div class="payment-icon">
-                    ✓
+                    ₦0.00
                 </div>
 
+                <div class="balance-footer">
 
-                <div class="payment-info">
-
-                    <h3>
-                        Pay with Monnify
-                    </h3>
-
-                    <p>
-                        Secure payment
-                    </p>
+                    <i class="fa-solid fa-shield-halved"></i>
 
                     <span>
-                        Card • Bank Transfer • USSD
+                        Your balance is securely managed by NovaPay.
                     </span>
 
                 </div>
 
-
-                <div class="payment-check">
-                    ✓
-                </div>
-
-            </div>
+            </section>
 
 
-            <!-- Future virtual account -->
+            <!-- ==================================
+                 AMOUNT
+            =================================== -->
 
-            <div class="bank-transfer-card">
+            <section class="funding-section">
 
-                <div class="bank-icon">
-                    🏦
-                </div>
+                <div class="section-heading">
 
-                <div class="bank-info">
-
-                    <h3>
-                        Bank Transfer
-                    </h3>
+                    <h2>How much do you want to add?</h2>
 
                     <p>
-                        Your personal NovaPay account
+                        Enter an amount or select one below.
                     </p>
-
-                    <span>
-                        Coming soon
-                    </span>
 
                 </div>
 
-            </div>
+
+                <!-- Amount Input -->
+
+                <div class="amount-field">
+
+                    <span class="currency-symbol">
+                        ₦
+                    </span>
+
+                    <input
+                        id="amount"
+                        name="amount"
+                        type="number"
+                        inputmode="numeric"
+                        min="100"
+                        step="1"
+                        placeholder="0"
+                        autocomplete="off"
+                        aria-label="Amount to add"
+                    >
+
+                </div>
+
+
+                <p class="minimum-note">
+                    Minimum funding amount: ₦100
+                </p>
+
+
+                <!-- ==================================
+                     QUICK AMOUNTS
+                =================================== -->
+
+                <div class="quick-amounts">
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="500"
+                    >
+                        ₦500
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="1000"
+                    >
+                        ₦1,000
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="2000"
+                    >
+                        ₦2,000
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="5000"
+                    >
+                        ₦5,000
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="10000"
+                    >
+                        ₦10,000
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quickBtn"
+                        data-amount="20000"
+                    >
+                        ₦20,000
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 PAYMENT INFORMATION
+            =================================== -->
+
+            <section class="security-card">
+
+                <div class="security-icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+
+                <div class="security-content">
+
+                    <h3>Secure payment</h3>
+
+                    <p>
+                        Your payment is processed through NovaPay's
+                        secure payment infrastructure. Your wallet
+                        balance is updated only after payment
+                        confirmation.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 CONTINUE
+            =================================== -->
+
+            <button
+                type="button"
+                id="continueBtn"
+                class="continue-button"
+            >
+                <span>Continue</span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+
+            <p class="payment-note">
+                You will be redirected to the secure payment page
+                to complete your funding.
+            </p>
 
         </section>
-
-
-        <!-- ==============================
-             CONTINUE
-        =============================== -->
-
-        <button
-            id="continueBtn"
-            class="continue-btn"
-        >
-            Continue
-        </button>
-
-
-        <p class="secure-note">
-            🔒 Your payment is securely processed by Monnify
-        </p>
 
     </main>
 
 
-    <!-- ==============================
+    <!-- ======================================
          MODAL
-    =============================== -->
+    ======================================= -->
 
-    <div id="customModal" class="modal">
+    <div
+        id="customModal"
+        class="modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+        aria-describedby="modalMessage"
+    >
 
-        <div class="modal-content">
+        <div class="modal-card">
 
-            <h3 id="modalTitle"></h3>
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeModal()"
+                aria-label="Close"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-            <p id="modalMessage"></p>
 
-            <button onclick="closeModal()">
+            <div class="modal-icon">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+            </div>
+
+
+            <h2 id="modalTitle">
+                Notice
+            </h2>
+
+
+            <p id="modalMessage">
+                Something happened.
+            </p>
+
+
+            <button
+                type="button"
+                class="modal-button"
+                onclick="closeModal()"
+            >
                 OK
             </button>
 
@@ -237,11 +321,14 @@
     </div>
 
 
-    <!-- ==============================
+    <!-- ======================================
          JAVASCRIPT
-    =============================== -->
+    ======================================= -->
 
-    <script type="module" src="add-money.js"></script>
+    <script
+        type="module"
+        src="add-money.js"
+    ></script>
 
 </body>
 </html>
