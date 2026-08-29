@@ -16,7 +16,8 @@ import {
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
-    signOut
+    signOut,
+    deleteUser
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 
@@ -69,6 +70,36 @@ const loginLink =
 
 
 /* =========================================================
+   REGISTRATION STEPS
+========================================================= */
+
+const stepOne =
+    document.getElementById(
+        "registrationStepOne"
+    );
+
+const stepTwo =
+    document.getElementById(
+        "registrationStepTwo"
+    );
+
+const nextBtn =
+    document.getElementById(
+        "nextBtn"
+    );
+
+const backBtn =
+    document.getElementById(
+        "backBtn"
+    );
+
+const stepIndicator =
+    document.getElementById(
+        "stepIndicator"
+    );
+
+
+/* =========================================================
    MESSAGES
 ========================================================= */
 
@@ -89,7 +120,7 @@ const registrationStatus =
 
 
 /* =========================================================
-   SUCCESS SCREEN
+   SUCCESS / VERIFICATION SCREEN
 ========================================================= */
 
 const successScreen =
@@ -105,6 +136,16 @@ const successNickname =
 const verificationStatus =
     document.getElementById(
         "verificationStatus"
+    );
+
+const resendVerificationBtn =
+    document.getElementById(
+        "resendVerificationBtn"
+    );
+
+const checkVerificationBtn =
+    document.getElementById(
+        "checkVerificationBtn"
     );
 
 
@@ -204,6 +245,12 @@ const requirementSpecial =
 
 let registrationInProgress =
     false;
+
+let currentStep =
+    1;
+
+let verificationEmail =
+    "";
 
 
 /* =========================================================
@@ -379,30 +426,134 @@ function setStatus(
 
 
 /* =========================================================
-   LOADING STATE
+   STEP UI
 ========================================================= */
 
-function setLoading(
-    loading
+function showRegistrationStep(
+    step
 ) {
 
-    registrationInProgress =
-        loading;
+    currentStep =
+        step;
 
 
-    if (!registerBtn) {
-        return;
+    if (stepOne) {
+
+        stepOne.hidden =
+            step !== 1;
     }
 
 
-    registerBtn.disabled =
-        loading;
+    if (stepTwo) {
+
+        stepTwo.hidden =
+            step !== 2;
+    }
 
 
-    registerBtn.textContent =
-        loading
-            ? "Creating Account..."
-            : "Create Account";
+    if (stepIndicator) {
+
+        stepIndicator.textContent =
+            `Step ${step} of 2`;
+    }
+
+
+    if (nextBtn) {
+
+        nextBtn.hidden =
+            step !== 1;
+    }
+
+
+    if (registerBtn) {
+
+        registerBtn.hidden =
+            step !== 2;
+    }
+
+
+    if (backBtn) {
+
+        backBtn.hidden =
+            step !== 2;
+    }
+
+
+    hideError();
+
+    hideSuccess();
+}
+
+
+/* =========================================================
+   STEP ONE VALIDATION
+========================================================= */
+
+function validateStepOne(
+    data
+) {
+
+    if (!data.nickname) {
+
+        return "Please enter your nickname.";
+    }
+
+
+    if (!data.firstName) {
+
+        return "Please enter your first name.";
+    }
+
+
+    if (!data.surname) {
+
+        return "Please enter your surname.";
+    }
+
+
+    if (!data.email) {
+
+        return "Please enter your email address.";
+    }
+
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if (
+        !emailPattern.test(
+            data.email
+        )
+    ) {
+
+        return "Please enter a valid email address.";
+    }
+
+
+    if (!data.phone) {
+
+        return "Please enter your phone number.";
+    }
+
+
+    const phoneDigits =
+        data.phone.replace(
+            /\D/g,
+            ""
+        );
+
+
+    if (
+        phoneDigits.length < 7 ||
+        phoneDigits.length > 15
+    ) {
+
+        return "Please enter a valid phone number.";
+    }
+
+
+    return null;
 }
 
 
@@ -611,6 +762,62 @@ function updatePasswordMatch() {
 
 
 /* =========================================================
+   STEP TWO VALIDATION
+========================================================= */
+
+function validateStepTwo(
+    data
+) {
+
+    if (!data.password) {
+
+        return "Please create a password.";
+    }
+
+
+    const requirements =
+        getPasswordRequirements(
+            data.password
+        );
+
+
+    if (
+        !requirements.length ||
+        !requirements.uppercase ||
+        !requirements.lowercase ||
+        !requirements.number ||
+        !requirements.special
+    ) {
+
+        return (
+            "Your password must contain at least 8 characters, " +
+            "including uppercase, lowercase, a number and a special character."
+        );
+    }
+
+
+    if (
+        data.password !==
+        data.confirmPassword
+    ) {
+
+        return "Your passwords do not match.";
+    }
+
+
+    if (!data.termsAccepted) {
+
+        return (
+            "Please accept the Terms & Conditions and Privacy Policy."
+        );
+    }
+
+
+    return null;
+}
+
+
+/* =========================================================
    PASSWORD SHOW / HIDE
 ========================================================= */
 
@@ -733,131 +940,6 @@ function getFormData() {
 
 
 /* =========================================================
-   FORM VALIDATION
-========================================================= */
-
-function validateForm(
-    data
-) {
-
-    if (!data.nickname) {
-
-        return "Please enter your nickname.";
-    }
-
-
-    if (!data.firstName) {
-
-        return "Please enter your first name.";
-    }
-
-
-    if (!data.surname) {
-
-        return "Please enter your surname.";
-    }
-
-
-    if (!data.email) {
-
-        return "Please enter your email address.";
-    }
-
-
-    if (
-        data.email.length >
-        MAX_EMAIL_LENGTH
-    ) {
-
-        return "Your email address is too long.";
-    }
-
-
-    const emailPattern =
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-    if (
-        !emailPattern.test(
-            data.email
-        )
-    ) {
-
-        return "Please enter a valid email address.";
-    }
-
-
-    if (!data.phone) {
-
-        return "Please enter your phone number.";
-    }
-
-
-    const phoneDigits =
-        data.phone.replace(
-            /\D/g,
-            ""
-        );
-
-
-    if (
-        phoneDigits.length < 7 ||
-        phoneDigits.length > 15
-    ) {
-
-        return "Please enter a valid phone number.";
-    }
-
-
-    if (!data.password) {
-
-        return "Please create a password.";
-    }
-
-
-    const requirements =
-        getPasswordRequirements(
-            data.password
-        );
-
-
-    if (
-        !requirements.length ||
-        !requirements.uppercase ||
-        !requirements.lowercase ||
-        !requirements.number ||
-        !requirements.special
-    ) {
-
-        return (
-            "Your password must contain at least 8 characters, " +
-            "including uppercase, lowercase, a number and a special character."
-        );
-    }
-
-
-    if (
-        data.password !==
-        data.confirmPassword
-    ) {
-
-        return "Your passwords do not match.";
-    }
-
-
-    if (!data.termsAccepted) {
-
-        return (
-            "Please accept the Terms & Conditions and Privacy Policy."
-        );
-    }
-
-
-    return null;
-}
-
-
-/* =========================================================
    FIRESTORE USER PROFILE
 ========================================================= */
 
@@ -881,12 +963,6 @@ async function createUserDocument(
             user.uid
         );
 
-
-    /*
-       IMPORTANT:
-
-       Password is NEVER stored here.
-    */
 
     await setDoc(
         userReference,
@@ -939,12 +1015,6 @@ async function claimPhoneOnBackend(
         );
     }
 
-
-    /*
-       Get a fresh Firebase ID token.
-
-       Render verifies this token.
-    */
 
     const idToken =
         await firebaseUser.getIdToken(
@@ -1041,324 +1111,415 @@ async function claimPhoneOnBackend(
 
 
     return result;
+} 
+/* =========================================================
+   STEP ONE → STEP TWO
+========================================================= */
+
+if (nextBtn) {
+
+    nextBtn.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            const data =
+                getFormData();
+
+            const error =
+                validateStepOne(
+                    data
+                );
+
+
+            if (error) {
+
+                showError(
+                    error
+                );
+
+                return;
+            }
+
+
+            showRegistrationStep(
+                2
+            );
+
+
+            passwordInput?.focus();
+        }
+    );
 }
 
 
 /* =========================================================
-   FIREBASE ERROR MESSAGES
+   STEP TWO → STEP ONE
 ========================================================= */
 
-function getFriendlyFirebaseError(
-    error
-) {
+if (backBtn) {
 
-    switch (
-        error?.code
-    ) {
+    backBtn.addEventListener(
+        "click",
+        event => {
 
-        case "auth/email-already-in-use":
+            event.preventDefault();
 
-            return (
-                "An account already exists with this email address."
+            showRegistrationStep(
+                1
             );
-
-
-        case "auth/invalid-email":
-
-            return (
-                "Please enter a valid email address."
-            );
-
-
-        case "auth/weak-password":
-
-            return (
-                "Your password does not meet NovaPay's security requirements."
-            );
-
-
-        case "auth/operation-not-allowed":
-
-            return (
-                "Email/password registration is currently unavailable."
-            );
-
-
-        case "auth/network-request-failed":
-
-            return (
-                "Network error. Please check your internet connection and try again."
-            );
-
-
-        case "auth/too-many-requests":
-
-            return (
-                "Too many attempts. Please wait a little and try again."
-            );
-
-
-        case "auth/user-disabled":
-
-            return (
-                "This account has been disabled."
-            );
-
-
-        case "permission-denied":
-
-        case "firestore/permission-denied":
-
-            return (
-                "Your account could not be completed because access was denied."
-            );
-
-
-        default:
-
-            return (
-                "Registration could not be completed. Please try again."
-            );
-    }
+        }
+    );
 }
 
 
 /* =========================================================
-   CREATE NOVAPAY ACCOUNT
+   PASSWORD EVENTS
 ========================================================= */
 
-async function createNovaPayAccount(
-    data
+passwordInput?.addEventListener(
+    "input",
+    () => {
+
+        updatePasswordRequirements();
+        updatePasswordMatch();
+    }
+);
+
+
+confirmPasswordInput?.addEventListener(
+    "input",
+    () => {
+
+        updatePasswordMatch();
+    }
+);
+
+
+/* =========================================================
+   VERIFICATION SCREEN
+========================================================= */
+
+function showVerificationScreen(
+    email,
+    nickname
 ) {
 
-    if (registrationInProgress) {
-        return;
+    verificationEmail =
+        email;
+
+
+    if (form) {
+
+        form.hidden =
+            true;
     }
 
 
-    setLoading(true);
+    if (successScreen) {
 
-    hideError();
+        successScreen.hidden =
+            false;
+    }
 
-    hideSuccess();
+
+    if (successNickname) {
+
+        successNickname.textContent =
+            nickname || "";
+    }
+
+
+    if (verificationStatus) {
+
+        verificationStatus.textContent =
+            `We've sent a verification link to ${email}. ` +
+            "Open your email inbox or Spam/Junk folder and tap the verification link " +
+            "to complete your registration.";
+    }
+
+
+    if (successMessage) {
+
+        successMessage.hidden =
+            true;
+
+        successMessage.textContent =
+            "";
+    }
+
+
+    if (errorMessage) {
+
+        errorMessage.hidden =
+            true;
+
+        errorMessage.textContent =
+            "";
+    }
+
 
     setStatus(
-        "Creating your secure account..."
+        ""
     );
+}
 
 
-    let firebaseUser =
-        null;
+/* =========================================================
+   HIDE VERIFICATION SCREEN
+========================================================= */
+
+function hideVerificationScreen() {
+
+    if (successScreen) {
+
+        successScreen.hidden =
+            true;
+    }
 
 
-    try {
+    if (form) {
 
-        /* =================================================
-           1. CREATE FIREBASE AUTH ACCOUNT
-        ================================================= */
-
-        const credential =
-            await createUserWithEmailAndPassword(
-                auth,
-                data.email,
-                data.password
-            );
+        form.hidden =
+            false;
+    }
+}
 
 
-        firebaseUser =
-            credential.user;
+/* =========================================================
+   SEND VERIFICATION EMAIL
+========================================================= */
 
+async function sendVerificationEmail(
+    user
+) {
 
-        /* =================================================
-           2. CLAIM PHONE THROUGH RENDER
-        ================================================= */
+    if (!user) {
 
-        setStatus(
-            "Checking your phone number..."
+        throw new Error(
+            "Your Firebase account could not be found."
         );
+    }
 
 
-        await claimPhoneOnBackend(
-            firebaseUser,
-            data
-        );
+    await sendEmailVerification(
+        user
+    );
+}
 
 
-        /* =================================================
-           3. CREATE FIRESTORE PROFILE
-        ================================================= */
+/* =========================================================
+   RESEND VERIFICATION
+========================================================= */
 
-        setStatus(
-            "Creating your NovaPay profile..."
-        );
+if (resendVerificationBtn) {
 
+    resendVerificationBtn.addEventListener(
+        "click",
+        async event => {
 
-        await createUserDocument(
-            firebaseUser,
-            data
-        );
+            event.preventDefault();
 
 
-        /* =================================================
-           4. SEND EMAIL VERIFICATION
-        ================================================= */
+            if (!verificationEmail) {
 
-        setStatus(
-            "Sending your verification email..."
-        );
+                showError(
+                    "Your verification session has expired. Please register again."
+                );
 
-
-        await sendEmailVerification(
-            firebaseUser
-        );
+                return;
+            }
 
 
-        /* =================================================
-           5. CLEAR PASSWORDS
-        ================================================= */
-
-        if (passwordInput) {
-
-            passwordInput.value =
-                "";
-        }
-
-
-        if (confirmPasswordInput) {
-
-            confirmPasswordInput.value =
-                "";
-        }
-
-
-        /* =================================================
-           6. SIGN OUT
-        ================================================= */
-
-        await signOut(
-            auth
-        );
-
-
-        /* =================================================
-           7. SUCCESS SCREEN
-        ================================================= */
-
-        if (successNickname) {
-
-            successNickname.textContent =
-                data.nickname;
-        }
-
-
-        if (verificationStatus) {
-
-            verificationStatus.textContent =
-                `A verification link has been sent to ${data.email}. Please check your inbox or Spam/Junk folder and verify your email before logging in.`;
-        }
-
-
-        if (form) {
-
-            form.hidden =
+            resendVerificationBtn.disabled =
                 true;
-        }
 
-
-        if (successScreen) {
-
-            successScreen.hidden =
-                false;
-        }
-
-
-        if (loginLink) {
-
-            loginLink.hidden =
-                true;
-        }
-
-
-        showSuccess(
-            "Your NovaPay account has been created. Please verify your email before logging in."
-        );
-
-
-        setStatus(
-            ""
-        );
-
-    } catch (error) {
-
-        console.error(
-            "NovaPay registration failed:",
-            error
-        );
-
-
-        /*
-           Duplicate phone.
-        */
-
-        if (
-            error?.message ===
-            "PHONE_ALREADY_REGISTERED"
-        ) {
-
-            showError(
-                "This phone number is already registered. Please use another phone number."
-            );
-
-        } else {
-
-            showError(
-                getFriendlyFirebaseError(
-                    error
-                )
-            );
-        }
-
-
-        /*
-           Make sure the Firebase session is not
-           left active after a failed registration.
-        */
-
-        if (firebaseUser) {
 
             try {
 
-                await signOut(
-                    auth
+                hideError();
+
+
+                const currentUser =
+                    auth.currentUser;
+
+
+                if (
+                    !currentUser
+                ) {
+
+                    throw new Error(
+                        "Please start registration again."
+                    );
+                }
+
+
+                await sendVerificationEmail(
+                    currentUser
                 );
 
-            } catch (
-                cleanupError
-            ) {
+
+                if (verificationStatus) {
+
+                    verificationStatus.textContent =
+                        `A new verification link has been sent to ${verificationEmail}. ` +
+                        "Please check your inbox or Spam/Junk folder.";
+                }
+
+
+            } catch (error) {
 
                 console.error(
-                    "Registration cleanup failed:",
-                    cleanupError
+                    "Verification resend failed:",
+                    error
                 );
+
+
+                showError(
+                    "We could not resend the verification email. Please wait a moment and try again."
+                );
+
+
+            } finally {
+
+                resendVerificationBtn.disabled =
+                    false;
             }
         }
-
-
-        setStatus(
-            ""
-        );
-
-    } finally {
-
-        setLoading(
-            false
-        );
-    }
+    );
 }
 
 
 /* =========================================================
-   FORM SUBMISSION
+   CHECK EMAIL VERIFICATION
+========================================================= */
+
+if (checkVerificationBtn) {
+
+    checkVerificationBtn.addEventListener(
+        "click",
+        async event => {
+
+            event.preventDefault();
+
+
+            checkVerificationBtn.disabled =
+                true;
+
+
+            try {
+
+                hideError();
+
+
+                const currentUser =
+                    auth.currentUser;
+
+
+                if (!currentUser) {
+
+                    throw new Error(
+                        "Your verification session has expired. Please start again."
+                    );
+                }
+
+
+                const {
+                    reload
+                } =
+                    await import(
+                        "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"
+                    );
+
+
+                await reload(
+                    currentUser
+                );
+
+
+                if (
+                    currentUser.emailVerified
+                ) {
+
+                    /*
+                     * Do NOT automatically send an unverified user
+                     * to the dashboard.
+                     *
+                     * At this point Firebase has explicitly confirmed
+                     * that the email is verified.
+                     */
+
+                    if (verificationStatus) {
+
+                        verificationStatus.textContent =
+                            "Your email has been verified. Your registration is complete.";
+                    }
+
+
+                    if (continueBtn) {
+
+                        continueBtn.hidden =
+                            false;
+
+                        continueBtn.disabled =
+                            false;
+                    }
+
+
+                    if (checkVerificationBtn) {
+
+                        checkVerificationBtn.hidden =
+                            true;
+                    }
+
+
+                    /*
+                     * Keep the user signed out after verification.
+                     *
+                     * The normal login flow will authenticate them
+                     * and perform the final access checks.
+                     */
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    return;
+                }
+
+
+                showError(
+                    "Your email has not been verified yet. Please open the verification link in your email first, then try again."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Verification check failed:",
+                    error
+                );
+
+
+                showError(
+                    "We could not confirm your email verification. Please try again."
+                );
+
+
+            } finally {
+
+                checkVerificationBtn.disabled =
+                    false;
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
 ========================================================= */
 
 if (form) {
@@ -1370,112 +1531,556 @@ if (form) {
             event.preventDefault();
 
 
-            hideError();
+            if (
+                registrationInProgress
+            ) {
 
-            hideSuccess();
+                return;
+            }
 
 
             const data =
                 getFormData();
 
 
-            const validationError =
-                validateForm(
+            const stepOneError =
+                validateStepOne(
                     data
                 );
 
 
-            if (validationError) {
+            if (stepOneError) {
+
+                showRegistrationStep(
+                    1
+                );
 
                 showError(
-                    validationError
+                    stepOneError
                 );
 
                 return;
             }
 
 
-            await createNovaPayAccount(
-                data
+            const stepTwoError =
+                validateStepTwo(
+                    data
+                );
+
+
+            if (stepTwoError) {
+
+                showError(
+                    stepTwoError
+                );
+
+                return;
+            }
+
+
+            registrationInProgress =
+                true;
+
+
+            if (registerBtn) {
+
+                registerBtn.disabled =
+                    true;
+            }
+
+
+            if (nextBtn) {
+
+                nextBtn.disabled =
+                    true;
+            }
+
+
+            hideError();
+            hideSuccess();
+
+
+            setStatus(
+                "Creating your registration..."
             );
-        }
-    );
-}
 
 
-/* =========================================================
-   PASSWORD EVENTS
-========================================================= */
-
-if (passwordInput) {
-
-    passwordInput.addEventListener(
-        "input",
-        () => {
-
-            updatePasswordRequirements();
-
-            updatePasswordMatch();
-
-            hideError();
-        }
-    );
-}
+            let firebaseUser =
+                null;
 
 
-if (confirmPasswordInput) {
+            try {
 
-    confirmPasswordInput.addEventListener(
-        "input",
-        () => {
+                /* ---------------------------------------------
+                   CREATE FIREBASE AUTH ACCOUNT
+                --------------------------------------------- */
 
-            updatePasswordMatch();
+                const credential =
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        data.email,
+                        data.password
+                    );
 
-            hideError();
-        }
-    );
-}
+
+                firebaseUser =
+                    credential.user;
 
 
-/* =========================================================
-   NORMAL INPUT EVENTS
-========================================================= */
+                if (!firebaseUser) {
 
-[
-    nicknameInput,
-    firstNameInput,
-    middleNameInput,
-    surnameInput,
-    emailInput,
-    phoneInput
-]
-    .filter(Boolean)
-    .forEach(
-        input => {
-
-            input.addEventListener(
-                "input",
-                () => {
-
-                    hideError();
+                    throw new Error(
+                        "Firebase did not return a user account."
+                    );
                 }
-            );
+
+
+                /* ---------------------------------------------
+                   CREATE NOVAPAY FIRESTORE PROFILE
+                --------------------------------------------- */
+
+                setStatus(
+                    "Creating your NovaPay profile..."
+                );
+
+
+                await createUserDocument(
+                    firebaseUser,
+                    data
+                );
+
+
+                /* ---------------------------------------------
+                   CLAIM PHONE THROUGH RENDER
+                --------------------------------------------- */
+
+                setStatus(
+                    "Checking your phone number..."
+                );
+
+
+                try {
+
+                    await claimPhoneOnBackend(
+                        firebaseUser,
+                        data
+                    );
+
+                } catch (phoneError) {
+
+                    /*
+                     * If the phone is already registered,
+                     * do not continue registration.
+                     */
+
+                    if (
+                        phoneError.message ===
+                        "PHONE_ALREADY_REGISTERED"
+                    ) {
+
+                        throw new Error(
+                            "PHONE_ALREADY_REGISTERED"
+                        );
+                    }
+
+
+                    throw phoneError;
+                }
+
+
+                /* ---------------------------------------------
+                   SEND EMAIL VERIFICATION
+                --------------------------------------------- */
+
+                setStatus(
+                    "Sending your verification email..."
+                );
+
+
+                await sendVerificationEmail(
+                    firebaseUser
+                );
+
+
+                /*
+                 * Save the email for the verification screen
+                 * before signing the user out.
+                 */
+
+                verificationEmail =
+                    data.email;
+
+
+                /* ---------------------------------------------
+                   IMPORTANT:
+                   USER MUST VERIFY EMAIL BEFORE ACCESS
+                --------------------------------------------- */
+
+                await signOut(
+                    auth
+                );
+
+
+                showVerificationScreen(
+                    data.email,
+                    data.nickname
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Registration failed:",
+                    error
+                );
+
+
+                /* ---------------------------------------------
+                   FIREBASE EMAIL ALREADY EXISTS
+                --------------------------------------------- */
+
+                if (
+                    error?.code ===
+                    "auth/email-already-in-use"
+                ) {
+
+                    /*
+                     * The email may belong to an account that
+                     * was created previously but never verified.
+                     *
+                     * We attempt to authenticate only with the
+                     * password the user just entered. If the
+                     * account is unverified, we can resend the
+                     * verification email instead of trapping the
+                     * user with "already exists".
+                     */
+
+                    try {
+
+                        const {
+                            signInWithEmailAndPassword
+                        } =
+                            await import(
+                                "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"
+                            );
+
+
+                        const existingCredential =
+                            await signInWithEmailAndPassword(
+                                auth,
+                                data.email,
+                                data.password
+                            );
+
+
+                        const existingUser =
+                            existingCredential.user;
+
+
+                        if (
+                            existingUser &&
+                            !existingUser.emailVerified
+                        ) {
+
+                            await sendVerificationEmail(
+                                existingUser
+                            );
+
+
+                            verificationEmail =
+                                data.email;
+
+
+                            showVerificationScreen(
+                                data.email,
+                                data.nickname
+                            );
+
+
+                            if (verificationStatus) {
+
+                                verificationStatus.textContent =
+                                    `This email already has an unverified registration. ` +
+                                    `We've sent a new verification link to ${data.email}. ` +
+                                    "Please check your inbox or Spam/Junk folder.";
+                            }
+
+
+                            await signOut(
+                                auth
+                            );
+
+
+                            return;
+                        }
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        showError(
+                            "This email is already registered. Please use the login page."
+                        );
+
+
+                    } catch (existingAccountError) {
+
+                        console.error(
+                            "Existing account check failed:",
+                            existingAccountError
+                        );
+
+
+                        if (
+                            existingAccountError?.code ===
+                            "auth/wrong-password" ||
+                            existingAccountError?.code ===
+                            "auth/invalid-credential"
+                        ) {
+
+                            showError(
+                                "This email is already registered. Please use the login page or reset your password."
+                            );
+
+                        } else {
+
+                            showError(
+                                "This email is already registered. If you have not verified it yet, please use the verification email that was sent to you."
+                            );
+                        }
+                    }
+
+
+                    return;
+                }
+
+
+                /* ---------------------------------------------
+                   PHONE ALREADY REGISTERED
+                --------------------------------------------- */
+
+                if (
+                    error?.message ===
+                    "PHONE_ALREADY_REGISTERED"
+                ) {
+
+                    showError(
+                        "This phone number is already registered with NovaPay."
+                    );
+
+
+                    if (firebaseUser) {
+
+                        try {
+
+                            await deleteUser(
+                                firebaseUser
+                            );
+
+                        } catch (
+                            cleanupError
+                        ) {
+
+                            console.error(
+                                "Firebase cleanup failed:",
+                                cleanupError
+                            );
+                        }
+                    }
+
+
+                    return;
+                }
+
+
+                /* ---------------------------------------------
+                   FIREBASE COMMON ERRORS
+                --------------------------------------------- */
+
+                switch (
+                    error?.code
+                ) {
+
+                    case "auth/weak-password":
+
+                        showError(
+                            "Your password is too weak. Please create a stronger password."
+                        );
+
+                        break;
+
+
+                    case "auth/invalid-email":
+
+                        showError(
+                            "Please enter a valid email address."
+                        );
+
+                        break;
+
+
+                    case "auth/operation-not-allowed":
+
+                        showError(
+                            "Email and password registration is currently unavailable."
+                        );
+
+                        break;
+
+
+                    case "auth/network-request-failed":
+
+                        showError(
+                            "Network connection failed. Please check your internet connection and try again."
+                        );
+
+                        break;
+
+
+                    case "auth/too-many-requests":
+
+                        showError(
+                            "Too many attempts were made. Please wait a little while before trying again."
+                        );
+
+                        break;
+
+
+                    default:
+
+                        showError(
+                            error?.message ||
+                            "Registration could not be completed. Please try again."
+                        );
+                }
+
+
+                /* ---------------------------------------------
+                   CLEAN UP NEW AUTH ACCOUNT IF POSSIBLE
+                --------------------------------------------- */
+
+                if (firebaseUser) {
+
+                    try {
+
+                        await deleteUser(
+                            firebaseUser
+                        );
+
+                    } catch (
+                        cleanupError
+                    ) {
+
+                        console.error(
+                            "Could not remove incomplete Firebase account:",
+                            cleanupError
+                        );
+                    }
+                }
+
+
+            } finally {
+
+                registrationInProgress =
+                    false;
+
+
+                if (registerBtn) {
+
+                    registerBtn.disabled =
+                        false;
+                }
+
+
+                if (nextBtn) {
+
+                    nextBtn.disabled =
+                        false;
+                }
+
+
+                setStatus(
+                    ""
+                );
+            }
         }
     );
+}
 
 
 /* =========================================================
-   CONTINUE TO LOGIN
+   CONTINUE BUTTON
 ========================================================= */
 
 if (continueBtn) {
 
     continueBtn.addEventListener(
         "click",
+        event => {
+
+            /*
+             * Verification completion is intentionally handled
+             * separately from this button.
+             *
+             * If the existing HTML already provides a destination
+             * through href, allow that existing navigation.
+             */
+
+            const target =
+                continueBtn.getAttribute(
+                    "data-href"
+                ) ||
+                continueBtn.getAttribute(
+                    "href"
+                );
+
+
+            if (
+                target &&
+                target !== "#"
+            ) {
+
+                window.location.href =
+                    target;
+
+                return;
+            }
+
+
+            /*
+             * Do not send the user to the dashboard automatically.
+             * Login.js will be responsible for normal authenticated
+             * navigation after the email has been verified.
+             */
+
+            event.preventDefault();
+
+
+            showError(
+                "Please log in after verifying your email."
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   LOGIN LINK
+========================================================= */
+
+if (loginLink) {
+
+    loginLink.addEventListener(
+        "click",
         () => {
 
-            window.location.href =
-                "login.html";
+            /*
+             * Existing HTML navigation is preserved.
+             * No custom redirect is forced here.
+             */
         }
     );
 }
@@ -1487,11 +2092,16 @@ if (continueBtn) {
 
 setupPasswordToggles();
 
+showRegistrationStep(
+    1
+);
+
 updatePasswordRequirements();
 
 updatePasswordMatch();
 
+hideVerificationScreen();
 
 console.log(
-    "NovaPay registration initialized successfully."
+    "NovaPay registration flow initialized."
 );

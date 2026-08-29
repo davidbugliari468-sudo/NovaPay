@@ -1,0 +1,1649 @@
+/* =========================================================
+   NOVAPAY REGISTRATION
+   Independent registration stylesheet
+   Does not depend on auth.css
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    background: #f5f7fb;
+
+    color: #111827;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.nova-register {
+
+    width: min(100%, 520px);
+
+    min-height: 100vh;
+    min-height: 100svh;
+
+    margin: 0 auto;
+
+    padding:
+        max(14px, env(safe-area-inset-top))
+        14px
+        max(14px, env(safe-area-inset-bottom));
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.np-logo {
+
+    display: block;
+
+    width: fit-content;
+
+    margin:
+        0 auto 10px;
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-size: 28px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -1.2px;
+}
+
+
+.np-logo span {
+    color: #111827;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.np-header {
+
+    margin-bottom: 14px;
+
+    text-align: center;
+}
+
+
+.np-header h1 {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size:
+        clamp(23px, 6vw, 30px);
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    letter-spacing: -0.8px;
+}
+
+
+.np-header p {
+
+    margin:
+        6px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.np-card {
+
+    width: 100%;
+
+    padding: 17px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 18px 50px rgba(
+            15,
+            23,
+            42,
+            0.09
+        );
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+#registrationForm {
+
+    width: 100%;
+}
+
+
+.registration-step {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   STEP INDICATOR
+========================================================= */
+
+.step-indicator {
+
+    margin:
+        0 0 13px;
+
+    color: #2563eb;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   FIELD GRID
+========================================================= */
+
+.np-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+}
+
+
+.np-field {
+
+    min-width: 0;
+}
+
+
+.np-field.full {
+
+    grid-column:
+        1 / -1;
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+.np-field label {
+
+    display: block;
+
+    margin:
+        0 0 4px 2px;
+
+    color: #334155;
+
+    font-size: 11px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.np-field input {
+
+    display: block;
+
+    width: 100%;
+
+    height: 41px;
+
+    margin: 0;
+
+    padding:
+        0 11px;
+
+    border:
+        1px solid #dbe2ea;
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #f8fafc;
+
+    color: #111827;
+
+    font-size: 14px;
+
+    line-height: 1;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease;
+}
+
+
+.np-field input:hover {
+
+    border-color:
+        #cbd5e1;
+}
+
+
+.np-field input:focus {
+
+    border-color:
+        #2563eb;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            37,
+            99,
+            235,
+            0.10
+        );
+}
+
+
+.np-field input::placeholder {
+
+    color:
+        #94a3b8;
+
+    opacity:
+        1;
+}
+
+
+.np-field input:disabled {
+
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.6;
+}
+
+
+/* =========================================================
+   INVALID INPUT
+========================================================= */
+
+.np-field input[aria-invalid="true"] {
+
+    border-color:
+        #dc2626;
+
+    background:
+        #fffafa;
+}
+
+
+.np-field input[aria-invalid="true"]:focus {
+
+    border-color:
+        #dc2626;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            220,
+            38,
+            38,
+            0.10
+        );
+}
+
+
+/* =========================================================
+   PASSWORD WRAPPER
+========================================================= */
+
+.password-wrapper {
+
+    position: relative;
+
+    width: 100%;
+}
+
+
+.password-wrapper input {
+
+    padding-right:
+        58px;
+}
+
+
+/* =========================================================
+   SHOW PASSWORD
+========================================================= */
+
+.np-show-password {
+
+    position: absolute;
+
+    top: 50%;
+
+    right: 7px;
+
+    z-index: 2;
+
+    transform:
+        translateY(-50%);
+
+    min-width: 42px;
+
+    min-height: 30px;
+
+    padding:
+        4px 6px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #2563eb;
+
+    font-size: 11px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.np-show-password:hover {
+
+    background:
+        #eff6ff;
+}
+
+
+.np-show-password:active {
+
+    transform:
+        translateY(-50%)
+        scale(0.96);
+}
+
+
+.np-show-password:focus-visible {
+
+    outline:
+        2px solid #2563eb;
+
+    outline-offset:
+        1px;
+}
+
+
+/* =========================================================
+   PASSWORD STRENGTH
+========================================================= */
+
+.password-strength {
+
+    min-height: 15px;
+
+    margin:
+        3px 2px 0;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   PASSWORD REQUIREMENTS
+========================================================= */
+
+.password-requirements {
+
+    margin-top: 7px;
+
+    padding:
+        8px 10px;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 11px;
+
+    background:
+        #f8fafc;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+.password-requirements ul {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        4px 8px;
+
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.password-requirements li {
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.password-requirements li::before {
+
+    content: "○";
+
+    display: inline-block;
+
+    width: 14px;
+
+    color: #94a3b8;
+}
+
+
+.password-requirements li.valid {
+
+    color: #16a34a;
+}
+
+
+.password-requirements li.valid::before {
+
+    content: "✓";
+
+    color: #16a34a;
+}
+
+
+/* =========================================================
+   FIELD MESSAGES
+========================================================= */
+
+.field-message {
+
+    min-height: 15px;
+
+    margin:
+        3px 2px 0;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+.field-message.valid {
+
+    color:
+        #16a34a;
+}
+
+
+.field-message.invalid {
+
+    color:
+        #dc2626;
+}
+
+
+/* =========================================================
+   TERMS
+========================================================= */
+
+.np-terms {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 11px;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+
+.np-terms input {
+
+    width: 15px;
+
+    height: 15px;
+
+    flex:
+        0 0 15px;
+
+    margin:
+        1px 0 0;
+
+    padding: 0;
+
+    accent-color:
+        #2563eb;
+
+    cursor: pointer;
+}
+
+
+.np-terms label {
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+.np-terms a {
+
+    color:
+        #2563eb;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+}
+
+
+.np-terms a:hover {
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   BUTTON ROW
+========================================================= */
+
+.button-row {
+
+    display: flex;
+
+    width: 100%;
+
+    gap: 9px;
+
+    margin-top: 13px;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.primary-button {
+
+    width: 100%;
+
+    min-height: 43px;
+
+    padding:
+        0 15px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background:
+        #2563eb;
+
+    color:
+        #ffffff;
+
+    font-size: 13px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 16px rgba(
+            37,
+            99,
+            235,
+            0.18
+        );
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+.primary-button:hover {
+
+    background:
+        #1d4ed8;
+
+    box-shadow:
+        0 8px 20px rgba(
+            37,
+            99,
+            235,
+            0.22
+        );
+}
+
+
+.primary-button:active {
+
+    transform:
+        translateY(1px);
+
+    box-shadow:
+        0 4px 10px rgba(
+            37,
+            99,
+            235,
+            0.16
+        );
+}
+
+
+.primary-button:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
+.secondary-button {
+
+    flex:
+        0 0 90px;
+
+    min-height: 43px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid #dbe2ea;
+
+    border-radius: 11px;
+
+    background:
+        #ffffff;
+
+    color:
+        #334155;
+
+    font-size: 13px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+.secondary-button:hover {
+
+    background:
+        #f8fafc;
+
+    border-color:
+        #cbd5e1;
+}
+
+
+.secondary-button:active {
+
+    transform:
+        translateY(1px);
+}
+
+
+.secondary-button:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.message {
+
+    width: 100%;
+
+    margin-top: 9px;
+
+    padding:
+        9px 10px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* ERROR */
+
+#errorMessage {
+
+    color:
+        #b91c1c;
+
+    background:
+        #fef2f2;
+
+    border:
+        1px solid #fecaca;
+}
+
+
+/* SUCCESS */
+
+#successMessage {
+
+    color:
+        #166534;
+
+    background:
+        #f0fdf4;
+
+    border:
+        1px solid #bbf7d0;
+}
+
+
+/* =========================================================
+   REGISTRATION STATUS
+========================================================= */
+
+#registrationStatus {
+
+    margin-top: 9px;
+
+    color:
+        #64748b;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   VERIFICATION SCREEN
+========================================================= */
+
+.success-screen {
+
+    width: 100%;
+
+    padding:
+        7px 3px 3px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   VERIFICATION ICON
+========================================================= */
+
+.success-icon {
+
+    width: 64px;
+
+    height: 64px;
+
+    margin:
+        0 auto 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #eff6ff;
+
+    color:
+        #2563eb;
+
+    font-size: 28px;
+
+    line-height: 1;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   VERIFICATION TITLE
+========================================================= */
+
+.success-screen h2 {
+
+    margin:
+        0 0 8px;
+
+    color:
+        #111827;
+
+    font-size: 22px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   VERIFICATION TEXT
+========================================================= */
+
+.success-screen p {
+
+    margin:
+        7px 0;
+
+    color:
+        #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+#successNickname {
+
+    color:
+        #111827;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   VERIFICATION STATUS
+========================================================= */
+
+#verificationStatus {
+
+    margin:
+        12px 0;
+
+    padding:
+        11px;
+
+    border:
+        1px solid #dbeafe;
+
+    border-radius:
+        11px;
+
+    background:
+        #eff6ff;
+
+    color:
+        #1e40af;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   VERIFICATION BUTTONS
+========================================================= */
+
+.verification-actions {
+
+    display: grid;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+
+.verification-actions button {
+
+    width: 100%;
+
+    min-height: 42px;
+
+    padding:
+        0 12px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+#resendVerificationBtn {
+
+    border:
+        1px solid #bfdbfe;
+
+    background:
+        #ffffff;
+
+    color:
+        #2563eb;
+}
+
+
+#resendVerificationBtn:hover {
+
+    background:
+        #eff6ff;
+
+    border-color:
+        #93c5fd;
+}
+
+
+#checkVerificationBtn,
+#continueBtn {
+
+    border:
+        0;
+
+    background:
+        #2563eb;
+
+    color:
+        #ffffff;
+}
+
+
+#checkVerificationBtn:hover,
+#continueBtn:hover {
+
+    background:
+        #1d4ed8;
+}
+
+
+.verification-actions button:active {
+
+    transform:
+        translateY(1px);
+}
+
+
+.verification-actions button:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+}
+
+
+/* =========================================================
+   BOTTOM LOGIN LINK
+========================================================= */
+
+.bottom-text {
+
+    margin:
+        12px 0 0;
+
+    color:
+        #64748b;
+
+    text-align: center;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.4;
+}
+
+
+.bottom-text a {
+
+    color:
+        #2563eb;
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+}
+
+
+.bottom-text a:hover {
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+[hidden] {
+
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+
+    outline:
+        3px solid rgba(
+            37,
+            99,
+            235,
+            0.25
+        );
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
+
+@media (
+    max-width: 380px
+) {
+
+    .nova-register {
+
+        padding-left:
+            9px;
+
+        padding-right:
+            9px;
+    }
+
+
+    .np-card {
+
+        padding:
+            12px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .np-grid {
+
+        gap:
+            7px;
+    }
+
+
+    .np-field input {
+
+        height:
+            39px;
+
+        font-size:
+            13px;
+    }
+
+
+    .np-header h1 {
+
+        font-size:
+            22px;
+    }
+
+
+    .np-header p {
+
+        font-size:
+            12px;
+    }
+}
+
+
+/* =========================================================
+   SHORT PHONE
+========================================================= */
+
+@media (
+    max-height: 740px
+) {
+
+    .nova-register {
+
+        justify-content:
+            center;
+
+        padding-top:
+            8px;
+
+        padding-bottom:
+            8px;
+    }
+
+
+    .np-logo {
+
+        margin-bottom:
+            6px;
+
+        font-size:
+            23px;
+    }
+
+
+    .np-header {
+
+        margin-bottom:
+            8px;
+    }
+
+
+    .np-header h1 {
+
+        font-size:
+            21px;
+    }
+
+
+    .np-header p {
+
+        margin-top:
+            3px;
+
+        font-size:
+            11px;
+    }
+
+
+    .np-card {
+
+        padding:
+            11px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .step-indicator {
+
+        margin-bottom:
+            7px;
+
+        font-size:
+            10px;
+    }
+
+
+    .np-grid {
+
+        gap:
+            6px;
+    }
+
+
+    .np-field label {
+
+        margin-bottom:
+            2px;
+
+        font-size:
+            9px;
+    }
+
+
+    .np-field input {
+
+        height:
+            35px;
+
+        padding-left:
+            9px;
+
+        padding-right:
+            9px;
+
+        border-radius:
+            9px;
+
+        font-size:
+            12px;
+    }
+
+
+    .password-wrapper input {
+
+        padding-right:
+            50px;
+    }
+
+
+    .np-show-password {
+
+        min-width:
+            36px;
+
+        min-height:
+            27px;
+
+        font-size:
+            9px;
+    }
+
+
+    .password-strength,
+    .field-message {
+
+        min-height:
+            10px;
+
+        margin-top:
+            1px;
+
+        font-size:
+            8px;
+    }
+
+
+    .password-requirements {
+
+        margin-top:
+            5px;
+
+        padding:
+            5px 7px;
+
+        font-size:
+            8px;
+    }
+
+
+    .password-requirements ul {
+
+        gap:
+            2px 6px;
+    }
+
+
+    .np-terms {
+
+        margin-top:
+            6px;
+
+        gap:
+            6px;
+
+        font-size:
+            8px;
+    }
+
+
+    .np-terms input {
+
+        width:
+            13px;
+
+        height:
+            13px;
+
+        flex-basis:
+            13px;
+    }
+
+
+    .button-row {
+
+        margin-top:
+            7px;
+    }
+
+
+    .primary-button,
+    .secondary-button {
+
+        min-height:
+            37px;
+
+        font-size:
+            11px;
+    }
+
+
+    .bottom-text {
+
+        margin-top:
+            6px;
+
+        font-size:
+            9px;
+    }
+}
+
+
+/* =========================================================
+   VERY SHORT PHONE
+========================================================= */
+
+@media (
+    max-height: 620px
+) {
+
+    .nova-register {
+
+        padding-top:
+            5px;
+
+        padding-bottom:
+            5px;
+    }
+
+
+    .np-logo {
+
+        font-size:
+            20px;
+
+        margin-bottom:
+            4px;
+    }
+
+
+    .np-header {
+
+        margin-bottom:
+            5px;
+    }
+
+
+    .np-header h1 {
+
+        font-size:
+            19px;
+    }
+
+
+    .np-header p {
+
+        display:
+            none;
+    }
+
+
+    .np-card {
+
+        padding:
+            8px;
+    }
+
+
+    .np-grid {
+
+        gap:
+            4px;
+    }
+
+
+    .np-field label {
+
+        font-size:
+            8px;
+    }
+
+
+    .np-field input {
+
+        height:
+            32px;
+
+        font-size:
+            11px;
+    }
+
+
+    .password-requirements {
+
+        display:
+            none;
+    }
+
+
+    .np-terms {
+
+        margin-top:
+            5px;
+    }
+
+
+    .button-row {
+
+        margin-top:
+            5px;
+    }
+
+
+    .primary-button,
+    .secondary-button {
+
+        min-height:
+            34px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    *,
+    *::before,
+    *::after {
+
+        scroll-behavior:
+            auto !important;
+
+        transition:
+            none !important;
+
+        animation:
+            none !important;
+    }
+}

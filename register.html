@@ -22,805 +22,1009 @@
 
     <title>Create Account - NovaPay</title>
 
-    <link rel="stylesheet" href="auth.css">
+    <link
+        rel="stylesheet"
+        href="register.css"
+    >
 
     <style>
 
-        /* =====================================================
-           NOVAPAY REGISTRATION — COMPACT MOBILE DESIGN
-           ===================================================== */
+        * {
+            box-sizing: border-box;
+        }
 
-        .nova-register {
 
-            --np-blue: #2563eb;
-            --np-blue-dark: #1d4ed8;
-            --np-blue-light: #eff6ff;
-            --np-text: #111827;
-            --np-muted: #64748b;
-            --np-border: #dbe2ea;
-            --np-danger: #dc2626;
-            --np-success: #16a34a;
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
 
-            width: min(
-                100%,
-                520px
-            );
 
+        body {
+            min-height: 100vh;
             min-height: 100svh;
 
-            margin: 0 auto;
+            background:
+                #f5f7fb;
 
-            padding:
-                max(14px, env(safe-area-inset-top))
-                14px
-                max(14px, env(safe-area-inset-bottom))
-                14px;
-
-            display: flex;
-            flex-direction: column;
-
-            justify-content: center;
-
-            box-sizing: border-box;
+            color:
+                #111827;
 
             font-family:
-                Inter,
                 -apple-system,
                 BlinkMacSystemFont,
                 "Segoe UI",
+                Roboto,
+                Arial,
                 sans-serif;
 
-            color: var(--np-text);
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .nova-register {
+
+            width:
+                min(100%, 520px);
+
+            min-height:
+                100svh;
+
+            margin:
+                0 auto;
+
+            padding:
+                18px 14px;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            justify-content:
+                center;
         }
 
 
         /* =====================================================
            LOGO
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register .np-logo {
+        .np-logo {
 
-            display: inline-flex;
+            display:
+                block;
 
-            align-items: center;
+            width:
+                fit-content;
 
-            justify-content: center;
+            margin:
+                0 auto 10px;
 
-            align-self: center;
+            color:
+                #2563eb;
 
-            margin-bottom: 8px;
+            text-decoration:
+                none;
 
-            color: var(--np-blue);
+            font-size:
+                28px;
 
-            text-decoration: none;
+            line-height:
+                1;
 
-            font-size: 26px;
+            font-weight:
+                800;
 
-            line-height: 1;
-
-            font-weight: 800;
-
-            letter-spacing: -1px;
+            letter-spacing:
+                -1px;
         }
 
 
-        .nova-register .np-logo span {
+        .np-logo span {
 
-            color: #111827;
+            color:
+                #111827;
         }
 
 
         /* =====================================================
            HEADER
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register .np-header {
+        .np-header {
 
-            text-align: center;
+            text-align:
+                center;
 
-            margin-bottom: 12px;
+            margin-bottom:
+                14px;
         }
 
 
-        .nova-register .np-header h1 {
+        .np-header h1 {
 
-            margin: 0;
+            margin:
+                0;
 
-            font-size: clamp(
-                22px,
-                6vw,
-                30px
-            );
+            font-size:
+                clamp(23px, 6vw, 30px);
 
-            line-height: 1.1;
+            line-height:
+                1.1;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
-            letter-spacing: -0.8px;
+            letter-spacing:
+                -0.8px;
         }
 
 
-        .nova-register .np-header p {
+        .np-header p {
 
-            margin: 5px 0 0;
+            margin:
+                6px 0 0;
 
-            color: var(--np-muted);
+            color:
+                #64748b;
 
-            font-size: 13px;
+            font-size:
+                13px;
 
-            line-height: 1.35;
+            line-height:
+                1.4;
         }
 
 
         /* =====================================================
            CARD
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register .np-card {
+        .np-card {
 
-            width: 100%;
+            width:
+                100%;
 
-            box-sizing: border-box;
+            padding:
+                17px;
 
-            padding: 16px;
+            background:
+                #ffffff;
 
-            background: rgba(
-                255,
-                255,
-                255,
-                0.98
-            );
+            border:
+                1px solid #e5e7eb;
 
-            border: 1px solid #edf0f4;
-
-            border-radius: 24px;
+            border-radius:
+                22px;
 
             box-shadow:
                 0 18px 50px rgba(
                     15,
                     23,
                     42,
-                    0.10
+                    0.09
                 );
+        }
 
-            overflow: hidden;
+
+        /* =====================================================
+           STEP INDICATOR
+        ===================================================== */
+
+        .step-indicator {
+
+            margin:
+                0 0 13px;
+
+            text-align:
+                center;
+
+            color:
+                #2563eb;
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
         }
 
 
         /* =====================================================
            FORM
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register #registrationForm {
+        #registrationForm {
 
-            width: 100%;
-
-            margin: 0;
+            width:
+                100%;
         }
 
 
-        .nova-register .np-grid {
+        .registration-step {
 
-            display: grid;
+            width:
+                100%;
+        }
+
+
+        .np-grid {
+
+            display:
+                grid;
 
             grid-template-columns:
-                minmax(0, 1fr)
-                minmax(0, 1fr);
+                repeat(2, minmax(0, 1fr));
 
-            gap: 9px;
+            gap:
+                9px;
         }
 
 
-        /* =====================================================
-           FIELD
-           ===================================================== */
+        .np-field {
 
-        .nova-register .np-field {
-
-            min-width: 0;
+            min-width:
+                0;
         }
 
 
-        .nova-register .np-field.full {
+        .np-field.full {
 
-            grid-column: 1 / -1;
+            grid-column:
+                1 / -1;
         }
 
 
-        .nova-register .np-field label {
+        .np-field label {
 
-            display: block;
+            display:
+                block;
 
-            margin: 0 0 4px 3px;
+            margin:
+                0 0 4px 2px;
 
-            color: #334155;
+            color:
+                #334155;
 
-            font-size: 11px;
+            font-size:
+                11px;
 
-            line-height: 1.1;
+            line-height:
+                1.1;
 
-            font-weight: 700;
+            font-weight:
+                700;
         }
 
 
-        .nova-register .np-field input {
+        .np-field input {
 
-            width: 100%;
+            width:
+                100%;
 
-            height: 40px;
-
-            box-sizing: border-box;
+            height:
+                41px;
 
             padding:
                 0 11px;
 
             border:
-                1px solid var(--np-border);
+                1px solid #dbe2ea;
 
-            border-radius: 11px;
+            border-radius:
+                11px;
 
-            outline: none;
+            outline:
+                none;
 
-            background: #f8fafc;
+            background:
+                #f8fafc;
 
-            color: var(--np-text);
+            color:
+                #111827;
 
-            font-size: 14px;
+            font-size:
+                14px;
 
-            font-family: inherit;
+            font-family:
+                inherit;
 
             transition:
-                border-color 0.18s ease,
-                box-shadow 0.18s ease,
-                background 0.18s ease;
+                border-color .18s ease,
+                box-shadow .18s ease,
+                background .18s ease;
         }
 
 
-        .nova-register .np-field input::placeholder {
-
-            color: #94a3b8;
-        }
-
-
-        .nova-register .np-field input:focus {
+        .np-field input:focus {
 
             border-color:
-                var(--np-blue);
+                #2563eb;
 
-            background: #ffffff;
+            background:
+                #ffffff;
 
             box-shadow:
-                0 0 0 3px
-                rgba(
+                0 0 0 3px rgba(
                     37,
                     99,
                     235,
-                    0.12
+                    0.10
                 );
         }
 
 
-        /* =====================================================
-           PASSWORD
-           ===================================================== */
+        .np-field input::placeholder {
 
-        .nova-register .np-password {
-
-            position: relative;
-
-            display: flex;
-
-            align-items: center;
-        }
-
-
-        .nova-register .np-password input {
-
-            padding-right: 58px;
-        }
-
-
-        .nova-register .np-show-password {
-
-            position: absolute;
-
-            right: 7px;
-
-            top: 50%;
-
-            transform: translateY(-50%);
-
-            border: 0;
-
-            background: transparent;
-
-            color: var(--np-blue);
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-            padding: 6px;
-
-            cursor: pointer;
-        }
-
-
-        .nova-register .np-show-password:active {
-
-            opacity: 0.65;
+            color:
+                #94a3b8;
         }
 
 
         /* =====================================================
-           PASSWORD MESSAGE
-           ===================================================== */
+           PASSWORD FIELD
+        ===================================================== */
 
-        .nova-register .password-strength {
+        .password-wrapper {
 
-            min-height: 14px;
+            position:
+                relative;
+        }
 
-            margin:
-                3px
-                2px
+
+        .password-wrapper input {
+
+            padding-right:
+                58px;
+        }
+
+
+        .np-show-password {
+
+            position:
+                absolute;
+
+            top:
+                50%;
+
+            right:
+                8px;
+
+            transform:
+                translateY(-50%);
+
+            border:
                 0;
-
-            color: var(--np-muted);
-
-            font-size: 9px;
-
-            line-height: 1.2;
-        }
-
-
-        .nova-register .field-message {
-
-            min-height: 14px;
-
-            margin:
-                3px
-                2px
-                0;
-
-            font-size: 9px;
-
-            line-height: 1.2;
-        }
-
-
-        .nova-register .field-message.valid {
-
-            color: var(--np-success);
-        }
-
-
-        .nova-register .field-message.invalid {
-
-            color: var(--np-danger);
-        }
-
-
-        /* =====================================================
-           PASSWORD REQUIREMENTS
-           ===================================================== */
-
-        .nova-register
-        .password-requirements {
-
-            margin-top: 5px;
-
-            padding:
-                7px
-                9px;
-
-            border-radius: 10px;
 
             background:
-                var(--np-blue-light);
+                transparent;
 
-            color: #475569;
+            color:
+                #2563eb;
 
-            font-size: 8px;
+            font-size:
+                11px;
 
-            line-height: 1.25;
+            font-weight:
+                800;
+
+            cursor:
+                pointer;
+
+            padding:
+                5px;
         }
 
 
-        .nova-register
-        .password-requirements p {
+        /* =====================================================
+           PASSWORD INFORMATION
+        ===================================================== */
 
-            margin: 0 0 3px;
+        .password-strength,
+        .field-message {
 
-            font-weight: 700;
+            min-height:
+                15px;
+
+            margin:
+                3px 2px 0;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.3;
         }
 
 
-        .nova-register
+        .field-message.valid {
+
+            color:
+                #16a34a;
+        }
+
+
+        .field-message.invalid {
+
+            color:
+                #dc2626;
+        }
+
+
+        .password-requirements {
+
+            margin-top:
+                7px;
+
+            padding:
+                8px 10px;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius:
+                11px;
+
+            background:
+                #f8fafc;
+
+            color:
+                #64748b;
+
+            font-size:
+                10px;
+        }
+
+
         .password-requirements ul {
 
-            display: grid;
+            display:
+                grid;
 
             grid-template-columns:
-                1fr 1fr;
+                repeat(2, minmax(0, 1fr));
 
-            gap: 2px 8px;
+            gap:
+                4px 8px;
 
-            margin: 0;
+            margin:
+                0;
 
-            padding-left: 13px;
+            padding:
+                0;
+
+            list-style:
+                none;
         }
 
 
-        .nova-register
-        .password-requirements li {
+        .password-requirements li::before {
 
-            color: #64748b;
+            content:
+                "○";
+
+            margin-right:
+                4px;
+
+            color:
+                #94a3b8;
         }
 
 
-        .nova-register
         .password-requirements li.valid {
 
-            color: var(--np-success);
+            color:
+                #16a34a;
+        }
+
+
+        .password-requirements li.valid::before {
+
+            content:
+                "✓";
+
+            color:
+                #16a34a;
         }
 
 
         /* =====================================================
            TERMS
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register .np-terms {
+        .np-terms {
 
-            display: flex;
+            display:
+                flex;
 
-            align-items: flex-start;
+            align-items:
+                flex-start;
 
-            gap: 7px;
+            gap:
+                8px;
 
-            margin-top: 8px;
+            margin-top:
+                11px;
+
+            color:
+                #64748b;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.4;
         }
 
 
-        .nova-register .np-terms input {
+        .np-terms input {
 
-            width: 16px;
+            width:
+                15px;
 
-            height: 16px;
+            height:
+                15px;
 
-            flex: 0 0 16px;
+            flex:
+                0 0 auto;
 
-            margin: 1px 0 0;
+            margin:
+                1px 0 0;
 
-            accent-color: var(--np-blue);
-
-            cursor: pointer;
+            accent-color:
+                #2563eb;
         }
 
 
-        .nova-register .np-terms label {
+        .np-terms label {
 
-            margin: 0;
-
-            color: #64748b;
-
-            font-size: 9px;
-
-            line-height: 1.35;
+            cursor:
+                pointer;
         }
 
 
-        .nova-register .np-terms a {
+        .np-terms a {
 
-            color: var(--np-blue);
+            color:
+                #2563eb;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
-            text-decoration: none;
+            text-decoration:
+                none;
         }
 
 
         /* =====================================================
-           SECURITY NOTICE
-           ===================================================== */
+           BUTTONS
+        ===================================================== */
 
-        .nova-register .security-notice {
+        .button-row {
 
-            margin-top: 7px;
+            display:
+                flex;
 
-            padding:
-                7px
+            gap:
                 9px;
 
-            border-radius: 9px;
-
-            background: #f8fafc;
-
-            color: #64748b;
-
-            font-size: 8px;
-
-            line-height: 1.3;
+            margin-top:
+                13px;
         }
 
 
-        .nova-register .security-notice strong {
+        .primary-button,
+        .secondary-button {
 
-            display: block;
+            min-height:
+                43px;
 
-            margin-bottom: 1px;
+            border-radius:
+                11px;
 
-            color: #334155;
+            font-family:
+                inherit;
 
-            font-size: 9px;
-        }
+            font-size:
+                13px;
 
+            font-weight:
+                800;
 
-        .nova-register .security-notice p {
-
-            margin: 0;
-        }
-
-
-        /* =====================================================
-           ERROR
-           ===================================================== */
-
-        .nova-register .error-message {
-
-            margin-bottom: 8px;
-
-            padding:
-                8px
-                10px;
-
-            border-radius: 9px;
-
-            background: #fef2f2;
-
-            color: #b91c1c;
-
-            font-size: 11px;
-
-            line-height: 1.3;
-
-            font-weight: 600;
-        }
-
-
-        /* =====================================================
-           SUCCESS
-           ===================================================== */
-
-        .nova-register .success-message {
-
-            margin-bottom: 8px;
-
-            padding:
-                8px
-                10px;
-
-            border-radius: 9px;
-
-            background: #f0fdf4;
-
-            color: #15803d;
-
-            font-size: 11px;
-
-            line-height: 1.3;
-
-            font-weight: 600;
-        }
-
-
-        /* =====================================================
-           STATUS
-           ===================================================== */
-
-        .nova-register .registration-status {
-
-            margin-top: 7px;
-
-            color: var(--np-muted);
-
-            text-align: center;
-
-            font-size: 10px;
-
-            line-height: 1.3;
-        }
-
-
-        /* =====================================================
-           CREATE ACCOUNT
-           ===================================================== */
-
-        .nova-register .primary-button {
-
-            width: 100%;
-
-            min-height: 43px;
-
-            margin-top: 9px;
-
-            border: 0;
-
-            border-radius: 12px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #1d4ed8
-                );
-
-            color: #ffffff;
-
-            font-family: inherit;
-
-            font-size: 14px;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 7px 18px
-                rgba(
-                    37,
-                    99,
-                    235,
-                    0.22
-                );
+            cursor:
+                pointer;
 
             transition:
-                transform 0.15s ease,
-                box-shadow 0.15s ease,
-                opacity 0.15s ease;
+                transform .15s ease,
+                opacity .15s ease,
+                background .15s ease;
         }
 
 
-        .nova-register .primary-button:active {
+        .primary-button {
 
-            transform: scale(0.985);
+            width:
+                100%;
 
-            box-shadow:
-                0 4px 12px
-                rgba(
-                    37,
-                    99,
-                    235,
-                    0.18
-                );
+            border:
+                0;
+
+            background:
+                #2563eb;
+
+            color:
+                #ffffff;
         }
 
 
-        .nova-register .primary-button:disabled {
+        .secondary-button {
 
-            opacity: 0.55;
+            flex:
+                0 0 90px;
 
-            cursor: not-allowed;
+            border:
+                1px solid #dbe2ea;
 
-            transform: none;
+            background:
+                #ffffff;
+
+            color:
+                #334155;
+        }
+
+
+        .primary-button:hover,
+        .secondary-button:hover {
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .primary-button:disabled,
+        .secondary-button:disabled {
+
+            opacity:
+                .55;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+        }
+
+
+        /* =====================================================
+           ERROR / STATUS
+        ===================================================== */
+
+        .message {
+
+            margin-top:
+                9px;
+
+            padding:
+                9px 10px;
+
+            border-radius:
+                10px;
+
+            font-size:
+                11px;
+
+            line-height:
+                1.4;
+        }
+
+
+        #errorMessage {
+
+            color:
+                #b91c1c;
+
+            background:
+                #fef2f2;
+
+            border:
+                1px solid #fecaca;
+        }
+
+
+        #successMessage {
+
+            color:
+                #166534;
+
+            background:
+                #f0fdf4;
+
+            border:
+                1px solid #bbf7d0;
+        }
+
+
+        #registrationStatus {
+
+            margin-top:
+                9px;
+
+            color:
+                #64748b;
+
+            text-align:
+                center;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.3;
         }
 
 
         /* =====================================================
            LOGIN
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register .bottom-text {
+        .bottom-text {
 
-            margin-top: 10px;
+            margin:
+                12px 0 0;
 
-            text-align: center;
+            text-align:
+                center;
 
-            color: var(--np-muted);
+            color:
+                #64748b;
 
-            font-size: 11px;
-
-            line-height: 1.3;
+            font-size:
+                11px;
         }
 
 
-        .nova-register .bottom-text a {
+        .bottom-text a {
 
-            color: var(--np-blue);
+            color:
+                #2563eb;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
-            text-decoration: none;
+            text-decoration:
+                none;
         }
 
 
         /* =====================================================
-           SUCCESS SCREEN
-           ===================================================== */
+           VERIFICATION SCREEN
+        ===================================================== */
 
-        .nova-register .success-screen {
+        .success-screen {
 
-            text-align: center;
+            text-align:
+                center;
 
-            padding: 20px 10px;
+            padding:
+                8px 4px 4px;
         }
 
 
-        .nova-register .success-icon {
+        .success-icon {
 
-            width: 58px;
+            width:
+                64px;
 
-            height: 58px;
+            height:
+                64px;
 
-            margin: 0 auto 12px;
+            margin:
+                0 auto 13px;
 
-            display: flex;
+            display:
+                flex;
 
-            align-items: center;
+            align-items:
+                center;
 
-            justify-content: center;
+            justify-content:
+                center;
 
-            border-radius: 50%;
+            border-radius:
+                50%;
 
-            background: #dcfce7;
+            background:
+                #eff6ff;
 
-            color: #16a34a;
+            color:
+                #2563eb;
 
-            font-size: 30px;
+            font-size:
+                28px;
 
-            font-weight: 900;
+            font-weight:
+                900;
         }
 
 
-        .nova-register .success-screen h2 {
+        .success-screen h2 {
 
-            margin: 0 0 7px;
+            margin:
+                0 0 8px;
 
-            font-size: 22px;
+            color:
+                #111827;
+
+            font-size:
+                22px;
+
+            line-height:
+                1.2;
         }
 
 
-        .nova-register .success-screen p {
+        .success-screen p {
 
-            margin: 6px 0;
+            margin:
+                7px 0;
 
-            color: var(--np-muted);
+            color:
+                #64748b;
 
-            font-size: 12px;
+            font-size:
+                12px;
 
-            line-height: 1.45;
+            line-height:
+                1.5;
+        }
+
+
+        #successNickname {
+
+            color:
+                #111827;
+
+            font-weight:
+                800;
+        }
+
+
+        #verificationStatus {
+
+            margin:
+                12px 0;
+
+            padding:
+                11px;
+
+            border:
+                1px solid #dbeafe;
+
+            border-radius:
+                11px;
+
+            background:
+                #eff6ff;
+
+            color:
+                #1e40af;
+
+            font-size:
+                11px;
+
+            line-height:
+                1.5;
+        }
+
+
+        .verification-actions {
+
+            display:
+                grid;
+
+            gap:
+                8px;
+
+            margin-top:
+                12px;
+        }
+
+
+        .verification-actions button {
+
+            width:
+                100%;
+
+            min-height:
+                42px;
+
+            border-radius:
+                11px;
+
+            font-family:
+                inherit;
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+
+            cursor:
+                pointer;
+        }
+
+
+        #resendVerificationBtn {
+
+            border:
+                1px solid #bfdbfe;
+
+            background:
+                #ffffff;
+
+            color:
+                #2563eb;
+        }
+
+
+        #checkVerificationBtn,
+        #continueBtn {
+
+            border:
+                0;
+
+            background:
+                #2563eb;
+
+            color:
+                #ffffff;
+        }
+
+
+        /* =====================================================
+           HIDDEN
+        ===================================================== */
+
+        [hidden] {
+
+            display:
+                none !important;
         }
 
 
         /* =====================================================
            ACCESSIBILITY
-           ===================================================== */
+        ===================================================== */
 
-        .nova-register [hidden] {
-
-            display: none !important;
-        }
-
-
-        .nova-register button:focus-visible,
-        .nova-register input:focus-visible,
-        .nova-register a:focus-visible {
+        button:focus-visible,
+        input:focus-visible,
+        a:focus-visible {
 
             outline:
-                3px solid
-                rgba(
+                3px solid rgba(
                     37,
                     99,
                     235,
                     0.25
                 );
 
-            outline-offset: 2px;
+            outline-offset:
+                2px;
         }
 
 
         /* =====================================================
            SMALL PHONES
-           ===================================================== */
+        ===================================================== */
 
         @media (
             max-height: 700px
@@ -828,175 +1032,207 @@
 
             .nova-register {
 
-                padding-top: 8px;
-
-                padding-bottom: 8px;
+                padding:
+                    9px 11px;
             }
 
 
-            .nova-register .np-logo {
+            .np-logo {
 
-                font-size: 22px;
+                font-size:
+                    23px;
 
-                margin-bottom: 5px;
+                margin-bottom:
+                    6px;
             }
 
 
-            .nova-register .np-header {
+            .np-header {
 
-                margin-bottom: 7px;
+                margin-bottom:
+                    8px;
             }
 
 
-            .nova-register .np-header h1 {
+            .np-header h1 {
 
-                font-size: 21px;
+                font-size:
+                    21px;
             }
 
 
-            .nova-register .np-header p {
+            .np-header p {
 
-                font-size: 11px;
+                margin-top:
+                    3px;
 
-                margin-top: 3px;
+                font-size:
+                    11px;
             }
 
 
-            .nova-register .np-card {
+            .np-card {
 
-                padding: 11px;
+                padding:
+                    11px;
 
-                border-radius: 18px;
+                border-radius:
+                    18px;
             }
 
 
-            .nova-register .np-grid {
+            .step-indicator {
 
-                gap: 6px;
+                margin-bottom:
+                    7px;
+
+                font-size:
+                    10px;
             }
 
 
-            .nova-register .np-field label {
+            .np-grid {
 
-                font-size: 9px;
-
-                margin-bottom: 2px;
+                gap:
+                    6px;
             }
 
 
-            .nova-register .np-field input {
+            .np-field label {
 
-                height: 35px;
+                margin-bottom:
+                    2px;
 
-                border-radius: 9px;
-
-                font-size: 12px;
+                font-size:
+                    9px;
             }
 
 
-            .nova-register .password-strength,
-            .nova-register .field-message {
+            .np-field input {
 
-                min-height: 10px;
+                height:
+                    35px;
 
-                font-size: 8px;
+                padding:
+                    0 9px;
 
-                margin-top: 1px;
+                border-radius:
+                    9px;
+
+                font-size:
+                    12px;
             }
 
 
-            .nova-register
+            .password-strength,
+            .field-message {
+
+                min-height:
+                    10px;
+
+                margin-top:
+                    1px;
+
+                font-size:
+                    8px;
+            }
+
+
             .password-requirements {
 
-                padding: 5px 7px;
+                margin-top:
+                    5px;
 
-                font-size: 7px;
+                padding:
+                    5px 7px;
+
+                font-size:
+                    8px;
             }
 
 
-            .nova-register .np-terms {
+            .np-terms {
 
-                margin-top: 5px;
+                margin-top:
+                    6px;
+
+                font-size:
+                    8px;
             }
 
 
-            .nova-register .np-terms label {
+            .button-row {
 
-                font-size: 8px;
+                margin-top:
+                    7px;
             }
 
 
-            .nova-register .security-notice {
+            .primary-button,
+            .secondary-button {
 
-                margin-top: 4px;
+                min-height:
+                    37px;
 
-                padding: 5px 7px;
-
-                font-size: 7px;
+                font-size:
+                    11px;
             }
 
 
-            .nova-register .primary-button {
+            .bottom-text {
 
-                min-height: 38px;
+                margin-top:
+                    6px;
 
-                margin-top: 6px;
-
-                font-size: 12px;
-            }
-
-
-            .nova-register .bottom-text {
-
-                margin-top: 6px;
-
-                font-size: 9px;
+                font-size:
+                    9px;
             }
         }
 
 
         /* =====================================================
-           VERY SMALL WIDTH
-           ===================================================== */
+           VERY SMALL PHONES
+        ===================================================== */
 
         @media (
-            max-width: 340px
+            max-width: 350px
         ) {
 
             .nova-register {
 
-                padding-left: 9px;
+                padding-left:
+                    8px;
 
-                padding-right: 9px;
+                padding-right:
+                    8px;
             }
 
 
-            .nova-register .np-card {
+            .np-card {
 
-                padding: 9px;
+                padding:
+                    9px;
             }
 
 
-            .nova-register .np-grid {
+            .np-grid {
 
-                gap: 5px;
+                gap:
+                    5px;
             }
 
 
-            .nova-register .np-field input {
+            .np-field input {
 
-                padding-left: 8px;
-
-                padding-right: 8px;
-
-                font-size: 11px;
+                font-size:
+                    11px;
             }
 
 
-            .nova-register
             .password-requirements ul {
 
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
         }
 
@@ -1009,13 +1245,14 @@
 
 <main class="nova-register">
 
+
     <!-- =====================================================
          LOGO
-         ===================================================== -->
+    ===================================================== -->
 
     <a
-        href="index.html"
         class="np-logo"
+        href="index.html"
         aria-label="NovaPay home"
     >
         Nova<span>Pay</span>
@@ -1024,16 +1261,16 @@
 
     <!-- =====================================================
          HEADER
-         ===================================================== -->
+    ===================================================== -->
 
     <header class="np-header">
 
-        <h1 id="registerTitle">
-            Create your NovaPay account
+        <h1>
+            Create your account
         </h1>
 
-        <p id="registerDescription">
-            Quick, secure and easy to get started.
+        <p>
+            Complete the two steps below to register with NovaPay.
         </p>
 
     </header>
@@ -1041,469 +1278,533 @@
 
     <!-- =====================================================
          CARD
-         ===================================================== -->
+    ===================================================== -->
 
     <section class="np-card">
 
 
         <!-- =================================================
-             ERROR
-             ================================================= -->
-
-        <div
-            id="errorMessage"
-            class="error-message"
-            role="alert"
-            aria-live="assertive"
-            hidden
-        ></div>
-
-
-        <!-- =================================================
-             SUCCESS MESSAGE
-             ================================================= -->
-
-        <div
-            id="successMessage"
-            class="success-message"
-            role="status"
-            aria-live="polite"
-            hidden
-        ></div>
-
-
-        <!-- =================================================
-             FORM
-             ================================================= -->
+             REGISTRATION FORM
+        ================================================= -->
 
         <form
             id="registrationForm"
             novalidate
-            autocomplete="on"
         >
 
-            <div class="np-grid">
 
-
-                <!-- =========================================
-                     NICKNAME
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="nickname">
-                        Nickname
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nickname"
-                        name="nickname"
-                        placeholder="Nickname"
-                        autocomplete="nickname"
-                        maxlength="30"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     FIRST NAME
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="firstName">
-                        First Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        placeholder="First name"
-                        autocomplete="given-name"
-                        maxlength="50"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     MIDDLE NAME
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="middleName">
-                        Middle Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="middleName"
-                        name="middleName"
-                        placeholder="Optional"
-                        autocomplete="additional-name"
-                        maxlength="50"
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     SURNAME
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="surname">
-                        Surname
-                    </label>
-
-                    <input
-                        type="text"
-                        id="surname"
-                        name="surname"
-                        placeholder="Surname"
-                        autocomplete="family-name"
-                        maxlength="50"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     EMAIL
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="email">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="you@example.com"
-                        autocomplete="email"
-                        inputmode="email"
-                        maxlength="254"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     PHONE
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="phone">
-                        Phone
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        placeholder="Phone number"
-                        autocomplete="tel"
-                        inputmode="tel"
-                        maxlength="20"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================================
-                     PASSWORD
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <div class="np-password">
-
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Create password"
-                            autocomplete="new-password"
-                            minlength="8"
-                            maxlength="4096"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="np-show-password"
-                            data-target="password"
-                            aria-label="Show password"
-                        >
-                            Show
-                        </button>
-
-                    </div>
-
-                    <div
-                        id="passwordStrength"
-                        class="password-strength"
-                        aria-live="polite"
-                    ></div>
-
-                </div>
-
-
-                <!-- =========================================
-                     CONFIRM PASSWORD
-                     ========================================= -->
-
-                <div class="np-field">
-
-                    <label for="confirmPassword">
-                        Confirm Password
-                    </label>
-
-                    <div class="np-password">
-
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            placeholder="Confirm password"
-                            autocomplete="new-password"
-                            minlength="8"
-                            maxlength="4096"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="np-show-password"
-                            data-target="confirmPassword"
-                            aria-label="Show confirm password"
-                        >
-                            Show
-                        </button>
-
-                    </div>
-
-                    <div
-                        id="confirmPasswordMessage"
-                        class="field-message"
-                        aria-live="polite"
-                    ></div>
-
-                </div>
-
-
-                <!-- =========================================
-                     PASSWORD REQUIREMENTS
-                     ========================================= -->
-
-                <div
-                    class="password-requirements full"
-                    id="passwordRequirements"
-                    aria-live="polite"
-                >
-
-                    <p>
-                        Password must contain:
-                    </p>
-
-                    <ul>
-
-                        <li id="requirementLength">
-                            8+ characters
-                        </li>
-
-                        <li id="requirementUppercase">
-                            Uppercase letter
-                        </li>
-
-                        <li id="requirementLowercase">
-                            Lowercase letter
-                        </li>
-
-                        <li id="requirementNumber">
-                            Number
-                        </li>
-
-                        <li id="requirementSpecial">
-                            Special character
-                        </li>
-
-                    </ul>
-
-                </div>
-
-
-            </div>
-
-
-            <!-- =================================================
-                 EMAIL VERIFICATION NOTICE
-                 ================================================= -->
+            <!-- =============================================
+                 STEP INDICATOR
+            ============================================== -->
 
             <div
-                id="emailVerificationNotice"
-                class="security-notice"
-                role="note"
+                id="stepIndicator"
+                class="step-indicator"
+                aria-live="polite"
+            >
+                Step 1 of 2
+            </div>
+
+
+            <!-- =============================================
+                 STEP 1
+            ============================================== -->
+
+            <section
+                id="registrationStepOne"
+                class="registration-step"
+                aria-label="Personal information"
             >
 
-                <strong>
-                    Email verification required
-                </strong>
-
-                <p>
-                    We'll send a verification link after your
-                    account is created.
-                </p>
-
-            </div>
+                <div class="np-grid">
 
 
-            <!-- =================================================
-                 TERMS
-                 ================================================= -->
+                    <!-- NICKNAME -->
 
-            <div class="np-terms">
+                    <div class="np-field full">
 
-                <input
-                    type="checkbox"
-                    id="terms"
-                    name="terms"
-                    required
-                >
+                        <label for="nickname">
+                            Nickname
+                        </label>
 
-                <label for="terms">
+                        <input
+                            id="nickname"
+                            name="nickname"
+                            type="text"
+                            maxlength="30"
+                            autocomplete="nickname"
+                            placeholder="Choose a nickname"
+                            required
+                        >
 
-                    I agree to NovaPay's
-
-                    <a href="terms.html">
-                        Terms &amp; Conditions
-                    </a>
-
-                    and
-
-                    <a href="privacy-policy.html">
-                        Privacy Policy
-                    </a>.
-
-                </label>
-
-            </div>
+                    </div>
 
 
-            <!-- =================================================
+                    <!-- FIRST NAME -->
+
+                    <div class="np-field">
+
+                        <label for="firstName">
+                            First name
+                        </label>
+
+                        <input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            maxlength="50"
+                            autocomplete="given-name"
+                            placeholder="First name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- MIDDLE NAME -->
+
+                    <div class="np-field">
+
+                        <label for="middleName">
+                            Middle name
+                        </label>
+
+                        <input
+                            id="middleName"
+                            name="middleName"
+                            type="text"
+                            maxlength="50"
+                            autocomplete="additional-name"
+                            placeholder="Middle name"
+                        >
+
+                    </div>
+
+
+                    <!-- SURNAME -->
+
+                    <div class="np-field full">
+
+                        <label for="surname">
+                            Surname
+                        </label>
+
+                        <input
+                            id="surname"
+                            name="surname"
+                            type="text"
+                            maxlength="50"
+                            autocomplete="family-name"
+                            placeholder="Surname"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="np-field full">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            maxlength="254"
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                            inputmode="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="np-field full">
+
+                        <label for="phone">
+                            Phone number
+                        </label>
+
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            maxlength="20"
+                            autocomplete="tel"
+                            placeholder="+1234567890"
+                            inputmode="tel"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- NEXT -->
+
+                <div class="button-row">
+
+                    <button
+                        id="nextBtn"
+                        class="primary-button"
+                        type="button"
+                    >
+                        Next
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 STEP 2
+            ============================================== -->
+
+            <section
+                id="registrationStepTwo"
+                class="registration-step"
+                aria-label="Account security"
+                hidden
+            >
+
+                <div class="np-grid">
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="np-field full">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="Create a strong password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="np-show-password"
+                                data-target="password"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="passwordStrength"
+                            class="password-strength"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <div
+                            class="password-requirements"
+                            aria-label="Password requirements"
+                        >
+
+                            <ul>
+
+                                <li id="requirementLength">
+                                    8+ characters
+                                </li>
+
+                                <li id="requirementUppercase">
+                                    Uppercase letter
+                                </li>
+
+                                <li id="requirementLowercase">
+                                    Lowercase letter
+                                </li>
+
+                                <li id="requirementNumber">
+                                    Number
+                                </li>
+
+                                <li id="requirementSpecial">
+                                    Special character
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="np-field full">
+
+                        <label for="confirmPassword">
+                            Confirm password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="Enter your password again"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="np-show-password"
+                                data-target="confirmPassword"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="confirmPasswordMessage"
+                            class="field-message"
+                            aria-live="polite"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TERMS -->
+
+                <div class="np-terms">
+
+                    <input
+                        id="terms"
+                        name="terms"
+                        type="checkbox"
+                        required
+                    >
+
+                    <label for="terms">
+
+                        I agree to the
+                        <a
+                            href="terms.html"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Terms &amp; Conditions
+                        </a>
+                        and
+                        <a
+                            href="privacy.html"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Privacy Policy
+                        </a>.
+
+                    </label>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="button-row">
+
+                    <button
+                        id="backBtn"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Back
+                    </button>
+
+
+                    <button
+                        id="registerBtn"
+                        class="primary-button"
+                        type="submit"
+                    >
+                        Create Account
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 ERROR
+            ============================================== -->
+
+            <div
+                id="errorMessage"
+                class="message"
+                role="alert"
+                hidden
+            ></div>
+
+
+            <!-- =============================================
+                 SUCCESS MESSAGE
+            ============================================== -->
+
+            <div
+                id="successMessage"
+                class="message"
+                role="status"
+                hidden
+            ></div>
+
+
+            <!-- =============================================
                  STATUS
-                 ================================================= -->
+            ============================================== -->
 
             <div
                 id="registrationStatus"
-                class="registration-status"
                 role="status"
                 aria-live="polite"
                 hidden
             ></div>
 
 
-            <!-- =================================================
-                 SUBMIT
-                 ================================================= -->
-
-            <button
-                type="submit"
-                id="registerBtn"
-                class="primary-button"
-            >
-                Create Account
-            </button>
-
         </form>
 
+
+        <!-- =================================================
+             VERIFICATION SCREEN
+        ================================================== -->
+
+        <section
+            id="successScreen"
+            class="success-screen"
+            aria-labelledby="verificationTitle"
+            hidden
+        >
+
+            <div
+                class="success-icon"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+
+            <h2 id="verificationTitle">
+                Verify your email
+            </h2>
+
+
+            <p>
+                <strong id="successNickname"></strong>
+            </p>
+
+
+            <p>
+                Verify your email to complete your registration.
+            </p>
+
+
+            <div
+                id="verificationStatus"
+                role="status"
+                aria-live="polite"
+            >
+                We've sent a verification link to your email.
+                Open your inbox or Spam/Junk folder and tap the
+                verification link to continue.
+            </div>
+
+
+            <div class="verification-actions">
+
+
+                <!-- RESEND -->
+
+                <button
+                    id="resendVerificationBtn"
+                    type="button"
+                >
+                    Resend verification email
+                </button>
+
+
+                <!-- CHECK -->
+
+                <button
+                    id="checkVerificationBtn"
+                    type="button"
+                >
+                    I've verified my email
+                </button>
+
+
+                <!-- CONTINUE -->
+
+                <button
+                    id="continueBtn"
+                    type="button"
+                    hidden
+                >
+                    Continue
+                </button>
+
+            </div>
+
+
+            <p class="bottom-text">
+
+                Already verified?
+
+                <a
+                    id="loginLink"
+                    href="login.html"
+                >
+                    Go to Login
+                </a>
+
+            </p>
+
+        </section>
+
+
     </section>
 
-
-    <!-- =====================================================
-         SUCCESS SCREEN
-         ===================================================== -->
-
-    <section
-        id="successScreen"
-        class="success-screen"
-        aria-labelledby="successTitle"
-        hidden
-    >
-
-        <div
-            class="success-icon"
-            aria-hidden="true"
-        >
-            ✓
-        </div>
-
-        <h2 id="successTitle">
-            Account Created
-        </h2>
-
-        <p>
-            Welcome to NovaPay,
-            <strong id="successNickname"></strong>.
-        </p>
-
-        <p id="verificationStatus">
-            Please check your email to verify your account.
-        </p>
-
-        <button
-            type="button"
-            id="continueBtn"
-            class="primary-button"
-        >
-            Continue to NovaPay
-        </button>
-
-    </section>
-
-
-    <!-- =====================================================
-         LOGIN
-         ===================================================== -->
-
-    <div
-        id="loginLink"
-        class="bottom-text"
-    >
-
-        Already have an account?
-
-        <a href="login.html">
-            Login
-        </a>
-
-    </div>
 
 </main>
 
+
+<!-- =========================================================
+     REGISTRATION JAVASCRIPT
+========================================================= -->
 
 <script
     type="module"
     src="register.js"
 ></script>
+
 
 </body>
 
