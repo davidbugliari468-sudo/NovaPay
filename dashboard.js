@@ -442,16 +442,13 @@ onAuthStateChanged(
                 const data =
                     userSnap.data();
 
-                if (
-                    userName
-                ) {
+                if (userName) {
 
-                    userName.textContent =
-                        data.fullName ||
-                        user.email?.split("@")[0] ||
-                        "User";
+    userName.textContent =
+        data.nickname ||
+        "User";
 
-                }
+}
 
                 balance =
                     Number(
@@ -463,15 +460,12 @@ onAuthStateChanged(
 
             else {
 
-                if (
-                    userName
-                ) {
+                if (userName) {
 
-                    userName.textContent =
-                        user.email?.split("@")[0] ||
-                        "User";
+    userName.textContent =
+        "User";
 
-                }
+}
 
                 balance =
                     0;
