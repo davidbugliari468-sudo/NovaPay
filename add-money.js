@@ -3,16 +3,18 @@
 // Secure Backend Version
 // ======================================
 
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-import {
-    doc,
-    getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+// ======================================
+// API
+// ======================================
+
+const API_BASE_URL =
+    "https://novapay-server.onrender.com";
 
 // ======================================
 // Elements
@@ -47,6 +49,7 @@ const quickButtons =
 // ======================================
 
 let currentUser = null;
+
 let balance = 0;
 
 // ======================================
@@ -55,16 +58,41 @@ let balance = 0;
 
 function showModal(title, message) {
 
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
+    if (modalTitle) {
 
-    modal.style.display = "flex";
+        modalTitle.textContent =
+            title;
+
+    }
+
+    if (modalMessage) {
+
+        modalMessage.textContent =
+            message;
+
+    }
+
+    if (modal) {
+
+        modal.style.display =
+            "flex";
+
+    }
+
 }
+
 
 window.closeModal = function () {
 
-    modal.style.display = "none";
+    if (modal) {
+
+        modal.style.display =
+            "none";
+
+    }
+
 };
+
 
 // ======================================
 // Format Money
@@ -72,91 +100,374 @@ window.closeModal = function () {
 
 function formatMoney(amount) {
 
-    return "₦" +
-        Number(amount).toLocaleString("en-NG", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+    const numericAmount =
+        Number(amount);
+
+    const safeAmount =
+        Number.isFinite(numericAmount)
+            ? numericAmount
+            : 0;
+
+    return (
+        "₦" +
+        safeAmount.toLocaleString(
+            "en-NG",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        )
+    );
+
 }
 
+
 // ======================================
-// Authentication
+// KOBO → NAIRA
 // ======================================
 
-onAuthStateChanged(auth, async (user) => {
+function koboToNaira(amountKobo) {
+
+    const numericKobo =
+        Number(amountKobo);
+
+    if (
+        !Number.isSafeInteger(
+            numericKobo
+        ) ||
+        numericKobo < 0
+    ) {
+
+        throw new Error(
+            "Invalid wallet balance received from server."
+        );
+
+    }
+
+    return (
+        numericKobo / 100
+    );
+
+}
+
+
+// ======================================
+// LOAD WALLET FROM SECURE BACKEND
+// ======================================
+//
+// IMPORTANT:
+//
+// The frontend does NOT read
+// walletBalance from Firestore.
+//
+// Firebase authentication provides
+// the ID token.
+//
+// The backend verifies the token,
+// identifies the user and returns
+// the authoritative wallet balance.
+// ======================================
+
+async function loadWalletBalance(user) {
 
     if (!user) {
 
-        window.location.href = "login.html";
-        return;
+        throw new Error(
+            "Authentication required."
+        );
+
     }
 
-    currentUser = user;
+
+    const idToken =
+        await Promise.race([
+
+            user.getIdToken(),
+
+            new Promise(
+                (_, reject) => {
+
+                    setTimeout(
+                        () => {
+
+                            reject(
+                                new Error(
+                                    "Authentication token request timed out."
+                                )
+                            );
+
+                        },
+                        8000
+                    );
+
+                }
+            )
+
+        ]);
+
+
+    const controller =
+        new AbortController();
+
+
+    const timeoutId =
+        setTimeout(
+            () => {
+
+                controller.abort();
+
+            },
+            8000
+        );
+
+
+    let response;
+
 
     try {
 
-        const userRef =
-            doc(db, "users", user.uid);
+        response =
+            await fetch(
+                `${API_BASE_URL}/api/wallet`,
+                {
 
-        const userSnap =
-            await getDoc(userRef);
+                    method:
+                        "GET",
 
-        if (userSnap.exists()) {
+                    headers: {
 
-            const userData =
-                userSnap.data();
+                        "Authorization":
+                            `Bearer ${idToken}`,
 
-            balance =
-                userData.walletBalance || 0;
+                        "Accept":
+                            "application/json"
 
-            walletBalance.textContent =
-                formatMoney(balance);
+                    },
+
+                    cache:
+                        "no-store",
+
+                    signal:
+                        controller.signal
+
+                }
+            );
+
+    }
+
+    catch (error) {
+
+        if (
+            error?.name ===
+            "AbortError"
+        ) {
+
+            throw new Error(
+                "Wallet server timed out."
+            );
+
         }
 
-    } catch (error) {
+        throw error;
 
-        console.error(
-            "Wallet loading error:",
-            error
-        );
-
-        showModal(
-            "Error",
-            "Unable to load your wallet."
-        );
     }
-});
+
+    finally {
+
+        clearTimeout(
+            timeoutId
+        );
+
+    }
+
+
+    let result;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    }
+
+    catch {
+
+        throw new Error(
+            "Invalid response from NovaPay wallet server."
+        );
+
+    }
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            result?.error ||
+            result?.message ||
+            `Wallet server error (${response.status}).`
+        );
+
+    }
+
+
+    if (
+        !result?.success ||
+        !result?.wallet
+    ) {
+
+        throw new Error(
+            result?.error ||
+            result?.message ||
+            "Unable to load wallet balance."
+        );
+
+    }
+
+
+    const balanceKobo =
+        Number(
+            result.wallet.balanceKobo
+        );
+
+
+    balance =
+        koboToNaira(
+            balanceKobo
+        );
+
+
+    if (walletBalance) {
+
+        walletBalance.textContent =
+            formatMoney(balance);
+
+    }
+
+
+    return balance;
+
+}
+
 
 // ======================================
-// Quick Amount Buttons
+// AUTHENTICATION
 // ======================================
 
-quickButtons.forEach(button => {
+onAuthStateChanged(
+    auth,
+    async (user) => {
 
-    button.addEventListener("click", () => {
+        if (!user) {
 
-        amountInput.value =
-            button.dataset.amount;
-    });
+            window.location.href =
+                "login.html";
 
-});
+            return;
+
+        }
+
+
+        currentUser =
+            user;
+
+
+        try {
+
+            await loadWalletBalance(
+                user
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "NovaPay wallet loading error:",
+                error
+            );
+
+
+            balance =
+                0;
+
+
+            if (walletBalance) {
+
+                walletBalance.textContent =
+                    "₦0.00";
+
+            }
+
+
+            showModal(
+                "Wallet Error",
+                error.message ||
+                "Unable to load your wallet."
+            );
+
+        }
+
+    }
+);
+
 
 // ======================================
-// Continue / Create Payment
+// QUICK AMOUNT BUTTONS
 // ======================================
 
-continueBtn.addEventListener(
+quickButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if (!amountInput) {
+
+                    return;
+
+                }
+
+
+                const amount =
+                    button.dataset.amount;
+
+
+                amountInput.value =
+                    amount;
+
+            }
+        );
+
+    }
+);
+
+
+// ======================================
+// CONTINUE / CREATE PAYMENT
+// ======================================
+
+continueBtn?.addEventListener(
     "click",
     async () => {
 
         const amount =
-            Number(amountInput.value);
+            Number(
+                amountInput?.value
+            );
+
 
         // ------------------------------
         // Validate amount
         // ------------------------------
 
-        if (!amount || amount < 100) {
+        if (
+            !Number.isFinite(amount) ||
+            amount < 100
+        ) {
 
             showModal(
                 "Invalid Amount",
@@ -164,10 +475,12 @@ continueBtn.addEventListener(
             );
 
             return;
+
         }
 
+
         // ------------------------------
-        // Check authentication
+        // Validate authentication
         // ------------------------------
 
         if (!currentUser) {
@@ -178,11 +491,35 @@ continueBtn.addEventListener(
             );
 
             return;
+
         }
 
-        continueBtn.disabled = true;
+
+        // ------------------------------
+        // Validate whole naira amount
+        // ------------------------------
+
+        if (
+            !Number.isInteger(amount)
+        ) {
+
+            showModal(
+                "Invalid Amount",
+                "Please enter a whole naira amount."
+            );
+
+            return;
+
+        }
+
+
+        continueBtn.disabled =
+            true;
+
+
         continueBtn.textContent =
             "Please wait...";
+
 
         try {
 
@@ -191,46 +528,157 @@ continueBtn.addEventListener(
             // --------------------------
 
             const idToken =
-                await currentUser.getIdToken();
+                await Promise.race([
+
+                    currentUser.getIdToken(),
+
+                    new Promise(
+                        (_, reject) => {
+
+                            setTimeout(
+                                () => {
+
+                                    reject(
+                                        new Error(
+                                            "Authentication token request timed out."
+                                        )
+                                    );
+
+                                },
+                                8000
+                            );
+
+                        }
+                    )
+
+                ]);
+
 
             // --------------------------
-            // Send secure request
+            // Create payment
+            // --------------------------
+            //
+            // IMPORTANT:
+            //
+            // Do NOT send:
+            // - uid
+            // - customerEmail
+            // - customerName
+            //
+            // The backend should obtain
+            // the authenticated identity
+            // from the verified Firebase
+            // ID token.
             // --------------------------
 
-            const response =
-                await fetch(
-                    "https://novapay-server.onrender.com/api/create-payment",
-                    {
-                        method: "POST",
+            const controller =
+                new AbortController();
 
-                        headers: {
 
-                            "Content-Type":
-                                "application/json",
+            const timeoutId =
+                setTimeout(
+                    () => {
 
-                            "Authorization":
-                                `Bearer ${idToken}`
-                        },
+                        controller.abort();
 
-                        // IMPORTANT:
-                        // We intentionally do NOT send
-                        // uid, customerEmail or
-                        // customerName here.
-                        //
-                        // The Render backend obtains
-                        // the authenticated user's
-                        // identity from Firebase.
-
-                        body: JSON.stringify({
-
-                            amount: amount
-
-                        })
-                    }
+                    },
+                    15000
                 );
 
-            const data =
-                await response.json();
+
+            let response;
+
+
+            try {
+
+                response =
+                    await fetch(
+                        `${API_BASE_URL}/api/create-payment`,
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${idToken}`,
+
+                                "Accept":
+                                    "application/json"
+
+                            },
+
+                            cache:
+                                "no-store",
+
+                            signal:
+                                controller.signal,
+
+                            body:
+                                JSON.stringify({
+
+                                    amount:
+                                        amount
+
+                                })
+
+                        }
+                    );
+
+            }
+
+            catch (fetchError) {
+
+                if (
+                    fetchError?.name ===
+                    "AbortError"
+                ) {
+
+                    throw new Error(
+                        "Payment server timed out."
+                    );
+
+                }
+
+                throw fetchError;
+
+            }
+
+            finally {
+
+                clearTimeout(
+                    timeoutId
+                );
+
+            }
+
+
+            // --------------------------
+            // Parse response
+            // --------------------------
+
+            let data;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            }
+
+            catch {
+
+                throw new Error(
+                    "Invalid response from payment server."
+                );
+
+            }
+
 
             // --------------------------
             // Handle backend response
@@ -238,35 +686,51 @@ continueBtn.addEventListener(
 
             if (
                 !response.ok ||
-                !data.success
+                !data?.success
             ) {
 
                 throw new Error(
-                    data.message ||
-                    "Unable to create payment."
+                    data?.message ||
+                    data?.error ||
+                    `Payment server error (${response.status}).`
                 );
+
             }
 
+
             // --------------------------
-            // Open Monnify checkout
+            // Validate checkout URL
             // --------------------------
 
-            if (!data.checkoutUrl) {
+            if (
+                !data.checkoutUrl ||
+                typeof data.checkoutUrl !==
+                "string"
+            ) {
 
                 throw new Error(
                     "Payment checkout link was not received."
                 );
+
             }
+
+
+            // --------------------------
+            // Open payment checkout
+            // --------------------------
 
             window.location.href =
                 data.checkoutUrl;
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
-                "Payment error:",
+                "NovaPay payment error:",
                 error
             );
+
 
             showModal(
                 "Payment Error",
@@ -274,25 +738,107 @@ continueBtn.addEventListener(
                 "Unable to connect to payment server."
             );
 
-        } finally {
+        }
 
-            continueBtn.disabled = false;
+        finally {
+
+            continueBtn.disabled =
+                false;
+
 
             continueBtn.textContent =
                 "Continue";
+
         }
+
     }
 );
 
+
 // ======================================
-// Back
+// BACK
 // ======================================
 
-backBtn.addEventListener(
+backBtn?.addEventListener(
     "click",
     () => {
 
         window.location.href =
             "dashboard.html";
+
     }
+);
+
+
+// ======================================
+// MODAL BACKDROP
+// ======================================
+
+modal?.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            window.closeModal();
+
+        }
+
+    }
+);
+
+
+// ======================================
+// ESC KEY
+// ======================================
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !==
+            "Escape"
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            modal &&
+            modal.style.display ===
+            "flex"
+        ) {
+
+            window.closeModal();
+
+        }
+
+    }
+);
+
+
+// ======================================
+// STARTUP
+// ======================================
+
+console.log(
+    "NovaPay Add Money initialized."
+);
+
+console.log(
+    "Firebase authentication: ENABLED"
+);
+
+console.log(
+    "Secure backend wallet loading: ENABLED"
+);
+
+console.log(
+    "Payment creation: ENABLED"
 );
