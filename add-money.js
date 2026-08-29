@@ -834,7 +834,7 @@ continueBtn?.addEventListener(
             true;
 
         continueBtn.textContent =
-            "Creating account...";
+    "Preparing transfer details...";
 
 
         try {

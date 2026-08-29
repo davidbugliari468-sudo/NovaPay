@@ -10,23 +10,11 @@
 
     <meta
         name="theme-color"
-        content="#081c15"
+        content="#0b63f6"
     >
 
-    <meta
-        name="description"
-        content="Securely add money to your NovaPay wallet."
-    >
+    <title>NovaPay — Add Money</title>
 
-    <title>Add Money — NovaPay</title>
-
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
-
-    <!-- NovaPay Add Money Styles -->
     <link
         rel="stylesheet"
         href="add-money.css"
@@ -35,30 +23,30 @@
 
 <body>
 
-    <!-- ======================================
-         PAGE
-    ======================================= -->
-
     <main class="add-money-page">
 
-        <!-- ==================================
+        <!-- ==============================
              HEADER
-        =================================== -->
-
-        <header class="page-header">
+        =============================== -->
+        <header class="topbar">
 
             <button
                 type="button"
                 id="backBtn"
-                class="icon-button"
-                aria-label="Go back to dashboard"
+                class="back-button"
+                aria-label="Go back"
             >
-                <i class="fa-solid fa-arrow-left"></i>
+                <span class="back-icon">‹</span>
+                <span>Back</span>
             </button>
 
-            <div class="header-title">
-                <h1>Add Money</h1>
-                <p>Fund your NovaPay wallet</p>
+            <div class="brand">
+                <div class="brand-mark">N</div>
+
+                <div class="brand-text">
+                    <strong>NovaPay</strong>
+                    <span>Add Money</span>
+                </div>
             </div>
 
             <div class="header-spacer"></div>
@@ -66,71 +54,76 @@
         </header>
 
 
-        <!-- ==================================
+        <!-- ==============================
              CONTENT
-        =================================== -->
-
+        =============================== -->
         <section class="content">
 
-            <!-- ==================================
-                 WALLET BALANCE
-            =================================== -->
+            <div class="intro">
 
+                <span class="eyebrow">
+                    FUND YOUR WALLET
+                </span>
+
+                <h1>
+                    Add money
+                </h1>
+
+                <p>
+                    Fund your NovaPay wallet securely using
+                    a temporary bank transfer account.
+                </p>
+
+            </div>
+
+
+            <!-- ==============================
+                 WALLET BALANCE
+            =============================== -->
             <section class="balance-card">
 
-                <div class="balance-top">
+                <div class="balance-icon">
+                    ₦
+                </div>
 
-                    <div class="balance-icon">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
+                <div class="balance-info">
 
-                    <span class="balance-label">
+                    <span>
                         Current wallet balance
                     </span>
 
-                </div>
-
-                <div
-                    id="walletBalance"
-                    class="wallet-balance"
-                    aria-live="polite"
-                >
-                    ₦0.00
-                </div>
-
-                <div class="balance-footer">
-
-                    <i class="fa-solid fa-shield-halved"></i>
-
-                    <span>
-                        Your balance is securely managed by NovaPay.
-                    </span>
+                    <strong id="walletBalance">
+                        ₦0.00
+                    </strong>
 
                 </div>
 
             </section>
 
 
-            <!-- ==================================
-                 AMOUNT
-            =================================== -->
-
-            <section class="funding-section">
+            <!-- ==============================
+                 AMOUNT CARD
+            =============================== -->
+            <section class="funding-card">
 
                 <div class="section-heading">
 
-                    <h2>How much do you want to add?</h2>
+                    <div>
+                        <h2>
+                            How much do you want to add?
+                        </h2>
 
-                    <p>
-                        Enter an amount or select one below.
-                    </p>
+                        <p>
+                            Enter an amount between
+                            ₦100 and ₦5,000,000.
+                        </p>
+                    </div>
 
                 </div>
 
 
-                <!-- Amount Input -->
-
-                <div class="amount-field">
+                <!-- Amount input -->
+                <div class="amount-wrapper">
 
                     <span class="currency-symbol">
                         ₦
@@ -140,8 +133,9 @@
                         id="amount"
                         name="amount"
                         type="number"
-                        inputmode="numeric"
+                        inputmode="decimal"
                         min="100"
+                        max="5000000"
                         step="1"
                         placeholder="0"
                         autocomplete="off"
@@ -151,89 +145,125 @@
                 </div>
 
 
-                <p class="minimum-note">
-                    Minimum funding amount: ₦100
-                </p>
+                <!-- Quick amounts -->
+                <div class="quick-section">
 
+                    <span class="quick-label">
+                        Quick select
+                    </span>
 
-                <!-- ==================================
-                     QUICK AMOUNTS
-                =================================== -->
+                    <div class="quick-grid">
 
-                <div class="quick-amounts">
+                        <button
+                            type="button"
+                            class="quickBtn"
+                            data-amount="500"
+                        >
+                            ₦500
+                        </button>
 
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="500"
-                    >
-                        ₦500
-                    </button>
+                        <button
+                            type="button"
+                            class="quickBtn"
+                            data-amount="1000"
+                        >
+                            ₦1,000
+                        </button>
 
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="1000"
-                    >
-                        ₦1,000
-                    </button>
+                        <button
+                            type="button"
+                            class="quickBtn"
+                            data-amount="5000"
+                        >
+                            ₦5,000
+                        </button>
 
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="2000"
-                    >
-                        ₦2,000
-                    </button>
+                        <button
+                            type="button"
+                            class="quickBtn"
+                            data-amount="10000"
+                        >
+                            ₦10,000
+                        </button>
 
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="5000"
-                    >
-                        ₦5,000
-                    </button>
-
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="10000"
-                    >
-                        ₦10,000
-                    </button>
-
-                    <button
-                        type="button"
-                        class="quickBtn"
-                        data-amount="20000"
-                    >
-                        ₦20,000
-                    </button>
+                    </div>
 
                 </div>
+
+
+                <!-- Security note -->
+                <div class="security-note">
+
+                    <div class="security-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Secure payment
+                        </strong>
+
+                        <p>
+                            Your payment is processed securely
+                            through Paystack.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Continue -->
+                <button
+                    type="button"
+                    id="continueBtn"
+                    class="continue-button"
+                >
+                    <span>
+                        Continue
+                    </span>
+
+                    <span class="continue-arrow">
+                        →
+                    </span>
+                </button>
 
             </section>
 
 
-            <!-- ==================================
-                 PAYMENT INFORMATION
-            =================================== -->
+            <!-- ==============================
+                 IMPORTANT WARNING
+            =============================== -->
+            <section class="warning-card">
 
-            <section class="security-card">
-
-                <div class="security-icon">
-                    <i class="fa-solid fa-lock"></i>
+                <div class="warning-icon">
+                    !
                 </div>
 
-                <div class="security-content">
+                <div class="warning-content">
 
-                    <h3>Secure payment</h3>
+                    <h3>
+                        Important: temporary account
+                    </h3>
 
                     <p>
-                        Your payment is processed through NovaPay's
-                        secure payment infrastructure. Your wallet
-                        balance is updated only after payment
-                        confirmation.
+                        The bank account shown after you continue
+                        is temporary and is created specifically
+                        for this deposit.
+                    </p>
+
+                    <p>
+                        <strong>
+                            Do not transfer money to the same
+                            account more than once.
+                        </strong>
+                    </p>
+
+                    <p>
+                        Whenever you want to add money again,
+                        start a new funding request and generate
+                        a new transfer account.
                     </p>
 
                 </div>
@@ -241,89 +271,161 @@
             </section>
 
 
-            <!-- ==================================
-                 CONTINUE
-            =================================== -->
+            <!-- ==============================
+                 HOW IT WORKS
+            =============================== -->
+            <section class="steps-card">
 
-            <button
-                type="button"
-                id="continueBtn"
-                class="continue-button"
-            >
-                <span>Continue</span>
+                <div class="steps-title">
+                    How it works
+                </div>
 
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+                <div class="steps">
+
+                    <div class="step">
+
+                        <div class="step-number">
+                            1
+                        </div>
+
+                        <div>
+                            <strong>
+                                Enter amount
+                            </strong>
+
+                            <span>
+                                Choose how much you want to add.
+                            </span>
+                        </div>
+
+                    </div>
 
 
-            <p class="payment-note">
-                You will be redirected to the secure payment page
-                to complete your funding.
-            </p>
+                    <div class="step-line"></div>
+
+
+                    <div class="step">
+
+                        <div class="step-number">
+                            2
+                        </div>
+
+                        <div>
+                            <strong>
+                                Get transfer details
+                            </strong>
+
+                            <span>
+                                NovaPay prepares a temporary
+                                account for this deposit.
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="step-line"></div>
+
+
+                    <div class="step">
+
+                        <div class="step-number">
+                            3
+                        </div>
+
+                        <div>
+                            <strong>
+                                Make your transfer
+                            </strong>
+
+                            <span>
+                                Transfer the exact amount to
+                                the displayed account.
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
         </section>
 
-    </main>
+
+        <!-- ==============================
+             MODAL
+        =============================== -->
+        <div
+            id="customModal"
+            class="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modalTitle"
+        >
+
+            <div class="modal-backdrop"></div>
+
+            <div class="modal-card">
+
+                <div class="modal-top">
+
+                    <div class="modal-status-icon">
+                        ✓
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeModal()"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+                </div>
 
 
-    <!-- ======================================
-         MODAL
-    ======================================= -->
-
-    <div
-        id="customModal"
-        class="modal-overlay"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modalTitle"
-        aria-describedby="modalMessage"
-    >
-
-        <div class="modal-card">
-
-            <button
-                type="button"
-                class="modal-close"
-                onclick="closeModal()"
-                aria-label="Close"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+                <h2 id="modalTitle">
+                    Payment
+                </h2>
 
 
-            <div class="modal-icon">
+                <div
+                    id="modalMessage"
+                    class="modal-message"
+                ></div>
 
-                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <div class="modal-warning">
+
+                    <strong>
+                        Please read carefully
+                    </strong>
+
+                    <span>
+                        This transfer account is temporary.
+                        Generate a new account for every new
+                        deposit.
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-button"
+                    onclick="closeModal()"
+                >
+                    OK
+                </button>
 
             </div>
 
-
-            <h2 id="modalTitle">
-                Notice
-            </h2>
-
-
-            <p id="modalMessage">
-                Something happened.
-            </p>
-
-
-            <button
-                type="button"
-                class="modal-button"
-                onclick="closeModal()"
-            >
-                OK
-            </button>
-
         </div>
 
-    </div>
+    </main>
 
-
-    <!-- ======================================
-         JAVASCRIPT
-    ======================================= -->
 
     <script
         type="module"
