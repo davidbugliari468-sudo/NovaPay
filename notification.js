@@ -1,17 +1,18 @@
 /* =========================================================
    NOVAPAY — NOTIFICATIONS
-   Backend-authoritative notification history
    ---------------------------------------------------------
-   Frontend responsibilities:
-   - Keep existing page navigation/buttons
-   - Authenticate with Firebase Auth
-   - Request notifications from NovaPay backend
-   - Display backend notification data
+   Responsibilities:
+   - Authenticate the current Firebase user
+   - Load notification history from NovaPay backend
    - Search notifications
    - Filter notification tabs
    - Mark notifications as read
    - Mark all notifications as read
-   - Never read notification data directly from Firestore
+   - Register the browser/PWA for Firebase Cloud Messaging
+   - Send the FCM device token to NovaPay backend
+   - Refresh notification history when a foreground
+     push message arrives
+   - Preserve existing page navigation and UI
    ========================================================= */
 
 import {
@@ -20,7 +21,14 @@ import {
 
 import {
     onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+import {
+    getMessaging,
+    getToken,
+    onMessage,
+    isSupported
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging.js";
 
 
 /* =========================================================
@@ -33,7 +41,11 @@ const API_BASE_URL =
 const NOTIFICATIONS_API =
     `${API_BASE_URL}/api/notifications`;
 
-const DEFAULT_LIMIT = 30;
+const DEFAULT_LIMIT =
+    30;
+
+const FCM_SERVICE_WORKER_PATH =
+    "/firebase-messaging-sw.js";
 
 
 /* =========================================================
@@ -70,23 +82,32 @@ const tabs =
    STATE
    ========================================================= */
 
-let currentUser = null;
+let currentUser =
+    null;
 
-let allNotifications = [];
+let allNotifications =
+    [];
 
-let nextCursor = null;
+let nextCursor =
+    null;
 
-let hasMore = false;
+let hasMore =
+    false;
 
-let isLoading = false;
+let isLoading =
+    false;
 
-let activeTab = "All";
+let activeTab =
+    "All";
+
+let messagingInstance =
+    null;
 
 
 /* =========================================================
    BACK BUTTON
    ---------------------------------------------------------
-   Existing working behavior preserved.
+   Existing behavior preserved.
    ========================================================= */
 
 backBtn?.addEventListener(
@@ -128,10 +149,25 @@ onAuthStateChanged(
             "NovaPay notification authentication ready."
         );
 
+        console.log(
+            "Authenticated UID:",
+            currentUser.uid
+        );
 
+
+        /*
+         * Load existing notification history.
+         */
         await loadNotifications(
             true
         );
+
+
+        /*
+         * Register this authenticated browser/PWA
+         * for push notifications.
+         */
+        await setupPushNotifications();
 
     }
 );
@@ -146,7 +182,9 @@ async function loadNotifications(
 ) {
 
     if (isLoading) {
+
         return;
+
     }
 
 
@@ -173,11 +211,14 @@ async function loadNotifications(
 
     if (reset) {
 
-        allNotifications = [];
+        allNotifications =
+            [];
 
-        nextCursor = null;
+        nextCursor =
+            null;
 
-        hasMore = false;
+        hasMore =
+            false;
 
         showLoading();
 
@@ -187,9 +228,10 @@ async function loadNotifications(
     try {
 
         /*
-         * Firebase Auth creates the identity.
+         * Firebase Auth supplies the identity token.
+         *
          * The backend verifies this token and determines
-         * the actual user ID.
+         * the user's UID itself.
          */
         const idToken =
             await currentUser.getIdToken();
@@ -245,7 +287,8 @@ async function loadNotifications(
             );
 
 
-        let result = null;
+        let result =
+            null;
 
 
         try {
@@ -319,11 +362,6 @@ async function loadNotifications(
             null;
 
 
-        /*
-         * Backend already returns newest first.
-         * We intentionally do not sort by a client-controlled
-         * field.
-         */
         renderNotifications();
 
 
@@ -357,6 +395,492 @@ async function loadNotifications(
 
 
 /* =========================================================
+   PUSH NOTIFICATION SETUP
+   ========================================================= */
+
+async function setupPushNotifications() {
+
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    /*
+     * Check whether this browser supports Firebase
+     * Cloud Messaging.
+     */
+    try {
+
+        const supported =
+            await isSupported();
+
+
+        if (!supported) {
+
+            console.log(
+                "NovaPay push notifications are not supported in this browser."
+            );
+
+            return;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "NovaPay push support check failed:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Service workers are required for web push.
+     */
+    if (
+        !("serviceWorker" in navigator)
+    ) {
+
+        console.log(
+            "NovaPay: Service workers are not supported."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Notification permission must be granted before
+     * Firebase can deliver web push notifications.
+     *
+     * We deliberately do NOT force a permission prompt
+     * immediately on page load.
+     */
+    if (
+        !("Notification" in window)
+    ) {
+
+        console.log(
+            "NovaPay: Browser notifications are unavailable."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * Register the exact service worker we created.
+         */
+        const serviceWorkerRegistration =
+            await navigator.serviceWorker.register(
+                FCM_SERVICE_WORKER_PATH,
+                {
+                    scope:
+                        "/"
+                }
+            );
+
+
+        console.log(
+            "NovaPay FCM service worker registered.",
+            serviceWorkerRegistration.scope
+        );
+
+
+        /*
+         * Request permission.
+         *
+         * On iPhone/iPad, this should be tested from the
+         * installed Home Screen web app.
+         */
+        let permission =
+            Notification.permission;
+
+
+        if (
+            permission ===
+            "default"
+        ) {
+
+            permission =
+                await Notification.requestPermission();
+
+        }
+
+
+        if (
+            permission !==
+            "granted"
+        ) {
+
+            console.log(
+                "NovaPay notification permission was not granted."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Create Firebase Messaging instance.
+         */
+        messagingInstance =
+            getMessaging();
+
+
+        /*
+         * Obtain the browser/PWA FCM registration token.
+         *
+         * No userId is accepted from the browser.
+         * The backend associates the token with the
+         * authenticated Firebase UID from the Authorization
+         * token.
+         */
+        const token =
+            await getToken(
+                messagingInstance,
+                {
+                    serviceWorkerRegistration
+                }
+            );
+
+
+        if (!token) {
+
+            console.error(
+                "NovaPay: Firebase did not return an FCM token."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "NovaPay FCM token obtained successfully."
+        );
+
+
+        /*
+         * Send the token to our live backend.
+         */
+        await registerDeviceToken(
+            token
+        );
+
+
+        /*
+         * Handle pushes received while the Notifications
+         * page is currently open.
+         */
+        setupForegroundMessageListener();
+
+
+    } catch (error) {
+
+        console.error(
+            "NovaPay push notification setup error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REGISTER DEVICE TOKEN WITH BACKEND
+   ========================================================= */
+
+async function registerDeviceToken(
+    token
+) {
+
+    if (
+        !currentUser ||
+        !token
+    ) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        const idToken =
+            await currentUser.getIdToken();
+
+
+        /*
+         * Detect the current environment.
+         */
+        const platform =
+            detectPlatform();
+
+
+        const response =
+            await fetch(
+                `${NOTIFICATIONS_API}/device-token`,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Authorization":
+                            `Bearer ${idToken}`,
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            token,
+
+                            platform
+
+                        })
+
+                }
+            );
+
+
+        let result =
+            null;
+
+
+        try {
+
+            result =
+                await response.json();
+
+        } catch {
+
+            result =
+                null;
+
+        }
+
+
+        if (
+            !response.ok ||
+            result?.success !== true
+        ) {
+
+            console.error(
+                "NovaPay device token registration failed:",
+                result?.error ||
+                `HTTP ${response.status}`
+            );
+
+            return false;
+
+        }
+
+
+        console.log(
+            "✅ NovaPay device token registered with backend."
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "NovaPay device token request error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   PLATFORM DETECTION
+   ========================================================= */
+
+function detectPlatform() {
+
+    const userAgent =
+        navigator.userAgent ||
+        "";
+
+
+    const platform =
+        navigator.platform ||
+        "";
+
+
+    /*
+     * iPhone/iPad.
+     */
+    if (
+        /iPhone|iPad|iPod/i.test(
+            userAgent
+        )
+    ) {
+
+        return "ios";
+
+    }
+
+
+    /*
+     * Android.
+     */
+    if (
+        /Android/i.test(
+            userAgent
+        )
+    ) {
+
+        return "android";
+
+    }
+
+
+    /*
+     * Windows.
+     */
+    if (
+        /Win/i.test(
+            platform
+        )
+    ) {
+
+        return "windows";
+
+    }
+
+
+    /*
+     * macOS.
+     */
+    if (
+        /Mac/i.test(
+            platform
+        )
+    ) {
+
+        return "macos";
+
+    }
+
+
+    return "web";
+
+}
+
+
+/* =========================================================
+   FOREGROUND PUSH MESSAGE LISTENER
+   ========================================================= */
+
+function setupForegroundMessageListener() {
+
+    if (
+        !messagingInstance
+    ) {
+
+        return;
+
+    }
+
+
+    onMessage(
+        messagingInstance,
+        payload => {
+
+            console.log(
+                "🔔 NovaPay foreground push received:",
+                payload
+            );
+
+
+            /*
+             * The backend already stores the notification.
+             *
+             * Refreshing from the backend ensures the UI
+             * remains backend-authoritative instead of
+             * trusting the push payload as notification history.
+             */
+            loadNotifications(
+                true
+            );
+
+
+            /*
+             * If the browser is already displaying the page,
+             * show a lightweight in-page indication.
+             */
+            showForegroundPushNotice(
+                payload
+            );
+
+        }
+    );
+
+
+    console.log(
+        "NovaPay foreground push listener ready."
+    );
+
+}
+
+
+/* =========================================================
+   FOREGROUND PUSH NOTICE
+   ========================================================= */
+
+function showForegroundPushNotice(
+    payload
+) {
+
+    const title =
+        String(
+            payload?.notification?.title ||
+            "NovaPay"
+        );
+
+
+    const body =
+        String(
+            payload?.notification?.body ||
+            "You have a new notification."
+        );
+
+
+    console.log(
+        `🔔 ${title}: ${body}`
+    );
+
+}
+
+
+/* =========================================================
    NOTIFICATION TYPE
    ========================================================= */
 
@@ -385,17 +909,14 @@ function getNotificationTitle(
     return String(
         notification?.title ||
         "Notification"
-    ).trim();
+    )
+        .trim();
 
 }
 
 
 /* =========================================================
    NOTIFICATION BODY
-   ---------------------------------------------------------
-   New backend uses "body".
-   We deliberately do not depend on the deleted
-   Firestore "message" structure.
    ========================================================= */
 
 function getNotificationBody(
@@ -405,7 +926,8 @@ function getNotificationBody(
     return String(
         notification?.body ||
         ""
-    ).trim();
+    )
+        .trim();
 
 }
 
@@ -444,7 +966,8 @@ function timestampToMillis(
     ) {
 
         if (
-            timestamp > 100000000000
+            timestamp >
+            100000000000
         ) {
 
             return timestamp;
@@ -475,7 +998,8 @@ function timestampToMillis(
         ) {
 
             if (
-                numeric > 100000000000
+                numeric >
+                100000000000
             ) {
 
                 return numeric;
@@ -484,7 +1008,8 @@ function timestampToMillis(
 
 
             if (
-                numeric > 1000000000
+                numeric >
+                1000000000
             ) {
 
                 return numeric * 1000;
@@ -525,7 +1050,8 @@ function timestampToMillis(
             return (
                 Number(
                     timestamp.seconds
-                ) * 1000
+                ) *
+                1000
             );
 
         }
@@ -542,7 +1068,8 @@ function timestampToMillis(
             return (
                 Number(
                     timestamp._seconds
-                ) * 1000
+                ) *
+                1000
             );
 
         }
@@ -726,14 +1253,86 @@ function notificationMatchesTab(
     }
 
 
-    /*
-     * If the existing HTML contains category tabs,
-     * support them without changing the buttons.
-     */
     const type =
         getNotificationType(
             notification
         );
+
+
+    /*
+     * Existing HTML uses:
+     *
+     * All
+     * Transactions
+     * Services
+     * NovaPay
+     *
+     * Map these UI labels to backend notification types.
+     */
+    if (
+        activeTab.toLowerCase() ===
+        "transactions"
+    ) {
+
+        return [
+
+            "transaction",
+
+            "payment",
+
+            "wallet"
+
+        ].includes(
+            type
+        );
+
+    }
+
+
+    if (
+        activeTab.toLowerCase() ===
+        "services"
+    ) {
+
+        return [
+
+            "airtime",
+
+            "data",
+
+            "electricity",
+
+            "tv"
+
+        ].includes(
+            type
+        );
+
+    }
+
+
+    if (
+        activeTab.toLowerCase() ===
+        "novapay"
+    ) {
+
+        return [
+
+            "system",
+
+            "promotion",
+
+            "announcement",
+
+            "security",
+
+            "account"
+
+        ].includes(
+            type
+        );
+
+    }
 
 
     return (
@@ -795,7 +1394,7 @@ function notificationMatchesSearch(
 
 
 /* =========================================================
-   FILTER
+   VISIBLE NOTIFICATIONS
    ========================================================= */
 
 function getVisibleNotifications() {
@@ -840,7 +1439,8 @@ function renderNotifications() {
 
 
     if (
-        notifications.length === 0
+        notifications.length ===
+        0
     ) {
 
         showEmptyState();
@@ -927,7 +1527,8 @@ function createNotificationCard(
         String(
             notification?.id ||
             ""
-        ).trim();
+        )
+            .trim();
 
 
     card.innerHTML = `
@@ -990,8 +1591,7 @@ function createNotificationCard(
 
 
     /*
-     * Clicking an unread notification marks it read.
-     * We do not invent any new navigation behavior.
+     * Clicking an unread notification marks it as read.
      */
     if (
         notificationId
@@ -1072,7 +1672,8 @@ async function markNotificationAsRead(
             );
 
 
-        let result = null;
+        let result =
+            null;
 
 
         try {
@@ -1082,7 +1683,8 @@ async function markNotificationAsRead(
 
         } catch {
 
-            result = null;
+            result =
+                null;
 
         }
 
@@ -1101,10 +1703,6 @@ async function markNotificationAsRead(
         }
 
 
-        /*
-         * Update local display only after the backend
-         * confirms the operation.
-         */
         const notification =
             allNotifications.find(
                 item =>
@@ -1140,9 +1738,6 @@ async function markNotificationAsRead(
 
 /* =========================================================
    MARK ALL AS READ
-   ---------------------------------------------------------
-   This function is available for the existing UI if
-   an element with one of these IDs exists.
    ========================================================= */
 
 async function markAllNotificationsAsRead() {
@@ -1182,7 +1777,8 @@ async function markAllNotificationsAsRead() {
             );
 
 
-        let result = null;
+        let result =
+            null;
 
 
         try {
@@ -1192,7 +1788,8 @@ async function markAllNotificationsAsRead() {
 
         } catch {
 
-            result = null;
+            result =
+                null;
 
         }
 
@@ -1237,10 +1834,7 @@ async function markAllNotificationsAsRead() {
 
 
 /* =========================================================
-   OPTIONAL MARK-ALL BUTTON HOOK
-   ---------------------------------------------------------
-   Does not interfere with the page if the button does
-   not exist.
+   MARK-ALL BUTTON
    ========================================================= */
 
 const markAllBtn =
@@ -1277,8 +1871,6 @@ searchInput?.addEventListener(
 
 /* =========================================================
    TABS
-   ---------------------------------------------------------
-   Existing tab buttons remain in control.
    ========================================================= */
 
 tabs.forEach(
@@ -1313,9 +1905,6 @@ tabs.forEach(
                         .trim();
 
 
-                /*
-                 * Normalize common labels.
-                 */
                 if (
                     activeTab.toLowerCase() ===
                     "all notifications"
@@ -1437,10 +2026,7 @@ function hideEmptyState() {
 
 
 /* =========================================================
-   FRIENDLY ERROR STATE
-   ---------------------------------------------------------
-   Technical backend details are intentionally hidden
-   from users.
+   ERROR STATE
    ========================================================= */
 
 function showError() {
@@ -1515,5 +2101,5 @@ function escapeHTML(
    ========================================================= */
 
 console.log(
-    "🔐 NovaPay Notifications frontend loaded — backend-authoritative mode."
+    "🔐 NovaPay Notifications frontend loaded — backend-authoritative + FCM push mode."
 );
