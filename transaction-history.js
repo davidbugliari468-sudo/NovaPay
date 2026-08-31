@@ -1,6 +1,6 @@
 /* =========================================================
    NOVAPAY — TRANSACTION HISTORY
-   Secure backend-powered transaction history
+   Backend-authoritative transaction history
    ========================================================= */
 
 import { auth } from "./firebase.js";
@@ -9,64 +9,104 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
+
 /* =========================================================
    CONFIG
    ========================================================= */
 
-const API_URL =
-    "https://novapay-server.onrender.com/api/transactions?limit=100";
+const API_BASE_URL =
+    "https://novapay-server.onrender.com";
+
+const TRANSACTIONS_API =
+    `${API_BASE_URL}/api/transactions`;
+
+const DEFAULT_LIMIT = 50;
+
 
 /* =========================================================
    DOM
    ========================================================= */
 
 const container =
-    document.getElementById("transactionContainer");
+    document.getElementById(
+        "transactionContainer"
+    );
 
 const transactionCount =
-    document.getElementById("transactionCount");
+    document.getElementById(
+        "transactionCount"
+    );
 
 const moneyIn =
-    document.getElementById("moneyIn");
+    document.getElementById(
+        "moneyIn"
+    );
 
 const moneyOut =
-    document.getElementById("moneyOut");
+    document.getElementById(
+        "moneyOut"
+    );
 
 const netAmount =
-    document.getElementById("netAmount");
+    document.getElementById(
+        "netAmount"
+    );
 
 const searchInput =
-    document.getElementById("searchInput");
+    document.getElementById(
+        "searchInput"
+    );
 
 const categoryBtn =
-    document.getElementById("categoryBtn");
+    document.getElementById(
+        "categoryBtn"
+    );
 
 const statusBtn =
-    document.getElementById("statusBtn");
+    document.getElementById(
+        "statusBtn"
+    );
 
 const monthBtn =
-    document.getElementById("monthBtn");
+    document.getElementById(
+        "monthBtn"
+    );
 
 const categorySheet =
-    document.getElementById("categorySheet");
+    document.getElementById(
+        "categorySheet"
+    );
 
 const statusSheet =
-    document.getElementById("statusSheet");
+    document.getElementById(
+        "statusSheet"
+    );
 
 const monthSheet =
-    document.getElementById("monthSheet");
+    document.getElementById(
+        "monthSheet"
+    );
 
 const exportSheet =
-    document.getElementById("exportSheet");
+    document.getElementById(
+        "exportSheet"
+    );
 
 const sheetOverlay =
-    document.getElementById("sheetOverlay");
+    document.getElementById(
+        "sheetOverlay"
+    );
 
 const backBtn =
-    document.getElementById("backBtn");
+    document.getElementById(
+        "backBtn"
+    );
 
 const exportBtn =
-    document.getElementById("exportBtn");
+    document.getElementById(
+        "exportBtn"
+    );
+
 
 /* =========================================================
    STATE
@@ -74,101 +114,210 @@ const exportBtn =
 
 let allTransactions = [];
 
-let selectedCategory = "All Categories";
-let selectedStatus = "All Status";
-let selectedMonth = "This Month";
+let nextCursor = null;
+
+let hasMore = false;
+
+let isLoading = false;
+
+let selectedCategory =
+    "All Categories";
+
+let selectedStatus =
+    "All Status";
+
+let selectedMonth =
+    "This Month";
+
 
 /* =========================================================
-   AUTH
+   AUTHENTICATION
    ========================================================= */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+    auth,
+    async (user) => {
 
-    if (!user) {
-        window.location.href = "login.html";
-        return;
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+        await loadTransactions(
+            true
+        );
+
     }
+);
 
-    await loadTransactions();
-});
 
 /* =========================================================
    LOAD TRANSACTIONS
    ========================================================= */
 
-async function loadTransactions() {
+async function loadTransactions(
+    reset = false
+) {
 
-    showLoading();
+    if (isLoading) {
+        return;
+    }
+
+    if (
+        !reset &&
+        !hasMore
+    ) {
+        return;
+    }
+
+    const user =
+        auth.currentUser;
+
+    if (!user) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+    isLoading = true;
+
+    if (reset) {
+
+        nextCursor = null;
+
+        hasMore = false;
+
+        allTransactions = [];
+
+        showLoading();
+
+    }
 
     try {
 
-        const user = auth.currentUser;
+        const idToken =
+            await user.getIdToken();
 
-        if (!user) {
-            throw new Error("Authentication required.");
+        const params =
+            new URLSearchParams();
+
+        params.set(
+            "limit",
+            String(
+                DEFAULT_LIMIT
+            )
+        );
+
+        if (
+            !reset &&
+            nextCursor
+        ) {
+
+            params.set(
+                "cursor",
+                nextCursor
+            );
+
         }
 
-        /*
-         * IMPORTANT SECURITY RULE:
-         *
-         * We do NOT send a UID.
-         *
-         * The backend gets the UID from the
-         * verified Firebase ID token.
-         */
-
-        const idToken =
-            await user.getIdToken(true);
-
         const response =
-            await fetch(API_URL, {
-                method: "GET",
+            await fetch(
+                `${TRANSACTIONS_API}?${params.toString()}`,
+                {
+                    method: "GET",
 
-                headers: {
-                    "Authorization":
-                        `Bearer ${idToken}`,
+                    headers: {
 
-                    "Accept":
-                        "application/json"
-                },
+                        "Authorization":
+                            `Bearer ${idToken}`,
 
-                cache: "no-store"
-            });
+                        "Accept":
+                            "application/json"
 
-        let result;
+                    },
+
+                    cache:
+                        "no-store"
+
+                }
+            );
+
+
+        let result = null;
+
 
         try {
-            result = await response.json();
+
+            result =
+                await response.json();
+
         } catch {
+
             throw new Error(
                 "NovaPay server returned an invalid response."
             );
+
         }
+
 
         if (!response.ok) {
 
             throw new Error(
-                result?.message ||
-                `Server error (${response.status}).`
-            );
-        }
-
-        if (!result?.success) {
-
-            throw new Error(
-                result?.message ||
+                result?.error ||
                 "Unable to load transaction history."
             );
+
         }
 
-        allTransactions =
-            Array.isArray(result.transactions)
+
+        if (
+            result?.success !== true
+        ) {
+
+            throw new Error(
+                result?.error ||
+                "Unable to load transaction history."
+            );
+
+        }
+
+
+        const transactions =
+            Array.isArray(
+                result.transactions
+            )
                 ? result.transactions
                 : [];
 
-        /*
-         * Normalize and sort newest first.
-         */
+
+        if (reset) {
+
+            allTransactions =
+                transactions;
+
+        } else {
+
+            allTransactions =
+                [
+                    ...allTransactions,
+                    ...transactions
+                ];
+
+        }
+
+
+        hasMore =
+            result?.pagination?.hasMore === true;
+
+        nextCursor =
+            result?.pagination?.nextCursor ||
+            null;
+
 
         allTransactions.sort(
             (a, b) =>
@@ -176,11 +325,14 @@ async function loadTransactions() {
                 getDateValue(a)
         );
 
+
         renderTransactions();
 
+
         console.log(
-            `NovaPay: loaded ${allTransactions.length} transactions.`
+            `NovaPay: loaded ${transactions.length} transaction(s).`
         );
+
 
     } catch (error) {
 
@@ -189,43 +341,65 @@ async function loadTransactions() {
             error
         );
 
-        showError(
-            error?.message ||
-            "Unable to load your transaction history."
-        );
+
+        if (reset) {
+
+            showError(
+                error?.message ||
+                "Unable to load your transaction history."
+            );
+
+        }
+
+    } finally {
+
+        isLoading = false;
+
     }
+
 }
+
 
 /* =========================================================
    TRANSACTION TYPE
    ========================================================= */
 
-function getTransactionType(transaction) {
+function getTransactionType(
+    transaction
+) {
 
     return String(
         transaction?.type ||
-        transaction?.category ||
         ""
     )
         .trim()
         .toUpperCase();
+
 }
+
 
 /* =========================================================
    CATEGORY
    ========================================================= */
 
-function getCategory(transaction) {
+function getCategory(
+    transaction
+) {
 
     const type =
-        getTransactionType(transaction);
+        getTransactionType(
+            transaction
+        );
+
 
     switch (type) {
 
         case "DEPOSIT":
         case "CREDIT":
-        case "CREDIT_ALERT":
+        case "REFUND":
+        case "WALLET_DEPOSIT":
             return "Credit Alert";
+
 
         case "TRANSFER":
         case "BANK_TRANSFER":
@@ -233,15 +407,19 @@ function getCategory(transaction) {
         case "TRANSFER_OUT":
             return "Transfer";
 
+
         case "AIRTIME":
             return "Airtime";
+
 
         case "DATA":
             return "Data";
 
+
         case "ELECTRICITY":
         case "POWER":
             return "Electricity";
+
 
         case "TV":
         case "DSTV":
@@ -249,317 +427,364 @@ function getCategory(transaction) {
         case "STARTIMES":
             return "TV";
 
+
         case "BETTING":
             return "Betting";
 
+
         default:
             return "Transaction";
+
     }
+
 }
 
+
 /* =========================================================
-   MONEY DIRECTION
+   DIRECTION
    ========================================================= */
 
-function isMoneyIn(transaction) {
-
-    const type =
-        getTransactionType(transaction);
-
-    /*
-     * Explicit backend direction wins if present.
-     */
+function isMoneyIn(
+    transaction
+) {
 
     const direction =
         String(
             transaction?.direction ||
-            transaction?.flow ||
             ""
         )
             .trim()
-            .toUpperCase();
+            .toLowerCase();
+
 
     if (
-        direction === "IN" ||
-        direction === "CREDIT" ||
-        direction === "CREDITED"
+        direction === "credit"
     ) {
+
         return true;
+
     }
 
+
     if (
-        direction === "OUT" ||
-        direction === "DEBIT" ||
-        direction === "DEBITED"
+        direction === "debit"
     ) {
+
         return false;
+
     }
+
 
     /*
-     * Known credit transaction types.
+     * Backend normally supplies direction.
+     * This fallback protects the UI if an older
+     * ledger record does not contain it.
      */
+
+    const type =
+        getTransactionType(
+            transaction
+        );
+
 
     return (
         type === "DEPOSIT" ||
         type === "CREDIT" ||
-        type === "CREDIT_ALERT" ||
-        type === "TRANSFER_IN"
+        type === "REFUND" ||
+        type === "WALLET_DEPOSIT"
     );
+
 }
+
 
 /* =========================================================
    STATUS
    ========================================================= */
 
-function getStatus(transaction) {
+function getStatus(
+    transaction
+) {
 
-    const rawStatus =
+    const status =
         String(
             transaction?.status ||
             ""
         )
             .trim()
-            .toUpperCase();
+            .toLowerCase();
 
-    if (
-        rawStatus === "SUCCESS" ||
-        rawStatus === "SUCCESSFUL" ||
-        rawStatus === "COMPLETED" ||
-        rawStatus === "COMPLETE" ||
-        rawStatus === "PAID"
-    ) {
-        return "Successful";
+
+    switch (status) {
+
+        case "successful":
+        case "success":
+        case "completed":
+        case "complete":
+        case "paid":
+            return "Successful";
+
+
+        case "failed":
+        case "fail":
+        case "cancelled":
+        case "canceled":
+        case "reversed":
+            return "Failed";
+
+
+        case "pending":
+            return "Pending";
+
+
+        default:
+            return "Successful";
+
     }
 
-    if (
-        rawStatus === "FAILED" ||
-        rawStatus === "FAIL" ||
-        rawStatus === "CANCELLED" ||
-        rawStatus === "CANCELED" ||
-        rawStatus === "REVERSED"
-    ) {
-        return "Failed";
-    }
-
-    return "Pending";
 }
 
+
 /* =========================================================
-   TIMESTAMP NORMALIZATION
+   TIMESTAMP
    ========================================================= */
 
-function timestampToMillis(timestamp) {
+function timestampToMillis(
+    timestamp
+) {
 
     if (!timestamp) {
         return 0;
     }
 
-    /*
-     * Firebase Timestamp object.
-     */
 
     if (
         typeof timestamp.toMillis ===
         "function"
     ) {
+
         return timestamp.toMillis();
+
     }
+
 
     if (
         typeof timestamp.toDate ===
         "function"
     ) {
+
         const date =
             timestamp.toDate();
 
-        const value =
-            date.getTime();
-
-        return Number.isFinite(value)
-            ? value
+        return Number.isFinite(
+            date.getTime()
+        )
+            ? date.getTime()
             : 0;
+
     }
 
-    /*
-     * Firestore JSON formats.
-     *
-     * Different transports can produce:
-     *
-     * seconds
-     * _seconds
-     * milliseconds
-     * _milliseconds
-     */
 
     if (
-        Number.isFinite(
-            Number(timestamp.seconds)
-        )
+        typeof timestamp ===
+        "object"
     ) {
-        return (
-            Number(timestamp.seconds) *
-            1000
-        );
+
+        if (
+            Number.isFinite(
+                Number(
+                    timestamp.seconds
+                )
+            )
+        ) {
+
+            return (
+                Number(
+                    timestamp.seconds
+                ) * 1000
+            );
+
+        }
+
+
+        if (
+            Number.isFinite(
+                Number(
+                    timestamp._seconds
+                )
+            )
+        ) {
+
+            return (
+                Number(
+                    timestamp._seconds
+                ) * 1000
+            );
+
+        }
+
+
+        if (
+            Number.isFinite(
+                Number(
+                    timestamp.milliseconds
+                )
+            )
+        ) {
+
+            return Number(
+                timestamp.milliseconds
+            );
+
+        }
+
+
+        if (
+            Number.isFinite(
+                Number(
+                    timestamp._milliseconds
+                )
+            )
+        ) {
+
+            return Number(
+                timestamp._milliseconds
+            );
+
+        }
+
     }
 
+
     if (
-        Number.isFinite(
-            Number(timestamp._seconds)
-        )
+        typeof timestamp ===
+        "number"
     ) {
-        return (
-            Number(timestamp._seconds) *
-            1000
-        );
+
+        if (
+            timestamp > 100000000000
+        ) {
+
+            return timestamp;
+
+        }
+
+        return timestamp * 1000;
+
     }
 
-    if (
-        Number.isFinite(
-            Number(timestamp.milliseconds)
-        )
-    ) {
-        return Number(
-            timestamp.milliseconds
-        );
-    }
 
     if (
-        Number.isFinite(
-            Number(timestamp._milliseconds)
-        )
-    ) {
-        return Number(
-            timestamp._milliseconds
-        );
-    }
-
-    /*
-     * ISO string / numeric string.
-     */
-
-    if (
-        typeof timestamp === "string" ||
-        typeof timestamp === "number"
+        typeof timestamp ===
+        "string"
     ) {
 
         const numeric =
             Number(timestamp);
 
         if (
-            Number.isFinite(numeric) &&
-            numeric > 100000000000
+            Number.isFinite(numeric)
         ) {
-            return numeric;
+
+            if (
+                numeric > 100000000000
+            ) {
+
+                return numeric;
+
+            }
+
+            if (
+                numeric > 1000000000
+            ) {
+
+                return numeric * 1000;
+
+            }
+
         }
 
+
         const parsed =
-            new Date(timestamp).getTime();
+            new Date(
+                timestamp
+            ).getTime();
+
 
         return Number.isFinite(parsed)
             ? parsed
             : 0;
+
     }
 
-    /*
-     * Firestore Timestamp JSON can contain
-     * a date string inside toJSON().
-     */
 
-    try {
+    return 0;
 
-        if (
-            typeof timestamp.toJSON ===
-            "function"
-        ) {
-
-            const json =
-                timestamp.toJSON();
-
-            if (
-                json?.seconds !== undefined
-            ) {
-                return (
-                    Number(json.seconds) *
-                    1000
-                );
-            }
-
-            if (
-                json?.timestamp
-            ) {
-
-                const parsed =
-                    new Date(
-                        json.timestamp
-                    ).getTime();
-
-                return Number.isFinite(parsed)
-                    ? parsed
-                    : 0;
-            }
-        }
-
-    } catch {
-        /* Ignore and continue. */
-    }
-
-    /*
-     * Final attempt.
-     */
-
-    const parsed =
-        new Date(timestamp).getTime();
-
-    return Number.isFinite(parsed)
-        ? parsed
-        : 0;
 }
+
 
 /* =========================================================
    DATE
    ========================================================= */
 
-function getDateValue(transaction) {
+function getDateValue(
+    transaction
+) {
 
-    const timestamp =
-        transaction?.completedAt ||
-        transaction?.createdAt ||
-        transaction?.updatedAt;
+    return timestampToMillis(
+        transaction?.createdAt
+    );
 
-    return timestampToMillis(timestamp);
 }
 
-function getTransactionDate(transaction) {
 
-    const value =
-        getDateValue(transaction);
+function getTransactionDate(
+    transaction
+) {
 
-    if (!value) {
+    const milliseconds =
+        getDateValue(
+            transaction
+        );
+
+
+    if (!milliseconds) {
         return null;
     }
 
+
     const date =
-        new Date(value);
+        new Date(
+            milliseconds
+        );
+
 
     return Number.isNaN(
         date.getTime()
     )
         ? null
         : date;
+
 }
+
 
 /* =========================================================
    DATE FORMAT
    ========================================================= */
 
-function formatDate(transaction) {
+function formatDate(
+    transaction
+) {
 
     const date =
-        getTransactionDate(transaction);
+        getTransactionDate(
+            transaction
+        );
+
 
     if (!date) {
         return "Date unavailable";
     }
+
 
     return date.toLocaleDateString(
         "en-NG",
@@ -569,16 +794,24 @@ function formatDate(transaction) {
             year: "numeric"
         }
     );
+
 }
 
-function formatTime(transaction) {
+
+function formatTime(
+    transaction
+) {
 
     const date =
-        getTransactionDate(transaction);
+        getTransactionDate(
+            transaction
+        );
+
 
     if (!date) {
         return "--:--";
     }
+
 
     return date.toLocaleTimeString(
         "en-NG",
@@ -587,35 +820,65 @@ function formatTime(transaction) {
             minute: "2-digit"
         }
     );
+
 }
+
 
 /* =========================================================
    AMOUNT
    ========================================================= */
 
-function getAmount(transaction) {
+function getAmountKobo(
+    transaction
+) {
 
     const amount =
         Number(
-            transaction?.amount ??
-            transaction?.amountPaid ??
-            0
+            transaction?.amountKobo
         );
 
-    if (!Number.isFinite(amount)) {
+
+    if (
+        !Number.isSafeInteger(
+            amount
+        ) ||
+        amount < 0
+    ) {
+
         return 0;
+
     }
 
-    return Math.abs(amount);
+
+    return amount;
+
 }
+
+
+function getAmountNaira(
+    transaction
+) {
+
+    return (
+        getAmountKobo(
+            transaction
+        ) / 100
+    );
+
+}
+
 
 /* =========================================================
    MONEY FORMAT
    ========================================================= */
 
-function formatMoney(amount) {
+function formatMoney(
+    amount
+) {
 
-    return Number(amount || 0)
+    return Number(
+        amount || 0
+    )
         .toLocaleString(
             "en-NG",
             {
@@ -623,79 +886,112 @@ function formatMoney(amount) {
                 maximumFractionDigits: 2
             }
         );
+
 }
+
 
 /* =========================================================
    TITLE
    ========================================================= */
 
-function getTitle(transaction) {
+function getTitle(
+    transaction
+) {
 
-    return getCategory(transaction);
+    return getCategory(
+        transaction
+    );
+
 }
+
 
 /* =========================================================
    ICON
    ========================================================= */
 
-function getIcon(transaction) {
+function getIcon(
+    transaction
+) {
 
     switch (
-        getCategory(transaction)
+        getCategory(
+            transaction
+        )
     ) {
 
         case "Credit Alert":
             return "fa-arrow-down";
 
+
         case "Transfer":
             return "fa-money-bill-transfer";
+
 
         case "Airtime":
             return "fa-mobile-screen-button";
 
+
         case "Data":
             return "fa-signal";
+
 
         case "Electricity":
             return "fa-bolt";
 
+
         case "TV":
             return "fa-tv";
+
 
         case "Betting":
             return "fa-bullseye";
 
+
         default:
             return "fa-receipt";
+
     }
+
 }
+
 
 /* =========================================================
    ICON COLOR
    ========================================================= */
 
-function getIconColor(transaction) {
+function getIconColor(
+    transaction
+) {
 
     switch (
-        getCategory(transaction)
+        getCategory(
+            transaction
+        )
     ) {
 
         case "Credit Alert":
             return "#16A34A";
 
+
         case "Electricity":
             return "#F59E0B";
+
 
         case "TV":
             return "#7C3AED";
 
+
         case "Betting":
             return "#EC4899";
 
+
         default:
             return "#2563EB";
+
     }
+
 }
+
 
 /* =========================================================
    FILTERING
@@ -711,17 +1007,25 @@ function getFilteredTransactions() {
             .trim()
             .toLowerCase();
 
+
     return allTransactions.filter(
-        (transaction) => {
+        transaction => {
 
             const category =
-                getCategory(transaction);
+                getCategory(
+                    transaction
+                );
 
             const status =
-                getStatus(transaction);
+                getStatus(
+                    transaction
+                );
 
             const date =
-                getTransactionDate(transaction);
+                getTransactionDate(
+                    transaction
+                );
+
 
             /* CATEGORY */
 
@@ -731,8 +1035,11 @@ function getFilteredTransactions() {
                 category !==
                 selectedCategory
             ) {
+
                 return false;
+
             }
+
 
             /* STATUS */
 
@@ -742,8 +1049,11 @@ function getFilteredTransactions() {
                 status !==
                 selectedStatus
             ) {
+
                 return false;
+
             }
+
 
             /* MONTH */
 
@@ -756,8 +1066,10 @@ function getFilteredTransactions() {
                     return false;
                 }
 
+
                 const now =
                     new Date();
+
 
                 if (
                     date.getMonth() !==
@@ -765,7 +1077,9 @@ function getFilteredTransactions() {
                     date.getFullYear() !==
                     now.getFullYear()
                 ) {
+
                     return false;
+
                 }
 
             } else if (
@@ -777,21 +1091,28 @@ function getFilteredTransactions() {
                     return false;
                 }
 
+
                 const monthName =
                     date.toLocaleString(
                         "en-US",
                         {
-                            month: "long"
+                            month:
+                                "long"
                         }
                     );
+
 
                 if (
                     monthName !==
                     selectedMonth
                 ) {
+
                     return false;
+
                 }
+
             }
+
 
             /* SEARCH */
 
@@ -799,51 +1120,56 @@ function getFilteredTransactions() {
 
                 const searchable = [
 
-                    getTitle(transaction),
+                    getTitle(
+                        transaction
+                    ),
 
-                    getCategory(transaction),
+                    getTransactionType(
+                        transaction
+                    ),
 
-                    getTransactionType(transaction),
-
-                    getStatus(transaction),
-
-                    transaction?.customerEmail,
-
-                    transaction?.phoneNumber,
-
-                    transaction?.recipient,
-
-                    transaction?.transactionReference,
-
-                    transaction?.paymentReference,
+                    getStatus(
+                        transaction
+                    ),
 
                     transaction?.reference,
 
-                    transaction?.description
+                    transaction?.provider,
+
+                    transaction?.id
 
                 ]
                     .filter(
                         value =>
                             value !==
                             undefined &&
-                            value !== null
+                            value !==
+                            null
                     )
                     .join(" ")
                     .toLowerCase();
+
 
                 if (
                     !searchable.includes(
                         search
                     )
                 ) {
+
                     return false;
+
                 }
+
             }
 
+
             return true;
+
         }
     );
+
 }
+
 
 /* =========================================================
    RENDER
@@ -855,14 +1181,18 @@ function renderTransactions() {
         return;
     }
 
+
     const transactions =
         getFilteredTransactions();
+
 
     updateSummary(
         transactions
     );
 
+
     container.innerHTML = "";
+
 
     if (
         transactions.length === 0
@@ -871,7 +1201,9 @@ function renderTransactions() {
         showEmptyState();
 
         return;
+
     }
+
 
     transactions.forEach(
         transaction => {
@@ -881,9 +1213,12 @@ function renderTransactions() {
                     transaction
                 )
             );
+
         }
     );
+
 }
+
 
 /* =========================================================
    TRANSACTION CARD
@@ -894,38 +1229,62 @@ function createTransactionCard(
 ) {
 
     const item =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     item.className =
         "transaction-item";
 
+
     const amount =
-        getAmount(transaction);
+        getAmountNaira(
+            transaction
+        );
+
 
     const moneyInTransaction =
-        isMoneyIn(transaction);
+        isMoneyIn(
+            transaction
+        );
+
 
     const status =
-        getStatus(transaction);
+        getStatus(
+            transaction
+        );
+
 
     const title =
-        getTitle(transaction);
+        getTitle(
+            transaction
+        );
+
 
     const icon =
-        getIcon(transaction);
+        getIcon(
+            transaction
+        );
+
 
     const iconColor =
-        getIconColor(transaction);
+        getIconColor(
+            transaction
+        );
+
 
     const amountClass =
         moneyInTransaction
             ? "amount-in"
             : "amount-out";
 
+
     const prefix =
         moneyInTransaction
             ? "+"
             : "-";
+
 
     const statusClass =
         status === "Successful"
@@ -933,6 +1292,7 @@ function createTransactionCard(
             : status === "Failed"
                 ? "status-failed"
                 : "status-pending";
+
 
     item.innerHTML = `
 
@@ -943,6 +1303,7 @@ function createTransactionCard(
             <i class="fas ${icon}"></i>
         </div>
 
+
         <div class="transaction-content">
 
             <div class="transaction-top">
@@ -950,6 +1311,7 @@ function createTransactionCard(
                 <div class="transaction-title">
                     ${escapeHTML(title)}
                 </div>
+
 
                 <div
                     class="transaction-amount ${amountClass}"
@@ -959,13 +1321,27 @@ function createTransactionCard(
 
             </div>
 
+
             <div class="transaction-bottom">
 
                 <div class="transaction-date">
-                    ${escapeHTML(formatDate(transaction))}
+
+                    ${escapeHTML(
+                        formatDate(
+                            transaction
+                        )
+                    )}
+
                     ·
-                    ${escapeHTML(formatTime(transaction))}
+
+                    ${escapeHTML(
+                        formatTime(
+                            transaction
+                        )
+                    )}
+
                 </div>
+
 
                 <div class="transaction-status">
 
@@ -981,57 +1357,113 @@ function createTransactionCard(
 
         </div>
 
+
         <div class="transaction-arrow">
+
             <i class="fas fa-chevron-right"></i>
+
         </div>
+
     `;
 
-    /* RECEIPT */
 
     item.addEventListener(
         "click",
         () => {
 
-            const selectedTransaction = {
-
-                title:
-                    getTitle(transaction),
-
-                amount:
-                    getAmount(transaction),
-
-                type:
-                    moneyInTransaction
-                        ? "in"
-                        : "out",
-
-                status,
-
-                date:
-                    `${formatDate(transaction)} · ${formatTime(transaction)}`,
-
-                id:
-                    transaction?.transactionReference ||
-                    transaction?.paymentReference ||
-                    transaction?.reference ||
-                    transaction?.id ||
-                    "--"
-            };
-
-            localStorage.setItem(
-                "selectedTransaction",
-                JSON.stringify(
-                    selectedTransaction
-                )
+            openReceipt(
+                transaction
             );
 
-            window.location.href =
-                "receipt.html";
         }
     );
 
+
     return item;
+
 }
+
+
+/* =========================================================
+   RECEIPT
+   ========================================================= */
+
+function openReceipt(
+    transaction
+) {
+
+    const selectedTransaction = {
+
+        id:
+            transaction?.id ||
+            "--",
+
+        reference:
+            transaction?.reference ||
+            "--",
+
+        title:
+            getTitle(
+                transaction
+            ),
+
+        amount:
+            getAmountNaira(
+                transaction
+            ),
+
+        amountKobo:
+            getAmountKobo(
+                transaction
+            ),
+
+        type:
+            isMoneyIn(
+                transaction
+            )
+                ? "in"
+                : "out",
+
+        direction:
+            transaction?.direction ||
+            null,
+
+        status:
+            getStatus(
+                transaction
+            ),
+
+        currency:
+            transaction?.currency ||
+            "NGN",
+
+        provider:
+            transaction?.provider ||
+            null,
+
+        date:
+            `${formatDate(
+                transaction
+            )} · ${formatTime(
+                transaction
+            )}`
+
+    };
+
+
+    localStorage.setItem(
+        "selectedTransaction",
+        JSON.stringify(
+            selectedTransaction
+        )
+    );
+
+
+    window.location.href =
+        "receipt.html";
+
+}
+
 
 /* =========================================================
    SUMMARY
@@ -1041,47 +1473,80 @@ function updateSummary(
     transactions
 ) {
 
-    let totalIn = 0;
-    let totalOut = 0;
+    let totalInKobo = 0;
+
+    let totalOutKobo = 0;
+
 
     transactions.forEach(
         transaction => {
 
-            const amount =
-                getAmount(transaction);
+            const amountKobo =
+                getAmountKobo(
+                    transaction
+                );
+
 
             if (
-                isMoneyIn(transaction)
+                isMoneyIn(
+                    transaction
+                )
             ) {
-                totalIn += amount;
+
+                totalInKobo +=
+                    amountKobo;
+
             } else {
-                totalOut += amount;
+
+                totalOutKobo +=
+                    amountKobo;
+
             }
+
         }
     );
 
-    const balance =
-        totalIn - totalOut;
+
+    const netKobo =
+        totalInKobo -
+        totalOutKobo;
+
 
     if (moneyIn) {
 
         moneyIn.textContent =
-            `₦${formatMoney(totalIn)}`;
+            `₦${formatMoney(
+                totalInKobo / 100
+            )}`;
+
     }
+
 
     if (moneyOut) {
 
         moneyOut.textContent =
-            `₦${formatMoney(totalOut)}`;
+            `₦${formatMoney(
+                totalOutKobo / 100
+            )}`;
+
     }
+
 
     if (netAmount) {
 
         netAmount.textContent =
-            balance < 0
-                ? `-₦${formatMoney(Math.abs(balance))}`
-                : `₦${formatMoney(balance)}`;
+            netKobo < 0
+                ? `-₦${formatMoney(
+                    Math.abs(
+                        netKobo
+                    ) / 100
+                )}`
+                : `₦${formatMoney(
+                    netKobo / 100
+                )}`;
+
     }
+
 
     if (transactionCount) {
 
@@ -1091,8 +1556,11 @@ function updateSummary(
                     ? ""
                     : "s"
             }`;
+
     }
+
 }
+
 
 /* =========================================================
    LOADING
@@ -1104,13 +1572,16 @@ function showLoading() {
         return;
     }
 
+
     container.innerHTML = `
 
         <div class="empty-state">
 
             <i class="fas fa-spinner fa-spin"></i>
 
-            <h3>Loading transactions</h3>
+            <h3>
+                Loading transactions
+            </h3>
 
             <p>
                 Please wait while we load
@@ -1118,8 +1589,11 @@ function showLoading() {
             </p>
 
         </div>
+
     `;
+
 }
+
 
 /* =========================================================
    EMPTY
@@ -1131,13 +1605,16 @@ function showEmptyState() {
         return;
     }
 
+
     container.innerHTML = `
 
         <div class="empty-state">
 
             <i class="fas fa-receipt"></i>
 
-            <h3>No Transactions Found</h3>
+            <h3>
+                No Transactions Found
+            </h3>
 
             <p>
                 No transactions match
@@ -1145,18 +1622,24 @@ function showEmptyState() {
             </p>
 
         </div>
+
     `;
+
 }
+
 
 /* =========================================================
    ERROR
    ========================================================= */
 
-function showError(message) {
+function showError(
+    message
+) {
 
     if (!container) {
         return;
     }
+
 
     container.innerHTML = `
 
@@ -1164,34 +1647,48 @@ function showError(message) {
 
             <i class="fas fa-circle-exclamation"></i>
 
-            <h3>Unable to Load Transactions</h3>
+            <h3>
+                Unable to Load Transactions
+            </h3>
 
             <p>
                 ${escapeHTML(message)}
             </p>
 
         </div>
+
     `;
+
 }
+
 
 /* =========================================================
    BOTTOM SHEETS
    ========================================================= */
 
-function openSheet(sheet) {
+function openSheet(
+    sheet
+) {
 
     closeSheets();
+
 
     if (!sheet) {
         return;
     }
 
-    sheet.classList.add("active");
 
-    if (sheetOverlay) {
-        sheetOverlay.classList.add("active");
-    }
+    sheet.classList.add(
+        "active"
+    );
+
+
+    sheetOverlay?.classList.add(
+        "active"
+    );
+
 }
+
 
 function closeSheets() {
 
@@ -1200,20 +1697,26 @@ function closeSheets() {
         statusSheet,
         monthSheet,
         exportSheet
-    ].forEach(sheet => {
+    ].forEach(
+        sheet => {
 
-        sheet?.classList.remove(
-            "active"
-        );
-    });
+            sheet?.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
 
     sheetOverlay?.classList.remove(
         "active"
     );
+
 }
 
+
 /* =========================================================
-   FILTER BUTTONS
+   CATEGORY BUTTON
    ========================================================= */
 
 categoryBtn?.addEventListener(
@@ -1225,8 +1728,14 @@ categoryBtn?.addEventListener(
         openSheet(
             categorySheet
         );
+
     }
 );
+
+
+/* =========================================================
+   STATUS BUTTON
+   ========================================================= */
 
 statusBtn?.addEventListener(
     "click",
@@ -1237,8 +1746,14 @@ statusBtn?.addEventListener(
         openSheet(
             statusSheet
         );
+
     }
 );
+
+
+/* =========================================================
+   MONTH BUTTON
+   ========================================================= */
 
 monthBtn?.addEventListener(
     "click",
@@ -1249,13 +1764,20 @@ monthBtn?.addEventListener(
         openSheet(
             monthSheet
         );
+
     }
 );
+
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
 
 sheetOverlay?.addEventListener(
     "click",
     closeSheets
 );
+
 
 /* =========================================================
    CATEGORY OPTIONS
@@ -1265,35 +1787,46 @@ document
     .querySelectorAll(
         "#categorySheet .sheet-option"
     )
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            event => {
+            button.addEventListener(
+                "click",
+                event => {
 
-                event.preventDefault();
+                    event.preventDefault();
 
-                selectedCategory =
-                    button.dataset.category ||
-                    button.textContent.trim() ||
-                    "All Categories";
 
-                const span =
-                    categoryBtn?.querySelector(
-                        "span"
-                    );
+                    selectedCategory =
+                        button.dataset.category ||
+                        button.textContent.trim() ||
+                        "All Categories";
 
-                if (span) {
-                    span.textContent =
-                        selectedCategory;
+
+                    const span =
+                        categoryBtn?.querySelector(
+                            "span"
+                        );
+
+
+                    if (span) {
+
+                        span.textContent =
+                            selectedCategory;
+
+                    }
+
+
+                    closeSheets();
+
+                    renderTransactions();
+
                 }
+            );
 
-                closeSheets();
+        }
+    );
 
-                renderTransactions();
-            }
-        );
-    });
 
 /* =========================================================
    STATUS OPTIONS
@@ -1303,35 +1836,46 @@ document
     .querySelectorAll(
         "#statusSheet .sheet-option"
     )
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            event => {
+            button.addEventListener(
+                "click",
+                event => {
 
-                event.preventDefault();
+                    event.preventDefault();
 
-                selectedStatus =
-                    button.dataset.status ||
-                    button.textContent.trim() ||
-                    "All Status";
 
-                const span =
-                    statusBtn?.querySelector(
-                        "span"
-                    );
+                    selectedStatus =
+                        button.dataset.status ||
+                        button.textContent.trim() ||
+                        "All Status";
 
-                if (span) {
-                    span.textContent =
-                        selectedStatus;
+
+                    const span =
+                        statusBtn?.querySelector(
+                            "span"
+                        );
+
+
+                    if (span) {
+
+                        span.textContent =
+                            selectedStatus;
+
+                    }
+
+
+                    closeSheets();
+
+                    renderTransactions();
+
                 }
+            );
 
-                closeSheets();
+        }
+    );
 
-                renderTransactions();
-            }
-        );
-    });
 
 /* =========================================================
    MONTH OPTIONS
@@ -1341,35 +1885,46 @@ document
     .querySelectorAll(
         "#monthSheet .sheet-option"
     )
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            event => {
+            button.addEventListener(
+                "click",
+                event => {
 
-                event.preventDefault();
+                    event.preventDefault();
 
-                selectedMonth =
-                    button.dataset.month ||
-                    button.textContent.trim() ||
-                    "This Month";
 
-                const span =
-                    monthBtn?.querySelector(
-                        "span"
-                    );
+                    selectedMonth =
+                        button.dataset.month ||
+                        button.textContent.trim() ||
+                        "This Month";
 
-                if (span) {
-                    span.textContent =
-                        selectedMonth;
+
+                    const span =
+                        monthBtn?.querySelector(
+                            "span"
+                        );
+
+
+                    if (span) {
+
+                        span.textContent =
+                            selectedMonth;
+
+                    }
+
+
+                    closeSheets();
+
+                    renderTransactions();
+
                 }
+            );
 
-                closeSheets();
+        }
+    );
 
-                renderTransactions();
-            }
-        );
-    });
 
 /* =========================================================
    SEARCH
@@ -1378,9 +1933,12 @@ document
 searchInput?.addEventListener(
     "input",
     () => {
+
         renderTransactions();
+
     }
 );
+
 
 /* =========================================================
    BACK
@@ -1393,8 +1951,10 @@ backBtn?.addEventListener(
         event.preventDefault();
 
         window.history.back();
+
     }
 );
+
 
 /* =========================================================
    EXPORT MENU
@@ -1409,15 +1969,19 @@ exportBtn?.addEventListener(
         openSheet(
             exportSheet
         );
+
     }
 );
+
 
 /* =========================================================
    CSV EXPORT
    ========================================================= */
 
 document
-    .getElementById("exportCSV")
+    .getElementById(
+        "exportCSV"
+    )
     ?.addEventListener(
         "click",
         event => {
@@ -1427,13 +1991,16 @@ document
             exportCSV();
 
             closeSheets();
+
         }
     );
+
 
 function exportCSV() {
 
     const transactions =
         getFilteredTransactions();
+
 
     const rows = [
 
@@ -1441,39 +2008,65 @@ function exportCSV() {
             "Date",
             "Category",
             "Type",
-            "Amount",
+            "Amount (NGN)",
+            "Amount (Kobo)",
             "Direction",
             "Status",
+            "Provider",
             "Reference"
         ]
+
     ];
+
 
     transactions.forEach(
         transaction => {
 
             rows.push([
 
-                `${formatDate(transaction)} ${formatTime(transaction)}`,
+                `${formatDate(
+                    transaction
+                )} ${formatTime(
+                    transaction
+                )}`,
 
-                getCategory(transaction),
+                getCategory(
+                    transaction
+                ),
 
-                getTransactionType(transaction),
+                getTransactionType(
+                    transaction
+                ),
 
-                getAmount(transaction),
+                getAmountNaira(
+                    transaction
+                ).toFixed(2),
 
-                isMoneyIn(transaction)
+                getAmountKobo(
+                    transaction
+                ),
+
+                isMoneyIn(
+                    transaction
+                )
                     ? "Money In"
                     : "Money Out",
 
-                getStatus(transaction),
+                getStatus(
+                    transaction
+                ),
 
-                transaction?.transactionReference ||
-                transaction?.paymentReference ||
+                transaction?.provider ||
+                "",
+
                 transaction?.reference ||
                 ""
+
             ]);
+
         }
     );
+
 
     const csv =
         rows
@@ -1482,7 +2075,9 @@ function exportCSV() {
                     row
                         .map(
                             value =>
-                                `"${String(value)
+                                `"${String(
+                                    value
+                                )
                                     .replaceAll(
                                         '"',
                                         '""'
@@ -1491,6 +2086,7 @@ function exportCSV() {
                         .join(",")
             )
             .join("\n");
+
 
     const blob =
         new Blob(
@@ -1501,32 +2097,50 @@ function exportCSV() {
             }
         );
 
+
     const url =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
+
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
+
 
     link.href = url;
 
     link.download =
         "NovaPay-Transaction-History.csv";
 
-    document.body.appendChild(link);
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
     link.remove();
 
-    URL.revokeObjectURL(url);
+
+    URL.revokeObjectURL(
+        url
+    );
+
 }
 
+
 /* =========================================================
-   PRINT / PDF
+   PRINT
    ========================================================= */
 
 document
-    .getElementById("printHistory")
+    .getElementById(
+        "printHistory"
+    )
     ?.addEventListener(
         "click",
         event => {
@@ -1536,11 +2150,19 @@ document
             closeSheets();
 
             window.print();
+
         }
     );
 
+
+/* =========================================================
+   PDF
+   ========================================================= */
+
 document
-    .getElementById("exportPDF")
+    .getElementById(
+        "exportPDF"
+    )
     ?.addEventListener(
         "click",
         event => {
@@ -1550,16 +2172,22 @@ document
             closeSheets();
 
             window.print();
+
         }
     );
 
+
 /* =========================================================
-   ESCAPE HTML
+   HTML ESCAPING
    ========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
 
-    return String(value ?? "")
+    return String(
+        value ?? ""
+    )
         .replaceAll(
             "&",
             "&amp;"
@@ -1580,12 +2208,14 @@ function escapeHTML(value) {
             "'",
             "&#039;"
         );
+
 }
+
 
 /* =========================================================
    STARTUP
    ========================================================= */
 
 console.log(
-    "🔐 NovaPay Transaction History loaded."
+    "🔐 NovaPay Transaction History frontend loaded."
 );
