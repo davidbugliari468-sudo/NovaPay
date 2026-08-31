@@ -1,6 +1,7 @@
 /* =========================================================
    NOVAPAY — TRANSACTION HISTORY
    Backend-authoritative transaction history
+   Customer-safe error handling
    ========================================================= */
 
 import { auth } from "./firebase.js";
@@ -144,11 +145,10 @@ onAuthStateChanged(
                 "login.html";
 
             return;
+
         }
 
-        await loadTransactions(
-            true
-        );
+        await loadTransactions(true);
 
     }
 );
@@ -182,9 +182,11 @@ async function loadTransactions(
             "login.html";
 
         return;
+
     }
 
     isLoading = true;
+
 
     if (reset) {
 
@@ -198,20 +200,22 @@ async function loadTransactions(
 
     }
 
+
     try {
 
         const idToken =
             await user.getIdToken();
 
+
         const params =
             new URLSearchParams();
 
+
         params.set(
             "limit",
-            String(
-                DEFAULT_LIMIT
-            )
+            String(DEFAULT_LIMIT)
         );
+
 
         if (
             !reset &&
@@ -225,6 +229,7 @@ async function loadTransactions(
 
         }
 
+
         const response =
             await fetch(
                 `${TRANSACTIONS_API}?${params.toString()}`,
@@ -232,18 +237,15 @@ async function loadTransactions(
                     method: "GET",
 
                     headers: {
-
                         "Authorization":
                             `Bearer ${idToken}`,
 
                         "Accept":
                             "application/json"
-
                     },
 
                     cache:
                         "no-store"
-
                 }
             );
 
@@ -258,8 +260,13 @@ async function loadTransactions(
 
         } catch {
 
+            /*
+             * Never expose the server's raw response
+             * to the customer.
+             */
+
             throw new Error(
-                "NovaPay server returned an invalid response."
+                "TRANSACTION_RESPONSE_INVALID"
             );
 
         }
@@ -267,9 +274,28 @@ async function loadTransactions(
 
         if (!response.ok) {
 
+            /*
+             * Keep backend details out of the UI.
+             * The actual HTTP status is useful for
+             * developers but not customers.
+             */
+
+            const backendError =
+                result?.error;
+
+            console.error(
+                "NovaPay transaction API error:",
+                {
+                    status:
+                        response.status,
+
+                    backendError
+                }
+            );
+
+
             throw new Error(
-                result?.error ||
-                "Unable to load transaction history."
+                "TRANSACTION_REQUEST_FAILED"
             );
 
         }
@@ -279,9 +305,14 @@ async function loadTransactions(
             result?.success !== true
         ) {
 
+            console.error(
+                "NovaPay transaction API returned an unsuccessful response:",
+                result
+            );
+
+
             throw new Error(
-                result?.error ||
-                "Unable to load transaction history."
+                "TRANSACTION_REQUEST_FAILED"
             );
 
         }
@@ -302,11 +333,10 @@ async function loadTransactions(
 
         } else {
 
-            allTransactions =
-                [
-                    ...allTransactions,
-                    ...transactions
-                ];
+            allTransactions = [
+                ...allTransactions,
+                ...transactions
+            ];
 
         }
 
@@ -333,8 +363,26 @@ async function loadTransactions(
             `NovaPay: loaded ${transactions.length} transaction(s).`
         );
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
+
+        /*
+         * IMPORTANT:
+         *
+         * The customer NEVER receives:
+         *
+         * - Route not found
+         * - Internal server error
+         * - Firebase errors
+         * - Render errors
+         * - HTTP response text
+         * - authentication implementation details
+         *
+         * Developers still get the actual error in
+         * the browser console.
+         */
 
         console.error(
             "NovaPay transaction history error:",
@@ -344,14 +392,14 @@ async function loadTransactions(
 
         if (reset) {
 
-            showError(
-                error?.message ||
-                "Unable to load your transaction history."
-            );
+            showError();
 
         }
 
-    } finally {
+    }
+
+
+    finally {
 
         isLoading = false;
 
@@ -369,8 +417,7 @@ function getTransactionType(
 ) {
 
     return String(
-        transaction?.type ||
-        ""
+        transaction?.type || ""
     )
         .trim()
         .toUpperCase();
@@ -450,8 +497,7 @@ function isMoneyIn(
 
     const direction =
         String(
-            transaction?.direction ||
-            ""
+            transaction?.direction || ""
         )
             .trim()
             .toLowerCase();
@@ -474,12 +520,6 @@ function isMoneyIn(
 
     }
 
-
-    /*
-     * Backend normally supplies direction.
-     * This fallback protects the UI if an older
-     * ledger record does not contain it.
-     */
 
     const type =
         getTransactionType(
@@ -507,8 +547,7 @@ function getStatus(
 
     const status =
         String(
-            transaction?.status ||
-            ""
+            transaction?.status || ""
         )
             .trim()
             .toLowerCase();
@@ -575,6 +614,7 @@ function timestampToMillis(
         const date =
             timestamp.toDate();
 
+
         return Number.isFinite(
             date.getTime()
         )
@@ -585,22 +625,18 @@ function timestampToMillis(
 
 
     if (
-        typeof timestamp ===
-        "object"
+        typeof timestamp === "object"
     ) {
 
         if (
             Number.isFinite(
-                Number(
-                    timestamp.seconds
-                )
+                Number(timestamp.seconds)
             )
         ) {
 
             return (
-                Number(
-                    timestamp.seconds
-                ) * 1000
+                Number(timestamp.seconds) *
+                1000
             );
 
         }
@@ -608,16 +644,13 @@ function timestampToMillis(
 
         if (
             Number.isFinite(
-                Number(
-                    timestamp._seconds
-                )
+                Number(timestamp._seconds)
             )
         ) {
 
             return (
-                Number(
-                    timestamp._seconds
-                ) * 1000
+                Number(timestamp._seconds) *
+                1000
             );
 
         }
@@ -625,9 +658,7 @@ function timestampToMillis(
 
         if (
             Number.isFinite(
-                Number(
-                    timestamp.milliseconds
-                )
+                Number(timestamp.milliseconds)
             )
         ) {
 
@@ -640,9 +671,7 @@ function timestampToMillis(
 
         if (
             Number.isFinite(
-                Number(
-                    timestamp._milliseconds
-                )
+                Number(timestamp._milliseconds)
             )
         ) {
 
@@ -656,8 +685,7 @@ function timestampToMillis(
 
 
     if (
-        typeof timestamp ===
-        "number"
+        typeof timestamp === "number"
     ) {
 
         if (
@@ -674,12 +702,12 @@ function timestampToMillis(
 
 
     if (
-        typeof timestamp ===
-        "string"
+        typeof timestamp === "string"
     ) {
 
         const numeric =
             Number(timestamp);
+
 
         if (
             Number.isFinite(numeric)
@@ -692,6 +720,7 @@ function timestampToMillis(
                 return numeric;
 
             }
+
 
             if (
                 numeric > 1000000000
@@ -753,9 +782,7 @@ function getTransactionDate(
 
 
     const date =
-        new Date(
-            milliseconds
-        );
+        new Date(milliseconds);
 
 
     return Number.isNaN(
@@ -839,9 +866,7 @@ function getAmountKobo(
 
 
     if (
-        !Number.isSafeInteger(
-            amount
-        ) ||
+        !Number.isSafeInteger(amount) ||
         amount < 0
     ) {
 
@@ -970,7 +995,7 @@ function getIconColor(
     ) {
 
         case "Credit Alert":
-            return "#16A34A";
+            return "#10B981";
 
 
         case "Electricity":
@@ -986,7 +1011,7 @@ function getIconColor(
 
 
         default:
-            return "#2563EB";
+            return "#2F6BFF";
 
     }
 
@@ -1001,8 +1026,7 @@ function getFilteredTransactions() {
 
     const search =
         String(
-            searchInput?.value ||
-            ""
+            searchInput?.value || ""
         )
             .trim()
             .toLowerCase();
@@ -1027,8 +1051,6 @@ function getFilteredTransactions() {
                 );
 
 
-            /* CATEGORY */
-
             if (
                 selectedCategory !==
                 "All Categories" &&
@@ -1041,8 +1063,6 @@ function getFilteredTransactions() {
             }
 
 
-            /* STATUS */
-
             if (
                 selectedStatus !==
                 "All Status" &&
@@ -1054,8 +1074,6 @@ function getFilteredTransactions() {
 
             }
 
-
-            /* MONTH */
 
             if (
                 selectedMonth ===
@@ -1082,7 +1100,10 @@ function getFilteredTransactions() {
 
                 }
 
-            } else if (
+            }
+
+
+            else if (
                 selectedMonth !==
                 "All Months"
             ) {
@@ -1096,8 +1117,7 @@ function getFilteredTransactions() {
                     date.toLocaleString(
                         "en-US",
                         {
-                            month:
-                                "long"
+                            month: "long"
                         }
                     );
 
@@ -1113,8 +1133,6 @@ function getFilteredTransactions() {
 
             }
 
-
-            /* SEARCH */
 
             if (search) {
 
@@ -1141,19 +1159,15 @@ function getFilteredTransactions() {
                 ]
                     .filter(
                         value =>
-                            value !==
-                            undefined &&
-                            value !==
-                            null
+                            value !== undefined &&
+                            value !== null
                     )
                     .join(" ")
                     .toLowerCase();
 
 
                 if (
-                    !searchable.includes(
-                        search
-                    )
+                    !searchable.includes(search)
                 ) {
 
                     return false;
@@ -1238,6 +1252,24 @@ function createTransactionCard(
         "transaction-item";
 
 
+    item.setAttribute(
+        "role",
+        "button"
+    );
+
+
+    item.setAttribute(
+        "tabindex",
+        "0"
+    );
+
+
+    item.setAttribute(
+        "aria-label",
+        `${getTitle(transaction)}, ${isMoneyIn(transaction) ? "money received" : "money spent"}`
+    );
+
+
     const amount =
         getAmountNaira(
             transaction
@@ -1298,9 +1330,10 @@ function createTransactionCard(
 
         <div
             class="transaction-icon"
-            style="background:${iconColor};"
+            style="background:${escapeHTML(iconColor)};"
+            aria-hidden="true"
         >
-            <i class="fas ${icon}"></i>
+            <i class="fas ${escapeHTML(icon)}"></i>
         </div>
 
 
@@ -1327,17 +1360,13 @@ function createTransactionCard(
                 <div class="transaction-date">
 
                     ${escapeHTML(
-                        formatDate(
-                            transaction
-                        )
+                        formatDate(transaction)
                     )}
 
                     ·
 
                     ${escapeHTML(
-                        formatTime(
-                            transaction
-                        )
+                        formatTime(transaction)
                     )}
 
                 </div>
@@ -1347,6 +1376,7 @@ function createTransactionCard(
 
                     <span
                         class="status-dot ${statusClass}"
+                        aria-hidden="true"
                     ></span>
 
                     ${escapeHTML(status)}
@@ -1358,7 +1388,10 @@ function createTransactionCard(
         </div>
 
 
-        <div class="transaction-arrow">
+        <div
+            class="transaction-arrow"
+            aria-hidden="true"
+        >
 
             <i class="fas fa-chevron-right"></i>
 
@@ -1374,6 +1407,27 @@ function createTransactionCard(
             openReceipt(
                 transaction
             );
+
+        }
+    );
+
+
+    item.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                openReceipt(
+                    transaction
+                );
+
+            }
 
         }
     );
@@ -1537,9 +1591,7 @@ function updateSummary(
         netAmount.textContent =
             netKobo < 0
                 ? `-₦${formatMoney(
-                    Math.abs(
-                        netKobo
-                    ) / 100
+                    Math.abs(netKobo) / 100
                 )}`
                 : `₦${formatMoney(
                     netKobo / 100
@@ -1577,7 +1629,10 @@ function showLoading() {
 
         <div class="empty-state">
 
-            <i class="fas fa-spinner fa-spin"></i>
+            <i
+                class="fas fa-spinner fa-spin"
+                aria-hidden="true"
+            ></i>
 
             <h3>
                 Loading transactions
@@ -1610,15 +1665,18 @@ function showEmptyState() {
 
         <div class="empty-state">
 
-            <i class="fas fa-receipt"></i>
+            <i
+                class="fas fa-receipt"
+                aria-hidden="true"
+            ></i>
 
             <h3>
                 No Transactions Found
             </h3>
 
             <p>
-                No transactions match
-                your current filters.
+                You don't have any transactions
+                matching your current filters.
             </p>
 
         </div>
@@ -1629,12 +1687,10 @@ function showEmptyState() {
 
 
 /* =========================================================
-   ERROR
+   CUSTOMER-SAFE ERROR
    ========================================================= */
 
-function showError(
-    message
-) {
+function showError() {
 
     if (!container) {
         return;
@@ -1643,21 +1699,59 @@ function showError(
 
     container.innerHTML = `
 
-        <div class="empty-state">
+        <div class="empty-state error-state">
 
-            <i class="fas fa-circle-exclamation"></i>
+            <div class="error-icon">
+
+                <i
+                    class="fas fa-receipt"
+                    aria-hidden="true"
+                ></i>
+
+            </div>
+
 
             <h3>
-                Unable to Load Transactions
+                We couldn't load your transactions
             </h3>
 
+
             <p>
-                ${escapeHTML(message)}
+                Something went wrong while loading
+                your transaction history. Please try again.
             </p>
+
+
+            <button
+                type="button"
+                class="retry-button"
+                id="retryTransactions"
+            >
+                <i
+                    class="fas fa-rotate-right"
+                    aria-hidden="true"
+                ></i>
+
+                Try Again
+            </button>
 
         </div>
 
     `;
+
+
+    document
+        .getElementById(
+            "retryTransactions"
+        )
+        ?.addEventListener(
+            "click",
+            () => {
+
+                loadTransactions(true);
+
+            }
+        );
 
 }
 
@@ -1687,6 +1781,11 @@ function openSheet(
         "active"
     );
 
+
+    document.body.classList.add(
+        "sheet-open"
+    );
+
 }
 
 
@@ -1710,6 +1809,11 @@ function closeSheets() {
 
     sheetOverlay?.classList.remove(
         "active"
+    );
+
+
+    document.body.classList.remove(
+        "sheet-open"
     );
 
 }
@@ -1776,6 +1880,26 @@ monthBtn?.addEventListener(
 sheetOverlay?.addEventListener(
     "click",
     closeSheets
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeSheets();
+
+        }
+
+    }
 );
 
 
@@ -2075,9 +2199,7 @@ function exportCSV() {
                     row
                         .map(
                             value =>
-                                `"${String(
-                                    value
-                                )
+                                `"${String(value)
                                     .replaceAll(
                                         '"',
                                         '""'
@@ -2110,7 +2232,9 @@ function exportCSV() {
         );
 
 
-    link.href = url;
+    link.href =
+        url;
+
 
     link.download =
         "NovaPay-Transaction-History.csv";
@@ -2122,6 +2246,7 @@ function exportCSV() {
 
 
     link.click();
+
 
     link.remove();
 

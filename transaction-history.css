@@ -1,6 +1,11 @@
 /* =========================================================
    NOVAPAY — TRANSACTION HISTORY
-   Complete frontend stylesheet
+   Clean mobile-first white interface
+   NovaPay blue visual system
+   ========================================================= */
+
+/* =========================================================
+   RESET
    ========================================================= */
 
 * {
@@ -9,579 +14,447 @@
     box-sizing: border-box;
 }
 
-:root {
-    --primary: #2f6bff;
-    --primary-dark: #1f5ae0;
-
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-
-    --background: #f5f7fc;
-    --card: #ffffff;
-
-    --text: #111827;
-    --subtext: #6b7280;
-    --muted: #9ca3af;
-
-    --border: #e5e7eb;
-
-    --shadow:
-        0 8px 24px rgba(15, 23, 42, 0.08);
-
-    --shadow-large:
-        0 20px 50px rgba(15, 23, 42, 0.18);
-
-    --radius-small: 14px;
-    --radius-medium: 18px;
-    --radius-large: 22px;
-}
-
-
-/* =========================================================
-   BODY
-   ========================================================= */
-
 html {
     min-height: 100%;
-    background: var(--background);
+    background: #ffffff;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     min-height: 100vh;
-
+    margin: 0;
+    background: #f7f8fc;
+    color: #171a21;
     font-family:
-        Arial,
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
         Helvetica,
+        Arial,
         sans-serif;
-
-    background: var(--background);
-    color: var(--text);
-
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
 
-
 /* =========================================================
-   BUTTONS / INPUTS
+   NOVAPAY DESIGN TOKENS
    ========================================================= */
 
-button,
-input {
-    font: inherit;
-}
+:root {
+    --novapay-blue: #2f6bff;
+    --novapay-blue-dark: #1f5ae0;
+    --novapay-blue-soft: #eef3ff;
 
-button {
-    cursor: pointer;
-}
+    --success: #0aaa78;
+    --success-dark: #07845e;
+    --success-soft: #e9faf4;
 
-button:focus-visible,
-input:focus-visible {
-    outline: 3px solid rgba(47, 107, 255, 0.22);
-    outline-offset: 2px;
-}
+    --danger: #dc3545;
+    --danger-soft: #fff0f2;
 
+    --warning: #e79a18;
+    --warning-soft: #fff7e8;
+
+    --background: #f7f8fc;
+    --surface: #ffffff;
+    --surface-soft: #f8f9fd;
+
+    --text: #171a21;
+    --text-secondary: #626a78;
+    --text-muted: #8b93a1;
+
+    --border: #eaedf3;
+    --border-light: #f0f2f6;
+
+    --shadow:
+        0 2px 10px rgba(20, 31, 56, 0.045);
+
+    --shadow-strong:
+        0 10px 30px rgba(20, 31, 56, 0.10);
+
+    --radius-small: 12px;
+    --radius-medium: 16px;
+    --radius-large: 20px;
+}
 
 /* =========================================================
    PAGE
    ========================================================= */
 
-.transaction-page {
+.history-page {
     width: 100%;
-    max-width: 620px;
-
+    max-width: 560px;
     min-height: 100vh;
-
     margin: 0 auto;
-
     padding:
-        22px
-        18px
-        110px;
+        max(14px, env(safe-area-inset-top))
+        16px
+        calc(32px + env(safe-area-inset-bottom));
 }
-
 
 /* =========================================================
    HEADER
    ========================================================= */
 
-.page-header {
+.history-header {
+    min-height: 48px;
+
     display: grid;
-
-    grid-template-columns:
-        46px
-        minmax(0, 1fr)
-        46px;
-
+    grid-template-columns: 48px 1fr auto;
     align-items: center;
 
-    gap: 12px;
+    column-gap: 10px;
 
-    margin-bottom: 22px;
+    margin-bottom: 16px;
 }
 
-.header-title-wrap {
+.history-header h1 {
     min-width: 0;
+
     text-align: center;
-}
-
-.page-title {
-    font-size: 22px;
-    line-height: 1.25;
-
-    font-weight: 700;
 
     color: var(--text);
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
+
+    letter-spacing: -0.35px;
 }
 
-.page-subtitle {
-    margin-top: 5px;
+.icon-btn {
+    width: 44px;
+    height: 44px;
 
-    color: var(--subtext);
-
-    font-size: 13px;
-    line-height: 1.4;
-}
-
-.header-button {
-    width: 46px;
-    height: 46px;
-
-    border: none;
-    border-radius: 14px;
-
-    background: var(--card);
-
-    color: var(--primary);
-
-    box-shadow: var(--shadow);
-
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
     transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        color 0.2s ease;
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
 }
 
-.header-button:hover {
-    background: #eef3ff;
+.icon-btn:hover {
+    background: var(--novapay-blue-soft);
+    color: var(--novapay-blue);
 }
 
-.header-button:active {
-    transform: scale(0.95);
+.icon-btn:active {
+    transform: scale(0.94);
 }
 
+.export-btn {
+    min-width: 72px;
+    height: 42px;
+
+    padding: 0 14px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--novapay-blue);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.export-btn:hover {
+    background: var(--novapay-blue-soft);
+}
+
+.export-btn:active {
+    transform: scale(0.96);
+}
 
 /* =========================================================
    SEARCH
    ========================================================= */
 
-.search-section {
-    margin-bottom: 18px;
-}
-
 .search-box {
     width: 100%;
-
-    min-height: 54px;
+    min-height: 48px;
 
     display: flex;
     align-items: center;
 
     gap: 11px;
 
-    padding:
-        0
-        16px;
+    margin-bottom: 12px;
+    padding: 0 15px;
 
-    background: var(--card);
+    background: var(--surface);
 
-    border:
-        1px solid
-        transparent;
-
-    border-radius: 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
 
     box-shadow: var(--shadow);
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
-.search-box:focus-within {
-    border-color: rgba(47, 107, 255, 0.35);
+.search-box i {
+    flex: 0 0 auto;
 
-    box-shadow:
-        0 8px 24px rgba(47, 107, 255, 0.10);
-}
-
-.search-icon {
-    flex-shrink: 0;
-
-    color: var(--muted);
+    color: var(--text-muted);
 
     font-size: 15px;
 }
 
-.search-input {
+.search-box input {
     width: 100%;
-
     min-width: 0;
 
-    height: 52px;
-
-    border: none;
-    outline: none;
+    border: 0;
+    outline: 0;
 
     background: transparent;
 
     color: var(--text);
 
-    font-size: 15px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+
+    appearance: none;
 }
 
-.search-input::placeholder {
-    color: var(--muted);
+.search-box input::placeholder {
+    color: #a1a8b4;
 }
 
-.search-clear {
-    width: 30px;
-    height: 30px;
+.search-box:focus-within {
+    border-color: rgba(47, 107, 255, 0.45);
 
-    flex-shrink: 0;
-
-    border: none;
-    border-radius: 50%;
-
-    background: #eef2f7;
-
-    color: var(--subtext);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 13px;
+    box-shadow:
+        0 0 0 3px rgba(47, 107, 255, 0.08);
 }
-
-.search-clear:hover {
-    background: #e4e9f1;
-}
-
 
 /* =========================================================
    FILTERS
    ========================================================= */
 
-.filters-section {
+.filter-row {
+    width: 100%;
+
     display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    gap: 9px;
 
-    gap: 10px;
-
-    margin-bottom: 22px;
+    margin-bottom: 16px;
 }
 
-.filter-button {
+.filter-btn {
     min-width: 0;
+    height: 46px;
 
-    min-height: 50px;
-
-    border: none;
-
-    border-radius: 15px;
-
-    padding:
-        0
-        12px;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    box-shadow: var(--shadow);
-
-    display: grid;
-
-    grid-template-columns:
-        auto
-        minmax(0, 1fr)
-        auto;
-
+    display: flex;
     align-items: center;
+    justify-content: space-between;
 
-    gap: 8px;
+    gap: 7px;
 
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--surface);
+
+    color: var(--text-secondary);
+
+    font-family: inherit;
     font-size: 13px;
+    font-weight: 500;
 
-    font-weight: 600;
+    cursor: pointer;
+
+    overflow: hidden;
+
+    -webkit-tap-highlight-color: transparent;
 
     transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        color 0.2s ease;
+        border-color 0.18s ease,
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
 }
 
-.filter-button > i:first-child {
-    color: var(--primary);
-
-    font-size: 13px;
-}
-
-.filter-button > span {
+.filter-btn span {
     min-width: 0;
 
     overflow: hidden;
 
     white-space: nowrap;
-
     text-overflow: ellipsis;
-
-    text-align: left;
 }
 
-.filter-button > i:last-child {
-    color: var(--muted);
+.filter-btn i {
+    flex: 0 0 auto;
+
+    color: var(--text-muted);
 
     font-size: 10px;
 }
 
-.filter-button:hover {
-    background: #f9fbff;
+.filter-btn:hover {
+    border-color: rgba(47, 107, 255, 0.3);
+    color: var(--novapay-blue);
 }
 
-.filter-button:active {
-    transform: scale(0.97);
+.filter-btn:active {
+    transform: scale(0.98);
 }
 
+.filter-btn:hover i {
+    color: var(--novapay-blue);
+}
 
 /* =========================================================
    SUMMARY CARD
    ========================================================= */
 
 .summary-card {
-    background: var(--card);
+    width: 100%;
 
+    margin-bottom: 14px;
+    padding: 19px 18px 17px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border-light);
     border-radius: var(--radius-large);
-
-    padding: 22px;
-
-    margin-bottom: 26px;
 
     box-shadow: var(--shadow);
 }
 
-.summary-header {
-    display: flex;
+.summary-card h3 {
+    color: var(--text);
 
-    align-items: flex-start;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 21px;
-}
-
-.summary-header h2 {
     font-size: 19px;
-
-    line-height: 1.3;
-
+    line-height: 1.25;
     font-weight: 700;
+
+    letter-spacing: -0.25px;
+
+    margin-bottom: 4px;
 }
 
-.summary-header p {
-    margin-top: 6px;
+.summary-card > p {
+    color: var(--text-muted);
 
-    color: var(--subtext);
+    font-size: 12px;
+    line-height: 1.4;
 
-    font-size: 13px;
-
-    line-height: 1.5;
-}
-
-.summary-icon {
-    width: 44px;
-    height: 44px;
-
-    flex-shrink: 0;
-
-    border-radius: 14px;
-
-    background: #edf3ff;
-
-    color: var(--primary);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 17px;
+    margin-bottom: 17px;
 }
 
 .summary-grid {
     display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    gap: 10px;
 
-    gap: 12px;
+    padding-top: 14px;
+
+    border-top: 1px solid var(--border-light);
 }
 
 .summary-item {
     min-width: 0;
-
-    padding: 15px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: 17px;
-
-    background: #fbfcff;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
 }
 
-.summary-item-full {
-    grid-column: 1 / -1;
-}
-
-.summary-item-icon {
-    width: 38px;
-    height: 38px;
-
-    flex-shrink: 0;
-
-    border-radius: 12px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 14px;
-}
-
-.money-in-icon {
-    background: #eafaf3;
-    color: var(--success);
-}
-
-.money-out-icon {
-    background: #fff0f0;
-    color: var(--danger);
-}
-
-.net-icon {
-    background: #edf3ff;
-    color: var(--primary);
-}
-
-.summary-item-content {
-    min-width: 0;
-}
-
-.summary-label {
+.summary-item span {
     display: block;
 
     margin-bottom: 5px;
 
-    color: var(--subtext);
+    color: var(--text-muted);
 
-    font-size: 12px;
-}
-
-.summary-value {
-    display: block;
-
-    font-size: 17px;
-
-    line-height: 1.2;
-
-    font-weight: 700;
-
-    color: var(--primary);
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 500;
 
     white-space: nowrap;
 }
 
-.money-in-value {
+.summary-item h2 {
+    overflow: hidden;
+
+    color: var(--text);
+
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 700;
+
+    letter-spacing: -0.15px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#moneyIn {
     color: var(--success);
 }
 
-.money-out-value {
-    color: var(--danger);
+#moneyOut {
+    color: var(--text);
 }
 
+#netAmount {
+    color: var(--novapay-blue);
+}
 
 /* =========================================================
    TRANSACTIONS SECTION
    ========================================================= */
 
 .transactions-section {
-    margin-bottom: 30px;
+    width: 100%;
+    margin-bottom: 24px;
 }
 
-.section-heading {
+#transactionContainer {
+    width: 100%;
+
     display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 13px;
-}
-
-.section-heading h2 {
-    font-size: 19px;
-
-    font-weight: 700;
-
-    line-height: 1.3;
-}
-
-.section-heading p {
-    margin-top: 5px;
-
-    color: var(--subtext);
-
-    font-size: 13px;
-}
-
-
-/* =========================================================
-   TRANSACTION LIST
-   ========================================================= */
-
-.transaction-list {
-    display: flex;
-
     flex-direction: column;
 
-    gap: 12px;
-}
+    background: var(--surface);
 
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-large);
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+}
 
 /* =========================================================
    TRANSACTION ITEM
@@ -589,66 +462,105 @@ input:focus-visible {
 
 .transaction-item {
     width: 100%;
+    min-height: 88px;
 
     display: flex;
-
     align-items: center;
 
-    gap: 13px;
+    gap: 12px;
 
-    padding: 16px;
+    padding: 15px 14px 15px 15px;
 
-    background: var(--card);
+    background: var(--surface);
 
-    border:
-        1px solid
-        transparent;
-
-    border-radius: 19px;
-
-    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--border-light);
 
     cursor: pointer;
 
+    -webkit-tap-highlight-color: transparent;
+
     transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        border-color 0.18s ease;
+        background-color 0.18s ease,
+        transform 0.12s ease;
+}
+
+.transaction-item:last-child {
+    border-bottom: 0;
 }
 
 .transaction-item:hover {
-    border-color: rgba(47, 107, 255, 0.10);
-
-    box-shadow:
-        0 10px 28px rgba(15, 23, 42, 0.10);
+    background: #fbfcff;
 }
 
 .transaction-item:active {
-    transform: scale(0.985);
+    background: #f5f7fc;
+    transform: scale(0.995);
 }
-
 
 /* =========================================================
    TRANSACTION ICON
    ========================================================= */
 
 .transaction-icon {
-    width: 50px;
-    height: 50px;
+    width: 46px;
+    height: 46px;
 
-    flex-shrink: 0;
-
-    border-radius: 15px;
+    flex: 0 0 46px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: #ffffff;
+    border-radius: 50%;
 
-    font-size: 18px;
+    color: var(--novapay-blue) !important;
+
+    font-size: 17px;
+
+    /*
+     * JS supplies a background color.
+     * This overrides it visually with a soft NovaPay-style
+     * icon background rather than a strong solid block.
+     */
+    background: var(--novapay-blue-soft) !important;
 }
 
+.transaction-icon i {
+    color: currentColor;
+
+    font-size: 16px;
+}
+
+/*
+ * Give common icon types subtle NovaPay-compatible colors.
+ * These remain soft and do not introduce unrelated brand colors.
+ */
+
+.transaction-item:has(.fa-arrow-down) .transaction-icon,
+.transaction-item:has(.fa-arrow-up) .transaction-icon {
+    background: var(--success-soft) !important;
+    color: var(--success) !important;
+}
+
+.transaction-item:has(.fa-money-bill-transfer) .transaction-icon {
+    background: var(--novapay-blue-soft) !important;
+    color: var(--novapay-blue) !important;
+}
+
+.transaction-item:has(.fa-bolt) .transaction-icon {
+    background: #fff7df !important;
+    color: #d58a00 !important;
+}
+
+.transaction-item:has(.fa-tv) .transaction-icon {
+    background: #f1edff !important;
+    color: #7254d6 !important;
+}
+
+.transaction-item:has(.fa-bullseye) .transaction-icon {
+    background: #fff0f5 !important;
+    color: #d65b8b !important;
+}
 
 /* =========================================================
    TRANSACTION CONTENT
@@ -656,50 +568,46 @@ input:focus-visible {
 
 .transaction-content {
     min-width: 0;
-
     flex: 1;
 }
 
 .transaction-top {
+    min-width: 0;
+
     display: flex;
-
     align-items: flex-start;
-
     justify-content: space-between;
 
     gap: 12px;
 
-    margin-bottom: 7px;
+    margin-bottom: 6px;
 }
 
 .transaction-title {
     min-width: 0;
 
-    color: var(--text);
-
-    font-size: 15px;
-
-    line-height: 1.35;
-
-    font-weight: 700;
-
     overflow: hidden;
 
-    text-overflow: ellipsis;
+    color: var(--text);
+
+    font-size: 14.5px;
+    line-height: 1.35;
+    font-weight: 600;
 
     white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .transaction-amount {
-    flex-shrink: 0;
+    flex: 0 0 auto;
 
     font-size: 15px;
-
     line-height: 1.35;
-
     font-weight: 700;
 
     white-space: nowrap;
+
+    letter-spacing: -0.2px;
 }
 
 .amount-in {
@@ -707,61 +615,67 @@ input:focus-visible {
 }
 
 .amount-out {
-    color: var(--danger);
+    color: var(--text);
 }
-
 
 /* =========================================================
    TRANSACTION BOTTOM
    ========================================================= */
 
 .transaction-bottom {
+    min-width: 0;
+
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
-    gap: 10px;
+    gap: 8px;
 }
 
 .transaction-date {
     min-width: 0;
 
-    color: var(--subtext);
-
-    font-size: 12px;
-
-    line-height: 1.4;
-
     overflow: hidden;
 
+    color: var(--text-muted);
+
+    font-size: 11.5px;
+    line-height: 1.4;
+
+    white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.transaction-status {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    min-height: 22px;
+
+    padding: 3px 7px;
+
+    border-radius: 6px;
+
+    color: var(--success-dark);
+
+    background: var(--success-soft);
+
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 600;
 
     white-space: nowrap;
 }
 
-.transaction-status {
-    flex-shrink: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    color: var(--subtext);
-
-    font-size: 12px;
-
-    line-height: 1.4;
-}
-
 .status-dot {
-    width: 7px;
-    height: 7px;
+    width: 5px;
+    height: 5px;
 
-    flex-shrink: 0;
+    flex: 0 0 5px;
 
     border-radius: 50%;
 }
@@ -778,103 +692,117 @@ input:focus-visible {
     background: var(--danger);
 }
 
-.transaction-arrow {
-    flex-shrink: 0;
+/* =========================================================
+   STATUS COLOR OVERRIDES
+   ========================================================= */
 
-    color: #b2b8c3;
-
-    font-size: 12px;
+.transaction-status:has(.status-pending) {
+    color: #a46600;
+    background: var(--warning-soft);
 }
 
+.transaction-status:has(.status-failed) {
+    color: #c12939;
+    background: var(--danger-soft);
+}
 
 /* =========================================================
-   EMPTY / LOADING / ERROR
+   ARROW
+   ========================================================= */
+
+.transaction-arrow {
+    flex: 0 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #b1b7c1;
+
+    font-size: 11px;
+}
+
+/* =========================================================
+   EMPTY / LOADING / ERROR STATE
    ========================================================= */
 
 .empty-state {
     width: 100%;
 
-    padding:
-        58px
-        22px;
+    padding: 58px 22px;
 
-    background: var(--card);
-
-    border-radius: var(--radius-large);
-
-    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     text-align: center;
+
+    background: var(--surface);
 }
 
 .empty-state i {
-    display: block;
+    width: 64px;
+    height: 64px;
 
-    margin-bottom: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    color: #cbd2dc;
+    margin-bottom: 16px;
 
-    font-size: 46px;
+    border-radius: 50%;
+
+    background: var(--novapay-blue-soft);
+
+    color: var(--novapay-blue);
+
+    font-size: 25px;
 }
 
 .empty-state h3 {
-    margin-bottom: 8px;
-
     color: var(--text);
 
-    font-size: 18px;
-
+    font-size: 17px;
     line-height: 1.3;
-
     font-weight: 700;
+
+    margin-bottom: 7px;
 }
 
 .empty-state p {
-    max-width: 360px;
+    max-width: 310px;
 
-    margin: 0 auto;
-
-    color: var(--subtext);
+    color: var(--text-secondary);
 
     font-size: 13px;
-
-    line-height: 1.6;
+    line-height: 1.55;
 }
 
-
 /* =========================================================
-   SHEET OVERLAY
+   BOTTOM SHEET OVERLAY
    ========================================================= */
 
-.sheet-overlay {
+#sheetOverlay {
     position: fixed;
-
     inset: 0;
+
+    background: rgba(10, 17, 30, 0.38);
+
+    opacity: 0;
+    visibility: hidden;
 
     z-index: 999;
 
-    background:
-        rgba(15, 23, 42, 0.42);
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-
     transition:
-        opacity 0.25s ease,
-        visibility 0.25s ease;
+        opacity 0.22s ease,
+        visibility 0.22s ease;
 }
 
-.sheet-overlay.active {
+#sheetOverlay.active {
     opacity: 1;
-
     visibility: visible;
-
-    pointer-events: auto;
 }
-
 
 /* =========================================================
    BOTTOM SHEETS
@@ -883,127 +811,86 @@ input:focus-visible {
 .bottom-sheet {
     position: fixed;
 
-    left: 50%;
-
+    left: 0;
+    right: 0;
     bottom: 0;
 
-    z-index: 1000;
+    max-width: 560px;
 
-    width: min(
-        620px,
-        100%
-    );
-
-    max-height: 78vh;
+    margin: 0 auto;
 
     padding:
-        10px
-        20px
-        calc(
-            24px +
-            env(safe-area-inset-bottom)
-        );
+        12px
+        18px
+        calc(20px + env(safe-area-inset-bottom));
 
-    background: var(--card);
+    background: var(--surface);
 
-    border-radius:
-        28px
-        28px
-        0
-        0;
+    border-radius: 24px 24px 0 0;
 
-    box-shadow: var(--shadow-large);
+    box-shadow:
+        0 -10px 35px rgba(20, 31, 56, 0.14);
 
-    overflow-y: auto;
-
-    transform:
-        translate(-50%, 105%);
+    transform: translateY(110%);
 
     visibility: hidden;
 
+    z-index: 1000;
+
+    max-height: 75vh;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
     transition:
-        transform 0.3s ease,
-        visibility 0.3s ease;
+        transform 0.28s cubic-bezier(.22, .8, .25, 1),
+        visibility 0.28s ease;
 }
 
 .bottom-sheet.active {
-    transform:
-        translate(-50%, 0);
-
+    transform: translateY(0);
     visibility: visible;
 }
-
-
-/* =========================================================
-   SHEET HANDLE
-   ========================================================= */
-
-.sheet-handle {
-    width: 42px;
-    height: 5px;
-
-    margin:
-        3px
-        auto
-        17px;
-
-    border-radius: 99px;
-
-    background: #d7dce4;
-}
-
 
 /* =========================================================
    SHEET HEADER
    ========================================================= */
 
 .sheet-header {
-    display: flex;
+    position: relative;
 
-    align-items: center;
+    padding: 8px 0 17px;
 
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 17px;
+    text-align: center;
 }
 
-.sheet-header h2 {
+.sheet-header::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 38px;
+    height: 4px;
+
+    transform: translateX(-50%);
+
+    border-radius: 999px;
+
+    background: #d9dde5;
+}
+
+.sheet-header h3 {
+    padding-top: 12px;
+
     color: var(--text);
 
-    font-size: 19px;
-
+    font-size: 18px;
     line-height: 1.3;
-
     font-weight: 700;
 }
-
-.sheet-close {
-    width: 38px;
-    height: 38px;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #f1f4f8;
-
-    color: var(--subtext);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 15px;
-}
-
-.sheet-close:hover {
-    background: #e8edf4;
-}
-
 
 /* =========================================================
    SHEET OPTIONS
@@ -1011,105 +898,67 @@ input:focus-visible {
 
 .sheet-options {
     display: flex;
-
     flex-direction: column;
 
-    gap: 9px;
+    gap: 8px;
 }
 
 .sheet-option {
     width: 100%;
+    min-height: 50px;
 
-    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    padding:
-        0
-        16px;
+    padding: 0 15px;
 
-    border:
-        1px solid
-        transparent;
+    border: 1px solid var(--border);
+    border-radius: 13px;
 
-    border-radius: 15px;
-
-    background: #f4f7fb;
+    background: var(--surface-soft);
 
     color: var(--text);
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 12px;
-
-    text-align: left;
-
+    font-family: inherit;
     font-size: 14px;
-
     font-weight: 600;
 
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
     transition:
-        background 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
         color 0.18s ease,
-        border-color 0.18s ease;
-}
-
-.sheet-option span {
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    min-width: 0;
-}
-
-.sheet-option > i:last-child {
-    flex-shrink: 0;
-
-    color: transparent;
-
-    font-size: 13px;
+        transform 0.15s ease;
 }
 
 .sheet-option:hover {
-    background: #edf3ff;
+    border-color: rgba(47, 107, 255, 0.25);
+    background: var(--novapay-blue-soft);
+    color: var(--novapay-blue);
 }
 
-.sheet-option.active {
-    background: #edf3ff;
+.sheet-option:active {
+    transform: scale(0.98);
 
-    border-color:
-        rgba(47, 107, 255, 0.16);
+    background: var(--novapay-blue);
+    border-color: var(--novapay-blue);
 
-    color: var(--primary);
+    color: #ffffff;
 }
-
-.sheet-option.active > i:last-child {
-    color: var(--primary);
-}
-
 
 /* =========================================================
-   SCROLLBAR
+   FOCUS ACCESSIBILITY
    ========================================================= */
 
-.bottom-sheet::-webkit-scrollbar {
-    width: 5px;
+button:focus-visible,
+input:focus-visible {
+    outline: 3px solid rgba(47, 107, 255, 0.25);
+    outline-offset: 2px;
 }
-
-.bottom-sheet::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.bottom-sheet::-webkit-scrollbar-thumb {
-    background: #d7dce4;
-
-    border-radius: 99px;
-}
-
 
 /* =========================================================
    PRINT
@@ -1121,149 +970,201 @@ input:focus-visible {
         background: #ffffff;
     }
 
-    .transaction-page {
+    .history-page {
         max-width: none;
-
         padding: 20px;
     }
 
-    .header-button,
-    .search-section,
-    .filters-section,
-    .summary-card,
-    .sheet-overlay,
-    .bottom-sheet {
+    .history-header {
+        margin-bottom: 20px;
+    }
+
+    .icon-btn,
+    .export-btn,
+    .search-box,
+    .filter-row,
+    #sheetOverlay,
+    .bottom-sheet,
+    .transaction-arrow {
         display: none !important;
     }
 
-    .transaction-item {
+    .summary-card,
+    #transactionContainer {
+        border: 1px solid #dddddd;
         box-shadow: none;
+    }
 
-        border:
-            1px solid
-            #e5e7eb;
-
+    .transaction-item {
         break-inside: avoid;
     }
-
-    .transactions-section {
-        margin: 0;
-    }
 }
-
-
-/* =========================================================
-   TABLET / DESKTOP
-   ========================================================= */
-
-@media (min-width: 700px) {
-
-    .transaction-page {
-        padding-top: 32px;
-    }
-
-    .transaction-item {
-        padding: 18px;
-    }
-
-    .transaction-icon {
-        width: 54px;
-        height: 54px;
-    }
-
-    .transaction-title {
-        font-size: 16px;
-    }
-
-    .transaction-amount {
-        font-size: 16px;
-    }
-}
-
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
 
-    .transaction-page {
-        padding:
-            18px
-            14px
-            100px;
+    .history-page {
+        padding-left: 13px;
+        padding-right: 13px;
     }
 
-    .page-title {
-        font-size: 19px;
+    .history-header {
+        grid-template-columns: 42px 1fr auto;
+
+        column-gap: 6px;
+
+        margin-bottom: 13px;
     }
 
-    .page-subtitle {
-        font-size: 12px;
+    .history-header h1 {
+        font-size: 20px;
     }
 
-    .filters-section {
-        gap: 8px;
+    .icon-btn {
+        width: 42px;
+        height: 42px;
     }
 
-    .filter-button {
-        min-height: 48px;
+    .export-btn {
+        min-width: 66px;
 
-        padding:
-            0
-            9px;
+        padding: 0 10px;
 
-        gap: 6px;
+        font-size: 14px;
+    }
+
+    .search-box {
+        min-height: 46px;
+
+        padding: 0 13px;
+
+        border-radius: 13px;
+    }
+
+    .filter-row {
+        gap: 7px;
+
+        margin-bottom: 13px;
+    }
+
+    .filter-btn {
+        height: 44px;
+
+        padding: 0 10px;
 
         font-size: 12px;
     }
 
     .summary-card {
-        padding: 18px;
+        padding: 17px 15px 15px;
 
-        border-radius: 20px;
+        border-radius: 18px;
+
+        margin-bottom: 12px;
     }
 
-    .summary-header h2 {
+    .summary-card h3 {
         font-size: 18px;
     }
 
     .summary-grid {
-        gap: 9px;
+        gap: 7px;
+
+        padding-top: 13px;
     }
 
-    .summary-item {
-        padding: 13px 11px;
-
-        gap: 8px;
+    .summary-item span {
+        font-size: 10px;
     }
 
-    .summary-item-icon {
-        width: 34px;
-        height: 34px;
-
-        border-radius: 10px;
-
-        font-size: 12px;
+    .summary-item h2 {
+        font-size: 13px;
     }
 
-    .summary-value {
-        font-size: 15px;
+    #transactionContainer {
+        border-radius: 18px;
     }
 
     .transaction-item {
-        padding: 14px;
+        min-height: 82px;
 
-        gap: 11px;
+        gap: 10px;
+
+        padding: 13px 11px 13px 12px;
     }
 
     .transaction-icon {
-        width: 46px;
-        height: 46px;
+        width: 43px;
+        height: 43px;
 
-        border-radius: 14px;
+        flex-basis: 43px;
 
-        font-size: 16px;
+        font-size: 15px;
+    }
+
+    .transaction-title {
+        font-size: 13.5px;
+    }
+
+    .transaction-amount {
+        font-size: 14px;
+    }
+
+    .transaction-date {
+        font-size: 10.5px;
+    }
+
+    .transaction-status {
+        min-height: 20px;
+
+        padding: 3px 6px;
+
+        font-size: 9.5px;
+    }
+
+    .transaction-arrow {
+        flex-basis: 10px;
+
+        font-size: 9px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .history-page {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .history-header h1 {
+        font-size: 18px;
+    }
+
+    .filter-btn {
+        padding: 0 8px;
+
+        font-size: 11px;
+    }
+
+    .transaction-item {
+        gap: 8px;
+
+        padding-left: 9px;
+        padding-right: 8px;
+    }
+
+    .transaction-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
     }
 
     .transaction-top {
@@ -1271,90 +1172,26 @@ input:focus-visible {
     }
 
     .transaction-title {
-        font-size: 14px;
+        font-size: 12.5px;
     }
 
     .transaction-amount {
-        font-size: 14px;
-    }
-
-    .transaction-date,
-    .transaction-status {
-        font-size: 11px;
-    }
-
-    .transaction-arrow {
-        font-size: 10px;
-    }
-
-    .bottom-sheet {
-        padding-left: 16px;
-        padding-right: 16px;
+        font-size: 13px;
     }
 }
 
-
 /* =========================================================
-   VERY SMALL PHONES
+   REDUCED MOTION
    ========================================================= */
 
-@media (max-width: 370px) {
+@media (prefers-reduced-motion: reduce) {
 
-    .transaction-page {
-        padding-left: 11px;
-        padding-right: 11px;
-    }
-
-    .page-header {
-        grid-template-columns:
-            42px
-            minmax(0, 1fr)
-            42px;
-
-        gap: 8px;
-    }
-
-    .header-button {
-        width: 42px;
-        height: 42px;
-
-        border-radius: 12px;
-    }
-
-    .page-title {
-        font-size: 17px;
-    }
-
-    .filters-section {
-        grid-template-columns:
-            1fr;
-    }
-
-    .filter-button {
-        width: 100%;
-    }
-
-    .summary-grid {
-        grid-template-columns:
-            1fr;
-    }
-
-    .summary-item-full {
-        grid-column: auto;
-    }
-
-    .transaction-item {
-        gap: 9px;
-    }
-
-    .transaction-icon {
-        width: 42px;
-        height: 42px;
-
-        border-radius: 12px;
-    }
-
-    .transaction-arrow {
-        display: none;
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }

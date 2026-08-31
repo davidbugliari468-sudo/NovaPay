@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,15 +12,20 @@
 
     <meta
         name="theme-color"
-        content="#2563EB"
+        content="#ffffff"
     >
 
-    <title>NovaPay — Transaction History</title>
+    <meta
+        name="description"
+        content="View your NovaPay transaction history."
+    >
+
+    <title>Transactions — NovaPay</title>
 
     <!-- Font Awesome -->
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     >
 
     <!-- NovaPay Transaction History Styles -->
@@ -26,266 +33,237 @@
         rel="stylesheet"
         href="transaction-history.css"
     >
+
 </head>
+
 
 <body>
 
-    <!-- =====================================================
-         PAGE
-         ===================================================== -->
+    <!-- =================================================
+         NOVAPAY TRANSACTION HISTORY
+    ================================================== -->
 
     <main class="transaction-page">
 
+
         <!-- =================================================
              HEADER
-             ================================================= -->
+        ================================================== -->
 
         <header class="transaction-header">
 
             <button
                 type="button"
                 id="backBtn"
-                class="icon-button"
+                class="back-button"
                 aria-label="Go back"
             >
-                <i class="fas fa-arrow-left"></i>
+                <i class="fa-solid fa-chevron-left"></i>
             </button>
 
-            <div class="header-title">
-                <h1>Transactions</h1>
-                <p>Your transaction history</p>
-            </div>
+
+            <h1 class="page-title">
+                Transactions
+            </h1>
+
 
             <button
                 type="button"
                 id="exportBtn"
-                class="icon-button"
-                aria-label="Export transactions"
+                class="download-button"
             >
-                <i class="fas fa-download"></i>
+                Download
             </button>
 
         </header>
 
 
         <!-- =================================================
-             SUMMARY
-             ================================================= -->
+             FILTERS
+        ================================================== -->
 
         <section
-            class="transaction-summary"
-            aria-label="Transaction summary"
+            class="filter-section"
+            aria-label="Transaction filters"
         >
 
-            <div class="summary-card">
+            <button
+                type="button"
+                id="categoryBtn"
+                class="filter-button"
+                aria-haspopup="dialog"
+            >
 
-                <div class="summary-icon money-in-icon">
-                    <i class="fas fa-arrow-down"></i>
-                </div>
+                <span>
+                    All Categories
+                </span>
 
-                <div class="summary-content">
+                <i class="fa-solid fa-caret-down"></i>
 
-                    <span class="summary-label">
-                        Money In
-                    </span>
-
-                    <strong
-                        id="moneyIn"
-                        class="summary-value"
-                    >
-                        ₦0.00
-                    </strong>
-
-                </div>
-
-            </div>
+            </button>
 
 
-            <div class="summary-card">
+            <button
+                type="button"
+                id="statusBtn"
+                class="filter-button"
+                aria-haspopup="dialog"
+            >
 
-                <div class="summary-icon money-out-icon">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
+                <span>
+                    All Status
+                </span>
 
-                <div class="summary-content">
+                <i class="fa-solid fa-caret-down"></i>
 
-                    <span class="summary-label">
-                        Money Out
-                    </span>
-
-                    <strong
-                        id="moneyOut"
-                        class="summary-value"
-                    >
-                        ₦0.00
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <div class="summary-icon net-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-
-                <div class="summary-content">
-
-                    <span class="summary-label">
-                        Net
-                    </span>
-
-                    <strong
-                        id="netAmount"
-                        class="summary-value"
-                    >
-                        ₦0.00
-                    </strong>
-
-                </div>
-
-            </div>
+            </button>
 
         </section>
 
 
         <!-- =================================================
-             FILTERS
-             ================================================= -->
+             TRANSACTION SUMMARY
+        ================================================== -->
 
-        <section class="transaction-controls">
-
-            <div class="search-wrapper">
-
-                <i class="fas fa-search"></i>
-
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="Search transactions"
-                    autocomplete="off"
-                    aria-label="Search transactions"
-                >
-
-            </div>
+        <section class="transaction-summary">
 
 
-            <div class="filter-row">
+            <!-- SUMMARY HEADER -->
 
-                <button
-                    type="button"
-                    id="categoryBtn"
-                    class="filter-button"
-                >
-                    <i class="fas fa-layer-group"></i>
-
-                    <span>
-                        All Categories
-                    </span>
-
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-
-                <button
-                    type="button"
-                    id="statusBtn"
-                    class="filter-button"
-                >
-                    <i class="fas fa-circle-check"></i>
-
-                    <span>
-                        All Status
-                    </span>
-
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
+            <div class="summary-header">
 
                 <button
                     type="button"
                     id="monthBtn"
-                    class="filter-button"
+                    class="month-button"
+                    aria-haspopup="dialog"
                 >
-                    <i class="fas fa-calendar"></i>
 
                     <span>
                         This Month
                     </span>
 
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fa-solid fa-caret-down"></i>
+
                 </button>
+
+
+                <button
+                    type="button"
+                    id="analysisBtn"
+                    class="analysis-button"
+                >
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    <span>
+                        Analysis
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- IN / OUT -->
+
+            <div class="money-summary">
+
+
+                <div class="money-summary-item">
+
+                    <span class="summary-label">
+                        In
+                    </span>
+
+                    <strong
+                        id="moneyIn"
+                        class="money-in"
+                    >
+                        ₦0.00
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="money-summary-item">
+
+                    <span class="summary-label">
+                        Out
+                    </span>
+
+                    <strong
+                        id="moneyOut"
+                        class="money-out"
+                    >
+                        ₦0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCESSIBLE / JS SUMMARY VALUE -->
+
+            <p
+                id="transactionCount"
+                class="transaction-count"
+                aria-live="polite"
+            >
+                Showing 0 Transactions
+            </p>
+
+
+            <p
+                id="netAmount"
+                class="net-amount"
+                aria-hidden="true"
+            >
+                ₦0.00
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             TRANSACTIONS
+        ================================================== -->
+
+        <section
+            class="transactions-section"
+            aria-label="Transaction history"
+        >
+
+            <div
+                id="transactionContainer"
+                class="transaction-list"
+            >
+
+                <!--
+                    IMPORTANT:
+
+                    Do NOT put sample transactions here.
+
+                    Real transactions are inserted by
+                    transaction-history.js after the
+                    authenticated backend request succeeds.
+                -->
 
             </div>
 
         </section>
 
 
-        <!-- =================================================
-             TRANSACTION COUNT
-             ================================================= -->
-
-        <div class="transaction-heading">
-
-            <h2>Recent Transactions</h2>
-
-            <span id="transactionCount">
-                Showing 0 Transactions
-            </span>
-
-        </div>
-
-
-        <!-- =================================================
-             TRANSACTION LIST
-             ================================================= -->
-
-        <section
-            id="transactionContainer"
-            class="transaction-list"
-            aria-live="polite"
-            aria-label="Transaction history"
-        >
-            <!-- Transactions are rendered by transaction-history.js -->
-        </section>
-
-
-        <!-- =================================================
-             LOAD MORE
-             ================================================= -->
-
-        <div
-            id="loadMoreContainer"
-            class="load-more-container"
-            hidden
-        >
-
-            <button
-                type="button"
-                id="loadMoreBtn"
-                class="load-more-button"
-            >
-                <span id="loadMoreText">
-                    Load More
-                </span>
-
-                <i
-                    id="loadMoreSpinner"
-                    class="fas fa-spinner fa-spin"
-                    hidden
-                ></i>
-            </button>
-
-        </div>
-
     </main>
 
 
-    <!-- =====================================================
+    <!-- =================================================
          SHEET OVERLAY
-         ===================================================== -->
+    ================================================== -->
 
     <div
         id="sheetOverlay"
@@ -294,31 +272,34 @@
     ></div>
 
 
-    <!-- =====================================================
+    <!-- =================================================
          CATEGORY SHEET
-         ===================================================== -->
+    ================================================== -->
 
     <section
         id="categorySheet"
         class="bottom-sheet"
-        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="categorySheetTitle"
     >
 
         <div class="sheet-handle"></div>
 
+
         <div class="sheet-header">
 
-            <h3>
-                Transaction Category
-            </h3>
+            <h2 id="categorySheetTitle">
+                Categories
+            </h2>
 
             <button
                 type="button"
                 class="sheet-close"
-                data-close-sheet
-                aria-label="Close"
+                onclick="closeSheets()"
+                aria-label="Close categories"
             >
-                <i class="fas fa-xmark"></i>
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
         </div>
@@ -331,71 +312,70 @@
                 class="sheet-option"
                 data-category="All Categories"
             >
-                <i class="fas fa-list"></i>
-                <span>All Categories</span>
+                All Categories
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Credit Alert"
             >
-                <i class="fas fa-arrow-down"></i>
-                <span>Credit Alert</span>
+                Credit Alert
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Transfer"
             >
-                <i class="fas fa-money-bill-transfer"></i>
-                <span>Transfer</span>
+                Transfer
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Airtime"
             >
-                <i class="fas fa-mobile-screen-button"></i>
-                <span>Airtime</span>
+                Airtime
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Data"
             >
-                <i class="fas fa-signal"></i>
-                <span>Data</span>
+                Data
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Electricity"
             >
-                <i class="fas fa-bolt"></i>
-                <span>Electricity</span>
+                Electricity
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="TV"
             >
-                <i class="fas fa-tv"></i>
-                <span>TV</span>
+                TV Subscription
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-category="Betting"
             >
-                <i class="fas fa-bullseye"></i>
-                <span>Betting</span>
+                Betting
             </button>
 
         </div>
@@ -403,31 +383,34 @@
     </section>
 
 
-    <!-- =====================================================
+    <!-- =================================================
          STATUS SHEET
-         ===================================================== -->
+    ================================================== -->
 
     <section
         id="statusSheet"
         class="bottom-sheet"
-        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="statusSheetTitle"
     >
 
         <div class="sheet-handle"></div>
 
+
         <div class="sheet-header">
 
-            <h3>
+            <h2 id="statusSheetTitle">
                 Transaction Status
-            </h3>
+            </h2>
 
             <button
                 type="button"
                 class="sheet-close"
-                data-close-sheet
-                aria-label="Close"
+                onclick="closeSheets()"
+                aria-label="Close status"
             >
-                <i class="fas fa-xmark"></i>
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
         </div>
@@ -440,35 +423,34 @@
                 class="sheet-option"
                 data-status="All Status"
             >
-                <i class="fas fa-list"></i>
-                <span>All Status</span>
+                All Status
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-status="Successful"
             >
-                <i class="fas fa-circle-check"></i>
-                <span>Successful</span>
+                Successful
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-status="Pending"
             >
-                <i class="fas fa-clock"></i>
-                <span>Pending</span>
+                Pending
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-status="Failed"
             >
-                <i class="fas fa-circle-xmark"></i>
-                <span>Failed</span>
+                Failed
             </button>
 
         </div>
@@ -476,31 +458,34 @@
     </section>
 
 
-    <!-- =====================================================
+    <!-- =================================================
          MONTH SHEET
-         ===================================================== -->
+    ================================================== -->
 
     <section
         id="monthSheet"
         class="bottom-sheet"
-        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="monthSheetTitle"
     >
 
         <div class="sheet-handle"></div>
 
+
         <div class="sheet-header">
 
-            <h3>
-                Transaction Period
-            </h3>
+            <h2 id="monthSheetTitle">
+                Select Month
+            </h2>
 
             <button
                 type="button"
                 class="sheet-close"
-                data-close-sheet
-                aria-label="Close"
+                onclick="closeSheets()"
+                aria-label="Close month selector"
             >
-                <i class="fas fa-xmark"></i>
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
         </div>
@@ -513,125 +498,115 @@
                 class="sheet-option"
                 data-month="This Month"
             >
-                <i class="fas fa-calendar-day"></i>
-                <span>This Month</span>
+                This Month
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="January"
             >
-                <i class="fas fa-calendar"></i>
-                <span>January</span>
+                January
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="February"
             >
-                <i class="fas fa-calendar"></i>
-                <span>February</span>
+                February
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="March"
             >
-                <i class="fas fa-calendar"></i>
-                <span>March</span>
+                March
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="April"
             >
-                <i class="fas fa-calendar"></i>
-                <span>April</span>
+                April
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="May"
             >
-                <i class="fas fa-calendar"></i>
-                <span>May</span>
+                May
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="June"
             >
-                <i class="fas fa-calendar"></i>
-                <span>June</span>
+                June
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="July"
             >
-                <i class="fas fa-calendar"></i>
-                <span>July</span>
+                July
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="August"
             >
-                <i class="fas fa-calendar"></i>
-                <span>August</span>
+                August
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="September"
             >
-                <i class="fas fa-calendar"></i>
-                <span>September</span>
+                September
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="October"
             >
-                <i class="fas fa-calendar"></i>
-                <span>October</span>
+                October
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="November"
             >
-                <i class="fas fa-calendar"></i>
-                <span>November</span>
+                November
             </button>
+
 
             <button
                 type="button"
                 class="sheet-option"
                 data-month="December"
             >
-                <i class="fas fa-calendar"></i>
-                <span>December</span>
-            </button>
-
-            <button
-                type="button"
-                class="sheet-option"
-                data-month="All Months"
-            >
-                <i class="fas fa-calendar-days"></i>
-                <span>All Months</span>
+                December
             </button>
 
         </div>
@@ -639,31 +614,34 @@
     </section>
 
 
-    <!-- =====================================================
+    <!-- =================================================
          EXPORT SHEET
-         ===================================================== -->
+    ================================================== -->
 
     <section
         id="exportSheet"
         class="bottom-sheet"
-        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="exportSheetTitle"
     >
 
         <div class="sheet-handle"></div>
 
+
         <div class="sheet-header">
 
-            <h3>
-                Export Transactions
-            </h3>
+            <h2 id="exportSheetTitle">
+                Download Transactions
+            </h2>
 
             <button
                 type="button"
                 class="sheet-close"
-                data-close-sheet
-                aria-label="Close"
+                onclick="closeSheets()"
+                aria-label="Close download menu"
             >
-                <i class="fas fa-xmark"></i>
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
         </div>
@@ -673,29 +651,52 @@
 
             <button
                 type="button"
-                id="exportCSV"
-                class="sheet-option"
-            >
-                <i class="fas fa-file-csv"></i>
-                <span>Export CSV</span>
-            </button>
-
-            <button
-                type="button"
+                class="sheet-option sheet-option-icon"
                 id="exportPDF"
-                class="sheet-option"
             >
-                <i class="fas fa-file-pdf"></i>
-                <span>Save as PDF</span>
+
+                <span class="option-icon pdf-icon">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </span>
+
+                <span>
+                    Export as PDF
+                </span>
+
             </button>
+
 
             <button
                 type="button"
-                id="printHistory"
-                class="sheet-option"
+                class="sheet-option sheet-option-icon"
+                id="exportCSV"
             >
-                <i class="fas fa-print"></i>
-                <span>Print History</span>
+
+                <span class="option-icon csv-icon">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+
+                <span>
+                    Export as CSV
+                </span>
+
+            </button>
+
+
+            <button
+                type="button"
+                class="sheet-option sheet-option-icon"
+                id="printHistory"
+            >
+
+                <span class="option-icon print-icon">
+                    <i class="fa-solid fa-print"></i>
+                </span>
+
+                <span>
+                    Print
+                </span>
+
             </button>
 
         </div>
@@ -703,9 +704,9 @@
     </section>
 
 
-    <!-- =====================================================
-         TRANSACTION HISTORY JAVASCRIPT
-         ===================================================== -->
+    <!-- =================================================
+         JAVASCRIPT
+    ================================================== -->
 
     <script
         type="module"
@@ -713,4 +714,5 @@
     ></script>
 
 </body>
+
 </html>
