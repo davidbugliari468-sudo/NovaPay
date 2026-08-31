@@ -1,55 +1,59 @@
 /* =========================================================
    NOVAPAY — TRANSACTION HISTORY
-   Clean white mobile-first design
-   NovaPay blue + green financial accents
+   Clean financial-app interface
+   White UI + NovaPay Blue
+   Mobile first
    ========================================================= */
 
 
 /* =========================================================
-   ROOT
+   DESIGN TOKENS
    ========================================================= */
 
 :root {
-    --novapay-blue: #2563eb;
-    --novapay-blue-dark: #1d4ed8;
-    --novapay-blue-soft: #eff6ff;
 
-    --money-in: #16a878;
-    --money-in-soft: #eafaf5;
+    --novapay-blue: #2563EB;
+    --novapay-blue-dark: #1D4ED8;
+    --novapay-blue-soft: #EFF6FF;
+
+    --money-in: #10A878;
+    --money-in-soft: #EAF9F4;
 
     --money-out: #171717;
 
-    --success: #16a878;
-    --success-soft: #e9f8f3;
+    --success: #10A878;
+    --success-soft: #EAF9F4;
 
-    --pending: #d97706;
-    --pending-soft: #fff7e6;
+    --pending: #D97706;
+    --pending-soft: #FFF7E6;
 
-    --failed: #dc2626;
-    --failed-soft: #fff0f0;
+    --failed: #DC2626;
+    --failed-soft: #FFF0F0;
 
-    --background: #f7f8fc;
-    --surface: #ffffff;
-    --surface-soft: #f8f9fc;
+    --page-background: #F7F8FC;
 
-    --text-primary: #17191c;
-    --text-secondary: #70757d;
-    --text-muted: #969ba3;
+    --surface: #FFFFFF;
+    --surface-soft: #F8FAFC;
 
-    --border: #edf0f4;
-    --divider: #f0f1f4;
+    --text-primary: #17191C;
+    --text-secondary: #70757D;
+    --text-muted: #9AA0A8;
+
+    --border: #EDF0F4;
+    --divider: #F0F1F4;
 
     --shadow-soft:
-        0 2px 12px rgba(15, 23, 42, 0.04);
+        0 2px 12px rgba(15, 23, 42, 0.045);
 
     --shadow-card:
-        0 5px 24px rgba(15, 23, 42, 0.06);
+        0 6px 24px rgba(15, 23, 42, 0.065);
 
     --radius-small: 12px;
     --radius-medium: 16px;
     --radius-large: 22px;
 
     --page-padding: 18px;
+
 }
 
 
@@ -67,7 +71,9 @@
 html {
     width: 100%;
     min-height: 100%;
-    background: var(--background);
+
+    background: var(--page-background);
+
     -webkit-text-size-adjust: 100%;
 }
 
@@ -78,7 +84,8 @@ body {
 
     margin: 0;
 
-    background: var(--background);
+    background: var(--page-background);
+
     color: var(--text-primary);
 
     font-family:
@@ -93,6 +100,7 @@ body {
         sans-serif;
 
     font-size: 15px;
+
     line-height: 1.4;
 
     -webkit-font-smoothing: antialiased;
@@ -103,35 +111,35 @@ body {
 
 
 /* =========================================================
-   LINKS / BUTTONS
+   FORM ELEMENTS
    ========================================================= */
 
 button,
 input,
-select,
-textarea {
+textarea,
+select {
     font: inherit;
 }
 
 
 button {
     border: 0;
+
     outline: none;
+
     cursor: pointer;
+
     -webkit-tap-highlight-color: transparent;
 }
 
 
 button:focus-visible,
 input:focus-visible {
-    outline: 2px solid var(--novapay-blue);
+    outline:
+        2px solid
+        var(--novapay-blue);
+
     outline-offset: 2px;
-}
-
-
-a {
-    color: inherit;
-    text-decoration: none;
 }
 
 
@@ -141,17 +149,16 @@ a {
 
 .transaction-page {
     width: 100%;
+
     min-height: 100vh;
-    background: var(--background);
-}
 
+    background: var(--page-background);
 
-.transaction-wrapper {
-    width: 100%;
-    max-width: 760px;
-
-    margin: 0 auto;
-    padding: 0 var(--page-padding) 40px;
+    padding-bottom:
+        calc(
+            32px +
+            env(safe-area-inset-bottom)
+        );
 }
 
 
@@ -162,50 +169,62 @@ a {
 .transaction-header {
     position: relative;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
 
-    min-height: 66px;
+    min-height: 64px;
+
+    padding:
+        0 var(--page-padding);
+
+    display: grid;
+
+    grid-template-columns:
+        44px
+        1fr
+        80px;
+
+    align-items: center;
 
     background: var(--surface);
+
+    border-bottom:
+        1px solid
+        var(--border);
 }
 
 
-.transaction-header-inner {
-    width: 100%;
-    max-width: 760px;
+.page-title {
+    margin: 0;
 
-    min-height: 66px;
+    text-align: center;
 
-    padding: 0 var(--page-padding);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-
-.transaction-header h1,
-.transaction-title-header {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.35px;
     color: var(--text-primary);
+
+    font-size: 22px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    letter-spacing: -0.35px;
 }
 
 
-.back-btn {
+.back-button {
     width: 42px;
+
     height: 42px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     border-radius: 50%;
 
     background: transparent;
+
     color: var(--text-primary);
 
     font-size: 19px;
@@ -216,152 +235,131 @@ a {
 }
 
 
-.back-btn:active {
+.back-button:active {
     background: var(--surface-soft);
+
     transform: scale(0.94);
 }
 
 
-.export-btn,
-#exportBtn {
+.download-button {
+    justify-self: end;
+
     min-width: 70px;
+
     height: 40px;
 
+    padding: 0 8px;
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
 
+    border-radius: 12px;
+
     background: transparent;
+
     color: var(--novapay-blue);
 
     font-size: 15px;
+
     font-weight: 600;
 
-    border-radius: 12px;
+    white-space: nowrap;
 }
 
 
-.export-btn:active,
-#exportBtn:active {
-    background: var(--novapay-blue-soft);
-}
+.download-button:active {
+    background:
+        var(--novapay-blue-soft);
 
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
-
-.transaction-search {
-    position: relative;
-
-    width: 100%;
-
-    margin: 14px 0 12px;
-}
-
-
-.transaction-search i {
-    position: absolute;
-
-    left: 16px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: var(--text-muted);
-    font-size: 15px;
-
-    pointer-events: none;
-}
-
-
-#searchInput {
-    width: 100%;
-    height: 46px;
-
-    padding: 0 16px 0 44px;
-
-    border: 1px solid transparent;
-    border-radius: 14px;
-
-    background: var(--surface);
-
-    color: var(--text-primary);
-
-    font-size: 14px;
-
-    box-shadow: var(--shadow-soft);
-
-    outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-#searchInput::placeholder {
-    color: var(--text-muted);
-}
-
-
-#searchInput:focus {
-    border-color: rgba(37, 99, 235, 0.25);
-
-    box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
 
 /* =========================================================
-   FILTER BAR
+   MAIN CONTENT WIDTH
    ========================================================= */
 
-.transaction-filters {
+.transaction-header,
+.filter-section,
+.transaction-summary,
+.transactions-section {
     width: 100%;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    max-width: 760px;
 
-    gap: 10px;
+    margin-left: auto;
 
-    margin-bottom: 12px;
+    margin-right: auto;
 }
 
 
-.filter-row {
+.filter-section,
+.transaction-summary,
+.transactions-section {
+    padding-left:
+        var(--page-padding);
+
+    padding-right:
+        var(--page-padding);
+}
+
+
+/* =========================================================
+   FILTER SECTION
+   ========================================================= */
+
+.filter-section {
     display: grid;
 
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
-    gap: 8px;
+    gap: 10px;
 
-    width: 100%;
+    padding-top: 14px;
+
+    padding-bottom: 10px;
 }
 
 
-.filter-btn {
-    min-width: 0;
+.filter-button {
+    width: 100%;
+
     height: 44px;
 
-    padding: 0 14px;
+    min-width: 0;
+
+    padding:
+        0 13px;
 
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 7px;
 
-    border: 1px solid var(--border);
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    border:
+        1px solid
+        var(--border);
+
     border-radius: 14px;
 
     background: var(--surface);
+
     color: var(--text-primary);
 
-    font-size: 13px;
-    font-weight: 500;
+    box-shadow:
+        var(--shadow-soft);
 
-    box-shadow: var(--shadow-soft);
+    font-size: 13px;
+
+    font-weight: 500;
 
     transition:
         background 0.18s ease,
@@ -370,15 +368,18 @@ a {
 }
 
 
-.filter-btn span {
+.filter-button span {
+    min-width: 0;
+
     overflow: hidden;
 
     white-space: nowrap;
+
     text-overflow: ellipsis;
 }
 
 
-.filter-btn i {
+.filter-button i {
     flex: 0 0 auto;
 
     color: var(--novapay-blue);
@@ -387,129 +388,172 @@ a {
 }
 
 
-.filter-btn:active {
-    transform: scale(0.98);
-    background: var(--novapay-blue-soft);
+.filter-button:active {
+    background:
+        var(--novapay-blue-soft);
+
+    border-color:
+        rgba(37, 99, 235, 0.18);
+
+    transform: scale(0.985);
 }
 
 
-.analysis-btn {
-    height: 44px;
+/* =========================================================
+   TRANSACTION SUMMARY
+   ========================================================= */
 
-    padding: 0 18px;
+.transaction-summary {
+    margin-top: 2px;
+
+    margin-bottom: 12px;
+
+    padding-top: 18px;
+
+    padding-bottom: 18px;
+
+    background: var(--surface);
+
+    border:
+        1px solid
+        rgba(237, 240, 244, 0.95);
+
+    border-radius:
+        var(--radius-large);
+
+    box-shadow:
+        var(--shadow-card);
+}
+
+
+/* =========================================================
+   SUMMARY HEADER
+   ========================================================= */
+
+.summary-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+
+.month-button {
+    min-width: 0;
+
+    height: 38px;
+
+    padding: 0;
 
     display: inline-flex;
+
     align-items: center;
+
+    gap: 7px;
+
+    background: transparent;
+
+    color: var(--text-primary);
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+.month-button span {
+    white-space: nowrap;
+}
+
+
+.month-button i {
+    color: var(--text-secondary);
+
+    font-size: 10px;
+}
+
+
+.month-button:active {
+    color: var(--novapay-blue);
+}
+
+
+.analysis-button {
+    flex: 0 0 auto;
+
+    height: 40px;
+
+    padding:
+        0 16px;
+
+    display: inline-flex;
+
+    align-items: center;
+
     justify-content: center;
+
     gap: 7px;
 
     border-radius: 22px;
 
     background: var(--novapay-blue);
-    color: #ffffff;
 
-    font-size: 14px;
+    color: #FFFFFF;
+
+    font-size: 13px;
+
     font-weight: 600;
 
     box-shadow:
-        0 5px 14px rgba(37, 99, 235, 0.18);
+        0 5px 14px
+        rgba(37, 99, 235, 0.18);
 
     transition:
-        transform 0.18s ease,
-        background 0.18s ease;
+        background 0.18s ease,
+        transform 0.18s ease;
 }
 
 
-.analysis-btn i {
-    font-size: 13px;
+.analysis-button i {
+    font-size: 12px;
 }
 
 
-.analysis-btn:active {
-    background: var(--novapay-blue-dark);
+.analysis-button:active {
+    background:
+        var(--novapay-blue-dark);
+
     transform: scale(0.97);
 }
 
 
 /* =========================================================
-   SUMMARY CARD
+   MONEY SUMMARY
    ========================================================= */
 
-.transaction-summary {
+.money-summary {
     width: 100%;
 
-    margin: 10px 0 14px;
-
-    padding: 18px;
-
-    background: var(--surface);
-
-    border: 1px solid rgba(237, 240, 244, 0.9);
-
-    border-radius: var(--radius-large);
-
-    box-shadow: var(--shadow-card);
-}
-
-
-.summary-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 15px;
-}
-
-
-.summary-month {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-
-    color: var(--text-primary);
-
-    font-size: 17px;
-    font-weight: 700;
-}
-
-
-.summary-month i {
-    color: var(--text-secondary);
-    font-size: 11px;
-}
-
-
-.summary-analysis {
-    height: 38px;
-
-    padding: 0 16px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 20px;
-
-    background: var(--novapay-blue);
-    color: #ffffff;
-
-    font-size: 13px;
-    font-weight: 600;
-}
-
-
-.summary-values {
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        1fr
+        1fr;
 
-    gap: 16px;
+    gap: 18px;
 }
 
 
-.summary-value {
+.money-summary-item {
+    min-width: 0;
+
     display: flex;
+
     flex-direction: column;
 
     gap: 4px;
@@ -517,56 +561,43 @@ a {
 
 
 .summary-label {
-    color: var(--text-muted);
+    color: var(--text-secondary);
 
     font-size: 12px;
+
     font-weight: 500;
 }
 
 
-.summary-amount {
-    font-size: 16px;
+.money-summary-item strong {
+    display: block;
+
+    font-size: 17px;
+
+    line-height: 1.2;
+
     font-weight: 700;
 
     letter-spacing: -0.2px;
 }
 
 
-.summary-amount.in {
+.money-in {
     color: var(--money-in);
 }
 
 
-.summary-amount.out {
+.money-out {
     color: var(--money-out);
 }
 
 
-.summary-net {
-    margin-top: 14px;
-    padding-top: 14px;
+/* =========================================================
+   SUMMARY DIVIDER
+   ========================================================= */
 
-    border-top: 1px solid var(--divider);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-
-.summary-net-label {
-    color: var(--text-secondary);
-
-    font-size: 13px;
-    font-weight: 500;
-}
-
-
-#netAmount {
-    color: var(--novapay-blue);
-
-    font-size: 15px;
-    font-weight: 700;
+.summary-divider {
+    display: none;
 }
 
 
@@ -575,23 +606,50 @@ a {
    ========================================================= */
 
 .transaction-count {
-    padding: 4px 2px 12px;
+    margin-top: 15px;
+
+    padding-top: 14px;
+
+    border-top:
+        1px solid
+        var(--divider);
 
     color: var(--text-secondary);
 
     font-size: 13px;
+
     font-weight: 500;
 }
 
 
 /* =========================================================
-   TRANSACTION CONTAINER
+   NET AMOUNT
    ========================================================= */
 
+.net-amount {
+    display: none;
+}
+
+
+/* =========================================================
+   TRANSACTION SECTION
+   ========================================================= */
+
+.transactions-section {
+    padding-bottom: 20px;
+}
+
+
+/* =========================================================
+   TRANSACTION LIST
+   ========================================================= */
+
+.transaction-list,
 #transactionContainer {
     width: 100%;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 10px;
@@ -603,24 +661,34 @@ a {
    ========================================================= */
 
 .transaction-item {
+    position: relative;
+
     width: 100%;
 
-    min-height: 82px;
+    min-height: 84px;
 
-    padding: 14px 13px 14px 12px;
+    padding:
+        13px
+        11px
+        13px
+        12px;
 
     display: flex;
+
     align-items: center;
 
     gap: 12px;
 
     background: var(--surface);
 
-    border: 1px solid rgba(237, 240, 244, 0.95);
+    border:
+        1px solid
+        rgba(237, 240, 244, 0.95);
 
     border-radius: 18px;
 
-    box-shadow: var(--shadow-soft);
+    box-shadow:
+        var(--shadow-soft);
 
     cursor: pointer;
 
@@ -632,13 +700,16 @@ a {
 
 
 .transaction-item:hover {
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        var(--shadow-card);
 }
 
 
 .transaction-item:active {
     transform: scale(0.992);
-    background: #fbfcff;
+
+    background:
+        #FBFCFF;
 }
 
 
@@ -648,19 +719,25 @@ a {
 
 .transaction-icon {
     width: 48px;
+
     height: 48px;
 
-    flex: 0 0 48px;
+    flex:
+        0 0 48px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     border-radius: 50%;
 
-    background: var(--money-in-soft) !important;
+    background:
+        var(--money-in-soft) !important;
 
-    color: var(--money-in);
+    color:
+        var(--money-in);
 
     font-size: 18px;
 }
@@ -671,39 +748,53 @@ a {
 }
 
 
-/*
- * JS supplies a color through inline style.
- * We intentionally soften those colors so the
- * NovaPay interface remains consistent.
- */
-
+/* NovaPay blue */
 .transaction-icon[style*="2563EB"] {
-    background: var(--novapay-blue-soft) !important;
-    color: var(--novapay-blue);
+    background:
+        var(--novapay-blue-soft) !important;
+
+    color:
+        var(--novapay-blue);
 }
 
 
+/* Orange */
 .transaction-icon[style*="F59E0B"] {
-    background: #fff7e8 !important;
-    color: #d97706;
+    background:
+        #FFF7E8 !important;
+
+    color:
+        #D97706;
 }
 
 
+/* Purple */
 .transaction-icon[style*="7C3AED"] {
-    background: #f3edff !important;
-    color: #7c3aed;
+    background:
+        #F3EDFF !important;
+
+    color:
+        #7C3AED;
 }
 
 
+/* Pink */
 .transaction-icon[style*="EC4899"] {
-    background: #fff0f7 !important;
-    color: #db2777;
+    background:
+        #FFF0F7 !important;
+
+    color:
+        #DB2777;
 }
 
 
+/* Green */
 .transaction-icon[style*="16A34A"] {
-    background: var(--money-in-soft) !important;
-    color: var(--money-in);
+    background:
+        var(--money-in-soft) !important;
+
+    color:
+        var(--money-in);
 }
 
 
@@ -713,6 +804,7 @@ a {
 
 .transaction-content {
     min-width: 0;
+
     flex: 1;
 }
 
@@ -720,28 +812,36 @@ a {
 .transaction-top {
     width: 100%;
 
+    min-width: 0;
+
     display: flex;
+
     align-items: flex-start;
+
     justify-content: space-between;
 
     gap: 10px;
+
+    margin-bottom: 6px;
 }
 
 
 .transaction-title {
     min-width: 0;
 
-    color: var(--text-primary);
-
-    font-size: 14px;
-    font-weight: 600;
-
-    line-height: 1.35;
-
     overflow: hidden;
 
-    text-overflow: ellipsis;
+    color: var(--text-primary);
+
+    font-size: 15px;
+
+    line-height: 1.25;
+
+    font-weight: 600;
+
     white-space: nowrap;
+
+    text-overflow: ellipsis;
 }
 
 
@@ -750,10 +850,13 @@ a {
 
     white-space: nowrap;
 
-    font-size: 14px;
+    font-size: 15px;
+
+    line-height: 1.25;
+
     font-weight: 700;
 
-    letter-spacing: -0.2px;
+    letter-spacing: -0.15px;
 }
 
 
@@ -767,11 +870,19 @@ a {
 }
 
 
+/* =========================================================
+   TRANSACTION BOTTOM
+   ========================================================= */
+
 .transaction-bottom {
-    margin-top: 6px;
+    width: 100%;
+
+    min-width: 0;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     gap: 8px;
@@ -781,180 +892,279 @@ a {
 .transaction-date {
     min-width: 0;
 
-    color: var(--text-muted);
-
-    font-size: 11.5px;
-    font-weight: 400;
-
     overflow: hidden;
 
+    color: var(--text-muted);
+
+    font-size: 12px;
+
+    line-height: 1.3;
+
     white-space: nowrap;
+
     text-overflow: ellipsis;
 }
 
 
+/* =========================================================
+   TRANSACTION STATUS
+   ========================================================= */
+
 .transaction-status {
     flex: 0 0 auto;
 
+    min-height: 24px;
+
+    padding:
+        4px
+        8px;
+
     display: inline-flex;
+
     align-items: center;
-    gap: 5px;
 
-    padding: 4px 8px;
+    gap: 6px;
 
-    border-radius: 7px;
+    border-radius: 8px;
 
-    background: var(--success-soft);
-    color: var(--success);
+    background:
+        var(--success-soft);
 
-    font-size: 10.5px;
+    color:
+        var(--success);
+
+    font-size: 10px;
+
+    line-height: 1;
+
     font-weight: 600;
 }
 
 
 .status-dot {
-    width: 5px;
-    height: 5px;
+    width: 6px;
 
-    display: inline-block;
+    height: 6px;
+
+    flex: 0 0 6px;
 
     border-radius: 50%;
-
-    background: currentColor;
 }
 
 
+/* Successful */
 .status-successful {
-    color: var(--success);
+    background:
+        var(--success);
 }
 
 
-.status-failed {
-    color: var(--failed);
+/* Pending */
+.transaction-status:has(.status-pending) {
+    background:
+        var(--pending-soft);
+
+    color:
+        var(--pending);
 }
 
 
 .status-pending {
-    color: var(--pending);
+    background:
+        var(--pending);
 }
 
 
+/* Failed */
 .transaction-status:has(.status-failed) {
-    background: var(--failed-soft);
+    background:
+        var(--failed-soft);
+
+    color:
+        var(--failed);
 }
 
 
-.transaction-status:has(.status-pending) {
-    background: var(--pending-soft);
+.status-failed {
+    background:
+        var(--failed);
 }
 
 
 /* =========================================================
-   ARROW
+   TRANSACTION ARROW
    ========================================================= */
 
 .transaction-arrow {
-    width: 18px;
+    width: 16px;
 
-    flex: 0 0 18px;
+    flex: 0 0 16px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    color: #b6bbc3;
+    color: #B4BAC2;
 
-    font-size: 11px;
+    font-size: 12px;
 }
 
 
 /* =========================================================
-   EMPTY / ERROR / LOADING
+   SEARCH SUPPORT
+   ========================================================= */
+
+.transaction-search {
+    position: relative;
+
+    width: 100%;
+
+    max-width: 760px;
+
+    margin:
+        12px auto;
+
+    padding:
+        0 var(--page-padding);
+}
+
+
+#searchInput {
+    width: 100%;
+
+    height: 46px;
+
+    padding:
+        0 16px
+        0 44px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 14px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-primary);
+
+    font-size: 14px;
+
+    outline: none;
+
+    box-shadow:
+        var(--shadow-soft);
+}
+
+
+#searchInput::placeholder {
+    color:
+        var(--text-muted);
+}
+
+
+#searchInput:focus {
+    border-color:
+        rgba(37, 99, 235, 0.25);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   EMPTY / ERROR / LOADING STATE
    ========================================================= */
 
 .empty-state {
     width: 100%;
 
-    min-height: 230px;
+    min-height: 260px;
 
-    padding: 36px 22px;
+    padding:
+        50px 24px;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
 
     text-align: center;
 
-    background: var(--surface);
+    background:
+        var(--surface);
 
-    border-radius: 20px;
+    border:
+        1px solid
+        var(--border);
 
-    border: 1px solid var(--border);
+    border-radius:
+        var(--radius-large);
 
-    box-shadow: var(--shadow-soft);
+    box-shadow:
+        var(--shadow-soft);
 }
 
 
 .empty-state > i {
-    width: 58px;
-    height: 58px;
-
     margin-bottom: 16px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color:
+        #C8CDD5;
 
-    border-radius: 50%;
-
-    background: var(--novapay-blue-soft);
-
-    color: var(--novapay-blue);
-
-    font-size: 22px;
+    font-size: 42px;
 }
 
 
 .empty-state h3 {
-    color: var(--text-primary);
-
-    font-size: 16px;
-    font-weight: 700;
-
     margin-bottom: 7px;
+
+    color:
+        var(--text-primary);
+
+    font-size: 18px;
+
+    font-weight: 700;
 }
 
 
 .empty-state p {
     max-width: 310px;
 
-    color: var(--text-secondary);
+    color:
+        var(--text-secondary);
 
     font-size: 13px;
+
     line-height: 1.55;
 }
 
 
-.empty-state .fa-spinner {
-    background: var(--novapay-blue-soft);
-}
-
-
 /* =========================================================
-   BOTTOM SHEET OVERLAY
+   SHEET OVERLAY
    ========================================================= */
 
-#sheetOverlay {
+#sheetOverlay,
+.sheet-overlay {
     position: fixed;
 
     inset: 0;
 
     z-index: 900;
 
-    background: rgba(15, 23, 42, 0.35);
+    background:
+        rgba(15, 23, 42, 0.35);
 
     opacity: 0;
+
     visibility: hidden;
 
     pointer-events: none;
@@ -963,13 +1173,18 @@ a {
         opacity 0.22s ease,
         visibility 0.22s ease;
 
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter:
+        blur(2px);
+
+    -webkit-backdrop-filter:
+        blur(2px);
 }
 
 
-#sheetOverlay.active {
+#sheetOverlay.active,
+.sheet-overlay.active {
     opacity: 1;
+
     visibility: visible;
 
     pointer-events: auto;
@@ -980,27 +1195,34 @@ a {
    BOTTOM SHEETS
    ========================================================= */
 
-.bottom-sheet,
-.sheet {
+.bottom-sheet {
     position: fixed;
 
     left: 50%;
+
     bottom: 0;
 
     z-index: 1000;
 
-    width: min(100%, 620px);
+    width: min(
+        100%,
+        620px
+    );
 
     max-height: 82vh;
 
     padding:
-        12px
+        10px
         18px
-        calc(18px + env(safe-area-inset-bottom));
+        calc(
+            18px +
+            env(safe-area-inset-bottom)
+        );
 
     overflow-y: auto;
 
-    background: var(--surface);
+    background:
+        var(--surface);
 
     border-radius:
         24px
@@ -1009,7 +1231,8 @@ a {
         0;
 
     box-shadow:
-        0 -10px 40px rgba(15, 23, 42, 0.14);
+        0 -12px 40px
+        rgba(15, 23, 42, 0.14);
 
     transform:
         translate(-50%, 105%);
@@ -1017,59 +1240,145 @@ a {
     visibility: hidden;
 
     transition:
-        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.28s
+        cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        ),
         visibility 0.28s ease;
 }
 
 
-.bottom-sheet.active,
-.sheet.active {
-    transform: translate(-50%, 0);
+.bottom-sheet.active {
+    transform:
+        translate(-50%, 0);
 
     visibility: visible;
 }
 
 
+/* =========================================================
+   SHEET HANDLE
+   ========================================================= */
+
 .sheet-handle {
     width: 42px;
+
     height: 4px;
 
-    margin: 2px auto 17px;
+    margin:
+        2px auto 17px;
 
-    border-radius: 10px;
+    border-radius: 20px;
 
-    background: #d8dce2;
+    background:
+        #D8DCE2;
 }
 
 
-.sheet-title {
-    margin-bottom: 13px;
+/* =========================================================
+   SHEET HEADER
+   ========================================================= */
 
-    color: var(--text-primary);
+.sheet-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+}
+
+
+.sheet-header h2,
+.sheet-header h3 {
+    color:
+        var(--text-primary);
 
     font-size: 18px;
+
     font-weight: 700;
+}
+
+
+.sheet-close {
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--surface-soft);
+
+    color:
+        var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+.sheet-close:active {
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
+}
+
+
+/* =========================================================
+   SHEET OPTIONS
+   ========================================================= */
+
+.sheet-options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0;
 }
 
 
 .sheet-option {
     width: 100%;
 
-    min-height: 50px;
+    min-height: 52px;
 
-    padding: 0 4px;
+    padding:
+        0 4px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    background: transparent;
+    gap: 12px;
 
-    border-bottom: 1px solid var(--divider);
+    background:
+        transparent;
 
-    color: var(--text-primary);
+    border-bottom:
+        1px solid
+        var(--divider);
+
+    color:
+        var(--text-primary);
 
     font-size: 14px;
+
     font-weight: 500;
 
     text-align: left;
@@ -1082,30 +1391,65 @@ a {
 
 
 .sheet-option:active {
-    color: var(--novapay-blue);
-}
-
-
-.sheet-option i {
-    color: var(--novapay-blue);
+    color:
+        var(--novapay-blue);
 }
 
 
 /* =========================================================
-   EXPORT SHEET
+   EXPORT OPTIONS
    ========================================================= */
 
-#exportSheet .sheet-option {
-    min-height: 54px;
+.sheet-option-icon {
+    justify-content: flex-start;
+
+    gap: 12px;
 }
 
 
-#exportCSV i,
-#exportPDF i,
-#printHistory i {
-    width: 30px;
+.option-icon {
+    width: 38px;
 
-    color: var(--novapay-blue);
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 15px;
+}
+
+
+.pdf-icon {
+    background:
+        #FFF0F0;
+
+    color:
+        #DC2626;
+}
+
+
+.csv-icon {
+    background:
+        var(--money-in-soft);
+
+    color:
+        var(--money-in);
+}
+
+
+.print-icon {
+    background:
+        var(--novapay-blue-soft);
+
+    color:
+        var(--novapay-blue);
 }
 
 
@@ -1115,23 +1459,30 @@ a {
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #d9dde4 transparent;
+
+    scrollbar-color:
+        #D9DDE4
+        transparent;
 }
 
 
 ::-webkit-scrollbar {
     width: 5px;
+
     height: 5px;
 }
 
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background:
+        transparent;
 }
 
 
 ::-webkit-scrollbar-thumb {
-    background: #d9dde4;
+    background:
+        #D9DDE4;
+
     border-radius: 20px;
 }
 
@@ -1140,14 +1491,259 @@ a {
    SAFE AREA
    ========================================================= */
 
-@supports (padding: max(0px)) {
+@supports (
+    padding: max(
+        0px
+    )
+) {
 
-    .transaction-wrapper {
+    .transaction-page {
         padding-bottom:
             max(
-                40px,
-                env(safe-area-inset-bottom)
+                32px,
+                calc(
+                    32px +
+                    env(
+                        safe-area-inset-bottom
+                    )
+                )
             );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE REFINEMENT
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    :root {
+        --page-padding: 16px;
+    }
+
+
+    .transaction-header {
+        grid-template-columns:
+            42px
+            1fr
+            74px;
+
+        min-height: 62px;
+
+        padding:
+            0 var(--page-padding);
+    }
+
+
+    .page-title {
+        font-size: 21px;
+    }
+
+
+    .download-button {
+        min-width: 64px;
+
+        font-size: 14px;
+    }
+
+
+    .filter-section {
+        padding-top: 12px;
+
+        gap: 8px;
+    }
+
+
+    .filter-button {
+        height: 43px;
+
+        padding:
+            0 11px;
+
+        font-size: 12.5px;
+    }
+
+
+    .transaction-summary {
+        padding:
+            17px 16px;
+    }
+
+
+    .summary-header {
+        margin-bottom: 15px;
+    }
+
+
+    .month-button {
+        font-size: 16px;
+    }
+
+
+    .analysis-button {
+        height: 38px;
+
+        padding:
+            0 14px;
+
+        font-size: 12.5px;
+    }
+
+
+    .money-summary-item strong {
+        font-size: 16px;
+    }
+
+
+    .transaction-item {
+        min-height: 80px;
+
+        padding:
+            12px
+            9px
+            12px
+            11px;
+
+        gap: 10px;
+
+        border-radius: 18px;
+    }
+
+
+    .transaction-icon {
+        width: 46px;
+
+        height: 46px;
+
+        flex-basis: 46px;
+
+        font-size: 17px;
+    }
+
+
+    .transaction-title {
+        font-size: 14px;
+    }
+
+
+    .transaction-amount {
+        font-size: 14px;
+    }
+
+
+    .transaction-date {
+        font-size: 11.5px;
+    }
+
+
+    .transaction-status {
+        min-height: 23px;
+
+        padding:
+            4px 7px;
+
+        font-size: 9.5px;
+    }
+
+
+    .transaction-arrow {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    :root {
+        --page-padding: 13px;
+    }
+
+
+    .transaction-header {
+        grid-template-columns:
+            38px
+            1fr
+            66px;
+
+        padding:
+            0 var(--page-padding);
+    }
+
+
+    .page-title {
+        font-size: 19px;
+    }
+
+
+    .download-button {
+        min-width: 58px;
+
+        font-size: 13px;
+    }
+
+
+    .filter-section {
+        gap: 7px;
+    }
+
+
+    .filter-button {
+        padding:
+            0 9px;
+
+        font-size: 11.5px;
+    }
+
+
+    .analysis-button {
+        padding:
+            0 11px;
+    }
+
+
+    .transaction-item {
+        gap: 8px;
+    }
+
+
+    .transaction-icon {
+        width: 43px;
+
+        height: 43px;
+
+        flex-basis: 43px;
+
+        font-size: 16px;
+    }
+
+
+    .transaction-title {
+        font-size: 13px;
+    }
+
+
+    .transaction-amount {
+        font-size: 13px;
+    }
+
+
+    .transaction-date {
+        font-size: 10.5px;
+    }
+
+
+    .transaction-status {
+        padding:
+            4px 6px;
+
+        font-size: 9px;
     }
 
 }
@@ -1164,8 +1760,33 @@ a {
     }
 
 
-    .transaction-wrapper {
-        padding-top: 10px;
+    .transaction-header {
+        min-height: 68px;
+    }
+
+
+    .page-title {
+        font-size: 23px;
+    }
+
+
+    .filter-section {
+        padding-top: 18px;
+
+        padding-bottom: 12px;
+    }
+
+
+    .filter-button {
+        height: 46px;
+
+        font-size: 14px;
+    }
+
+
+    .transaction-summary {
+        padding:
+            20px;
     }
 
 
@@ -1173,12 +1794,13 @@ a {
         min-height: 88px;
 
         padding:
-            16px;
+            15px;
     }
 
 
     .transaction-icon {
         width: 52px;
+
         height: 52px;
 
         flex-basis: 52px;
@@ -1211,28 +1833,33 @@ a {
 @media (min-width: 900px) {
 
     body {
-        background: #f3f5f9;
-    }
-
-
-    .transaction-page {
-        padding-bottom: 50px;
+        background:
+            #F3F5F9;
     }
 
 
     .transaction-header {
-        box-shadow:
-            0 1px 0 rgba(15, 23, 42, 0.04);
+        max-width: 100%;
+
+        padding:
+            0 max(
+                24px,
+                calc(
+                    (100vw - 760px) / 2
+                )
+            );
     }
 
 
-    .transaction-wrapper {
-        padding-top: 22px;
+    .filter-section,
+    .transaction-summary,
+    .transactions-section {
+        max-width: 760px;
     }
 
 
     .transaction-summary {
-        padding: 22px;
+        margin-top: 4px;
     }
 
 
@@ -1242,78 +1869,8 @@ a {
 
 
     .transaction-item:hover {
-        transform: translateY(-1px);
-    }
-
-}
-
-
-/* =========================================================
-   SMALL MOBILE DEVICES
-   ========================================================= */
-
-@media (max-width: 380px) {
-
-    :root {
-        --page-padding: 14px;
-    }
-
-
-    .transaction-header-inner {
-        padding:
-            0 var(--page-padding);
-    }
-
-
-    .transaction-filters {
-        gap: 7px;
-    }
-
-
-    .filter-btn {
-        padding: 0 10px;
-
-        font-size: 12px;
-    }
-
-
-    .transaction-item {
-        gap: 9px;
-
-        padding:
-            12px 9px 12px 10px;
-    }
-
-
-    .transaction-icon {
-        width: 44px;
-        height: 44px;
-
-        flex-basis: 44px;
-
-        font-size: 16px;
-    }
-
-
-    .transaction-title {
-        font-size: 13px;
-    }
-
-
-    .transaction-amount {
-        font-size: 13px;
-    }
-
-
-    .transaction-status {
-        padding: 3px 6px;
-
-        font-size: 9.5px;
-    }
-
-
-    .transaction-date {
-        font-size: 10.5px;
+        transform:
+            translateY(-1px);
     }
 
 }
@@ -1323,16 +1880,25 @@ a {
    REDUCED MOTION
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+@media (
+    prefers-reduced-motion: reduce
+) {
 
     *,
     *::before,
     *::after {
-        scroll-behavior: auto !important;
 
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
+        scroll-behavior:
+            auto !important;
+
+        transition-duration:
+            0.01ms !important;
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
     }
 
 }
