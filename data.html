@@ -1,47 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Buy Data</title>
 
-    <link rel="stylesheet" href="data.css">
+    <link
+        rel="stylesheet"
+        href="data.css"
+    >
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 </head>
 
 <body>
 
 <div class="data-page">
 
-    <!-- HEADER -->
+    <!-- ================= HEADER ================= -->
 
     <header class="page-header">
 
-        <button id="backBtn" class="back-btn">
-
+        <button
+            id="backBtn"
+            class="back-btn"
+            type="button"
+            aria-label="Go back"
+        >
             <i class="fas fa-arrow-left"></i>
-
         </button>
 
         <div class="header-content">
-
             <h1>Buy Data</h1>
-
             <p>Purchase data bundles for all networks.</p>
-
         </div>
 
     </header>
 
-    <!-- SERVICE PROVIDER -->
+
+    <!-- ================= WALLET BALANCE ================= -->
+
+    <section class="section">
+
+        <div class="balance-card">
+
+            <div class="balance-left">
+
+                <i class="fas fa-wallet"></i>
+
+                <div>
+                    <span>Wallet Balance</span>
+
+                    <strong id="walletBalance">
+                        ₦--
+                    </strong>
+                </div>
+
+            </div>
+
+            <button
+                id="refreshBalanceBtn"
+                class="balance-btn"
+                type="button"
+            >
+                <i class="fas fa-rotate"></i>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SERVICE PROVIDER ================= -->
 
     <section class="section">
 
@@ -49,45 +86,52 @@
 
         <div class="network-grid">
 
-            <div class="network-card active"
-                data-network="MTN">
-
+            <div
+                class="network-card active"
+                data-network="MTN"
+            >
                 <img
                     src="images/mtn.png"
-                    alt="MTN">
-
+                    alt="MTN"
+                >
             </div>
 
-            <div class="network-card"
-                data-network="Airtel">
-
+            <div
+                class="network-card"
+                data-network="Airtel"
+            >
                 <img
                     src="images/airtel.png"
-                    alt="Airtel">
-
+                    alt="Airtel"
+                >
             </div>
 
-            <div class="network-card"
-                data-network="Glo">
-
+            <div
+                class="network-card"
+                data-network="Glo"
+            >
                 <img
                     src="images/glo.png"
-                    alt="Glo">
-
+                    alt="Glo"
+                >
             </div>
 
-            <div class="network-card"
-                data-network="9mobile">
-
+            <div
+                class="network-card"
+                data-network="9mobile"
+            >
                 <img
                     src="images/9mobile.png"
-                    alt="9mobile">
-
+                    alt="9mobile"
+                >
             </div>
 
         </div>
 
-    </section>     <!-- PHONE NUMBER -->
+    </section>
+
+
+    <!-- ================= PHONE NUMBER ================= -->
 
     <section class="section">
 
@@ -97,12 +141,11 @@
 
             <button
                 id="beneficiaryBtn"
-                class="beneficiary-btn">
-
+                class="beneficiary-btn"
+                type="button"
+            >
                 <i class="fas fa-user"></i>
-
                 Beneficiaries
-
             </button>
 
         </div>
@@ -113,7 +156,10 @@
                 type="tel"
                 id="phoneNumber"
                 maxlength="11"
-                placeholder="Enter phone number">
+                inputmode="numeric"
+                autocomplete="tel"
+                placeholder="Enter phone number"
+            >
 
         </div>
 
@@ -121,7 +167,8 @@
 
             <input
                 type="checkbox"
-                id="saveBeneficiary">
+                id="saveBeneficiary"
+            >
 
             <span>Save Beneficiary</span>
 
@@ -129,7 +176,8 @@
 
     </section>
 
-    <!-- DATA BALANCE -->
+
+    <!-- ================= DATA BALANCE ================= -->
 
     <section class="section">
 
@@ -145,61 +193,109 @@
 
             <button
                 id="checkBalanceBtn"
-                class="balance-btn">
-
+                class="balance-btn"
+                type="button"
+            >
                 *323*4#
-
             </button>
 
         </div>
 
     </section>
 
-    <!-- PLAN CATEGORIES -->
+
+    <!-- ================= PLAN SECTION ================= -->
 
     <section class="section">
 
         <div class="plan-tabs">
 
-            <button class="plan-tab active">🔥 Hot</button>
+            <button
+                class="plan-tab active"
+                type="button"
+            >
+                🔥 Hot
+            </button>
 
-            <button class="plan-tab">Daily</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Daily
+            </button>
 
-            <button class="plan-tab">Weekly</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Weekly
+            </button>
 
-            <button class="plan-tab">Monthly</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Monthly
+            </button>
 
-            <button class="plan-tab">Router</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Router
+            </button>
 
-            <button class="plan-tab">Social</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Social
+            </button>
 
-            <button class="plan-tab">Night</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                Night
+            </button>
 
-            <button class="plan-tab">SME</button>
+            <button
+                class="plan-tab"
+                type="button"
+            >
+                SME
+            </button>
 
         </div>
+
 
         <div
             id="plansContainer"
-            class="plans-grid">
+            class="plans-grid"
+        ></div>
 
-        </div>
+    </section>
 
-    </section> 
-        <!-- CONTINUE BUTTON -->
+
+    <!-- ================= CONTINUE ================= -->
 
     <button
         id="continueBtn"
-        class="continue-btn">
-
+        class="continue-btn"
+        type="button"
+    >
         Continue
-
     </button>
 
 </div>
 
-<script src="data.js"></script>
+
+<!-- IMPORTANT: data.js uses Firebase modules -->
+
+<script
+    type="module"
+    src="data.js"
+></script>
 
 </body>
-
 </html>

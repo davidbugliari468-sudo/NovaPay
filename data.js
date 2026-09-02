@@ -1,13 +1,5 @@
 /* ==========================================
    NOVAPAY DATA
-   Frontend is untrusted.
-   Backend remains authoritative for:
-   - plan
-   - price
-   - wallet balance
-   - transaction state
-   - provider result
-   - profit
 ========================================== */
 
 import { auth } from "./firebase.js";
@@ -17,13 +9,17 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 
-/* ========= CONFIG ========= */
+/* ==========================================
+   CONFIG
+========================================== */
 
 const API_BASE_URL =
     "https://novapay-server.onrender.com";
 
 
-/* ========= ELEMENTS ========= */
+/* ==========================================
+   ELEMENTS
+========================================== */
 
 const backBtn =
     document.getElementById("backBtn");
@@ -37,6 +33,15 @@ const phoneInput =
 const beneficiaryBtn =
     document.getElementById("beneficiaryBtn");
 
+const refreshBalanceBtn =
+    document.getElementById("refreshBalanceBtn");
+
+const checkBalanceBtn =
+    document.getElementById("checkBalanceBtn");
+
+const walletBalance =
+    document.getElementById("walletBalance");
+
 const networkCards =
     document.querySelectorAll(".network-card");
 
@@ -47,13 +52,13 @@ const plansContainer =
     document.getElementById("plansContainer");
 
 
-/* ========= STATE ========= */
+/* ==========================================
+   STATE
+========================================== */
 
 let currentUser = null;
 
 let selectedNetwork = "mtn";
-
-let selectedCategory = "Hot";
 
 let selectedPlan = null;
 
@@ -61,12 +66,12 @@ let allPlans = [];
 
 let purchaseInProgress = false;
 
+let balanceLoading = false;
 
-/* ========= NETWORK MAP ========= */
-/*
-   Backend/catalog uses lowercase network IDs.
-   HTML uses display names.
-*/
+
+/* ==========================================
+   NETWORK MAP
+========================================== */
 
 const NETWORK_MAP = Object.freeze({
     MTN: "mtn",
@@ -77,7 +82,7 @@ const NETWORK_MAP = Object.freeze({
 
 
 /* ==========================================
-   AUTHENTICATION
+   AUTH STATE
 ========================================== */
 
 onAuthStateChanged(
@@ -96,7 +101,10 @@ onAuthStateChanged(
 
         currentUser = user;
 
-        await loadDataPlans();
+        await Promise.all([
+            loadWalletBalance(),
+            loadDataPlans()
+        ]);
     }
 );
 
@@ -144,8 +152,7 @@ async function authenticatedFetch(
 
 
 /* ==========================================
-   PUBLIC API FETCH
-   Used only for catalog retrieval.
+   PUBLIC FETCH
 ========================================== */
 
 async function publicFetch(path) {
@@ -163,13 +170,15 @@ async function publicFetch(path) {
 
 
 /* ==========================================
-   SAFE JSON RESPONSE
+   JSON RESPONSE
 ========================================== */
 
 async function readJsonResponse(response) {
 
     const contentType =
-        response.headers.get("content-type") || "";
+        response.headers.get(
+            "content-type"
+        ) || "";
 
     if (
         !contentType
@@ -187,26 +196,186 @@ async function readJsonResponse(response) {
 
 
 /* ==========================================
-   LOAD REAL DATA PLANS
+   LOAD WALLET BALANCE
+========================================== */
+
+async function loadWalletBalance() {
+
+    if (balanceLoading) {
+        return;
+    }
+
+    balanceLoading = true;
+
+    walletBalance.textContent =
+        "Loading...";
+
+    try {
+
+        const response =
+            await authenticatedFetch(
+                "/api/wallet",
+                {
+                    method: "GET"
+                }
+            );
+
+        const result =
+            await readJsonResponse(
+                response
+            );
+
+        if (!response.ok) {
+
+            if (
+                response.status === 401
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            throw new Error(
+                result.error ||
+                "Unable to load wallet balance."
+            );
+        }
+
+        /*
+           Your wallet endpoint is authoritative.
+
+           We support the common response shapes
+           without allowing the value to be sent
+           back as a purchase amount.
+        */
+
+        const balanceKobo =
+            extractBalanceKobo(result);
+
+        if (
+            !Number.isSafeInteger(
+                balanceKobo
+            ) ||
+            balanceKobo < 0
+        ) {
+
+            throw new Error(
+                "Server returned an invalid wallet balance."
+            );
+        }
+
+        walletBalance.textContent =
+            formatKoboAsNaira(
+                balanceKobo
+            );
+
+    } catch (error) {
+
+        console.error(
+            "Wallet balance error:",
+            error
+        );
+
+        walletBalance.textContent =
+            "₦--";
+
+    } finally {
+
+        balanceLoading = false;
+    }
+}
+
+
+/* ==========================================
+   EXTRACT WALLET BALANCE
+========================================== */
+
+function extractBalanceKobo(result) {
+
+    if (
+        Number.isSafeInteger(
+            result?.balanceKobo
+        )
+    ) {
+
+        return result.balanceKobo;
+    }
+
+    if (
+        Number.isSafeInteger(
+            result?.wallet?.balanceKobo
+        )
+    ) {
+
+        return result.wallet.balanceKobo;
+    }
+
+    if (
+        Number.isSafeInteger(
+            result?.data?.balanceKobo
+        )
+    ) {
+
+        return result.data.balanceKobo;
+    }
+
+    throw new Error(
+        "Wallet balance was not included in the server response."
+    );
+}
+
+
+/* ==========================================
+   FORMAT KOBO
+========================================== */
+
+function formatKoboAsNaira(
+    kobo
+) {
+
+    const naira =
+        kobo / 100;
+
+    return `₦${naira.toLocaleString(
+        "en-NG",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    )}`;
+}
+
+
+/* ==========================================
+   LOAD DATA PLANS
 ========================================== */
 
 async function loadDataPlans() {
 
+    plansContainer.innerHTML = `
+        <div class="plans-loading">
+            Loading data plans...
+        </div>
+    `;
+
     try {
 
-        plansContainer.innerHTML = `
-            <div class="plans-loading">
-                Loading data plans...
-            </div>
-        `;
-
         const response =
-            await publicFetch("/api/data/plans");
+            await publicFetch(
+                "/api/data/plans"
+            );
 
         const result =
-            await readJsonResponse(response);
+            await readJsonResponse(
+                response
+            );
 
-        if (!response.ok || !result.success) {
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
             throw new Error(
                 result.error ||
@@ -214,27 +383,21 @@ async function loadDataPlans() {
             );
         }
 
-        if (!Array.isArray(result.plans)) {
+        if (
+            !Array.isArray(
+                result.plans
+            )
+        ) {
 
             throw new Error(
                 "Server returned an invalid data catalog."
             );
         }
 
-        /*
-           Do not calculate or modify prices here.
-
-           The server's planId is what will be submitted
-           during purchase. The backend will look up the
-           current plan and authoritative price again.
-        */
-
         allPlans =
             result.plans.filter(
-                isValidCatalogPlan
+                isValidPlan
             );
-
-        selectedPlan = null;
 
         renderPlans();
 
@@ -251,105 +414,204 @@ async function loadDataPlans() {
                 Please try again.
             </div>
         `;
-
-        selectedPlan = null;
     }
 }
 
 
 /* ==========================================
-   CATALOG PLAN VALIDATION
+   PLAN VALIDATION
 ========================================== */
 
-function isValidCatalogPlan(plan) {
+function isValidPlan(plan) {
 
-    if (
-        !plan ||
-        typeof plan !== "object"
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.planId !== "string" ||
-        !plan.planId.trim()
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.variationId !== "string" ||
-        !plan.variationId.trim()
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.network !== "string" ||
-        !NETWORK_MAP_VALUE_EXISTS(plan.network)
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.serviceName !== "string" ||
-        !plan.serviceName.trim()
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.dataPlan !== "string" ||
-        !plan.dataPlan.trim()
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.priceNaira !== "number" ||
-        !Number.isFinite(plan.priceNaira) ||
-        plan.priceNaira < 0
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.priceKobo !== "number" ||
-        !Number.isSafeInteger(plan.priceKobo) ||
-        plan.priceKobo < 0
-    ) {
-
-        return false;
-    }
-
-    return true;
-}
-
-
-/* ==========================================
-   NETWORK VALIDATION
-========================================== */
-
-function NETWORK_MAP_VALUE_EXISTS(network) {
-
-    const normalized =
-        String(network)
-            .trim()
-            .toLowerCase();
-
-    return (
-        normalized === "mtn" ||
-        normalized === "airtel" ||
-        normalized === "glo" ||
-        normalized === "9mobile"
+    return Boolean(
+        plan &&
+        typeof plan === "object" &&
+        typeof plan.planId === "string" &&
+        plan.planId.trim() &&
+        typeof plan.variationId === "string" &&
+        plan.variationId.trim() &&
+        typeof plan.network === "string" &&
+        typeof plan.serviceName === "string" &&
+        typeof plan.dataPlan === "string" &&
+        typeof plan.priceNaira === "number" &&
+        Number.isFinite(
+            plan.priceNaira
+        ) &&
+        Number.isSafeInteger(
+            plan.priceKobo
+        ) &&
+        plan.priceKobo >= 0
     );
+}
+
+
+/* ==========================================
+   RENDER PLANS
+========================================== */
+
+function renderPlans() {
+
+    plansContainer.innerHTML = "";
+
+    selectedPlan = null;
+
+    const plans =
+        allPlans.filter(
+            plan =>
+                plan.network ===
+                selectedNetwork &&
+                plan.availability !== false
+        );
+
+    if (!plans.length) {
+
+        plansContainer.innerHTML = `
+            <div class="plans-empty">
+                No data plans are currently available
+                for this network.
+            </div>
+        `;
+
+        return;
+    }
+
+    plans.forEach(
+        plan => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "plan-card";
+
+
+            const size =
+                document.createElement(
+                    "div"
+                );
+
+            size.className =
+                "plan-size";
+
+            size.textContent =
+                plan.dataPlan;
+
+
+            const validity =
+                document.createElement(
+                    "div"
+                );
+
+            validity.className =
+                "plan-validity";
+
+            validity.textContent =
+                extractValidity(
+                    plan.dataPlan
+                );
+
+
+            const price =
+                document.createElement(
+                    "div"
+                );
+
+            price.className =
+                "plan-price";
+
+            price.textContent =
+                formatNaira(
+                    plan.priceNaira
+                );
+
+
+            card.appendChild(size);
+            card.appendChild(validity);
+            card.appendChild(price);
+
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        purchaseInProgress
+                    ) {
+                        return;
+                    }
+
+                    document
+                        .querySelectorAll(
+                            ".plan-card"
+                        )
+                        .forEach(
+                            item =>
+                                item.classList.remove(
+                                    "active"
+                                )
+                        );
+
+                    card.classList.add(
+                        "active"
+                    );
+
+                    selectedPlan =
+                        plan;
+                }
+            );
+
+
+            plansContainer.appendChild(
+                card
+            );
+        }
+    );
+}
+
+
+/* ==========================================
+   FORMAT NAIRA
+========================================== */
+
+function formatNaira(
+    amount
+) {
+
+    return `₦${Number(
+        amount
+    ).toLocaleString(
+        "en-NG",
+        {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }
+    )}`;
+}
+
+
+/* ==========================================
+   EXTRACT VALIDITY
+========================================== */
+
+function extractValidity(
+    dataPlan
+) {
+
+    const match =
+        String(
+            dataPlan || ""
+        ).match(
+            /(\d+)\s*(day|days|week|weeks|month|months)/i
+        );
+
+    if (!match) {
+        return "";
+    }
+
+    return `${match[1]} ${match[2]}`;
 }
 
 
@@ -382,262 +644,35 @@ beneficiaryBtn.addEventListener(
 
 
 /* ==========================================
-   RENDER PLANS
+   REFRESH WALLET
 ========================================== */
 
-function renderPlans() {
+refreshBalanceBtn.addEventListener(
+    "click",
+    async () => {
 
-    plansContainer.innerHTML = "";
-
-    selectedPlan = null;
-
-    const networkPlans =
-        allPlans.filter(
-            plan =>
-                plan.network ===
-                selectedNetwork
-        );
-
-    const availablePlans =
-        networkPlans.filter(
-            plan =>
-                plan.availability !== false
-        );
-
-    if (!availablePlans.length) {
-
-        plansContainer.innerHTML = `
-            <div class="plans-empty">
-                No data plans are currently available
-                for this network.
-            </div>
-        `;
-
-        return;
-    }
-
-    availablePlans.forEach(
-        (plan) => {
-
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "plan-card";
-
-            /*
-               All displayed values come from the
-               server catalog.
-
-               The displayed price is NOT sent back
-               as an authoritative purchase amount.
-            */
-
-            const sizeElement =
-                document.createElement("div");
-
-            sizeElement.className =
-                "plan-size";
-
-            sizeElement.textContent =
-                plan.dataPlan;
-
-
-            const validityElement =
-                document.createElement("div");
-
-            validityElement.className =
-                "plan-validity";
-
-            validityElement.textContent =
-                getPlanValidity(plan.dataPlan);
-
-
-            const priceElement =
-                document.createElement("div");
-
-            priceElement.className =
-                "plan-price";
-
-            priceElement.textContent =
-                formatNaira(plan.priceNaira);
-
-
-            card.appendChild(
-                sizeElement
-            );
-
-            card.appendChild(
-                validityElement
-            );
-
-            card.appendChild(
-                priceElement
-            );
-
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    if (purchaseInProgress) {
-                        return;
-                    }
-
-                    document
-                        .querySelectorAll(".plan-card")
-                        .forEach(
-                            item =>
-                                item.classList.remove(
-                                    "active"
-                                )
-                        );
-
-                    card.classList.add(
-                        "active"
-                    );
-
-                    /*
-                       Store the entire server plan
-                       locally for UI purposes.
-
-                       During purchase we send ONLY
-                       the planId.
-                    */
-
-                    selectedPlan = plan;
-                }
-            );
-
-
-            plansContainer.appendChild(
-                card
-            );
+        if (
+            balanceLoading ||
+            purchaseInProgress
+        ) {
+            return;
         }
-    );
-}
 
-
-/* ==========================================
-   FORMAT NAIRA
-========================================== */
-
-function formatNaira(amount) {
-
-    const numericAmount =
-        Number(amount);
-
-    if (
-        !Number.isFinite(numericAmount)
-    ) {
-
-        return "₦--";
+        await loadWalletBalance();
     }
-
-    return `₦${numericAmount.toLocaleString(
-        "en-NG",
-        {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2
-        }
-    )}`;
-}
+);
 
 
 /* ==========================================
-   PLAN VALIDITY DISPLAY
-========================================== */
-/*
-   The backend catalog does not currently expose
-   a separate validity field.
-
-   Therefore we extract it only for display when
-   the provider's dataPlan text contains it.
-
-   This NEVER affects the purchase request.
+   DATA BALANCE BUTTON
 ========================================== */
 
-function getPlanValidity(dataPlan) {
+checkBalanceBtn.addEventListener(
+    "click",
+    () => {
 
-    const text =
-        String(dataPlan || "")
-            .trim();
-
-    const match =
-        text.match(
-            /(\d+)\s*(day|days|week|weeks|month|months)/i
-        );
-
-    if (!match) {
-
-        return "";
-    }
-
-    const number =
-        match[1];
-
-    const unit =
-        match[2];
-
-    return `${number} ${unit}`;
-}
-
-
-/* ==========================================
-   CATEGORY TABS
-========================================== */
-
-categoryTabs.forEach(
-    tab => {
-
-        tab.addEventListener(
-            "click",
-            () => {
-
-                if (purchaseInProgress) {
-                    return;
-                }
-
-                categoryTabs.forEach(
-                    item =>
-                        item.classList.remove(
-                            "active"
-                        )
-                );
-
-                tab.classList.add(
-                    "active"
-                );
-
-                selectedCategory =
-                    tab.textContent
-                        .trim()
-                        .replace(
-                            "🔥 ",
-                            ""
-                        );
-
-                /*
-                   IMPORTANT:
-
-                   The current backend catalog does not
-                   contain a category field.
-
-                   Therefore we do NOT pretend that
-                   Hot/Daily/Weekly/etc. are provider
-                   categories.
-
-                   For now, changing the tab simply
-                   refreshes the same authoritative
-                   network catalog.
-
-                   Category mapping can be added later
-                   when the backend has an authoritative
-                   category source.
-                */
-
-                renderPlans();
-            }
+        alert(
+            "Use *323*4# on your phone to check your data balance."
         );
     }
 );
@@ -654,7 +689,26 @@ networkCards.forEach(
             "click",
             () => {
 
-                if (purchaseInProgress) {
+                if (
+                    purchaseInProgress
+                ) {
+                    return;
+                }
+
+                const displayNetwork =
+                    card.dataset.network;
+
+                const backendNetwork =
+                    NETWORK_MAP[
+                        displayNetwork
+                    ];
+
+                if (!backendNetwork) {
+
+                    alert(
+                        "Unsupported network."
+                    );
+
                     return;
                 }
 
@@ -669,36 +723,55 @@ networkCards.forEach(
                     "active"
                 );
 
-                const displayNetwork =
-                    card.dataset.network;
+                selectedNetwork =
+                    backendNetwork;
 
-                const backendNetwork =
-                    NETWORK_MAP[
-                        displayNetwork
-                    ];
+                renderPlans();
+            }
+        );
+    }
+);
 
-                if (!backendNetwork) {
 
-                    console.error(
-                        "Unsupported network:",
-                        displayNetwork
-                    );
+/* ==========================================
+   CATEGORY TABS
+========================================== */
 
-                    selectedNetwork = null;
+categoryTabs.forEach(
+    tab => {
 
-                    selectedPlan = null;
+        tab.addEventListener(
+            "click",
+            () => {
 
-                    plansContainer.innerHTML = `
-                        <div class="plans-error">
-                            Unsupported network.
-                        </div>
-                    `;
-
+                if (
+                    purchaseInProgress
+                ) {
                     return;
                 }
 
-                selectedNetwork =
-                    backendNetwork;
+                categoryTabs.forEach(
+                    item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                );
+
+                tab.classList.add(
+                    "active"
+                );
+
+                /*
+                   The current backend catalog does not
+                   provide Hot/Daily/Weekly/etc. as a
+                   provider field.
+
+                   Therefore we do not falsely filter
+                   plans by an invented category.
+
+                   Network filtering remains real and
+                   authoritative.
+                */
 
                 renderPlans();
             }
@@ -711,12 +784,19 @@ networkCards.forEach(
    PHONE NORMALIZATION
 ========================================== */
 
-function normalizePhoneNumber(value) {
+function normalizePhoneNumber(
+    value
+) {
 
     let phone =
-        String(value || "")
+        String(
+            value || ""
+        )
             .trim()
-            .replace(/\s+/g, "");
+            .replace(
+                /\s+/g,
+                ""
+            );
 
     if (
         phone.startsWith("+234")
@@ -743,59 +823,51 @@ function normalizePhoneNumber(value) {
    PHONE VALIDATION
 ========================================== */
 
-function validatePhoneNumber(value) {
+function validatePhoneNumber(
+    value
+) {
 
     const phone =
-        normalizePhoneNumber(value);
-
-    if (!/^0\d{10}$/.test(phone)) {
-
-        return {
-            valid: false,
-            phone
-        };
-    }
+        normalizePhoneNumber(
+            value
+        );
 
     return {
-        valid: true,
+        valid:
+            /^0\d{10}$/.test(
+                phone
+            ),
         phone
     };
 }
 
 
 /* ==========================================
-   CONTINUE / PURCHASE
+   CONTINUE
 ========================================== */
 
 continueBtn.addEventListener(
     "click",
     async () => {
 
-        if (purchaseInProgress) {
+        if (
+            purchaseInProgress
+        ) {
             return;
         }
 
-        const validation =
+        const phoneResult =
             validatePhoneNumber(
                 phoneInput.value
             );
 
-        if (!validation.valid) {
+        if (!phoneResult.valid) {
 
             alert(
                 "Please enter a valid Nigerian phone number."
             );
 
             phoneInput.focus();
-
-            return;
-        }
-
-        if (!selectedNetwork) {
-
-            alert(
-                "Please select a valid network."
-            );
 
             return;
         }
@@ -809,22 +881,8 @@ continueBtn.addEventListener(
             return;
         }
 
-        /*
-           We intentionally do NOT send:
-
-           - price
-           - priceKobo
-           - balance
-           - profit
-           - amount
-           - provider cost
-           - availability
-
-           The backend determines all financial values.
-        */
-
         await purchaseData(
-            validation.phone,
+            phoneResult.phone,
             selectedNetwork,
             selectedPlan.planId
         );
@@ -844,9 +902,32 @@ async function purchaseData(
 
     purchaseInProgress = true;
 
-    setPurchaseButtonState(true);
+    setPurchaseButtonState(
+        true
+    );
 
     try {
+
+        /*
+           IMPORTANT SECURITY RULE:
+
+           We intentionally send ONLY:
+
+           phoneNumber
+           network
+           planId
+
+           We do NOT send:
+
+           price
+           priceKobo
+           balance
+           providerCost
+           profit
+           amount
+
+           The backend determines those values.
+        */
 
         const response =
             await authenticatedFetch(
@@ -861,6 +942,7 @@ async function purchaseData(
                     })
                 }
             );
+
 
         const result =
             await readJsonResponse(
@@ -880,20 +962,12 @@ async function purchaseData(
                 "Data purchase successful."
             );
 
-            console.log(
-                "Data transaction:",
-                result
-            );
-
-            /*
-               Clear selection after a confirmed
-               successful transaction.
-            */
-
             selectedPlan = null;
 
             document
-                .querySelectorAll(".plan-card")
+                .querySelectorAll(
+                    ".plan-card"
+                )
                 .forEach(
                     card =>
                         card.classList.remove(
@@ -901,11 +975,13 @@ async function purchaseData(
                         )
                 );
 
+            await loadWalletBalance();
+
             return;
         }
 
 
-        /* ========= PENDING / UNKNOWN ========= */
+        /* ========= PENDING ========= */
 
         if (
             response.status === 202 ||
@@ -917,10 +993,7 @@ async function purchaseData(
                 "Your data purchase is being processed. Please check your transaction history for the final status."
             );
 
-            console.log(
-                "Data transaction pending:",
-                result
-            );
+            await loadWalletBalance();
 
             return;
         }
@@ -938,16 +1011,13 @@ async function purchaseData(
                 "Data purchase failed."
             );
 
-            console.error(
-                "Data purchase failed:",
-                result
-            );
+            await loadWalletBalance();
 
             return;
         }
 
 
-        /* ========= AUTH ERROR ========= */
+        /* ========= AUTH ========= */
 
         if (
             response.status === 401
@@ -963,8 +1033,6 @@ async function purchaseData(
             return;
         }
 
-
-        /* ========= OTHER SERVER ERROR ========= */
 
         throw new Error(
             result.error ||
@@ -987,13 +1055,15 @@ async function purchaseData(
 
         purchaseInProgress = false;
 
-        setPurchaseButtonState(false);
+        setPurchaseButtonState(
+            false
+        );
     }
 }
 
 
 /* ==========================================
-   PURCHASE BUTTON STATE
+   BUTTON STATE
 ========================================== */
 
 function setPurchaseButtonState(
@@ -1021,48 +1091,43 @@ function setPurchaseButtonState(
 
 
 /* ==========================================
-   INITIAL NETWORK STATE
+   INITIAL NETWORK
 ========================================== */
 
-function initializeNetwork() {
+networkCards.forEach(
+    card => {
 
-    networkCards.forEach(
-        card => {
+        const displayNetwork =
+            card.dataset.network;
 
-            const displayNetwork =
-                card.dataset.network;
+        const backendNetwork =
+            NETWORK_MAP[
+                displayNetwork
+            ];
 
-            const backendNetwork =
-                NETWORK_MAP[
-                    displayNetwork
-                ];
+        if (
+            backendNetwork ===
+            selectedNetwork
+        ) {
 
-            if (
-                backendNetwork ===
-                selectedNetwork
-            ) {
+            card.classList.add(
+                "active"
+            );
 
-                card.classList.add(
-                    "active"
-                );
+        } else {
 
-            } else {
-
-                card.classList.remove(
-                    "active"
-                );
-            }
+            card.classList.remove(
+                "active"
+            );
         }
-    );
-}
+    }
+);
 
 
 /* ==========================================
-   STARTUP
+   READY
 ========================================== */
 
-initializeNetwork();
-
 console.log(
-    "✅ NovaPay Data frontend ready."
+    "✅ NovaPay Data frontend connected."
 );
