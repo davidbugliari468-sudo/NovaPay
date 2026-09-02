@@ -1,6 +1,7 @@
 /* ==========================================
    NOVAPAY AIRTIME
    BACKEND-DRIVEN VERSION
+   TEMPORARY DIAGNOSTIC BUILD
    ========================================== */
 
 /*
@@ -22,7 +23,21 @@
  * - release wallet funds
  * - determine provider success/failure
  * - create financial transactions
+ *
+ * TEMPORARY DIAGNOSTIC:
+ *
+ * This version exposes the HTTP/network failure instead of
+ * replacing every failure with the generic:
+ *
+ * "We could not confirm the Airtime request..."
+ *
+ * It NEVER displays the Firebase ID token.
  */
+
+
+/* ==========================================
+   FIREBASE
+   ========================================== */
 
 import { auth } from "./firebase.js";
 
@@ -422,6 +437,11 @@ onAuthStateChanged(
             user;
 
 
+        console.log(
+            "NovaPay Airtime: authenticated user available."
+        );
+
+
         await loadWallet();
 
     }
@@ -440,6 +460,10 @@ onAuthStateChanged(
  * The Firebase ID token is generated here.
  *
  * The UID is NOT manually supplied to the backend.
+ *
+ * IMPORTANT:
+ *
+ * The token is never logged or displayed.
  */
 
 async function authenticatedFetch(
@@ -987,14 +1011,6 @@ function handlePendingPurchase(
             transactionId
         );
 
-        /*
-         * We deliberately do not automatically submit
-         * another purchase.
-         *
-         * The transaction can be checked later using
-         * the transaction endpoint.
-         */
-
     }
 
 
@@ -1010,6 +1026,178 @@ function handlePendingPurchase(
 
 /* ==========================================
    MODULE 16
+   TEMPORARY DIAGNOSTIC HELPERS
+   ========================================== */
+
+/*
+ * Convert a response body into something safe to display.
+ *
+ * We intentionally do not display:
+ *
+ * - Authorization headers
+ * - Firebase ID tokens
+ * - cookies
+ * - credentials
+ * - provider secrets
+ */
+
+function buildDiagnosticMessage({
+    stage,
+    url,
+    method,
+    status,
+    statusText,
+    responseBody,
+    error
+}) {
+
+    const lines = [
+
+        "NOVAPAY AIRTIME DIAGNOSTIC",
+
+        `Stage: ${stage}`,
+
+        `Method: ${method}`,
+
+        `URL: ${url}`
+
+    ];
+
+
+    if (
+        Number.isInteger(
+            status
+        )
+    ) {
+
+        lines.push(
+            `HTTP Status: ${status}`
+        );
+
+    }
+
+
+    if (
+        statusText
+    ) {
+
+        lines.push(
+            `HTTP Status Text: ${statusText}`
+        );
+
+    }
+
+
+    if (
+        responseBody
+    ) {
+
+        lines.push(
+            `Response: ${responseBody}`
+        );
+
+    }
+
+
+    if (
+        error
+    ) {
+
+        lines.push(
+            `Error: ${String(error)}`
+        );
+
+    }
+
+
+    lines.push(
+        "",
+        "This diagnostic is temporary. Do not retry the purchase repeatedly until the cause is identified."
+    );
+
+
+    return lines.join(
+        "\n"
+    );
+
+}
+
+
+/*
+ * Safely parse JSON without losing the raw response.
+ *
+ * We read the body as text first because this allows us
+ * to distinguish:
+ *
+ * - valid JSON
+ * - invalid JSON
+ * - empty response
+ * - HTML/server error page
+ * - proxy/CORS response
+ */
+
+async function readResponseBody(
+    response
+) {
+
+    const text =
+        await response.text();
+
+
+    const trimmed =
+        text.trim();
+
+
+    if (!trimmed) {
+
+        return {
+
+            raw:
+                "",
+
+            json:
+                null
+
+        };
+
+    }
+
+
+    try {
+
+        return {
+
+            raw:
+                trimmed,
+
+            json:
+                JSON.parse(
+                    trimmed
+                )
+
+        };
+
+    }
+
+    catch {
+
+        return {
+
+            raw:
+                trimmed,
+
+            json:
+                null
+
+        };
+
+    }
+
+}
+
+
+/* ==========================================
+   MODULE 17
    PURCHASE AIRTIME
    ========================================== */
 
@@ -1046,24 +1234,66 @@ async function purchaseAirtime() {
     );
 
 
+    const endpoint =
+        `${API_BASE_URL}/api/airtime/purchase`;
+
+
+    /*
+     * Keep the exact request structure that was already
+     * implemented.
+     *
+     * The backend expects:
+     *
+     * network
+     * phoneNumber
+     * amount
+     */
+
+    const requestBody = {
+
+        network:
+            selectedNetwork,
+
+        phoneNumber:
+            validation.phone,
+
+        amount:
+            validation.amount
+
+    };
+
+
     try {
 
         /*
-         * ------------------------------------------------
-         * SEND REQUEST TO NOVAPAY BACKEND
-         * ------------------------------------------------
+         * -----------------------------------------------
+         * DIAGNOSTIC REQUEST LOG
+         * -----------------------------------------------
          *
-         * The backend receives:
+         * IMPORTANT:
          *
-         * network
-         * phone
-         * amount
-         *
-         * The UID comes from the verified Firebase
-         * ID token.
-         *
-         * Provider information is never sent by the
-         * frontend.
+         * Never log the Firebase token.
+         */
+
+        console.log(
+            "NovaPay Airtime diagnostic request:",
+            {
+                method:
+                    "POST",
+
+                url:
+                    endpoint,
+
+                body:
+                    requestBody
+            }
+        );
+
+
+        /*
+         * -----------------------------------------------
+         * SEND REQUEST
+         * -----------------------------------------------
          */
 
         const response =
@@ -1075,33 +1305,67 @@ async function purchaseAirtime() {
                         "POST",
 
                     body:
-                        JSON.stringify({
-
-                            network:
-                                selectedNetwork,
-
-                            phoneNumber:
-                                validation.phone,
-
-                            amount:
-                                validation.amount
-
-                        })
+                        JSON.stringify(
+                            requestBody
+                        )
 
                 }
             );
 
 
         /*
-         * ------------------------------------------------
+         * -----------------------------------------------
          * AUTHENTICATION ERROR
-         * ------------------------------------------------
+         * -----------------------------------------------
          */
 
         if (
             response.status ===
             401
         ) {
+
+            const authBody =
+                await readResponseBody(
+                    response
+                );
+
+
+            console.error(
+                "NovaPay Airtime authentication failure:",
+                {
+                    status:
+                        response.status,
+
+                    body:
+                        authBody.raw
+                }
+            );
+
+
+            alert(
+                buildDiagnosticMessage({
+
+                    stage:
+                        "BACKEND REACHED — AUTHENTICATION REJECTED",
+
+                    url:
+                        endpoint,
+
+                    method:
+                        "POST",
+
+                    status:
+                        response.status,
+
+                    statusText:
+                        response.statusText,
+
+                    responseBody:
+                        authBody.raw
+
+                })
+            );
+
 
             handleExpiredSession();
 
@@ -1111,35 +1375,95 @@ async function purchaseAirtime() {
 
 
         /*
-         * ------------------------------------------------
-         * PARSE RESPONSE
-         * ------------------------------------------------
+         * -----------------------------------------------
+         * READ RESPONSE BODY
+         * -----------------------------------------------
          */
 
-        let result =
-            null;
-
-
-        try {
-
-            result =
-                await response.json();
-
-        }
-
-        catch {
-
-            throw new Error(
-                "The Airtime service returned an invalid response."
+        const responseData =
+            await readResponseBody(
+                response
             );
+
+
+        const result =
+            responseData.json;
+
+
+        /*
+         * -----------------------------------------------
+         * DIAGNOSTIC RESPONSE LOG
+         * -----------------------------------------------
+         */
+
+        console.log(
+            "NovaPay Airtime diagnostic response:",
+            {
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText,
+
+                body:
+                    result ||
+                    responseData.raw ||
+                    null
+
+            }
+        );
+
+
+        /*
+         * -----------------------------------------------
+         * INVALID / EMPTY RESPONSE
+         * -----------------------------------------------
+         */
+
+        if (
+            !result
+        ) {
+
+            alert(
+                buildDiagnosticMessage({
+
+                    stage:
+                        response.ok
+                            ? "BACKEND REACHED — INVALID RESPONSE BODY"
+                            : "BACKEND REACHED — NON-JSON ERROR RESPONSE",
+
+                    url:
+                        endpoint,
+
+                    method:
+                        "POST",
+
+                    status:
+                        response.status,
+
+                    statusText:
+                        response.statusText,
+
+                    responseBody:
+                        responseData.raw ||
+                        "(empty response)"
+
+                })
+            );
+
+
+            loadWallet();
+
+            return;
 
         }
 
 
         /*
-         * ------------------------------------------------
+         * -----------------------------------------------
          * SUCCESS
-         * ------------------------------------------------
+         * -----------------------------------------------
          *
          * HTTP 200
          * success === true
@@ -1163,13 +1487,13 @@ async function purchaseAirtime() {
 
 
         /*
-         * ------------------------------------------------
+         * -----------------------------------------------
          * PENDING
-         * ------------------------------------------------
+         * -----------------------------------------------
          *
-         * The backend intentionally uses HTTP 202.
+         * HTTP 202 is intentional.
          *
-         * Pending is NOT treated as a normal failure.
+         * Pending is NOT a failure.
          */
 
         if (
@@ -1190,9 +1514,9 @@ async function purchaseAirtime() {
 
 
         /*
-         * ------------------------------------------------
+         * -----------------------------------------------
          * CONFIRMED FAILURE
-         * ------------------------------------------------
+         * -----------------------------------------------
          */
 
         if (
@@ -1210,44 +1534,119 @@ async function purchaseAirtime() {
 
 
         /*
-         * ------------------------------------------------
-         * OTHER BACKEND ERROR
-         * ------------------------------------------------
+         * -----------------------------------------------
+         * BACKEND ERROR
+         * -----------------------------------------------
+         *
+         * IMPORTANT:
+         *
+         * This is the part that was previously hidden
+         * behind the generic catch message.
+         *
+         * Now we expose the actual HTTP status and the
+         * safe backend response.
          */
 
-        const errorMessage =
-            String(
-                result?.error ||
-                result?.message ||
-                "Airtime purchase failed."
-            ).trim();
+        console.error(
+            "NovaPay Airtime backend returned an unexpected response:",
+            {
 
+                status:
+                    response.status,
 
-        throw new Error(
-            errorMessage
+                statusText:
+                    response.statusText,
+
+                body:
+                    result
+
+            }
         );
+
+
+        alert(
+            buildDiagnosticMessage({
+
+                stage:
+                    "BACKEND REACHED — UNEXPECTED RESPONSE",
+
+                url:
+                    endpoint,
+
+                method:
+                    "POST",
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText,
+
+                responseBody:
+                    JSON.stringify(
+                        result,
+                        null,
+                        2
+                    )
+
+            })
+        );
+
+
+        loadWallet();
 
     }
 
     catch (error) {
 
+        /*
+         * -----------------------------------------------
+         * NETWORK / FETCH FAILURE
+         * -----------------------------------------------
+         *
+         * This means fetch itself failed before we
+         * received a normal HTTP response.
+         *
+         * Typical examples:
+         *
+         * - CORS failure
+         * - DNS failure
+         * - connection failure
+         * - browser/network failure
+         * - blocked request
+         * - Render unreachable
+         *
+         * IMPORTANT:
+         *
+         * We do NOT automatically assume the backend
+         * did not receive the request.
+         */
+
         console.error(
-            "NovaPay Airtime purchase error:",
+            "NovaPay Airtime fetch/network failure:",
             error
         );
 
 
-        /*
-         * If the network request itself failed,
-         * we cannot know whether the backend received
-         * the request.
-         *
-         * Therefore we MUST NOT tell the user to
-         * immediately purchase again.
-         */
-
         alert(
-            "We could not confirm the Airtime request. Please check your transaction status before trying again."
+            buildDiagnosticMessage({
+
+                stage:
+                    "FETCH FAILED — NO NORMAL HTTP RESPONSE RECEIVED",
+
+                url:
+                    endpoint,
+
+                method:
+                    "POST",
+
+                error:
+                    error?.message ||
+                    String(
+                        error
+                    )
+
+            })
         );
 
 
@@ -1271,7 +1670,7 @@ async function purchaseAirtime() {
 
 
 /* ==========================================
-   MODULE 17
+   MODULE 18
    CONTINUE BUTTON
    ========================================== */
 
@@ -1286,16 +1685,12 @@ if (continueBtn) {
 
 
 /* ==========================================
-   MODULE 18
+   MODULE 19
    OPTIONAL TRANSACTION STATUS LOOKUP
    ========================================== */
 
 /*
- * This function is intentionally exposed locally so
- * the page can check a transaction if we later add a
- * transaction-status UI.
- *
- * It does NOT create another Airtime purchase.
+ * This function does NOT create another Airtime purchase.
  */
 
 async function getAirtimeTransaction(
@@ -1340,18 +1735,19 @@ async function getAirtimeTransaction(
     }
 
 
-    let result =
-        null;
+    const responseData =
+        await readResponseBody(
+            response
+        );
 
 
-    try {
+    const result =
+        responseData.json;
 
-        result =
-            await response.json();
 
-    }
-
-    catch {
+    if (
+        !result
+    ) {
 
         throw new Error(
             "The transaction service returned an invalid response."
@@ -1379,7 +1775,7 @@ async function getAirtimeTransaction(
 
 
 /* ==========================================
-   MODULE 19
+   MODULE 20
    INITIAL UI
    ========================================== */
 
@@ -1441,7 +1837,7 @@ if (providers.length) {
 
 
 /* ==========================================
-   MODULE 20
+   MODULE 21
    DEBUG / DEVELOPMENT INFORMATION
    ========================================== */
 
@@ -1452,4 +1848,9 @@ console.log(
 console.log(
     "Airtime API:",
     `${API_BASE_URL}/api/airtime/purchase`
+);
+
+console.log(
+    "Airtime diagnostic mode:",
+    true
 );
