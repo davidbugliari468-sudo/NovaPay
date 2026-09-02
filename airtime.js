@@ -1,7 +1,6 @@
 /* ==========================================
    NOVAPAY AIRTIME
-   BACKEND-DRIVEN VERSION
-   TEMPORARY DIAGNOSTIC BUILD
+   SECURE BACKEND-DRIVEN VERSION
    ========================================== */
 
 /*
@@ -12,7 +11,7 @@
  * - collecting user input
  * - authenticating the user
  * - sending the request to NovaPay backend
- * - displaying the result
+ * - displaying safe customer-facing results
  *
  * The frontend does NOT:
  *
@@ -23,15 +22,13 @@
  * - release wallet funds
  * - determine provider success/failure
  * - create financial transactions
+ * - trust client-side wallet balances
  *
- * TEMPORARY DIAGNOSTIC:
+ * SECURITY:
  *
- * This version exposes the HTTP/network failure instead of
- * replacing every failure with the generic:
- *
- * "We could not confirm the Airtime request..."
- *
- * It NEVER displays the Firebase ID token.
+ * Backend errors, provider errors, HTTP details, raw
+ * responses, network errors, and internal errors are
+ * never displayed directly to the customer.
  */
 
 
@@ -234,12 +231,6 @@ providers.forEach(
                 selectedNetwork =
                     network;
 
-
-                console.log(
-                    "Selected Airtime network:",
-                    selectedNetwork
-                );
-
             }
         );
 
@@ -437,11 +428,6 @@ onAuthStateChanged(
             user;
 
 
-        console.log(
-            "NovaPay Airtime: authenticated user available."
-        );
-
-
         await loadWallet();
 
     }
@@ -474,7 +460,7 @@ async function authenticatedFetch(
     if (!currentUser) {
 
         throw new Error(
-            "Your session has expired. Please login again."
+            "SESSION_EXPIRED"
         );
 
     }
@@ -529,16 +515,10 @@ async function authenticatedFetch(
    ========================================== */
 
 /*
- * The old frontend read:
+ * The frontend does not read wallet data directly
+ * from Firestore.
  *
- * users/{uid}.walletBalance
- *
- * directly from Firestore.
- *
- * That logic has been removed.
- *
- * The backend is now responsible for returning
- * the authenticated user's wallet balance.
+ * The backend is authoritative.
  */
 
 async function loadWallet() {
@@ -588,7 +568,7 @@ async function loadWallet() {
         catch {
 
             throw new Error(
-                "The wallet service returned an invalid response."
+                "WALLET_INVALID_RESPONSE"
             );
 
         }
@@ -600,8 +580,7 @@ async function loadWallet() {
         ) {
 
             throw new Error(
-                result.error ||
-                "Unable to retrieve wallet balance."
+                "WALLET_UNAVAILABLE"
             );
 
         }
@@ -621,7 +600,7 @@ async function loadWallet() {
         ) {
 
             throw new Error(
-                "The wallet service returned an invalid balance."
+                "WALLET_INVALID_BALANCE"
             );
 
         }
@@ -635,18 +614,26 @@ async function loadWallet() {
 
     catch (error) {
 
+        /*
+         * Internal wallet errors are logged for
+         * development purposes only.
+         *
+         * They are never shown to the customer.
+         */
+
         console.error(
             "NovaPay wallet loading error:",
+            error?.message ||
             error
         );
 
 
         /*
-         * Do not invent a balance.
+         * Do not invent a wallet balance.
          *
-         * If the backend cannot provide the balance,
-         * show a neutral value rather than trusting
-         * an old client-side Firestore value.
+         * Preserve the existing neutral display
+         * behavior if the backend cannot provide
+         * the authoritative balance.
          */
 
         setWalletBalance(
@@ -807,7 +794,7 @@ function validatePurchaseInput() {
     /*
      * The backend expects whole-naira amounts.
      *
-     * The frontend therefore never sends decimals.
+     * The frontend never sends decimals.
      */
 
     return {
@@ -903,26 +890,28 @@ function handleSuccessfulPurchase(
 
 
     /*
-     * The new backend does not need the frontend
-     * to calculate the new wallet balance.
+     * The backend remains authoritative.
      *
-     * If the transaction response contains the
-     * balance in a future compatible response,
-     * use it. Otherwise reload it securely.
+     * If a compatible wallet balance is returned,
+     * it may be displayed. Otherwise reload from
+     * the backend.
      */
+
+    const walletBalanceKobo =
+        Number(
+            result?.walletBalanceKobo
+        );
+
 
     if (
         Number.isSafeInteger(
-            Number(
-                result?.walletBalanceKobo
-            )
-        )
+            walletBalanceKobo
+        ) &&
+        walletBalanceKobo >= 0
     ) {
 
         setWalletBalance(
-            Number(
-                result.walletBalanceKobo
-            )
+            walletBalanceKobo
         );
 
     }
@@ -938,6 +927,150 @@ function handleSuccessfulPurchase(
 
 /* ==========================================
    MODULE 14
+   SAFE BACKEND ERROR MAPPING
+   ========================================== */
+
+/*
+ * The backend already returns deliberately safe
+ * business messages.
+ *
+ * The frontend still uses an allowlist so that a future
+ * backend/internal error cannot accidentally become a
+ * customer-facing raw error.
+ */
+
+const SAFE_AIRTIME_MESSAGES =
+    new Set([
+
+        "Your wallet balance is insufficient.",
+
+        "Insufficient wallet balance.",
+
+        "Airtime request is required.",
+
+        "Airtime network is required.",
+
+        "Unsupported Airtime network.",
+
+        "Airtime phone number is required.",
+
+        "Enter a valid Nigerian Airtime phone number.",
+
+        "Enter a valid Nigerian phone number.",
+
+        "Invalid Airtime amount.",
+
+        "Airtime amount must be a positive integer in kobo.",
+
+        "Airtime amount must be a valid whole-naira amount.",
+
+        "Unable to reserve wallet funds."
+
+    ]);
+
+
+/*
+ * Preserve the configured minimum Airtime message.
+ */
+
+function isSafeAirtimeMessage(
+    message
+) {
+
+    const normalized =
+        String(
+            message ||
+            ""
+        ).trim();
+
+
+    if (
+        !normalized
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        SAFE_AIRTIME_MESSAGES.has(
+            normalized
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        normalized.startsWith(
+            "Minimum Airtime amount is"
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        normalized.startsWith(
+            "Maximum Airtime amount is"
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/*
+ * Convert any backend response into a safe
+ * customer-facing message.
+ *
+ * Raw backend content is never returned unless it
+ * matches the explicit allowlist above.
+ */
+
+function getSafePurchaseMessage(
+    result,
+    fallback =
+        "Unable to process Airtime request."
+) {
+
+    const candidate =
+        String(
+            result?.error ||
+            result?.message ||
+            ""
+        ).trim();
+
+
+    if (
+        isSafeAirtimeMessage(
+            candidate
+        )
+    ) {
+
+        return candidate;
+
+    }
+
+
+    return fallback;
+
+}
+
+
+/* ==========================================
+   MODULE 15
    HANDLE FAILED PURCHASE
    ========================================== */
 
@@ -946,11 +1079,10 @@ function handleFailedPurchase(
 ) {
 
     const message =
-        String(
-            result?.message ||
-            result?.error ||
+        getSafePurchaseMessage(
+            result,
             "Airtime could not be completed."
-        ).trim();
+        );
 
 
     alert(
@@ -959,64 +1091,8 @@ function handleFailedPurchase(
 
 
     /*
-     * Refresh the wallet from the backend.
-     *
-     * This is useful because a confirmed provider
-     * failure should have its reservation released
-     * by the backend service.
-     */
-
-    loadWallet();
-
-}
-
-
-/* ==========================================
-   MODULE 15
-   HANDLE PENDING PURCHASE
-   ========================================== */
-
-function handlePendingPurchase(
-    result
-) {
-
-    const transactionId =
-        String(
-            result?.transactionId ||
-            ""
-        ).trim();
-
-
-    /*
-     * IMPORTANT:
-     *
-     * We do NOT submit another Airtime purchase.
-     *
-     * The backend has already created the transaction
-     * and may still be waiting for VTU.ng confirmation.
-     */
-
-    alert(
-        result?.message ||
-        "Your Airtime request is being processed. Please do not retry yet."
-    );
-
-
-    if (
-        transactionId
-    ) {
-
-        console.log(
-            "Airtime transaction is pending:",
-            transactionId
-        );
-
-    }
-
-
-    /*
-     * Refresh the wallet because the backend owns
-     * the authoritative wallet state.
+     * Refresh the wallet from the authoritative
+     * backend.
      */
 
     loadWallet();
@@ -1026,114 +1102,55 @@ function handlePendingPurchase(
 
 /* ==========================================
    MODULE 16
-   TEMPORARY DIAGNOSTIC HELPERS
+   HANDLE PENDING PURCHASE
    ========================================== */
 
-/*
- * Convert a response body into something safe to display.
- *
- * We intentionally do not display:
- *
- * - Authorization headers
- * - Firebase ID tokens
- * - cookies
- * - credentials
- * - provider secrets
- */
+function handlePendingPurchase(
+    result
+) {
 
-function buildDiagnosticMessage({
-    stage,
-    url,
-    method,
-    status,
-    statusText,
-    responseBody,
-    error
-}) {
+    /*
+     * IMPORTANT:
+     *
+     * We do NOT submit another Airtime purchase.
+     *
+     * The backend may still be waiting for
+     * VTU.ng confirmation.
+     */
 
-    const lines = [
-
-        "NOVAPAY AIRTIME DIAGNOSTIC",
-
-        `Stage: ${stage}`,
-
-        `Method: ${method}`,
-
-        `URL: ${url}`
-
-    ];
-
-
-    if (
-        Number.isInteger(
-            status
-        )
-    ) {
-
-        lines.push(
-            `HTTP Status: ${status}`
+    const message =
+        getSafePurchaseMessage(
+            result,
+            "Your Airtime request is being processed. Please do not retry yet."
         );
 
-    }
 
-
-    if (
-        statusText
-    ) {
-
-        lines.push(
-            `HTTP Status Text: ${statusText}`
-        );
-
-    }
-
-
-    if (
-        responseBody
-    ) {
-
-        lines.push(
-            `Response: ${responseBody}`
-        );
-
-    }
-
-
-    if (
-        error
-    ) {
-
-        lines.push(
-            `Error: ${String(error)}`
-        );
-
-    }
-
-
-    lines.push(
-        "",
-        "This diagnostic is temporary. Do not retry the purchase repeatedly until the cause is identified."
+    alert(
+        message
     );
 
 
-    return lines.join(
-        "\n"
-    );
+    /*
+     * Refresh the authoritative wallet display.
+     */
+
+    loadWallet();
 
 }
 
 
+/* ==========================================
+   MODULE 17
+   READ RESPONSE BODY
+   ========================================== */
+
 /*
- * Safely parse JSON without losing the raw response.
+ * Read JSON safely.
  *
- * We read the body as text first because this allows us
- * to distinguish:
+ * IMPORTANT:
  *
- * - valid JSON
- * - invalid JSON
- * - empty response
- * - HTML/server error page
- * - proxy/CORS response
+ * This function deliberately does not return raw
+ * response text to the customer.
  */
 
 async function readResponseBody(
@@ -1150,46 +1167,22 @@ async function readResponseBody(
 
     if (!trimmed) {
 
-        return {
-
-            raw:
-                "",
-
-            json:
-                null
-
-        };
+        return null;
 
     }
 
 
     try {
 
-        return {
-
-            raw:
-                trimmed,
-
-            json:
-                JSON.parse(
-                    trimmed
-                )
-
-        };
+        return JSON.parse(
+            trimmed
+        );
 
     }
 
     catch {
 
-        return {
-
-            raw:
-                trimmed,
-
-            json:
-                null
-
-        };
+        return null;
 
     }
 
@@ -1197,7 +1190,7 @@ async function readResponseBody(
 
 
 /* ==========================================
-   MODULE 17
+   MODULE 18
    PURCHASE AIRTIME
    ========================================== */
 
@@ -1234,21 +1227,6 @@ async function purchaseAirtime() {
     );
 
 
-    const endpoint =
-        `${API_BASE_URL}/api/airtime/purchase`;
-
-
-    /*
-     * Keep the exact request structure that was already
-     * implemented.
-     *
-     * The backend expects:
-     *
-     * network
-     * phoneNumber
-     * amount
-     */
-
     const requestBody = {
 
         network:
@@ -1267,33 +1245,13 @@ async function purchaseAirtime() {
 
         /*
          * -----------------------------------------------
-         * DIAGNOSTIC REQUEST LOG
-         * -----------------------------------------------
-         *
-         * IMPORTANT:
-         *
-         * Never log the Firebase token.
-         */
-
-        console.log(
-            "NovaPay Airtime diagnostic request:",
-            {
-                method:
-                    "POST",
-
-                url:
-                    endpoint,
-
-                body:
-                    requestBody
-            }
-        );
-
-
-        /*
-         * -----------------------------------------------
          * SEND REQUEST
          * -----------------------------------------------
+         *
+         * The Firebase ID token is handled internally
+         * by authenticatedFetch().
+         *
+         * It is never logged.
          */
 
         const response =
@@ -1324,46 +1282,13 @@ async function purchaseAirtime() {
             401
         ) {
 
-            const authBody =
-                await readResponseBody(
-                    response
-                );
+            /*
+             * Consume the response body without exposing
+             * it to the customer.
+             */
 
-
-            console.error(
-                "NovaPay Airtime authentication failure:",
-                {
-                    status:
-                        response.status,
-
-                    body:
-                        authBody.raw
-                }
-            );
-
-
-            alert(
-                buildDiagnosticMessage({
-
-                    stage:
-                        "BACKEND REACHED — AUTHENTICATION REJECTED",
-
-                    url:
-                        endpoint,
-
-                    method:
-                        "POST",
-
-                    status:
-                        response.status,
-
-                    statusText:
-                        response.statusText,
-
-                    responseBody:
-                        authBody.raw
-
-                })
+            await readResponseBody(
+                response
             );
 
 
@@ -1376,49 +1301,28 @@ async function purchaseAirtime() {
 
         /*
          * -----------------------------------------------
-         * READ RESPONSE BODY
+         * READ RESPONSE
          * -----------------------------------------------
          */
 
-        const responseData =
+        const result =
             await readResponseBody(
                 response
             );
 
 
-        const result =
-            responseData.json;
-
-
         /*
          * -----------------------------------------------
-         * DIAGNOSTIC RESPONSE LOG
+         * INVALID RESPONSE
          * -----------------------------------------------
-         */
-
-        console.log(
-            "NovaPay Airtime diagnostic response:",
-            {
-
-                status:
-                    response.status,
-
-                statusText:
-                    response.statusText,
-
-                body:
-                    result ||
-                    responseData.raw ||
-                    null
-
-            }
-        );
-
-
-        /*
-         * -----------------------------------------------
-         * INVALID / EMPTY RESPONSE
-         * -----------------------------------------------
+         *
+         * Do not expose:
+         *
+         * - raw HTML
+         * - proxy errors
+         * - Render errors
+         * - HTTP details
+         * - backend internals
          */
 
         if (
@@ -1426,30 +1330,7 @@ async function purchaseAirtime() {
         ) {
 
             alert(
-                buildDiagnosticMessage({
-
-                    stage:
-                        response.ok
-                            ? "BACKEND REACHED — INVALID RESPONSE BODY"
-                            : "BACKEND REACHED — NON-JSON ERROR RESPONSE",
-
-                    url:
-                        endpoint,
-
-                    method:
-                        "POST",
-
-                    status:
-                        response.status,
-
-                    statusText:
-                        response.statusText,
-
-                    responseBody:
-                        responseData.raw ||
-                        "(empty response)"
-
-                })
+                "Unable to process Airtime request right now. Please try again later."
             );
 
 
@@ -1538,58 +1419,17 @@ async function purchaseAirtime() {
          * BACKEND ERROR
          * -----------------------------------------------
          *
-         * IMPORTANT:
+         * Only explicitly allowlisted business messages
+         * can reach the customer.
          *
-         * This is the part that was previously hidden
-         * behind the generic catch message.
-         *
-         * Now we expose the actual HTTP status and the
-         * safe backend response.
+         * Everything else becomes a generic message.
          */
 
-        console.error(
-            "NovaPay Airtime backend returned an unexpected response:",
-            {
-
-                status:
-                    response.status,
-
-                statusText:
-                    response.statusText,
-
-                body:
-                    result
-
-            }
-        );
-
-
         alert(
-            buildDiagnosticMessage({
-
-                stage:
-                    "BACKEND REACHED — UNEXPECTED RESPONSE",
-
-                url:
-                    endpoint,
-
-                method:
-                    "POST",
-
-                status:
-                    response.status,
-
-                statusText:
-                    response.statusText,
-
-                responseBody:
-                    JSON.stringify(
-                        result,
-                        null,
-                        2
-                    )
-
-            })
+            getSafePurchaseMessage(
+                result,
+                "Unable to process Airtime request right now. Please try again later."
+            )
         );
 
 
@@ -1601,52 +1441,28 @@ async function purchaseAirtime() {
 
         /*
          * -----------------------------------------------
-         * NETWORK / FETCH FAILURE
+         * FETCH / NETWORK FAILURE
          * -----------------------------------------------
-         *
-         * This means fetch itself failed before we
-         * received a normal HTTP response.
-         *
-         * Typical examples:
-         *
-         * - CORS failure
-         * - DNS failure
-         * - connection failure
-         * - browser/network failure
-         * - blocked request
-         * - Render unreachable
          *
          * IMPORTANT:
          *
-         * We do NOT automatically assume the backend
-         * did not receive the request.
+         * A failed fetch does NOT prove whether the
+         * backend received or processed the request.
+         *
+         * Therefore we do not automatically retry.
+         *
+         * We also do not show the browser's raw error.
          */
 
         console.error(
-            "NovaPay Airtime fetch/network failure:",
+            "NovaPay Airtime request failed:",
+            error?.message ||
             error
         );
 
 
         alert(
-            buildDiagnosticMessage({
-
-                stage:
-                    "FETCH FAILED — NO NORMAL HTTP RESPONSE RECEIVED",
-
-                url:
-                    endpoint,
-
-                method:
-                    "POST",
-
-                error:
-                    error?.message ||
-                    String(
-                        error
-                    )
-
-            })
+            "We could not confirm your Airtime request. Please check your transaction status before trying again."
         );
 
 
@@ -1670,7 +1486,7 @@ async function purchaseAirtime() {
 
 
 /* ==========================================
-   MODULE 18
+   MODULE 19
    CONTINUE BUTTON
    ========================================== */
 
@@ -1685,12 +1501,16 @@ if (continueBtn) {
 
 
 /* ==========================================
-   MODULE 19
-   OPTIONAL TRANSACTION STATUS LOOKUP
+   MODULE 20
+   TRANSACTION STATUS LOOKUP
    ========================================== */
 
 /*
- * This function does NOT create another Airtime purchase.
+ * This function does NOT create another Airtime
+ * purchase.
+ *
+ * It only retrieves the authenticated user's
+ * existing transaction.
  */
 
 async function getAirtimeTransaction(
@@ -1728,6 +1548,11 @@ async function getAirtimeTransaction(
         401
     ) {
 
+        await readResponseBody(
+            response
+        );
+
+
         handleExpiredSession();
 
         return null;
@@ -1735,14 +1560,10 @@ async function getAirtimeTransaction(
     }
 
 
-    const responseData =
+    const result =
         await readResponseBody(
             response
         );
-
-
-    const result =
-        responseData.json;
 
 
     if (
@@ -1750,7 +1571,7 @@ async function getAirtimeTransaction(
     ) {
 
         throw new Error(
-            "The transaction service returned an invalid response."
+            "TRANSACTION_INVALID_RESPONSE"
         );
 
     }
@@ -1761,9 +1582,16 @@ async function getAirtimeTransaction(
         !result.success
     ) {
 
+        /*
+         * Do not expose the backend error directly.
+         */
+
         throw new Error(
-            result.error ||
-            "Unable to retrieve Airtime transaction."
+            isSafeAirtimeMessage(
+                result?.error
+            )
+                ? result.error
+                : "Unable to retrieve Airtime transaction."
         );
 
     }
@@ -1775,7 +1603,7 @@ async function getAirtimeTransaction(
 
 
 /* ==========================================
-   MODULE 20
+   MODULE 21
    INITIAL UI
    ========================================== */
 
@@ -1837,20 +1665,10 @@ if (providers.length) {
 
 
 /* ==========================================
-   MODULE 21
-   DEBUG / DEVELOPMENT INFORMATION
+   MODULE 22
+   SECURE FRONTEND STATUS
    ========================================== */
 
 console.log(
     "NovaPay Secure Airtime Frontend Loaded"
-);
-
-console.log(
-    "Airtime API:",
-    `${API_BASE_URL}/api/airtime/purchase`
-);
-
-console.log(
-    "Airtime diagnostic mode:",
-    true
 );
