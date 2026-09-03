@@ -78,7 +78,6 @@ for (
         console.error(
             `NovaPay Data: missing HTML element #${name}`
         );
-
     }
 }
 
@@ -144,6 +143,7 @@ const CATEGORY_ORDER =
         "Weekly",
         "Monthly",
         "3 Months",
+        "Extra Value",
         "Router",
         "Social",
         "Night",
@@ -433,16 +433,6 @@ async function loadDataPlans() {
 
     try {
 
-        /*
-           IMPORTANT:
-
-           /api/data/plans is protected by the
-           NovaPay backend.
-
-           Therefore this MUST use Firebase
-           authentication.
-        */
-
         const response =
             await authenticatedFetch(
                 "/api/data/plans",
@@ -531,34 +521,198 @@ function isValidPlan(
     plan
 ) {
 
-    return Boolean(
+    if (
+        !plan ||
+        typeof plan !== "object"
+    ) {
 
-        plan &&
-        typeof plan === "object" &&
+        return false;
+    }
 
-        typeof plan.planId === "string" &&
-        plan.planId.trim() !== "" &&
+    if (
+        typeof plan.planId !== "string" ||
+        !plan.planId.trim()
+    ) {
 
-        typeof plan.variationId === "string" &&
-        plan.variationId.trim() !== "" &&
+        return false;
+    }
 
-        typeof plan.network === "string" &&
-        NETWORK_ORDER.includes(
+    if (
+        typeof plan.variationId !== "string" ||
+        !plan.variationId.trim()
+    ) {
+
+        return false;
+    }
+
+    if (
+        typeof plan.network !== "string" ||
+        !NETWORK_ORDER.includes(
             plan.network
-        ) &&
+        )
+    ) {
 
-        typeof plan.dataPlan === "string" &&
-        plan.dataPlan.trim() !== "" &&
+        return false;
+    }
 
-        Number.isSafeInteger(
+    if (
+        typeof plan.dataPlan !== "string" ||
+        !plan.dataPlan.trim()
+    ) {
+
+        return false;
+    }
+
+    if (
+        !Number.isSafeInteger(
             plan.priceKobo
-        ) &&
-        plan.priceKobo >= 0 &&
+        ) ||
+        plan.priceKobo < 0
+    ) {
 
-        typeof plan.priceNaira === "number" &&
-        Number.isFinite(
+        return false;
+    }
+
+    if (
+        typeof plan.priceNaira !== "number" ||
+        !Number.isFinite(
             plan.priceNaira
         )
+    ) {
+
+        return false;
+    }
+
+    if (
+        plan.customerPriceKobo !== undefined &&
+        (
+            !Number.isSafeInteger(
+                plan.customerPriceKobo
+            ) ||
+            plan.customerPriceKobo < 0
+        )
+    ) {
+
+        return false;
+    }
+
+    if (
+        plan.categories !== undefined &&
+        !Array.isArray(
+            plan.categories
+        )
+    ) {
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* ==========================================
+   NORMALIZE PLAN CATEGORIES
+========================================== */
+
+function getPlanCategories(
+    plan
+) {
+
+    const categories =
+        new Set();
+
+    /*
+       New backend format:
+
+       categories: [
+           "Hot",
+           "Daily",
+           "Extra Value"
+       ]
+    */
+
+    if (
+        Array.isArray(
+            plan.categories
+        )
+    ) {
+
+        plan.categories.forEach(
+            category => {
+
+                const normalized =
+                    normalizeCategory(
+                        category
+                    );
+
+                if (
+                    normalized !== "Other"
+                ) {
+
+                    categories.add(
+                        normalized
+                    );
+                }
+            }
+        );
+    }
+
+
+    /*
+       Backward compatibility with
+       the previous single category field.
+    */
+
+    if (
+        typeof plan.category ===
+        "string"
+    ) {
+
+        const normalized =
+            normalizeCategory(
+                plan.category
+            );
+
+        if (
+            normalized !== "Other"
+        ) {
+
+            categories.add(
+                normalized
+            );
+        }
+    }
+
+
+    /*
+       Backward compatibility with
+       the previous isHot field.
+    */
+
+    if (
+        plan.isHot === true
+    ) {
+
+        categories.add(
+            "Hot"
+        );
+    }
+
+
+    /*
+       If the backend provided no
+       recognized category, use Other.
+    */
+
+    if (!categories.size) {
+
+        categories.add(
+            "Other"
+        );
+    }
+
+    return Array.from(
+        categories
     );
 }
 
@@ -593,30 +747,23 @@ function normalizeCategory(
 
 
 /* ==========================================
-   GET PLAN CATEGORY
+   PLAN BELONGS TO CATEGORY
 ========================================== */
 
-function getPlanCategory(
-    plan
+function planBelongsToCategory(
+    plan,
+    category
 ) {
 
-    /*
-       Hot is explicitly controlled by the
-       backend's isHot field.
+    const normalizedCategory =
+        normalizeCategory(
+            category
+        );
 
-       Other categories come from the
-       backend catalog category.
-    */
-
-    if (
-        plan.isHot === true
-    ) {
-
-        return "Hot";
-    }
-
-    return normalizeCategory(
-        plan.category
+    return getPlanCategories(
+        plan
+    ).includes(
+        normalizedCategory
     );
 }
 
@@ -630,6 +777,9 @@ function setupCategoryTabs() {
     if (!categoryTabs.length) {
         return;
     }
+
+    const availableCategories =
+        getAvailableCategories();
 
     categoryTabs.forEach(
         tab => {
@@ -650,8 +800,22 @@ function setupCategoryTabs() {
                 return;
             }
 
+            /*
+               Only show a tab when at least
+               one real backend plan belongs
+               to that category somewhere
+               in the catalog.
+            */
+
+            const categoryExists =
+                availableCategories.includes(
+                    matchingCategory
+                );
+
             tab.style.display =
-                "";
+                categoryExists
+                    ? ""
+                    : "none";
 
             tab.dataset.category =
                 matchingCategory;
@@ -659,13 +823,23 @@ function setupCategoryTabs() {
             tab.classList.toggle(
                 "active",
                 matchingCategory ===
-                selectedCategory
+                selectedCategory &&
+                categoryExists
             );
 
             tab.onclick = () => {
 
                 if (
                     purchaseInProgress
+                ) {
+
+                    return;
+                }
+
+                if (
+                    !availableCategories.includes(
+                        matchingCategory
+                    )
                 ) {
 
                     return;
@@ -690,14 +864,12 @@ function setupCategoryTabs() {
         }
     );
 
-    /*
-       If Hot does not contain any plans,
-       automatically select the first
-       category that actually exists.
-    */
 
-    const availableCategories =
-        getAvailableCategories();
+    /*
+       Keep the current category when it
+       exists. Otherwise select the first
+       category with real plans.
+    */
 
     if (
         !availableCategories.includes(
@@ -708,18 +880,21 @@ function setupCategoryTabs() {
         selectedCategory =
             availableCategories[0] ||
             "Other";
-
-        categoryTabs.forEach(
-            tab => {
-
-                tab.classList.toggle(
-                    "active",
-                    tab.dataset.category ===
-                    selectedCategory
-                );
-            }
-        );
     }
+
+
+    categoryTabs.forEach(
+        tab => {
+
+            tab.classList.toggle(
+                "active",
+                tab.dataset.category ===
+                selectedCategory &&
+                tab.style.display !==
+                "none"
+            );
+        }
+    );
 }
 
 
@@ -751,7 +926,11 @@ function findCategoryForTab(
 ) {
 
     const normalized =
-        label.toLowerCase();
+        String(
+            label || ""
+        )
+            .trim()
+            .toLowerCase();
 
     const category =
         CATEGORY_ORDER.find(
@@ -783,16 +962,51 @@ function getAvailableCategories() {
                 return;
             }
 
-            categories.add(
-                getPlanCategory(plan)
+            getPlanCategories(
+                plan
+            ).forEach(
+                category => {
+
+                    categories.add(
+                        category
+                    );
+                }
             );
         }
     );
 
     return CATEGORY_ORDER.filter(
         category =>
-            categories.has(category)
+            categories.has(
+                category
+            )
     );
+}
+
+
+/* ==========================================
+   GET PLANS FOR CURRENT CATEGORY
+========================================== */
+
+function getPlansForCurrentSelection() {
+
+    return allPlans
+        .filter(
+            plan =>
+                plan.network ===
+                selectedNetwork
+        )
+        .filter(
+            plan =>
+                plan.availability !== false
+        )
+        .filter(
+            plan =>
+                planBelongsToCategory(
+                    plan,
+                    selectedCategory
+                )
+        );
 }
 
 
@@ -811,30 +1025,9 @@ function renderPlans() {
     plansContainer.innerHTML = "";
 
     const plans =
-        allPlans
-            .filter(
-                plan =>
-                    plan.network ===
-                    selectedNetwork
-            )
-            .filter(
-                plan =>
-                    plan.availability !== false
-            )
-            .filter(
-                plan =>
-                    getPlanCategory(plan) ===
-                    selectedCategory
-            );
+        getPlansForCurrentSelection();
 
     if (!plans.length) {
-
-        /*
-           If the selected frontend tab has
-           no backend plans for this network,
-           show a clean message instead of
-           inventing plans.
-        */
 
         plansContainer.innerHTML = `
             <div class="plans-empty">
@@ -849,7 +1042,55 @@ function renderPlans() {
         return;
     }
 
-    plans.forEach(
+
+    /*
+       Sort plans by customer price first,
+       then by data amount when available.
+
+       This keeps affordable options near
+       the top without changing the
+       provider's actual product identity.
+    */
+
+    const sortedPlans =
+        [...plans].sort(
+            (a, b) => {
+
+                const priceA =
+                    getCustomerPriceKobo(
+                        a
+                    );
+
+                const priceB =
+                    getCustomerPriceKobo(
+                        b
+                    );
+
+                if (
+                    priceA !== priceB
+                ) {
+
+                    return priceA -
+                        priceB;
+                }
+
+                const dataA =
+                    getDataMegabytes(
+                        a
+                    );
+
+                const dataB =
+                    getDataMegabytes(
+                        b
+                    );
+
+                return dataB -
+                    dataA;
+            }
+        );
+
+
+    sortedPlans.forEach(
         plan => {
 
             const card =
@@ -928,11 +1169,17 @@ function renderPlans() {
                 );
 
 
-            card.appendChild(size);
+            card.appendChild(
+                size
+            );
 
-            card.appendChild(validity);
+            card.appendChild(
+                validity
+            );
 
-            card.appendChild(price);
+            card.appendChild(
+                price
+            );
 
 
             /* ==========================
@@ -1003,6 +1250,28 @@ function renderPlans() {
 
 
 /* ==========================================
+   GET CUSTOMER PRICE
+========================================== */
+
+function getCustomerPriceKobo(
+    plan
+) {
+
+    if (
+        Number.isSafeInteger(
+            plan.customerPriceKobo
+        ) &&
+        plan.customerPriceKobo >= 0
+    ) {
+
+        return plan.customerPriceKobo;
+    }
+
+    return plan.priceKobo;
+}
+
+
+/* ==========================================
    DATA AMOUNT DISPLAY
 ========================================== */
 
@@ -1029,6 +1298,66 @@ function getDisplayDataAmount(
     }
 
     return "Data bundle";
+}
+
+
+/* ==========================================
+   DATA AMOUNT FOR SORTING
+========================================== */
+
+function getDataMegabytes(
+    plan
+) {
+
+    if (
+        Number.isFinite(
+            plan.dataMegabytes
+        )
+    ) {
+
+        return Number(
+            plan.dataMegabytes
+        );
+    }
+
+    const text =
+        String(
+            plan.dataPlan || ""
+        )
+            .toLowerCase();
+
+    const match =
+        text.match(
+            /([\d.]+)\s*(gb|mb)/
+        );
+
+    if (!match) {
+
+        return 0;
+    }
+
+    const value =
+        Number(
+            match[1]
+        );
+
+    if (
+        !Number.isFinite(
+            value
+        )
+    ) {
+
+        return 0;
+    }
+
+    if (
+        match[2] === "gb"
+    ) {
+
+        return value * 1024;
+    }
+
+    return value;
 }
 
 
@@ -1081,20 +1410,10 @@ function formatPlanPrice(
     plan
 ) {
 
-    if (
-        Number.isSafeInteger(
-            plan.customerPriceKobo
-        ) &&
-        plan.customerPriceKobo >= 0
-    ) {
-
-        return formatKoboAsNaira(
-            plan.customerPriceKobo
-        );
-    }
-
     return formatKoboAsNaira(
-        plan.priceKobo
+        getCustomerPriceKobo(
+            plan
+        )
     );
 }
 
@@ -1111,7 +1430,7 @@ function extractValidity(
         String(
             dataPlan || ""
         ).match(
-            /(\d+)\s*(day|days|week|weeks|month|months)/i
+            /(\d+(?:\.\d+)?)\s*(day|days|week|weeks|month|months)/i
         );
 
     if (!match) {
@@ -1293,13 +1612,13 @@ async function purchaseData(
         true
     );
 
-    /*
-       Generate the idempotency reference
-       ONCE for this purchase attempt.
 
-       The same reference must never be
-       regenerated automatically after an
-       ambiguous network error.
+    /*
+       Generate one reference for this
+       purchase attempt.
+
+       Never silently regenerate a new
+       reference after an ambiguous error.
     */
 
     const reference =
@@ -1308,21 +1627,17 @@ async function purchaseData(
     try {
 
         /*
-           IMPORTANT SECURITY RULE:
+           Only send data required by the
+           backend.
 
-           Only send customer input and the
-           selected backend plan identity.
+           The client never controls:
 
-           Never send:
-
-           price
-           customerPrice
-           priceKobo
-           provider cost
-           wallet balance
-           profit
-           variation price
-           amount
+           - price
+           - amount
+           - provider cost
+           - wallet balance
+           - profit
+           - reseller price
         */
 
         const response =
@@ -1462,15 +1777,13 @@ async function purchaseData(
         );
 
         /*
-           CRITICAL:
-
            If the request may have reached
            the backend but the browser cannot
-           determine the response, NEVER
+           determine the response, never
            automatically retry.
 
-           The backend reference has already
-           been generated for this attempt.
+           The customer must check history
+           before making another attempt.
         */
 
         alert(
@@ -1683,11 +1996,129 @@ networkCards.forEach(
                 selectedNetwork =
                     backendNetwork;
 
+                /*
+                   Re-evaluate categories for
+                   the newly selected network.
+
+                   This prevents the user from
+                   staying on a category that has
+                   no products for that network.
+                */
+
+                const networkCategories =
+                    getAvailableCategoriesForNetwork();
+
+                if (
+                    !networkCategories.includes(
+                        selectedCategory
+                    )
+                ) {
+
+                    selectedCategory =
+                        networkCategories[0] ||
+                        "Other";
+                }
+
+                updateCategoryTabVisibility();
+
                 renderPlans();
             }
         );
     }
 );
+
+
+/* ==========================================
+   AVAILABLE CATEGORIES FOR NETWORK
+========================================== */
+
+function getAvailableCategoriesForNetwork() {
+
+    const categories =
+        new Set();
+
+    allPlans.forEach(
+        plan => {
+
+            if (
+                plan.network !==
+                selectedNetwork
+            ) {
+
+                return;
+            }
+
+            if (
+                plan.availability === false
+            ) {
+
+                return;
+            }
+
+            getPlanCategories(
+                plan
+            ).forEach(
+                category => {
+
+                    categories.add(
+                        category
+                    );
+                }
+            );
+        }
+    );
+
+    return CATEGORY_ORDER.filter(
+        category =>
+            categories.has(
+                category
+            )
+    );
+}
+
+
+/* ==========================================
+   UPDATE CATEGORY TAB VISIBILITY
+========================================== */
+
+function updateCategoryTabVisibility() {
+
+    const availableCategories =
+        getAvailableCategoriesForNetwork();
+
+    categoryTabs.forEach(
+        tab => {
+
+            const category =
+                tab.dataset.category;
+
+            if (!category) {
+
+                tab.style.display =
+                    "none";
+
+                return;
+            }
+
+            const available =
+                availableCategories.includes(
+                    category
+                );
+
+            tab.style.display =
+                available
+                    ? ""
+                    : "none";
+
+            tab.classList.toggle(
+                "active",
+                available &&
+                category ===
+                selectedCategory
+            );
+        }
+    );
+}
 
 
 /* ==========================================
