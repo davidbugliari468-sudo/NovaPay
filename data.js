@@ -1,6 +1,6 @@
 /* ==========================================
    NOVAPAY DATA
-   Backend-authoritative Data purchase frontend
+   Secure backend-connected frontend
 ========================================== */
 
 import { auth } from "./firebase.js";
@@ -19,7 +19,7 @@ const API_BASE_URL =
 
 
 /* ==========================================
-   ELEMENTS
+   DOM ELEMENTS
 ========================================== */
 
 const backBtn =
@@ -46,11 +46,41 @@ const walletBalance =
 const networkCards =
     document.querySelectorAll(".network-card");
 
-const planTabsContainer =
-    document.querySelector(".plan-tabs");
+const categoryTabs =
+    document.querySelectorAll(".plan-tab");
 
 const plansContainer =
     document.getElementById("plansContainer");
+
+
+/* ==========================================
+   DOM SAFETY
+========================================== */
+
+const requiredElements = [
+    ["backBtn", backBtn],
+    ["continueBtn", continueBtn],
+    ["phoneNumber", phoneInput],
+    ["beneficiaryBtn", beneficiaryBtn],
+    ["refreshBalanceBtn", refreshBalanceBtn],
+    ["checkBalanceBtn", checkBalanceBtn],
+    ["walletBalance", walletBalance],
+    ["plansContainer", plansContainer]
+];
+
+for (
+    const [name, element]
+    of requiredElements
+) {
+
+    if (!element) {
+
+        console.error(
+            `NovaPay Data: missing HTML element #${name}`
+        );
+
+    }
+}
 
 
 /* ==========================================
@@ -65,55 +95,61 @@ let selectedPlan = null;
 
 let allPlans = [];
 
-let selectedCategory = null;
+let selectedCategory = "Hot";
 
 let purchaseInProgress = false;
 
 let balanceLoading = false;
-
-let purchaseNeedsReview = false;
 
 
 /* ==========================================
    NETWORK MAP
 ========================================== */
 
-const NETWORK_MAP = Object.freeze({
-    MTN: "mtn",
-    Airtel: "airtel",
-    Glo: "glo",
-    "9mobile": "9mobile"
-});
+const NETWORK_MAP =
+    Object.freeze({
+
+        MTN: "mtn",
+
+        Airtel: "airtel",
+
+        Glo: "glo",
+
+        "9mobile": "9mobile"
+
+    });
 
 
 /* ==========================================
    NETWORK ORDER
 ========================================== */
 
-const NETWORK_ORDER = Object.freeze([
-    "mtn",
-    "airtel",
-    "glo",
-    "9mobile"
-]);
+const NETWORK_ORDER =
+    Object.freeze([
+        "mtn",
+        "airtel",
+        "glo",
+        "9mobile"
+    ]);
 
 
 /* ==========================================
    CATEGORY ORDER
 ========================================== */
 
-const CATEGORY_ORDER = Object.freeze([
-    "Hot",
-    "Daily",
-    "Weekly",
-    "Monthly",
-    "3 Months",
-    "Router",
-    "Social",
-    "Night",
-    "SME",
-    "Other"
-]);
+const CATEGORY_ORDER =
+    Object.freeze([
+        "Hot",
+        "Daily",
+        "Weekly",
+        "Monthly",
+        "3 Months",
+        "Router",
+        "Social",
+        "Night",
+        "SME",
+        "Other"
+    ]);
 
 
 /* ==========================================
@@ -136,20 +172,10 @@ onAuthStateChanged(
 
         currentUser = user;
 
-        try {
-
-            await Promise.all([
-                loadWalletBalance(),
-                loadDataPlans()
-            ]);
-
-        } catch (error) {
-
-            console.error(
-                "Data page initialization error:",
-                error
-            );
-        }
+        await Promise.all([
+            loadWalletBalance(),
+            loadDataPlans()
+        ]);
     }
 );
 
@@ -175,11 +201,13 @@ async function authenticatedFetch(
 
     const headers = {
         "Accept": "application/json",
-        "Authorization": `Bearer ${idToken}`
+        "Authorization":
+            `Bearer ${idToken}`
     };
 
     if (
-        options.body !== undefined
+        options.body &&
+        !(options.body instanceof FormData)
     ) {
 
         headers["Content-Type"] =
@@ -220,7 +248,9 @@ async function readJsonResponse(
     if (
         !contentType
             .toLowerCase()
-            .includes("application/json")
+            .includes(
+                "application/json"
+            )
     ) {
 
         throw new Error(
@@ -238,7 +268,11 @@ async function readJsonResponse(
 
 async function loadWalletBalance() {
 
-    if (balanceLoading) {
+    if (
+        balanceLoading ||
+        !walletBalance
+    ) {
+
         return;
     }
 
@@ -266,7 +300,8 @@ async function loadWalletBalance() {
             response.status === 401
         ) {
 
-            redirectToLogin();
+            window.location.href =
+                "login.html";
 
             return;
         }
@@ -304,7 +339,7 @@ async function loadWalletBalance() {
     } catch (error) {
 
         console.error(
-            "Wallet balance error:",
+            "NovaPay wallet balance error:",
             error
         );
 
@@ -386,6 +421,10 @@ function formatKoboAsNaira(
 
 async function loadDataPlans() {
 
+    if (!plansContainer) {
+        return;
+    }
+
     plansContainer.innerHTML = `
         <div class="plans-loading">
             Loading data plans...
@@ -395,11 +434,13 @@ async function loadDataPlans() {
     try {
 
         /*
-           The Data plans endpoint is protected
-           by the backend.
+           IMPORTANT:
 
-           We therefore authenticate this request
-           with the Firebase user's ID token.
+           /api/data/plans is protected by the
+           NovaPay backend.
+
+           Therefore this MUST use Firebase
+           authentication.
         */
 
         const response =
@@ -419,15 +460,13 @@ async function loadDataPlans() {
             response.status === 401
         ) {
 
-            redirectToLogin();
+            window.location.href =
+                "login.html";
 
             return;
         }
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok) {
 
             throw new Error(
                 result.error ||
@@ -436,6 +475,7 @@ async function loadDataPlans() {
         }
 
         if (
+            !result.success ||
             !Array.isArray(
                 result.plans
             )
@@ -451,16 +491,27 @@ async function loadDataPlans() {
                 isValidPlan
             );
 
-        buildCategoryTabs();
+        if (!allPlans.length) {
+
+            plansContainer.innerHTML = `
+                <div class="plans-empty">
+                    No data plans are currently available.
+                </div>
+            `;
+
+            return;
+        }
+
+        setupCategoryTabs();
+
+        renderPlans();
 
     } catch (error) {
 
         console.error(
-            "Data catalog error:",
+            "NovaPay data catalog error:",
             error
         );
-
-        planTabsContainer.innerHTML = "";
 
         plansContainer.innerHTML = `
             <div class="plans-error">
@@ -481,196 +532,39 @@ function isValidPlan(
 ) {
 
     return Boolean(
+
         plan &&
         typeof plan === "object" &&
 
         typeof plan.planId === "string" &&
-        plan.planId.trim() &&
+        plan.planId.trim() !== "" &&
 
         typeof plan.variationId === "string" &&
-        plan.variationId.trim() &&
+        plan.variationId.trim() !== "" &&
 
         typeof plan.network === "string" &&
         NETWORK_ORDER.includes(
             plan.network
         ) &&
 
-        typeof plan.serviceName === "string" &&
-        plan.serviceName.trim() &&
-
         typeof plan.dataPlan === "string" &&
-        plan.dataPlan.trim() &&
-
-        typeof plan.dataAmount === "string" &&
-        plan.dataAmount.trim() &&
+        plan.dataPlan.trim() !== "" &&
 
         Number.isSafeInteger(
             plan.priceKobo
         ) &&
         plan.priceKobo >= 0 &&
 
+        typeof plan.priceNaira === "number" &&
         Number.isFinite(
             plan.priceNaira
-        ) &&
-        plan.priceNaira >= 0 &&
-
-        (
-            plan.customerPriceKobo === undefined ||
-            (
-                Number.isSafeInteger(
-                    plan.customerPriceKobo
-                ) &&
-                plan.customerPriceKobo >= 0
-            )
         )
     );
 }
 
 
 /* ==========================================
-   BUILD CATEGORY TABS
-========================================== */
-
-function buildCategoryTabs() {
-
-    planTabsContainer.innerHTML = "";
-
-    const categories =
-        getAvailableCategories();
-
-    if (!categories.length) {
-
-        selectedCategory = null;
-
-        plansContainer.innerHTML = `
-            <div class="plans-empty">
-                No data plans are currently available.
-            </div>
-        `;
-
-        return;
-    }
-
-    if (
-        !selectedCategory ||
-        !categories.includes(
-            selectedCategory
-        )
-    ) {
-
-        selectedCategory =
-            categories[0];
-    }
-
-    categories.forEach(
-        category => {
-
-            const tab =
-                document.createElement(
-                    "button"
-                );
-
-            tab.type =
-                "button";
-
-            tab.className =
-                "plan-tab";
-
-            tab.dataset.category =
-                category;
-
-            tab.textContent =
-                category === "Hot"
-                    ? "🔥 Hot"
-                    : category;
-
-            if (
-                category ===
-                selectedCategory
-            ) {
-
-                tab.classList.add(
-                    "active"
-                );
-            }
-
-            tab.addEventListener(
-                "click",
-                () => {
-
-                    if (
-                        purchaseInProgress
-                    ) {
-                        return;
-                    }
-
-                    selectCategory(
-                        category
-                    );
-                }
-            );
-
-            planTabsContainer.appendChild(
-                tab
-            );
-        }
-    );
-
-    renderPlans();
-}
-
-
-/* ==========================================
-   GET AVAILABLE CATEGORIES
-========================================== */
-
-function getAvailableCategories() {
-
-    const categories =
-        new Set();
-
-    allPlans.forEach(
-        plan => {
-
-            if (
-                plan.isHot === true
-            ) {
-
-                categories.add(
-                    "Hot"
-                );
-            }
-
-            const category =
-                normalizeCategory(
-                    plan.category
-                );
-
-            if (category) {
-
-                categories.add(
-                    category
-                );
-            }
-        }
-    );
-
-    return Array.from(
-        categories
-    ).sort(
-        (a, b) =>
-            getCategoryOrder(
-                a
-            ) -
-            getCategoryOrder(
-                b
-            )
-    );
-}
-
-
-/* ==========================================
-   NORMALIZE CATEGORY
+   CATEGORY HELPERS
 ========================================== */
 
 function normalizeCategory(
@@ -681,15 +575,11 @@ function normalizeCategory(
         typeof category !== "string"
     ) {
 
-        return null;
+        return "Other";
     }
 
     const normalized =
         category.trim();
-
-    if (!normalized) {
-        return null;
-    }
 
     const match =
         CATEGORY_ORDER.find(
@@ -703,51 +593,206 @@ function normalizeCategory(
 
 
 /* ==========================================
-   CATEGORY ORDER
+   GET PLAN CATEGORY
 ========================================== */
 
-function getCategoryOrder(
-    category
+function getPlanCategory(
+    plan
 ) {
 
-    const index =
-        CATEGORY_ORDER.indexOf(
-            category
-        );
+    /*
+       Hot is explicitly controlled by the
+       backend's isHot field.
 
-    return index === -1
-        ? CATEGORY_ORDER.length
-        : index;
+       Other categories come from the
+       backend catalog category.
+    */
+
+    if (
+        plan.isHot === true
+    ) {
+
+        return "Hot";
+    }
+
+    return normalizeCategory(
+        plan.category
+    );
 }
 
 
 /* ==========================================
-   SELECT CATEGORY
+   SETUP CATEGORY TABS
 ========================================== */
 
-function selectCategory(
-    category
-) {
+function setupCategoryTabs() {
 
-    selectedCategory =
-        category;
+    if (!categoryTabs.length) {
+        return;
+    }
 
-    document
-        .querySelectorAll(
-            ".plan-tab"
+    categoryTabs.forEach(
+        tab => {
+
+            const label =
+                getTabLabel(tab);
+
+            const matchingCategory =
+                findCategoryForTab(
+                    label
+                );
+
+            if (!matchingCategory) {
+
+                tab.style.display =
+                    "none";
+
+                return;
+            }
+
+            tab.style.display =
+                "";
+
+            tab.dataset.category =
+                matchingCategory;
+
+            tab.classList.toggle(
+                "active",
+                matchingCategory ===
+                selectedCategory
+            );
+
+            tab.onclick = () => {
+
+                if (
+                    purchaseInProgress
+                ) {
+
+                    return;
+                }
+
+                selectedCategory =
+                    matchingCategory;
+
+                categoryTabs.forEach(
+                    item => {
+
+                        item.classList.toggle(
+                            "active",
+                            item.dataset.category ===
+                            selectedCategory
+                        );
+                    }
+                );
+
+                renderPlans();
+            };
+        }
+    );
+
+    /*
+       If Hot does not contain any plans,
+       automatically select the first
+       category that actually exists.
+    */
+
+    const availableCategories =
+        getAvailableCategories();
+
+    if (
+        !availableCategories.includes(
+            selectedCategory
         )
-        .forEach(
+    ) {
+
+        selectedCategory =
+            availableCategories[0] ||
+            "Other";
+
+        categoryTabs.forEach(
             tab => {
 
                 tab.classList.toggle(
                     "active",
                     tab.dataset.category ===
-                    category
+                    selectedCategory
                 );
             }
         );
+    }
+}
 
-    renderPlans();
+
+/* ==========================================
+   GET TAB LABEL
+========================================== */
+
+function getTabLabel(
+    tab
+) {
+
+    return String(
+        tab.textContent || ""
+    )
+        .replace(
+            "🔥",
+            ""
+        )
+        .trim();
+}
+
+
+/* ==========================================
+   FIND CATEGORY FOR TAB
+========================================== */
+
+function findCategoryForTab(
+    label
+) {
+
+    const normalized =
+        label.toLowerCase();
+
+    const category =
+        CATEGORY_ORDER.find(
+            item =>
+                item.toLowerCase() ===
+                normalized
+        );
+
+    return category || null;
+}
+
+
+/* ==========================================
+   AVAILABLE CATEGORIES
+========================================== */
+
+function getAvailableCategories() {
+
+    const categories =
+        new Set();
+
+    allPlans.forEach(
+        plan => {
+
+            if (
+                plan.availability === false
+            ) {
+
+                return;
+            }
+
+            categories.add(
+                getPlanCategory(plan)
+            );
+        }
+    );
+
+    return CATEGORY_ORDER.filter(
+        category =>
+            categories.has(category)
+    );
 }
 
 
@@ -757,9 +802,13 @@ function selectCategory(
 
 function renderPlans() {
 
-    plansContainer.innerHTML = "";
+    if (!plansContainer) {
+        return;
+    }
 
     selectedPlan = null;
+
+    plansContainer.innerHTML = "";
 
     const plans =
         allPlans
@@ -773,18 +822,27 @@ function renderPlans() {
                     plan.availability !== false
             )
             .filter(
-                matchesSelectedCategory
-            )
-            .sort(
-                comparePlans
+                plan =>
+                    getPlanCategory(plan) ===
+                    selectedCategory
             );
 
     if (!plans.length) {
 
+        /*
+           If the selected frontend tab has
+           no backend plans for this network,
+           show a clean message instead of
+           inventing plans.
+        */
+
         plansContainer.innerHTML = `
             <div class="plans-empty">
-                No data plans are currently available
-                for this selection.
+                No ${escapeHtml(
+                    selectedCategory
+                ).toLowerCase()}
+                data plans are currently available
+                for this network.
             </div>
         `;
 
@@ -796,25 +854,28 @@ function renderPlans() {
 
             const card =
                 document.createElement(
-                    "button"
+                    "div"
                 );
-
-            card.type =
-                "button";
 
             card.className =
                 "plan-card";
 
             card.setAttribute(
-                "aria-label",
-                buildPlanAriaLabel(
-                    plan
-                )
+                "role",
+                "button"
             );
+
+            card.setAttribute(
+                "tabindex",
+                "0"
+            );
+
+            card.dataset.planId =
+                plan.planId;
 
 
             /* ==========================
-               DATA AMOUNT
+               DATA SIZE
             ========================== */
 
             const size =
@@ -826,8 +887,9 @@ function renderPlans() {
                 "plan-size";
 
             size.textContent =
-                plan.dataAmount ||
-                plan.dataPlan;
+                getDisplayDataAmount(
+                    plan
+                );
 
 
             /* ==========================
@@ -843,7 +905,7 @@ function renderPlans() {
                 "plan-validity";
 
             validity.textContent =
-                getPlanValidity(
+                getDisplayValidity(
                     plan
                 );
 
@@ -866,30 +928,22 @@ function renderPlans() {
                 );
 
 
-            card.appendChild(
-                size
-            );
+            card.appendChild(size);
 
-            card.appendChild(
-                validity
-            );
+            card.appendChild(validity);
 
-            card.appendChild(
-                price
-            );
+            card.appendChild(price);
 
 
             /* ==========================
                SELECT PLAN
             ========================== */
 
-            card.addEventListener(
-                "click",
+            const selectPlan =
                 () => {
 
                     if (
-                        purchaseInProgress ||
-                        purchaseNeedsReview
+                        purchaseInProgress
                     ) {
 
                         return;
@@ -912,6 +966,30 @@ function renderPlans() {
 
                     selectedPlan =
                         plan;
+                };
+
+
+            card.addEventListener(
+                "click",
+                selectPlan
+            );
+
+
+            card.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key ===
+                        "Enter" ||
+                        event.key ===
+                        " "
+                    ) {
+
+                        event.preventDefault();
+
+                        selectPlan();
+                    }
                 }
             );
 
@@ -925,107 +1003,40 @@ function renderPlans() {
 
 
 /* ==========================================
-   MATCH CATEGORY
+   DATA AMOUNT DISPLAY
 ========================================== */
 
-function matchesSelectedCategory(
+function getDisplayDataAmount(
     plan
 ) {
 
     if (
-        selectedCategory === "Hot"
+        typeof plan.dataAmount ===
+        "string" &&
+        plan.dataAmount.trim()
     ) {
 
-        return plan.isHot === true;
+        return plan.dataAmount;
     }
-
-    return normalizeCategory(
-        plan.category
-    ) === selectedCategory;
-}
-
-
-/* ==========================================
-   PLAN SORTING
-========================================== */
-
-function comparePlans(
-    a,
-    b
-) {
-
-    const priceA =
-        getCustomerPriceKobo(
-            a
-        );
-
-    const priceB =
-        getCustomerPriceKobo(
-            b
-        );
 
     if (
-        priceA !== priceB
+        typeof plan.dataPlan ===
+        "string" &&
+        plan.dataPlan.trim()
     ) {
 
-        return priceA - priceB;
+        return plan.dataPlan;
     }
 
-    return String(
-        a.planId
-    ).localeCompare(
-        String(
-            b.planId
-        )
-    );
+    return "Data bundle";
 }
 
 
 /* ==========================================
-   CUSTOMER PRICE
+   VALIDITY DISPLAY
 ========================================== */
 
-function getCustomerPriceKobo(
-    plan
-) {
-
-    if (
-        Number.isSafeInteger(
-            plan.customerPriceKobo
-        )
-    ) {
-
-        return plan.customerPriceKobo;
-    }
-
-    return plan.priceKobo;
-}
-
-
-/* ==========================================
-   CUSTOMER PRICE DISPLAY
-========================================== */
-
-function formatPlanPrice(
-    plan
-) {
-
-    const customerPriceKobo =
-        getCustomerPriceKobo(
-            plan
-        );
-
-    return formatKoboAsNaira(
-        customerPriceKobo
-    );
-}
-
-
-/* ==========================================
-   PLAN VALIDITY
-========================================== */
-
-function getPlanValidity(
+function getDisplayValidity(
     plan
 ) {
 
@@ -1041,227 +1052,75 @@ function getPlanValidity(
     if (
         Number.isFinite(
             plan.validityDays
-        ) &&
-        plan.validityDays > 0
+        )
     ) {
 
-        return formatValidityDays(
-            plan.validityDays
-        );
+        const days =
+            Number(
+                plan.validityDays
+            );
+
+        return `${days} ${
+            days === 1
+                ? "day"
+                : "days"
+        }`;
     }
 
-    return "Validity varies";
+    return extractValidity(
+        plan.dataPlan
+    );
 }
 
 
 /* ==========================================
-   FORMAT VALIDITY DAYS
+   PLAN PRICE
 ========================================== */
 
-function formatValidityDays(
-    days
-) {
-
-    if (
-        days === 1
-    ) {
-
-        return "1 Day";
-    }
-
-    if (
-        days < 28
-    ) {
-
-        return `${days} Days`;
-    }
-
-    if (
-        days < 60
-    ) {
-
-        return "Monthly";
-    }
-
-    if (
-        days < 120
-    ) {
-
-        return "3 Months";
-    }
-
-    return `${days} Days`;
-}
-
-
-/* ==========================================
-   PLAN ARIA LABEL
-========================================== */
-
-function buildPlanAriaLabel(
+function formatPlanPrice(
     plan
 ) {
 
-    const amount =
-        plan.dataAmount ||
-        plan.dataPlan ||
-        "Data plan";
+    if (
+        Number.isSafeInteger(
+            plan.customerPriceKobo
+        ) &&
+        plan.customerPriceKobo >= 0
+    ) {
 
-    const validity =
-        getPlanValidity(
-            plan
+        return formatKoboAsNaira(
+            plan.customerPriceKobo
         );
+    }
 
-    const price =
-        formatPlanPrice(
-            plan
-        );
-
-    return `${amount}, ${validity}, ${price}`;
+    return formatKoboAsNaira(
+        plan.priceKobo
+    );
 }
 
 
 /* ==========================================
-   FORMAT KOBO AS NAIRA
+   EXTRACT VALIDITY
 ========================================== */
 
-function formatKoboAsNaira(
-    kobo
+function extractValidity(
+    dataPlan
 ) {
 
-    const naira =
-        kobo / 100;
+    const match =
+        String(
+            dataPlan || ""
+        ).match(
+            /(\d+)\s*(day|days|week|weeks|month|months)/i
+        );
 
-    return `₦${naira.toLocaleString(
-        "en-NG",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    )}`;
+    if (!match) {
+
+        return "";
+    }
+
+    return `${match[1]} ${match[2]}`;
 }
-
-
-/* ==========================================
-   BACK BUTTON
-========================================== */
-
-backBtn.addEventListener(
-    "click",
-    () => {
-
-        history.back();
-    }
-);
-
-
-/* ==========================================
-   BENEFICIARIES
-========================================== */
-
-beneficiaryBtn.addEventListener(
-    "click",
-    () => {
-
-        alert(
-            "Beneficiaries coming soon."
-        );
-    }
-);
-
-
-/* ==========================================
-   REFRESH WALLET
-========================================== */
-
-refreshBalanceBtn.addEventListener(
-    "click",
-    async () => {
-
-        if (
-            balanceLoading ||
-            purchaseInProgress ||
-            purchaseNeedsReview
-        ) {
-
-            return;
-        }
-
-        await loadWalletBalance();
-    }
-);
-
-
-/* ==========================================
-   DATA BALANCE BUTTON
-========================================== */
-
-checkBalanceBtn.addEventListener(
-    "click",
-    () => {
-
-        alert(
-            "Use *323*4# on your phone to check your data balance."
-        );
-    }
-);
-
-
-/* ==========================================
-   NETWORK SELECTION
-========================================== */
-
-networkCards.forEach(
-    card => {
-
-        card.addEventListener(
-            "click",
-            () => {
-
-                if (
-                    purchaseInProgress ||
-                    purchaseNeedsReview
-                ) {
-
-                    return;
-                }
-
-                const displayNetwork =
-                    card.dataset.network;
-
-                const backendNetwork =
-                    NETWORK_MAP[
-                        displayNetwork
-                    ];
-
-                if (!backendNetwork) {
-
-                    alert(
-                        "Unsupported network."
-                    );
-
-                    return;
-                }
-
-                networkCards.forEach(
-                    item =>
-                        item.classList.remove(
-                            "active"
-                        )
-                );
-
-                card.classList.add(
-                    "active"
-                );
-
-                selectedNetwork =
-                    backendNetwork;
-
-                renderPlans();
-            }
-        );
-    }
-);
 
 
 /* ==========================================
@@ -1278,7 +1137,7 @@ function normalizePhoneNumber(
         )
             .trim()
             .replace(
-                /[\s().-]+/g,
+                /[\s\-().]/g,
                 ""
             );
 
@@ -1297,6 +1156,14 @@ function normalizePhoneNumber(
         phone =
             "0" +
             phone.slice(3);
+
+    } else if (
+        /^8\d{10}$/.test(phone)
+    ) {
+
+        phone =
+            "0" +
+            phone;
     }
 
     return phone;
@@ -1327,7 +1194,35 @@ function validatePhoneNumber(
 
 
 /* ==========================================
-   CONTINUE
+   GENERATE PURCHASE REFERENCE
+========================================== */
+
+function createPurchaseReference() {
+
+    if (
+        typeof crypto !==
+        "undefined" &&
+        typeof crypto.randomUUID ===
+        "function"
+    ) {
+
+        return crypto.randomUUID();
+    }
+
+    const timestamp =
+        Date.now().toString(36);
+
+    const random =
+        Math.random()
+            .toString(36)
+            .slice(2, 14);
+
+    return `DATA-${timestamp}-${random}`;
+}
+
+
+/* ==========================================
+   CONTINUE BUTTON
 ========================================== */
 
 continueBtn.addEventListener(
@@ -1337,17 +1232,6 @@ continueBtn.addEventListener(
         if (
             purchaseInProgress
         ) {
-
-            return;
-        }
-
-        if (
-            purchaseNeedsReview
-        ) {
-
-            alert(
-                "We could not confirm the previous purchase. Please check your transaction history before making another purchase."
-            );
 
             return;
         }
@@ -1378,9 +1262,7 @@ continueBtn.addEventListener(
         }
 
         await purchaseData(
-            phoneResult.phone,
-            selectedNetwork,
-            selectedPlan
+            phoneResult.phone
         );
     }
 );
@@ -1391,10 +1273,19 @@ continueBtn.addEventListener(
 ========================================== */
 
 async function purchaseData(
-    phoneNumber,
-    network,
-    plan
+    phoneNumber
 ) {
+
+    if (
+        !selectedPlan
+    ) {
+
+        alert(
+            "Please select a data plan."
+        );
+
+        return;
+    }
 
     purchaseInProgress = true;
 
@@ -1403,20 +1294,36 @@ async function purchaseData(
     );
 
     /*
-       Generate ONE reference for this purchase
-       attempt.
+       Generate the idempotency reference
+       ONCE for this purchase attempt.
 
-       The reference is used by the backend to
-       create an idempotent transaction.
-
-       We do not send price or amount.
+       The same reference must never be
+       regenerated automatically after an
+       ambiguous network error.
     */
 
     const reference =
         createPurchaseReference();
 
-
     try {
+
+        /*
+           IMPORTANT SECURITY RULE:
+
+           Only send customer input and the
+           selected backend plan identity.
+
+           Never send:
+
+           price
+           customerPrice
+           priceKobo
+           provider cost
+           wallet balance
+           profit
+           variation price
+           amount
+        */
 
         const response =
             await authenticatedFetch(
@@ -1425,10 +1332,15 @@ async function purchaseData(
                     method: "POST",
 
                     body: JSON.stringify({
+
                         phoneNumber,
-                        network,
+
+                        network:
+                            selectedNetwork,
+
                         planId:
-                            plan.planId,
+                            selectedPlan.planId,
+
                         reference
                     })
                 }
@@ -1449,7 +1361,12 @@ async function purchaseData(
             response.status === 401
         ) {
 
-            redirectToLogin();
+            alert(
+                "Your session has expired. Please login again."
+            );
+
+            window.location.href =
+                "login.html";
 
             return;
         }
@@ -1466,9 +1383,7 @@ async function purchaseData(
         ) {
 
             alert(
-                buildSuccessMessage(
-                    plan
-                )
+                "Data purchase successful."
             );
 
             selectedPlan = null;
@@ -1515,8 +1430,8 @@ async function purchaseData(
         ========================== */
 
         if (
-            result.status === "failed" ||
-            response.status === 400
+            response.status === 400 ||
+            result.status === "failed"
         ) {
 
             alert(
@@ -1531,6 +1446,10 @@ async function purchaseData(
         }
 
 
+        /* ==========================
+           OTHER SERVER ERROR
+        ========================== */
+
         throw new Error(
             "Data purchase could not be completed."
         );
@@ -1538,26 +1457,24 @@ async function purchaseData(
     } catch (error) {
 
         console.error(
-            "Data purchase request error:",
+            "NovaPay Data purchase error:",
             error
         );
 
         /*
-           A network/client failure after sending a
-           purchase request can mean that the backend
-           completed the purchase but the browser did
-           not receive the response.
+           CRITICAL:
 
-           Therefore we MUST NOT automatically retry.
+           If the request may have reached
+           the backend but the browser cannot
+           determine the response, NEVER
+           automatically retry.
 
-           The user must check transaction history
-           before attempting another purchase.
+           The backend reference has already
+           been generated for this attempt.
         */
 
-        purchaseNeedsReview = true;
-
         alert(
-            "We could not confirm the result of your data purchase. Please check your transaction history before trying again."
+            "We could not confirm the purchase status. Please check your transaction history before trying again."
         );
 
     } finally {
@@ -1567,62 +1484,7 @@ async function purchaseData(
         setPurchaseButtonState(
             false
         );
-
-        if (
-            purchaseNeedsReview
-        ) {
-
-            continueBtn.disabled =
-                true;
-
-            continueBtn.textContent =
-                "Check Transaction History";
-        }
     }
-}
-
-
-/* ==========================================
-   CREATE PURCHASE REFERENCE
-========================================== */
-
-function createPurchaseReference() {
-
-    if (
-        typeof crypto !== "undefined" &&
-        typeof crypto.randomUUID ===
-            "function"
-    ) {
-
-        return `DATA_${crypto.randomUUID()}`;
-    }
-
-    const timestamp =
-        Date.now()
-            .toString(36);
-
-    const randomPart =
-        Math.random()
-            .toString(36)
-            .slice(2, 14);
-
-    return `DATA_${timestamp}_${randomPart}`;
-}
-
-
-/* ==========================================
-   SUCCESS MESSAGE
-========================================== */
-
-function buildSuccessMessage(
-    plan
-) {
-
-    const amount =
-        plan.dataAmount ||
-        plan.dataPlan;
-
-    return `${amount} data purchase successful.`;
 }
 
 
@@ -1634,44 +1496,34 @@ function getSafePurchaseError(
     result
 ) {
 
-    const allowedMessages =
-        new Set([
-            "Invalid network.",
-            "Invalid phone number.",
-            "Invalid plan.",
-            "Data plan is unavailable.",
-            "Insufficient wallet balance.",
-            "Data purchase failed.",
-            "Data purchase is already in progress.",
-            "Data purchase is being processed.",
-            "Data purchase is temporarily unavailable.",
-            "Please try again later."
-        ]);
-
-    const message =
+    const error =
         typeof result?.error ===
         "string"
             ? result.error.trim()
             : "";
 
+    const safeMessages =
+        new Set([
+            "Invalid phone number.",
+            "Enter a valid Nigerian phone number.",
+            "Invalid network.",
+            "Unsupported network.",
+            "Invalid data plan.",
+            "Data plan is not available.",
+            "Insufficient wallet balance.",
+            "Please select a data plan.",
+            "Please enter a valid Nigerian phone number.",
+            "A purchase with this reference already exists.",
+            "Data purchase failed.",
+            "Data service is temporarily unavailable. Please try again later.",
+            "Data provider is temporarily unavailable. Please try again later."
+        ]);
+
     if (
-        allowedMessages.has(
-            message
-        )
+        safeMessages.has(error)
     ) {
 
-        return message;
-    }
-
-    if (
-        message
-            .toLowerCase()
-            .includes(
-                "insufficient wallet"
-            )
-    ) {
-
-        return "Insufficient wallet balance.";
+        return error;
     }
 
     return "Data purchase failed. Please try again.";
@@ -1679,20 +1531,31 @@ function getSafePurchaseError(
 
 
 /* ==========================================
-   PURCHASE BUTTON STATE
+   BUTTON STATE
 ========================================== */
 
 function setPurchaseButtonState(
     processing
 ) {
 
+    if (!continueBtn) {
+        return;
+    }
+
     continueBtn.disabled =
         processing;
 
     if (processing) {
 
-        continueBtn.dataset.originalText =
-            continueBtn.textContent;
+        if (
+            !continueBtn.dataset
+                .originalText
+        ) {
+
+            continueBtn.dataset
+                .originalText =
+                continueBtn.textContent;
+        }
 
         continueBtn.textContent =
             "Processing...";
@@ -1700,27 +1563,135 @@ function setPurchaseButtonState(
     } else {
 
         continueBtn.textContent =
-            continueBtn.dataset.originalText ||
+            continueBtn.dataset
+                .originalText ||
             "Continue";
     }
 }
 
 
 /* ==========================================
-   REDIRECT TO LOGIN
+   BACK BUTTON
 ========================================== */
 
-function redirectToLogin() {
+backBtn.addEventListener(
+    "click",
+    () => {
 
-    currentUser = null;
-
-    window.location.href =
-        "login.html";
-}
+        history.back();
+    }
+);
 
 
 /* ==========================================
-   INITIAL NETWORK STATE
+   BENEFICIARIES
+========================================== */
+
+beneficiaryBtn.addEventListener(
+    "click",
+    () => {
+
+        alert(
+            "Beneficiaries coming soon."
+        );
+    }
+);
+
+
+/* ==========================================
+   REFRESH WALLET
+========================================== */
+
+refreshBalanceBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (
+            balanceLoading ||
+            purchaseInProgress
+        ) {
+
+            return;
+        }
+
+        await loadWalletBalance();
+    }
+);
+
+
+/* ==========================================
+   DATA BALANCE
+========================================== */
+
+checkBalanceBtn.addEventListener(
+    "click",
+    () => {
+
+        alert(
+            "Use *323*4# on your phone to check your data balance."
+        );
+    }
+);
+
+
+/* ==========================================
+   NETWORK SELECTION
+========================================== */
+
+networkCards.forEach(
+    card => {
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    purchaseInProgress
+                ) {
+
+                    return;
+                }
+
+                const displayNetwork =
+                    card.dataset.network;
+
+                const backendNetwork =
+                    NETWORK_MAP[
+                        displayNetwork
+                    ];
+
+                if (!backendNetwork) {
+
+                    alert(
+                        "Unsupported network."
+                    );
+
+                    return;
+                }
+
+                networkCards.forEach(
+                    item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                );
+
+                card.classList.add(
+                    "active"
+                );
+
+                selectedNetwork =
+                    backendNetwork;
+
+                renderPlans();
+            }
+        );
+    }
+);
+
+
+/* ==========================================
+   INITIAL NETWORK
 ========================================== */
 
 networkCards.forEach(
@@ -1734,23 +1705,47 @@ networkCards.forEach(
                 displayNetwork
             ];
 
-        if (
+        card.classList.toggle(
+            "active",
             backendNetwork ===
             selectedNetwork
-        ) {
-
-            card.classList.add(
-                "active"
-            );
-
-        } else {
-
-            card.classList.remove(
-                "active"
-            );
-        }
+        );
     }
 );
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
 
 
 /* ==========================================
@@ -1758,5 +1753,5 @@ networkCards.forEach(
 ========================================== */
 
 console.log(
-    "NovaPay Data frontend connected to backend-authoritative catalog."
+    "NovaPay Data frontend connected."
 );
