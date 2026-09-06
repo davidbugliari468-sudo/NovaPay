@@ -88,7 +88,7 @@ for (
 
 let currentUser = null;
 
-let selectedNetwork = "mtn";
+let selectedNetwork = "1";
 
 let selectedPlan = null;
 
@@ -108,13 +108,13 @@ let balanceLoading = false;
 const NETWORK_MAP =
     Object.freeze({
 
-        MTN: "mtn",
+        MTN: "1",
 
-        Airtel: "airtel",
+        Airtel: "3",
 
-        Glo: "glo",
+        Glo: "2",
 
-        "9mobile": "9mobile"
+        "9mobile": "4"
 
     });
 
@@ -125,11 +125,29 @@ const NETWORK_MAP =
 
 const NETWORK_ORDER =
     Object.freeze([
-        "mtn",
-        "airtel",
-        "glo",
-        "9mobile"
+        "1",
+        "3",
+        "2",
+        "4"
     ]);
+
+
+/* ==========================================
+   NETWORK DISPLAY NAMES
+========================================== */
+
+const NETWORK_NAMES =
+    Object.freeze({
+
+        "1": "MTN",
+
+        "2": "GLO",
+
+        "3": "Airtel",
+
+        "4": "9mobile"
+
+    });
 
 
 /* ==========================================
@@ -147,8 +165,7 @@ const CATEGORY_ORDER =
         "Router",
         "Social",
         "Night",
-        "SME",
-        "Other"
+        "SME"
     ]);
 
 
@@ -464,8 +481,21 @@ async function loadDataPlans() {
             );
         }
 
+        /*
+           The new backend returns:
+
+           {
+               ok: true,
+               plans: [...]
+           }
+
+           The old frontend expected
+           result.success, which is no
+           longer the backend contract.
+        */
+
         if (
-            !result.success ||
+            result.ok !== true ||
             !Array.isArray(
                 result.plans
             )
@@ -488,6 +518,8 @@ async function loadDataPlans() {
                     No data plans are currently available.
                 </div>
             `;
+
+            updateCategoryTabVisibility();
 
             return;
         }
@@ -538,17 +570,9 @@ function isValidPlan(
     }
 
     if (
-        typeof plan.variationId !== "string" ||
-        !plan.variationId.trim()
-    ) {
-
-        return false;
-    }
-
-    if (
-        typeof plan.network !== "string" ||
+        typeof plan.networkId !== "string" ||
         !NETWORK_ORDER.includes(
-            plan.network
+            plan.networkId
         )
     ) {
 
@@ -556,8 +580,32 @@ function isValidPlan(
     }
 
     if (
-        typeof plan.dataPlan !== "string" ||
-        !plan.dataPlan.trim()
+        typeof plan.networkName !== "string" ||
+        !plan.networkName.trim()
+    ) {
+
+        return false;
+    }
+
+    if (
+        typeof plan.planName !== "string" ||
+        !plan.planName.trim()
+    ) {
+
+        return false;
+    }
+
+    if (
+        typeof plan.planType !== "string" ||
+        !plan.planType.trim()
+    ) {
+
+        return false;
+    }
+
+    if (
+        typeof plan.validity !== "string" ||
+        !plan.validity.trim()
     ) {
 
         return false;
@@ -577,30 +625,15 @@ function isValidPlan(
         typeof plan.priceNaira !== "number" ||
         !Number.isFinite(
             plan.priceNaira
-        )
+        ) ||
+        plan.priceNaira < 0
     ) {
 
         return false;
     }
 
     if (
-        plan.customerPriceKobo !== undefined &&
-        (
-            !Number.isSafeInteger(
-                plan.customerPriceKobo
-            ) ||
-            plan.customerPriceKobo < 0
-        )
-    ) {
-
-        return false;
-    }
-
-    if (
-        plan.categories !== undefined &&
-        !Array.isArray(
-            plan.categories
-        )
+        plan.status !== "active"
     ) {
 
         return false;
@@ -611,7 +644,185 @@ function isValidPlan(
 
 
 /* ==========================================
-   NORMALIZE PLAN CATEGORIES
+   GET CUSTOMER PRICE
+========================================== */
+
+function getCustomerPriceKobo(
+    plan
+) {
+
+    return plan.priceKobo;
+}
+
+
+/* ==========================================
+   DATA AMOUNT EXTRACTION
+========================================== */
+
+function getDataMegabytes(
+    plan
+) {
+
+    const text =
+        String(
+            plan.planName || ""
+        )
+            .toLowerCase();
+
+    const match =
+        text.match(
+            /([\d.]+)\s*(gb|mb)/
+        );
+
+    if (!match) {
+
+        return 0;
+    }
+
+    const value =
+        Number(
+            match[1]
+        );
+
+    if (
+        !Number.isFinite(
+            value
+        )
+    ) {
+
+        return 0;
+    }
+
+    if (
+        match[2] === "gb"
+    ) {
+
+        return value * 1024;
+    }
+
+    return value;
+}
+
+
+/* ==========================================
+   DISPLAY DATA AMOUNT
+========================================== */
+
+function getDisplayDataAmount(
+    plan
+) {
+
+    const text =
+        String(
+            plan.planName || ""
+        ).trim();
+
+    const match =
+        text.match(
+            /([\d.]+\s*(?:GB|MB))/i
+        );
+
+    if (match) {
+
+        return match[1];
+    }
+
+    return text || "Data bundle";
+}
+
+
+/* ==========================================
+   DISPLAY VALIDITY
+========================================== */
+
+function getDisplayValidity(
+    plan
+) {
+
+    return String(
+        plan.validity || ""
+    ).trim();
+}
+
+
+/* ==========================================
+   PLAN PRICE
+========================================== */
+
+function formatPlanPrice(
+    plan
+) {
+
+    return formatKoboAsNaira(
+        getCustomerPriceKobo(
+            plan
+        )
+    );
+}
+
+
+/* ==========================================
+   PARSE VALIDITY DAYS
+========================================== */
+
+function getValidityDays(
+    plan
+) {
+
+    const validity =
+        String(
+            plan.validity || ""
+        )
+            .trim()
+            .toLowerCase();
+
+    const match =
+        validity.match(
+            /(\d+(?:\.\d+)?)\s*(day|days|week|weeks|month|months)/
+        );
+
+    if (!match) {
+
+        return 0;
+    }
+
+    const value =
+        Number(
+            match[1]
+        );
+
+    if (
+        !Number.isFinite(
+            value
+        )
+    ) {
+
+        return 0;
+    }
+
+    const unit =
+        match[2];
+
+    if (
+        unit === "day" ||
+        unit === "days"
+    ) {
+
+        return value;
+    }
+
+    if (
+        unit === "week" ||
+        unit === "weeks"
+    ) {
+
+        return value * 7;
+    }
+
+    return value * 30;
+} 
+/* ==========================================
+   CATEGORY HELPERS
 ========================================== */
 
 function getPlanCategories(
@@ -621,95 +832,151 @@ function getPlanCategories(
     const categories =
         new Set();
 
-    /*
-       New backend format:
+    const validityDays =
+        getValidityDays(
+            plan
+        );
 
-       categories: [
-           "Hot",
-           "Daily",
-           "Extra Value"
-       ]
-    */
+    const planType =
+        String(
+            plan.planType || ""
+        )
+            .trim()
+            .toLowerCase();
+
+    const planName =
+        String(
+            plan.planName || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    /* ==========================
+       REAL PLAN TYPE
+    ========================== */
 
     if (
-        Array.isArray(
-            plan.categories
+        planType === "sme"
+    ) {
+
+        categories.add(
+            "SME"
+        );
+    }
+
+
+    /* ==========================
+       VALIDITY CATEGORIES
+    ========================== */
+
+    if (
+        validityDays > 0 &&
+        validityDays <= 3
+    ) {
+
+        categories.add(
+            "Daily"
+        );
+    }
+
+    if (
+        validityDays >= 4 &&
+        validityDays <= 14
+    ) {
+
+        categories.add(
+            "Weekly"
+        );
+    }
+
+    if (
+        validityDays >= 15 &&
+        validityDays <= 45
+    ) {
+
+        categories.add(
+            "Monthly"
+        );
+    }
+
+    if (
+        validityDays >= 60 &&
+        validityDays <= 120
+    ) {
+
+        categories.add(
+            "3 Months"
+        );
+    }
+
+
+    /* ==========================
+       EXPLICIT NAME CATEGORIES
+    ========================== */
+
+    if (
+        /\brouter\b/i.test(
+            planName
         )
     ) {
 
-        plan.categories.forEach(
-            category => {
-
-                const normalized =
-                    normalizeCategory(
-                        category
-                    );
-
-                if (
-                    normalized !== "Other"
-                ) {
-
-                    categories.add(
-                        normalized
-                    );
-                }
-            }
+        categories.add(
+            "Router"
         );
     }
 
-
-    /*
-       Backward compatibility with
-       the previous single category field.
-    */
-
     if (
-        typeof plan.category ===
-        "string"
-    ) {
-
-        const normalized =
-            normalizeCategory(
-                plan.category
-            );
-
-        if (
-            normalized !== "Other"
-        ) {
-
-            categories.add(
-                normalized
-            );
-        }
-    }
-
-
-    /*
-       Backward compatibility with
-       the previous isHot field.
-    */
-
-    if (
-        plan.isHot === true
+        /\bsocial\b/i.test(
+            planName
+        )
     ) {
 
         categories.add(
-            "Hot"
+            "Social"
+        );
+    }
+
+    if (
+        /\bnight\b/i.test(
+            planName
+        )
+    ) {
+
+        categories.add(
+            "Night"
         );
     }
 
 
     /*
-       If the backend provided no
-       recognized category, use Other.
+       "Hot" is a NovaPay merchandising
+       category, not a claim that BabsPay
+       labels the plan as "Hot".
+
+       We assign Hot later to the cheapest
+       real plans for the selected network.
     */
 
-    if (!categories.size) {
+
+    /*
+       Extra Value is based on actual
+       data quantity relative to customer
+       price, not a fabricated provider
+       product.
+    */
+
+    if (
+        isExtraValuePlan(
+            plan
+        )
+    ) {
 
         categories.add(
-            "Other"
+            "Extra Value"
         );
     }
+
 
     return Array.from(
         categories
@@ -718,7 +985,100 @@ function getPlanCategories(
 
 
 /* ==========================================
-   CATEGORY HELPERS
+   EXTRA VALUE
+========================================== */
+
+function isExtraValuePlan(
+    plan
+) {
+
+    const megabytes =
+        getDataMegabytes(
+            plan
+        );
+
+    const priceKobo =
+        getCustomerPriceKobo(
+            plan
+        );
+
+    if (
+        megabytes <= 0 ||
+        !Number.isSafeInteger(
+            priceKobo
+        ) ||
+        priceKobo <= 0
+    ) {
+
+        return false;
+    }
+
+    /*
+       This is only a relative
+       merchandising calculation.
+       It never changes the provider
+       product or price.
+    */
+
+    const naira =
+        priceKobo / 100;
+
+    const mbPerNaira =
+        megabytes / naira;
+
+    return mbPerNaira >= 8;
+}
+
+
+/* ==========================================
+   HOT PLANS
+========================================== */
+
+function getHotPlans(
+    plans
+) {
+
+    const sorted =
+        [...plans].sort(
+            (a, b) => {
+
+                const priceDifference =
+                    getCustomerPriceKobo(a) -
+                    getCustomerPriceKobo(b);
+
+                if (
+                    priceDifference !== 0
+                ) {
+
+                    return priceDifference;
+                }
+
+                return getDataMegabytes(b) -
+                    getDataMegabytes(a);
+            }
+        );
+
+    /*
+       Hot is deliberately limited to
+       real plans already returned by
+       BabsPay.
+
+       No new product is invented.
+    */
+
+    return new Set(
+        sorted
+            .slice(0, 6)
+            .map(
+                plan =>
+                    plan.planId
+            )
+    );
+}
+
+
+/* ==========================================
+   NORMALIZE CATEGORY
 ========================================== */
 
 function normalizeCategory(
@@ -729,20 +1089,21 @@ function normalizeCategory(
         typeof category !== "string"
     ) {
 
-        return "Other";
+        return null;
     }
 
     const normalized =
-        category.trim();
+        category
+            .trim()
+            .toLowerCase();
 
-    const match =
+    return (
         CATEGORY_ORDER.find(
             item =>
                 item.toLowerCase() ===
-                normalized.toLowerCase()
-        );
-
-    return match || "Other";
+                normalized
+        ) || null
+    );
 }
 
 
@@ -760,10 +1121,89 @@ function planBelongsToCategory(
             category
         );
 
+    if (!normalizedCategory) {
+
+        return false;
+    }
+
+    if (
+        normalizedCategory === "Hot"
+    ) {
+
+        return Boolean(
+            plan._isHot
+        );
+    }
+
     return getPlanCategories(
         plan
     ).includes(
         normalizedCategory
+    );
+}
+
+
+/* ==========================================
+   GET AVAILABLE CATEGORIES
+========================================== */
+
+function getAvailableCategoriesForNetwork() {
+
+    const networkPlans =
+        allPlans.filter(
+            plan =>
+                plan.networkId ===
+                selectedNetwork
+        );
+
+    if (!networkPlans.length) {
+
+        return [];
+    }
+
+    const categories =
+        new Set();
+
+    networkPlans.forEach(
+        plan => {
+
+            getPlanCategories(
+                plan
+            ).forEach(
+                category => {
+
+                    categories.add(
+                        category
+                    );
+                }
+            );
+        }
+    );
+
+
+    /*
+       Hot is always based on actual
+       available plans.
+    */
+
+    if (
+        networkPlans.some(
+            plan =>
+                plan._isHot
+        )
+    ) {
+
+        categories.add(
+            "Hot"
+        );
+    }
+
+
+    return CATEGORY_ORDER.filter(
+        category =>
+            categories.has(
+                category
+            )
     );
 }
 
@@ -775,17 +1215,50 @@ function planBelongsToCategory(
 function setupCategoryTabs() {
 
     if (!categoryTabs.length) {
+
         return;
     }
 
+    const networkPlans =
+        allPlans.filter(
+            plan =>
+                plan.networkId ===
+                selectedNetwork
+        );
+
+    const hotPlanIds =
+        getHotPlans(
+            networkPlans
+        );
+
+    /*
+       Store Hot internally on the
+       already-loaded real provider
+       plans.
+    */
+
+    allPlans =
+        allPlans.map(
+            plan => ({
+                ...plan,
+                _isHot:
+                    hotPlanIds.has(
+                        plan.planId
+                    )
+            })
+        );
+
+
     const availableCategories =
-        getAvailableCategories();
+        getAvailableCategoriesForNetwork();
 
     categoryTabs.forEach(
         tab => {
 
             const label =
-                getTabLabel(tab);
+                getTabLabel(
+                    tab
+                );
 
             const matchingCategory =
                 findCategoryForTab(
@@ -799,13 +1272,6 @@ function setupCategoryTabs() {
 
                 return;
             }
-
-            /*
-               Only show a tab when at least
-               one real backend plan belongs
-               to that category somewhere
-               in the catalog.
-            */
 
             const categoryExists =
                 availableCategories.includes(
@@ -854,7 +1320,9 @@ function setupCategoryTabs() {
                         item.classList.toggle(
                             "active",
                             item.dataset.category ===
-                            selectedCategory
+                            selectedCategory &&
+                            item.style.display !==
+                            "none"
                         );
                     }
                 );
@@ -865,12 +1333,6 @@ function setupCategoryTabs() {
     );
 
 
-    /*
-       Keep the current category when it
-       exists. Otherwise select the first
-       category with real plans.
-    */
-
     if (
         !availableCategories.includes(
             selectedCategory
@@ -879,7 +1341,7 @@ function setupCategoryTabs() {
 
         selectedCategory =
             availableCategories[0] ||
-            "Other";
+            "Hot";
     }
 
 
@@ -932,60 +1394,68 @@ function findCategoryForTab(
             .trim()
             .toLowerCase();
 
-    const category =
+    return (
         CATEGORY_ORDER.find(
             item =>
                 item.toLowerCase() ===
                 normalized
-        );
-
-    return category || null;
+        ) || null
+    );
 }
 
 
 /* ==========================================
-   AVAILABLE CATEGORIES
+   UPDATE CATEGORY VISIBILITY
 ========================================== */
 
-function getAvailableCategories() {
+function updateCategoryTabVisibility() {
 
-    const categories =
-        new Set();
+    const availableCategories =
+        getAvailableCategoriesForNetwork();
 
-    allPlans.forEach(
-        plan => {
+    categoryTabs.forEach(
+        tab => {
 
-            if (
-                plan.availability === false
-            ) {
+            const category =
+                tab.dataset.category ||
+                findCategoryForTab(
+                    getTabLabel(tab)
+                );
+
+            if (!category) {
+
+                tab.style.display =
+                    "none";
 
                 return;
             }
 
-            getPlanCategories(
-                plan
-            ).forEach(
-                category => {
+            const available =
+                availableCategories.includes(
+                    category
+                );
 
-                    categories.add(
-                        category
-                    );
-                }
+            tab.style.display =
+                available
+                    ? ""
+                    : "none";
+
+            tab.dataset.category =
+                category;
+
+            tab.classList.toggle(
+                "active",
+                available &&
+                category ===
+                selectedCategory
             );
         }
-    );
-
-    return CATEGORY_ORDER.filter(
-        category =>
-            categories.has(
-                category
-            )
     );
 }
 
 
 /* ==========================================
-   GET PLANS FOR CURRENT CATEGORY
+   GET PLANS FOR CURRENT SELECTION
 ========================================== */
 
 function getPlansForCurrentSelection() {
@@ -993,12 +1463,13 @@ function getPlansForCurrentSelection() {
     return allPlans
         .filter(
             plan =>
-                plan.network ===
+                plan.networkId ===
                 selectedNetwork
         )
         .filter(
             plan =>
-                plan.availability !== false
+                plan.status ===
+                "active"
         )
         .filter(
             plan =>
@@ -1017,6 +1488,7 @@ function getPlansForCurrentSelection() {
 function renderPlans() {
 
     if (!plansContainer) {
+
         return;
     }
 
@@ -1043,15 +1515,6 @@ function renderPlans() {
     }
 
 
-    /*
-       Sort plans by customer price first,
-       then by data amount when available.
-
-       This keeps affordable options near
-       the top without changing the
-       provider's actual product identity.
-    */
-
     const sortedPlans =
         [...plans].sort(
             (a, b) => {
@@ -1074,18 +1537,8 @@ function renderPlans() {
                         priceB;
                 }
 
-                const dataA =
-                    getDataMegabytes(
-                        a
-                    );
-
-                const dataB =
-                    getDataMegabytes(
-                        b
-                    );
-
-                return dataB -
-                    dataA;
+                return getDataMegabytes(b) -
+                    getDataMegabytes(a);
             }
         );
 
@@ -1109,6 +1562,11 @@ function renderPlans() {
             card.setAttribute(
                 "tabindex",
                 "0"
+            );
+
+            card.setAttribute(
+                "aria-label",
+                `${getDisplayDataAmount(plan)} ${getDisplayValidity(plan)} ${formatPlanPrice(plan)}`
             );
 
             card.dataset.planId =
@@ -1246,202 +1704,7 @@ function renderPlans() {
             );
         }
     );
-}
-
-
-/* ==========================================
-   GET CUSTOMER PRICE
-========================================== */
-
-function getCustomerPriceKobo(
-    plan
-) {
-
-    if (
-        Number.isSafeInteger(
-            plan.customerPriceKobo
-        ) &&
-        plan.customerPriceKobo >= 0
-    ) {
-
-        return plan.customerPriceKobo;
-    }
-
-    return plan.priceKobo;
-}
-
-
-/* ==========================================
-   DATA AMOUNT DISPLAY
-========================================== */
-
-function getDisplayDataAmount(
-    plan
-) {
-
-    if (
-        typeof plan.dataAmount ===
-        "string" &&
-        plan.dataAmount.trim()
-    ) {
-
-        return plan.dataAmount;
-    }
-
-    if (
-        typeof plan.dataPlan ===
-        "string" &&
-        plan.dataPlan.trim()
-    ) {
-
-        return plan.dataPlan;
-    }
-
-    return "Data bundle";
-}
-
-
-/* ==========================================
-   DATA AMOUNT FOR SORTING
-========================================== */
-
-function getDataMegabytes(
-    plan
-) {
-
-    if (
-        Number.isFinite(
-            plan.dataMegabytes
-        )
-    ) {
-
-        return Number(
-            plan.dataMegabytes
-        );
-    }
-
-    const text =
-        String(
-            plan.dataPlan || ""
-        )
-            .toLowerCase();
-
-    const match =
-        text.match(
-            /([\d.]+)\s*(gb|mb)/
-        );
-
-    if (!match) {
-
-        return 0;
-    }
-
-    const value =
-        Number(
-            match[1]
-        );
-
-    if (
-        !Number.isFinite(
-            value
-        )
-    ) {
-
-        return 0;
-    }
-
-    if (
-        match[2] === "gb"
-    ) {
-
-        return value * 1024;
-    }
-
-    return value;
-}
-
-
-/* ==========================================
-   VALIDITY DISPLAY
-========================================== */
-
-function getDisplayValidity(
-    plan
-) {
-
-    if (
-        typeof plan.validityLabel ===
-        "string" &&
-        plan.validityLabel.trim()
-    ) {
-
-        return plan.validityLabel;
-    }
-
-    if (
-        Number.isFinite(
-            plan.validityDays
-        )
-    ) {
-
-        const days =
-            Number(
-                plan.validityDays
-            );
-
-        return `${days} ${
-            days === 1
-                ? "day"
-                : "days"
-        }`;
-    }
-
-    return extractValidity(
-        plan.dataPlan
-    );
-}
-
-
-/* ==========================================
-   PLAN PRICE
-========================================== */
-
-function formatPlanPrice(
-    plan
-) {
-
-    return formatKoboAsNaira(
-        getCustomerPriceKobo(
-            plan
-        )
-    );
-}
-
-
-/* ==========================================
-   EXTRACT VALIDITY
-========================================== */
-
-function extractValidity(
-    dataPlan
-) {
-
-    const match =
-        String(
-            dataPlan || ""
-        ).match(
-            /(\d+(?:\.\d+)?)\s*(day|days|week|weeks|month|months)/i
-        );
-
-    if (!match) {
-
-        return "";
-    }
-
-    return `${match[1]} ${match[2]}`;
-}
-
-
+} 
 /* ==========================================
    PHONE NORMALIZATION
 ========================================== */
@@ -1477,7 +1740,9 @@ function normalizePhoneNumber(
             phone.slice(3);
 
     } else if (
-        /^8\d{10}$/.test(phone)
+        /^8\d{10}$/.test(
+            phone
+        )
     ) {
 
         phone =
@@ -1513,7 +1778,7 @@ function validatePhoneNumber(
 
 
 /* ==========================================
-   GENERATE PURCHASE REFERENCE
+   PURCHASE REFERENCE
 ========================================== */
 
 function createPurchaseReference() {
@@ -1595,9 +1860,7 @@ async function purchaseData(
     phoneNumber
 ) {
 
-    if (
-        !selectedPlan
-    ) {
+    if (!selectedPlan) {
 
         alert(
             "Please select a data plan."
@@ -1614,31 +1877,18 @@ async function purchaseData(
 
 
     /*
-       Generate one reference for this
+       One reference belongs to this
        purchase attempt.
 
-       Never silently regenerate a new
-       reference after an ambiguous error.
+       Never automatically create a
+       second reference after an
+       ambiguous response.
     */
 
     const reference =
         createPurchaseReference();
 
     try {
-
-        /*
-           Only send data required by the
-           backend.
-
-           The client never controls:
-
-           - price
-           - amount
-           - provider cost
-           - wallet balance
-           - profit
-           - reseller price
-        */
 
         const response =
             await authenticatedFetch(
@@ -1651,7 +1901,7 @@ async function purchaseData(
                         phoneNumber,
 
                         network:
-                            selectedNetwork,
+                            selectedPlan.networkId,
 
                         planId:
                             selectedPlan.planId,
@@ -1692,8 +1942,8 @@ async function purchaseData(
         ========================== */
 
         if (
-            response.status === 200 &&
-            result.success &&
+            response.ok &&
+            result.ok === true &&
             result.status === "successful"
         ) {
 
@@ -1701,7 +1951,8 @@ async function purchaseData(
                 "Data purchase successful."
             );
 
-            selectedPlan = null;
+            selectedPlan =
+                null;
 
             document
                 .querySelectorAll(
@@ -1746,7 +1997,8 @@ async function purchaseData(
 
         if (
             response.status === 400 ||
-            result.status === "failed"
+            result.status === "failed" ||
+            result.ok === false
         ) {
 
             alert(
@@ -1777,13 +2029,13 @@ async function purchaseData(
         );
 
         /*
-           If the request may have reached
-           the backend but the browser cannot
-           determine the response, never
-           automatically retry.
+           If the browser cannot establish
+           what happened, never retry
+           automatically.
 
-           The customer must check history
-           before making another attempt.
+           The backend may already have
+           created a reservation or sent the
+           provider request.
         */
 
         alert(
@@ -1817,23 +2069,33 @@ function getSafePurchaseError(
 
     const safeMessages =
         new Set([
+            "Invalid Data purchase information.",
+            "Invalid Data plan filter",
             "Invalid phone number.",
             "Enter a valid Nigerian phone number.",
             "Invalid network.",
             "Unsupported network.",
             "Invalid data plan.",
             "Data plan is not available.",
+            "The selected Data plan is no longer available. Please refresh and try again.",
+            "Selected Data plan is no longer available",
+            "Selected Data plan does not match the network",
+            "Selected Data plan is invalid",
+            "Insufficient wallet balance",
             "Insufficient wallet balance.",
             "Please select a data plan.",
             "Please enter a valid Nigerian phone number.",
             "A purchase with this reference already exists.",
             "Data purchase failed.",
-            "Data service is temporarily unavailable. Please try again later.",
-            "Data provider is temporarily unavailable. Please try again later."
+            "Data purchase could not be completed.",
+            "Data service is temporarily unavailable.",
+            "Data service is temporarily busy."
         ]);
 
     if (
-        safeMessages.has(error)
+        safeMessages.has(
+            error
+        )
     ) {
 
         return error;
@@ -1852,6 +2114,7 @@ function setPurchaseButtonState(
 ) {
 
     if (!continueBtn) {
+
         return;
     }
 
@@ -1996,15 +2259,6 @@ networkCards.forEach(
                 selectedNetwork =
                     backendNetwork;
 
-                /*
-                   Re-evaluate categories for
-                   the newly selected network.
-
-                   This prevents the user from
-                   staying on a category that has
-                   no products for that network.
-                */
-
                 const networkCategories =
                     getAvailableCategoriesForNetwork();
 
@@ -2016,7 +2270,7 @@ networkCards.forEach(
 
                     selectedCategory =
                         networkCategories[0] ||
-                        "Other";
+                        "Hot";
                 }
 
                 updateCategoryTabVisibility();
@@ -2026,99 +2280,6 @@ networkCards.forEach(
         );
     }
 );
-
-
-/* ==========================================
-   AVAILABLE CATEGORIES FOR NETWORK
-========================================== */
-
-function getAvailableCategoriesForNetwork() {
-
-    const categories =
-        new Set();
-
-    allPlans.forEach(
-        plan => {
-
-            if (
-                plan.network !==
-                selectedNetwork
-            ) {
-
-                return;
-            }
-
-            if (
-                plan.availability === false
-            ) {
-
-                return;
-            }
-
-            getPlanCategories(
-                plan
-            ).forEach(
-                category => {
-
-                    categories.add(
-                        category
-                    );
-                }
-            );
-        }
-    );
-
-    return CATEGORY_ORDER.filter(
-        category =>
-            categories.has(
-                category
-            )
-    );
-}
-
-
-/* ==========================================
-   UPDATE CATEGORY TAB VISIBILITY
-========================================== */
-
-function updateCategoryTabVisibility() {
-
-    const availableCategories =
-        getAvailableCategoriesForNetwork();
-
-    categoryTabs.forEach(
-        tab => {
-
-            const category =
-                tab.dataset.category;
-
-            if (!category) {
-
-                tab.style.display =
-                    "none";
-
-                return;
-            }
-
-            const available =
-                availableCategories.includes(
-                    category
-                );
-
-            tab.style.display =
-                available
-                    ? ""
-                    : "none";
-
-            tab.classList.toggle(
-                "active",
-                available &&
-                category ===
-                selectedCategory
-            );
-        }
-    );
-}
 
 
 /* ==========================================
