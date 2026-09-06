@@ -64,7 +64,6 @@ const requiredElements = [
     ["beneficiaryBtn", beneficiaryBtn],
     ["refreshBalanceBtn", refreshBalanceBtn],
     ["checkBalanceBtn", checkBalanceBtn],
-    ["walletBalance", walletBalance],
     ["plansContainer", plansContainer]
 ];
 
@@ -72,9 +71,7 @@ for (
     const [name, element]
     of requiredElements
 ) {
-
     if (!element) {
-
         console.error(
             `NovaPay Data: missing HTML element #${name}`
         );
@@ -100,6 +97,12 @@ let purchaseInProgress = false;
 
 let balanceLoading = false;
 
+let plansLoading = false;
+
+let categoryTabsInitialized = false;
+
+let networkRequestId = 0;
+
 
 /* ==========================================
    NETWORK MAP
@@ -107,15 +110,10 @@ let balanceLoading = false;
 
 const NETWORK_MAP =
     Object.freeze({
-
-        MTN: "1",
-
-        Airtel: "3",
-
-        Glo: "2",
-
+        mtn: "1",
+        airtel: "3",
+        glo: "2",
         "9mobile": "4"
-
     });
 
 
@@ -172,10 +170,11 @@ onAuthStateChanged(
 
         currentUser = user;
 
-        await Promise.all([
-            loadWalletBalance(),
-            loadDataPlans()
-        ]);
+        await loadWalletBalance();
+
+        await loadDataPlans(
+            selectedNetwork
+        );
     }
 );
 
@@ -419,11 +418,41 @@ function formatKoboAsNaira(
    LOAD DATA PLANS
 ========================================== */
 
-async function loadDataPlans() {
+async function loadDataPlans(
+    network = selectedNetwork
+) {
 
     if (!plansContainer) {
         return;
     }
+
+    const normalizedNetwork =
+        String(
+            network || ""
+        ).trim().toLowerCase();
+
+    const providerNetwork =
+        NETWORK_MAP[
+            normalizedNetwork
+        ];
+
+    if (!providerNetwork) {
+
+        plansContainer.innerHTML = `
+            <div class="plans-error">
+                Unable to determine the selected network.
+            </div>
+        `;
+
+        return;
+    }
+
+    const requestId =
+        ++networkRequestId;
+
+    plansLoading = true;
+
+    selectedPlan = null;
 
     plansContainer.innerHTML = `
         <div class="plans-loading">
@@ -431,11 +460,15 @@ async function loadDataPlans() {
         </div>
     `;
 
+    updateContinueButton();
+
     try {
 
         const response =
             await authenticatedFetch(
-                "/api/data/plans",
+                `/api/data/plans?network=${encodeURIComponent(
+                    providerNetwork
+                )}`,
                 {
                     method: "GET"
                 }
@@ -445,6 +478,18 @@ async function loadDataPlans() {
             await readJsonResponse(
                 response
             );
+
+        /*
+         * Ignore an older network request if the
+         * customer changed networks while it was
+         * still loading.
+         */
+        if (
+            requestId !== networkRequestId
+        ) {
+
+            return;
+        }
 
         if (
             response.status === 401
@@ -464,14 +509,6 @@ async function loadDataPlans() {
             );
         }
 
-        /*
-         * The Data route uses `ok: true`.
-         *
-         * Accept that authoritative backend
-         * response instead of requiring a
-         * different `success` property.
-         */
-
         if (
             result.ok !== true ||
             !Array.isArray(
@@ -485,15 +522,11 @@ async function loadDataPlans() {
         }
 
         /*
-         * Convert the backend BabsPay catalogue
-         * into the exact shape used by the
-         * existing frontend renderer.
+         * The backend is authoritative.
          *
-         * No price is invented here.
-         * priceKobo comes directly from the
-         * backend catalogue.
+         * No price is created or calculated
+         * by the frontend.
          */
-
         allPlans =
             result.plans
                 .map(
@@ -503,13 +536,29 @@ async function loadDataPlans() {
                     isValidPlan
                 );
 
+        /*
+         * The backend has already requested the
+         * selected network. We still verify the
+         * returned network locally before display.
+         */
+        allPlans =
+            allPlans.filter(
+                (plan) =>
+                    plan.network ===
+                    normalizedNetwork
+            );
+
         if (!allPlans.length) {
 
             plansContainer.innerHTML = `
                 <div class="plans-empty">
-                    No data plans are currently available.
+                    No data plans are currently available for this network.
                 </div>
             `;
+
+            updateCategoryTabVisibility();
+
+            updateContinueButton();
 
             return;
         }
@@ -522,10 +571,19 @@ async function loadDataPlans() {
 
     } catch (error) {
 
+        if (
+            requestId !== networkRequestId
+        ) {
+
+            return;
+        }
+
         console.error(
             "NovaPay data catalog error:",
             error
         );
+
+        allPlans = [];
 
         plansContainer.innerHTML = `
             <div class="plans-error">
@@ -533,6 +591,17 @@ async function loadDataPlans() {
                 Please try again.
             </div>
         `;
+
+    } finally {
+
+        if (
+            requestId === networkRequestId
+        ) {
+
+            plansLoading = false;
+
+            updateContinueButton();
+        }
     }
 }
 
@@ -589,15 +658,21 @@ function normalizeBackendPlan(
             ""
         ).trim();
 
+    /*
+     * BabsPay catalogue currently returns
+     * providerPriceKobo from the backend.
+     *
+     * Keep compatibility with priceKobo as
+     * well, but never invent a price.
+     */
+    const rawPriceKobo =
+        plan.priceKobo ??
+        plan.providerPriceKobo;
+
     const priceKobo =
         Number(
-            plan.priceKobo
+            rawPriceKobo
         );
-
-    /*
-     * Map BabsPay's numeric network ID
-     * to the frontend network key.
-     */
 
     let network = "";
 
@@ -626,9 +701,18 @@ function normalizeBackendPlan(
         network = "9mobile";
     }
 
+    const status =
+        String(
+            plan.status ||
+            ""
+        ).trim().toLowerCase();
+
     return {
         planId,
 
+        /*
+         * Keep the exact BabsPay plan identity.
+         */
         variationId:
             planId,
 
@@ -657,18 +741,19 @@ function normalizeBackendPlan(
 
         priceKobo,
 
-        status:
-            String(
-                plan.status ||
-                ""
-            ).trim().toLowerCase(),
+        /*
+         * Preserve provider price separately.
+         * The frontend never changes it.
+         */
+        providerPriceKobo:
+            Number(
+                plan.providerPriceKobo
+            ),
+
+        status,
 
         availability:
-            String(
-                plan.status ||
-                ""
-            ).trim().toLowerCase() ===
-            "active"
+            status === "active"
     };
 }
 
@@ -786,16 +871,24 @@ function extractDataAmount(
     }
 
     return `${match[1]} ${match[2].toUpperCase()}`;
-} 
+}
+
+
 /* ==========================================
    CATEGORY SETUP
 ========================================== */
 
 function setupCategoryTabs() {
 
-    if (!categoryTabs.length) {
+    if (
+        categoryTabsInitialized ||
+        !categoryTabs.length
+    ) {
+
         return;
     }
+
+    categoryTabsInitialized = true;
 
     categoryTabs.forEach((tab) => {
 
@@ -1124,14 +1217,6 @@ function getExtraValuePlans(
         return [];
     }
 
-    /*
-     * Rank plans by data received per ₦1.
-     * This does not alter the price.
-     * It is only used to determine which
-     * existing provider plans offer better
-     * value.
-     */
-
     return [...validPlans]
         .sort(
             (a, b) => {
@@ -1194,6 +1279,54 @@ function comparePlans(
             b.validity
         )
     );
+}
+
+
+/* ==========================================
+   CUSTOMER PRICE
+========================================== */
+
+function getCustomerPriceKobo(
+    plan
+) {
+
+    if (
+        !plan ||
+        typeof plan !== "object"
+    ) {
+
+        return 0;
+    }
+
+    /*
+     * The backend catalogue currently exposes
+     * providerPriceKobo as the authoritative
+     * catalogue price.
+     *
+     * No client-side markup or discount is
+     * invented here.
+     */
+    if (
+        Number.isSafeInteger(
+            plan.priceKobo
+        ) &&
+        plan.priceKobo > 0
+    ) {
+
+        return plan.priceKobo;
+    }
+
+    if (
+        Number.isSafeInteger(
+            plan.providerPriceKobo
+        ) &&
+        plan.providerPriceKobo > 0
+    ) {
+
+        return plan.providerPriceKobo;
+    }
+
+    return 0;
 }
 
 
@@ -1561,6 +1694,15 @@ networkCards.forEach(
                     return;
                 }
 
+                if (
+                    network ===
+                    selectedNetwork &&
+                    allPlans.length > 0
+                ) {
+
+                    return;
+                }
+
                 selectedNetwork =
                     network;
 
@@ -1583,9 +1725,12 @@ networkCards.forEach(
                     }
                 );
 
-                updateCategoryTabVisibility();
+                selectedCategory =
+                    "Hot";
 
-                renderPlans();
+                await loadDataPlans(
+                    selectedNetwork
+                );
             }
         );
     }
@@ -1701,7 +1846,8 @@ function updateContinueButton() {
     continueBtn.disabled =
         !phoneValid ||
         !planSelected ||
-        purchaseInProgress;
+        purchaseInProgress ||
+        plansLoading;
 }
 
 
@@ -1812,18 +1958,14 @@ async function purchaseSelectedPlan() {
     }
 
     /*
-     * IMPORTANT:
-     *
-     * The frontend sends the identity of the
-     * selected provider plan.
+     * The frontend sends only the selected
+     * provider plan identity.
      *
      * It does NOT send:
      * - wallet balance
      * - price
      * - debit amount
      * - provider cost
-     *
-     * The backend remains authoritative.
      */
 
     purchaseInProgress = true;
@@ -1883,12 +2025,6 @@ async function purchaseSelectedPlan() {
                 "Data purchase could not be completed."
             );
         }
-
-        /*
-         * Success is based on the backend
-         * transaction state, not the frontend
-         * card state.
-         */
 
         if (
             result.status ===
