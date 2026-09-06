@@ -68,10 +68,7 @@ const requiredElements = [
     ["plansContainer", plansContainer]
 ];
 
-for (
-    const [name, element]
-    of requiredElements
-) {
+for (const [name, element] of requiredElements) {
 
     if (!element) {
 
@@ -189,10 +186,20 @@ onAuthStateChanged(
 
         currentUser = user;
 
-        await Promise.all([
-            loadWalletBalance(),
-            loadDataPlans()
-        ]);
+        try {
+
+            await Promise.all([
+                loadWalletBalance(),
+                loadDataPlans()
+            ]);
+
+        } catch (error) {
+
+            console.error(
+                "NovaPay Data initialization error:",
+                error
+            );
+        }
     }
 );
 
@@ -280,6 +287,30 @@ async function readJsonResponse(
 
 
 /* ==========================================
+   HANDLE AUTH FAILURE
+========================================== */
+
+function handleUnauthorized(
+    response
+) {
+
+    if (
+        response.status !== 401
+    ) {
+
+        return false;
+    }
+
+    currentUser = null;
+
+    window.location.href =
+        "login.html";
+
+    return true;
+}
+
+
+/* ==========================================
    LOAD WALLET BALANCE
 ========================================== */
 
@@ -314,11 +345,10 @@ async function loadWalletBalance() {
             );
 
         if (
-            response.status === 401
+            handleUnauthorized(
+                response
+            )
         ) {
-
-            window.location.href =
-                "login.html";
 
             return;
         }
@@ -326,7 +356,7 @@ async function loadWalletBalance() {
         if (!response.ok) {
 
             throw new Error(
-                result.error ||
+                result?.error ||
                 "Unable to load wallet balance."
             );
         }
@@ -360,8 +390,11 @@ async function loadWalletBalance() {
             error
         );
 
-        walletBalance.textContent =
-            "₦--";
+        if (walletBalance) {
+
+            walletBalance.textContent =
+                "₦--";
+        }
 
     } finally {
 
@@ -378,31 +411,25 @@ function extractBalanceKobo(
     result
 ) {
 
-    if (
-        Number.isSafeInteger(
-            result?.balanceKobo
-        )
+    const candidates = [
+        result?.balanceKobo,
+        result?.wallet?.balanceKobo,
+        result?.data?.balanceKobo
+    ];
+
+    for (
+        const candidate
+        of candidates
     ) {
 
-        return result.balanceKobo;
-    }
+        if (
+            Number.isSafeInteger(
+                candidate
+            )
+        ) {
 
-    if (
-        Number.isSafeInteger(
-            result?.wallet?.balanceKobo
-        )
-    ) {
-
-        return result.wallet.balanceKobo;
-    }
-
-    if (
-        Number.isSafeInteger(
-            result?.data?.balanceKobo
-        )
-    ) {
-
-        return result.data.balanceKobo;
+            return candidate;
+        }
     }
 
     throw new Error(
@@ -418,6 +445,16 @@ function extractBalanceKobo(
 function formatKoboAsNaira(
     kobo
 ) {
+
+    if (
+        !Number.isSafeInteger(
+            kobo
+        ) ||
+        kobo < 0
+    ) {
+
+        return "₦--";
+    }
 
     const naira =
         kobo / 100;
@@ -439,6 +476,7 @@ function formatKoboAsNaira(
 async function loadDataPlans() {
 
     if (!plansContainer) {
+
         return;
     }
 
@@ -464,11 +502,10 @@ async function loadDataPlans() {
             );
 
         if (
-            response.status === 401
+            handleUnauthorized(
+                response
+            )
         ) {
-
-            window.location.href =
-                "login.html";
 
             return;
         }
@@ -476,26 +513,13 @@ async function loadDataPlans() {
         if (!response.ok) {
 
             throw new Error(
-                result.error ||
+                result?.error ||
                 "Unable to load data plans."
             );
         }
 
-        /*
-           The new backend returns:
-
-           {
-               ok: true,
-               plans: [...]
-           }
-
-           The old frontend expected
-           result.success, which is no
-           longer the backend contract.
-        */
-
         if (
-            result.ok !== true ||
+            result?.ok !== true ||
             !Array.isArray(
                 result.plans
             )
@@ -506,9 +530,17 @@ async function loadDataPlans() {
             );
         }
 
-        allPlans =
+        const validPlans =
             result.plans.filter(
                 isValidPlan
+            );
+
+        allPlans =
+            validPlans.map(
+                plan => ({
+                    ...plan,
+                    _isHot: false
+                })
             );
 
         if (!allPlans.length) {
@@ -611,22 +643,39 @@ function isValidPlan(
         return false;
     }
 
+    /*
+       priceKobo is the customer-facing
+       amount returned by the NovaPay backend.
+
+       The frontend never calculates or
+       overrides the purchase amount.
+    */
+
     if (
         !Number.isSafeInteger(
             plan.priceKobo
         ) ||
-        plan.priceKobo < 0
+        plan.priceKobo <= 0
     ) {
 
         return false;
     }
 
+    /*
+       priceNaira is optional because
+       priceKobo is the authoritative
+       money representation.
+    */
+
     if (
-        typeof plan.priceNaira !== "number" ||
-        !Number.isFinite(
-            plan.priceNaira
-        ) ||
-        plan.priceNaira < 0
+        plan.priceNaira !== undefined &&
+        (
+            typeof plan.priceNaira !== "number" ||
+            !Number.isFinite(
+                plan.priceNaira
+            ) ||
+            plan.priceNaira <= 0
+        )
     ) {
 
         return false;
@@ -644,12 +693,23 @@ function isValidPlan(
 
 
 /* ==========================================
-   GET CUSTOMER PRICE
+   CUSTOMER PRICE
 ========================================== */
 
 function getCustomerPriceKobo(
     plan
 ) {
+
+    if (
+        !plan ||
+        !Number.isSafeInteger(
+            plan.priceKobo
+        ) ||
+        plan.priceKobo <= 0
+    ) {
+
+        return 0;
+    }
 
     return plan.priceKobo;
 }
@@ -665,13 +725,13 @@ function getDataMegabytes(
 
     const text =
         String(
-            plan.planName || ""
+            plan?.planName || ""
         )
             .toLowerCase();
 
     const match =
         text.match(
-            /([\d.]+)\s*(gb|mb)/
+            /([\d.]+)\s*(gb|mb)\b/
         );
 
     if (!match) {
@@ -687,7 +747,8 @@ function getDataMegabytes(
     if (
         !Number.isFinite(
             value
-        )
+        ) ||
+        value <= 0
     ) {
 
         return 0;
@@ -714,7 +775,7 @@ function getDisplayDataAmount(
 
     const text =
         String(
-            plan.planName || ""
+            plan?.planName || ""
         ).trim();
 
     const match =
@@ -740,7 +801,7 @@ function getDisplayValidity(
 ) {
 
     return String(
-        plan.validity || ""
+        plan?.validity || ""
     ).trim();
 }
 
@@ -753,10 +814,20 @@ function formatPlanPrice(
     plan
 ) {
 
-    return formatKoboAsNaira(
+    const priceKobo =
         getCustomerPriceKobo(
             plan
-        )
+        );
+
+    if (
+        priceKobo <= 0
+    ) {
+
+        return "Price unavailable";
+    }
+
+    return formatKoboAsNaira(
+        priceKobo
     );
 }
 
@@ -771,7 +842,7 @@ function getValidityDays(
 
     const validity =
         String(
-            plan.validity || ""
+            plan?.validity || ""
         )
             .trim()
             .toLowerCase();
@@ -794,7 +865,8 @@ function getValidityDays(
     if (
         !Number.isFinite(
             value
-        )
+        ) ||
+        value <= 0
     ) {
 
         return 0;
@@ -820,7 +892,9 @@ function getValidityDays(
     }
 
     return value * 30;
-} 
+}
+
+
 /* ==========================================
    CATEGORY HELPERS
 ========================================== */
@@ -839,14 +913,14 @@ function getPlanCategories(
 
     const planType =
         String(
-            plan.planType || ""
+            plan?.planType || ""
         )
             .trim()
             .toLowerCase();
 
     const planName =
         String(
-            plan.planName || ""
+            plan?.planName || ""
         )
             .trim()
             .toLowerCase();
@@ -912,7 +986,7 @@ function getPlanCategories(
 
 
     /* ==========================
-       EXPLICIT NAME CATEGORIES
+       PROVIDER-NAME CATEGORIES
     ========================== */
 
     if (
@@ -949,22 +1023,9 @@ function getPlanCategories(
     }
 
 
-    /*
-       "Hot" is a NovaPay merchandising
-       category, not a claim that BabsPay
-       labels the plan as "Hot".
-
-       We assign Hot later to the cheapest
-       real plans for the selected network.
-    */
-
-
-    /*
-       Extra Value is based on actual
-       data quantity relative to customer
-       price, not a fabricated provider
-       product.
-    */
+    /* ==========================
+       NOVAPAY EXTRA VALUE
+    ========================== */
 
     if (
         isExtraValuePlan(
@@ -1004,32 +1065,27 @@ function isExtraValuePlan(
 
     if (
         megabytes <= 0 ||
-        !Number.isSafeInteger(
-            priceKobo
-        ) ||
         priceKobo <= 0
     ) {
 
         return false;
     }
 
-    /*
-       This is only a relative
-       merchandising calculation.
-       It never changes the provider
-       product or price.
-    */
-
     const naira =
         priceKobo / 100;
+
+    if (
+        naira <= 0
+    ) {
+
+        return false;
+    }
 
     const mbPerNaira =
         megabytes / naira;
 
     return mbPerNaira >= 8;
-}
-
-
+} 
 /* ==========================================
    HOT PLANS
 ========================================== */
@@ -1053,18 +1109,26 @@ function getHotPlans(
                     return priceDifference;
                 }
 
-                return getDataMegabytes(b) -
+                const dataDifference =
+                    getDataMegabytes(b) -
                     getDataMegabytes(a);
+
+                if (
+                    dataDifference !== 0
+                ) {
+
+                    return dataDifference;
+                }
+
+                return String(
+                    a.planId
+                ).localeCompare(
+                    String(
+                        b.planId
+                    )
+                );
             }
         );
-
-    /*
-       Hot is deliberately limited to
-       real plans already returned by
-       BabsPay.
-
-       No new product is invented.
-    */
 
     return new Set(
         sorted
@@ -1131,7 +1195,7 @@ function planBelongsToCategory(
     ) {
 
         return Boolean(
-            plan._isHot
+            plan?._isHot
         );
     }
 
@@ -1180,12 +1244,6 @@ function getAvailableCategoriesForNetwork() {
         }
     );
 
-
-    /*
-       Hot is always based on actual
-       available plans.
-    */
-
     if (
         networkPlans.some(
             plan =>
@@ -1197,7 +1255,6 @@ function getAvailableCategoriesForNetwork() {
             "Hot"
         );
     }
-
 
     return CATEGORY_ORDER.filter(
         category =>
@@ -1231,12 +1288,6 @@ function setupCategoryTabs() {
             networkPlans
         );
 
-    /*
-       Store Hot internally on the
-       already-loaded real provider
-       plans.
-    */
-
     allPlans =
         allPlans.map(
             plan => ({
@@ -1247,7 +1298,6 @@ function setupCategoryTabs() {
                     )
             })
         );
-
 
     const availableCategories =
         getAvailableCategoriesForNetwork();
@@ -1332,7 +1382,6 @@ function setupCategoryTabs() {
         }
     );
 
-
     if (
         !availableCategories.includes(
             selectedCategory
@@ -1343,7 +1392,6 @@ function setupCategoryTabs() {
             availableCategories[0] ||
             "Hot";
     }
-
 
     categoryTabs.forEach(
         tab => {
@@ -1369,7 +1417,7 @@ function getTabLabel(
 ) {
 
     return String(
-        tab.textContent || ""
+        tab?.textContent || ""
     )
         .replace(
             "🔥",
@@ -1507,13 +1555,15 @@ function renderPlans() {
                     selectedCategory
                 ).toLowerCase()}
                 data plans are currently available
-                for this network.
+                for ${escapeHtml(
+                    NETWORK_NAMES[selectedNetwork] ||
+                    "this network"
+                )}.
             </div>
         `;
 
         return;
     }
-
 
     const sortedPlans =
         [...plans].sort(
@@ -1537,11 +1587,26 @@ function renderPlans() {
                         priceB;
                 }
 
-                return getDataMegabytes(b) -
+                const dataDifference =
+                    getDataMegabytes(b) -
                     getDataMegabytes(a);
+
+                if (
+                    dataDifference !== 0
+                ) {
+
+                    return dataDifference;
+                }
+
+                return String(
+                    a.planId
+                ).localeCompare(
+                    String(
+                        b.planId
+                    )
+                );
             }
         );
-
 
     sortedPlans.forEach(
         plan => {
@@ -1685,10 +1750,8 @@ function renderPlans() {
                 event => {
 
                     if (
-                        event.key ===
-                        "Enter" ||
-                        event.key ===
-                        " "
+                        event.key === "Enter" ||
+                        event.key === " "
                     ) {
 
                         event.preventDefault();
@@ -1698,13 +1761,14 @@ function renderPlans() {
                 }
             );
 
-
             plansContainer.appendChild(
                 card
             );
         }
     );
-} 
+}
+
+
 /* ==========================================
    PHONE NORMALIZATION
 ========================================== */
@@ -1740,7 +1804,7 @@ function normalizePhoneNumber(
             phone.slice(3);
 
     } else if (
-        /^8\d{10}$/.test(
+        /^8\d{9}$/.test(
             phone
         )
     ) {
@@ -1784,10 +1848,8 @@ function validatePhoneNumber(
 function createPurchaseReference() {
 
     if (
-        typeof crypto !==
-        "undefined" &&
-        typeof crypto.randomUUID ===
-        "function"
+        typeof crypto !== "undefined" &&
+        typeof crypto.randomUUID === "function"
     ) {
 
         return crypto.randomUUID();
@@ -1809,47 +1871,62 @@ function createPurchaseReference() {
    CONTINUE BUTTON
 ========================================== */
 
-continueBtn.addEventListener(
-    "click",
-    async () => {
+if (continueBtn) {
 
-        if (
-            purchaseInProgress
-        ) {
+    continueBtn.addEventListener(
+        "click",
+        async () => {
 
-            return;
-        }
+            if (
+                purchaseInProgress
+            ) {
 
-        const phoneResult =
-            validatePhoneNumber(
-                phoneInput.value
+                return;
+            }
+
+            if (!currentUser) {
+
+                alert(
+                    "Your session has expired. Please login again."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            const phoneResult =
+                validatePhoneNumber(
+                    phoneInput?.value
+                );
+
+            if (!phoneResult.valid) {
+
+                alert(
+                    "Please enter a valid Nigerian phone number."
+                );
+
+                phoneInput?.focus();
+
+                return;
+            }
+
+            if (!selectedPlan) {
+
+                alert(
+                    "Please select a data plan."
+                );
+
+                return;
+            }
+
+            await purchaseData(
+                phoneResult.phone
             );
-
-        if (!phoneResult.valid) {
-
-            alert(
-                "Please enter a valid Nigerian phone number."
-            );
-
-            phoneInput.focus();
-
-            return;
         }
-
-        if (!selectedPlan) {
-
-            alert(
-                "Please select a data plan."
-            );
-
-            return;
-        }
-
-        await purchaseData(
-            phoneResult.phone
-        );
-    }
-);
+    );
+}
 
 
 /* ==========================================
@@ -1869,12 +1946,23 @@ async function purchaseData(
         return;
     }
 
+    if (!currentUser) {
+
+        alert(
+            "Your session has expired. Please login again."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
     purchaseInProgress = true;
 
     setPurchaseButtonState(
         true
     );
-
 
     /*
        One reference belongs to this
@@ -1911,7 +1999,6 @@ async function purchaseData(
                 }
             );
 
-
         const result =
             await readJsonResponse(
                 response
@@ -1923,15 +2010,10 @@ async function purchaseData(
         ========================== */
 
         if (
-            response.status === 401
+            handleUnauthorized(
+                response
+            )
         ) {
-
-            alert(
-                "Your session has expired. Please login again."
-            );
-
-            window.location.href =
-                "login.html";
 
             return;
         }
@@ -1943,8 +2025,8 @@ async function purchaseData(
 
         if (
             response.ok &&
-            result.ok === true &&
-            result.status === "successful"
+            result?.ok === true &&
+            result?.status === "successful"
         ) {
 
             alert(
@@ -1977,8 +2059,8 @@ async function purchaseData(
 
         if (
             response.status === 202 ||
-            result.status === "pending" ||
-            result.status === "unknown"
+            result?.status === "pending" ||
+            result?.status === "unknown"
         ) {
 
             alert(
@@ -1997,8 +2079,8 @@ async function purchaseData(
 
         if (
             response.status === 400 ||
-            result.status === "failed" ||
-            result.ok === false
+            result?.status === "failed" ||
+            result?.ok === false
         ) {
 
             alert(
@@ -2034,8 +2116,8 @@ async function purchaseData(
            automatically.
 
            The backend may already have
-           created a reservation or sent the
-           provider request.
+           created a reservation or sent
+           the provider request.
         */
 
         alert(
@@ -2062,8 +2144,7 @@ function getSafePurchaseError(
 ) {
 
     const error =
-        typeof result?.error ===
-        "string"
+        typeof result?.error === "string"
             ? result.error.trim()
             : "";
 
@@ -2150,64 +2231,76 @@ function setPurchaseButtonState(
    BACK BUTTON
 ========================================== */
 
-backBtn.addEventListener(
-    "click",
-    () => {
+if (backBtn) {
 
-        history.back();
-    }
-);
+    backBtn.addEventListener(
+        "click",
+        () => {
+
+            history.back();
+        }
+    );
+}
 
 
 /* ==========================================
    BENEFICIARIES
 ========================================== */
 
-beneficiaryBtn.addEventListener(
-    "click",
-    () => {
+if (beneficiaryBtn) {
 
-        alert(
-            "Beneficiaries coming soon."
-        );
-    }
-);
+    beneficiaryBtn.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Beneficiaries coming soon."
+            );
+        }
+    );
+}
 
 
 /* ==========================================
    REFRESH WALLET
 ========================================== */
 
-refreshBalanceBtn.addEventListener(
-    "click",
-    async () => {
+if (refreshBalanceBtn) {
 
-        if (
-            balanceLoading ||
-            purchaseInProgress
-        ) {
+    refreshBalanceBtn.addEventListener(
+        "click",
+        async () => {
 
-            return;
+            if (
+                balanceLoading ||
+                purchaseInProgress
+            ) {
+
+                return;
+            }
+
+            await loadWalletBalance();
         }
-
-        await loadWalletBalance();
-    }
-);
+    );
+}
 
 
 /* ==========================================
    DATA BALANCE
 ========================================== */
 
-checkBalanceBtn.addEventListener(
-    "click",
-    () => {
+if (checkBalanceBtn) {
 
-        alert(
-            "Use *323*4# on your phone to check your data balance."
-        );
-    }
-);
+    checkBalanceBtn.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Use *323*4# on your phone to check your data balance."
+            );
+        }
+    );
+}
 
 
 /* ==========================================
