@@ -1,10 +1,8 @@
 /* ==========================================
    NOVAPAY ELECTRICITY
-   BACKEND CONNECTED VERSION
 ========================================== */
 
 import { auth } from "./firebase.js";
-
 
 /* ==========================================
    ELEMENTS
@@ -46,22 +44,18 @@ const amount =
 const walletBalance =
     document.getElementById("walletBalance");
 
-
 /* ==========================================
    STATE
 ========================================== */
 
-let selectedCompany =
-    "ikedc";
-
-let selectedMeterType =
-    "prepaid";
+let selectedCompany = "ikedc";
+let selectedMeterType = "prepaid";
 
 let verifiedCustomer = null;
-
+let isMeterVerified = false;
 
 /* ==========================================
-   BACKEND URL
+   API BASE URL
 ========================================== */
 
 const API_BASE_URL =
@@ -70,101 +64,77 @@ const API_BASE_URL =
         ? "http://localhost:3000"
         : "";
 
-
 /* ==========================================
-   HELPER — GET AUTH TOKEN
+   AUTH TOKEN
 ========================================== */
 
 async function getAuthToken() {
 
-    const user =
-        auth.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
-
         throw new Error(
-            "You must be logged in to use electricity services."
+            "You must be logged in to perform this action."
         );
-
     }
 
-    return user.getIdToken();
-
+    return await user.getIdToken();
 }
 
-
 /* ==========================================
-   HELPER — BACKEND REQUEST
+   BACKEND REQUEST
 ========================================== */
 
-async function backendRequest(
-    endpoint,
-    options = {}
-) {
+async function backendRequest(path, options = {}) {
 
     const token =
         await getAuthToken();
 
-    const headers = {
-        ...(options.headers || {}),
-        Authorization:
-            `Bearer ${token}`,
-        "Content-Type":
-            "application/json"
-    };
-
-
     const response =
         await fetch(
-            `${API_BASE_URL}${endpoint}`,
+            `${API_BASE_URL}${path}`,
             {
                 ...options,
-                headers
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        `Bearer ${token}`,
+
+                    ...(options.headers || {})
+                }
             }
         );
 
-
-    let data = null;
+    let result = null;
 
     try {
 
-        data =
+        result =
             await response.json();
 
-    }
-
-    catch (error) {
-
-        data = null;
-
-    }
-
-
-    if (!response.ok) {
-
-        const message =
-            data &&
-            (
-                data.error ||
-                data.message
-            )
-                ? (
-                    data.error ||
-                    data.message
-                )
-                : "Request failed.";
+    } catch {
 
         throw new Error(
-            message
+            `Server returned an invalid response (${response.status}).`
         );
 
     }
 
+    if (!response.ok) {
 
-    return data;
+        throw new Error(
+            result?.message ||
+            result?.error ||
+            `Request failed (${response.status}).`
+        );
 
+    }
+
+    return result;
 }
-
 
 /* ==========================================
    BACK BUTTON
@@ -179,7 +149,6 @@ backBtn.addEventListener(
 
     }
 );
-
 
 /* ==========================================
    SELECT COMPANY
@@ -199,21 +168,13 @@ providers.forEach(
                         )
                 );
 
-
                 provider.classList.add(
                     "active"
                 );
 
-
                 selectedCompany =
                     provider.dataset.company;
 
-
-                /*
-                 * A previous verification belongs to the
-                 * previous electricity company, so it must
-                 * not be reused.
-                 */
                 resetVerification();
 
             }
@@ -221,7 +182,6 @@ providers.forEach(
 
     }
 );
-
 
 /* ==========================================
    SELECT METER TYPE
@@ -241,21 +201,13 @@ meterTypes.forEach(
                         )
                 );
 
-
                 type.classList.add(
                     "active"
                 );
 
-
                 selectedMeterType =
                     type.dataset.type;
 
-
-                /*
-                 * Meter type is part of the provider
-                 * verification, so previous verification
-                 * must not be reused.
-                 */
                 resetVerification();
 
             }
@@ -264,49 +216,38 @@ meterTypes.forEach(
     }
 );
 
-
 /* ==========================================
    RESET VERIFICATION
 ========================================== */
 
 function resetVerification() {
 
-    verifiedCustomer =
-        null;
+    isMeterVerified = false;
 
+    verifiedCustomer = null;
+
+    customerName.textContent = "";
+
+    customerAddress.textContent = "";
 
     customerCard.classList.add(
         "hidden"
     );
 
-
     amountSection.classList.add(
         "hidden"
     );
-
 
     continueBtn.classList.add(
         "hidden"
     );
 
-
-    customerName.textContent =
-        "";
-
-
-    customerAddress.textContent =
-        "";
-
-
-    verifyMeterBtn.disabled =
-        false;
-
+    verifyMeterBtn.disabled = false;
 
     verifyMeterBtn.textContent =
         "Verify Meter";
 
 }
-
 
 /* ==========================================
    VERIFY METER
@@ -319,41 +260,22 @@ verifyMeterBtn.addEventListener(
         const meter =
             meterNumber.value.trim();
 
-
         if (!meter) {
 
             alert(
                 "Please enter your meter number."
             );
 
-            meterNumber.focus();
-
             return;
 
         }
 
+        resetVerification();
 
-        /*
-         * Require an authenticated Firebase user
-         * before contacting the backend.
-         */
-        if (!auth.currentUser) {
-
-            alert(
-                "Please log in before verifying your meter."
-            );
-
-            return;
-
-        }
-
-
-        verifyMeterBtn.disabled =
-            true;
+        verifyMeterBtn.disabled = true;
 
         verifyMeterBtn.textContent =
             "Verifying...";
-
 
         try {
 
@@ -361,52 +283,42 @@ verifyMeterBtn.addEventListener(
                 await backendRequest(
                     "/api/electricity/verify",
                     {
-                        method:
-                            "POST",
+                        method: "POST",
 
-                        body:
-                            JSON.stringify({
+                        body: JSON.stringify({
 
-                                serviceId:
-                                    selectedCompany,
+                            serviceId:
+                                selectedCompany,
 
-                                meterType:
-                                    selectedMeterType,
+                            meterType:
+                                selectedMeterType,
 
-                                customerId:
-                                    meter,
+                            customerId:
+                                meter,
 
-                                meterNumber:
-                                    meter
+                            meterNumber:
+                                meter
 
-                            })
+                        })
                     }
                 );
 
-
-            /*
-             * Backend/provider verification must
-             * explicitly succeed.
-             */
             if (
                 !result ||
                 result.success !== true
             ) {
 
                 throw new Error(
-                    result?.error ||
+                    result?.message ||
                     "Meter verification failed."
                 );
 
             }
 
-
             const customer =
                 result.data ||
                 result.customer ||
-                result.verification ||
-                null;
-
+                result.verification;
 
             if (!customer) {
 
@@ -416,132 +328,92 @@ verifyMeterBtn.addEventListener(
 
             }
 
-
-            /*
-             * Do not manufacture customer information.
-             *
-             * Everything displayed below comes from
-             * the backend/provider response.
-             */
             verifiedCustomer =
                 customer;
 
+            isMeterVerified = true;
 
-            const verifiedName =
+            const name =
                 customer.customer_name ||
                 customer.customerName ||
                 customer.name ||
                 "";
 
-
-            const verifiedAddress =
+            const address =
                 customer.address ||
                 customer.customer_address ||
+                customer.customerAddress ||
                 "";
 
-
-            if (!verifiedName) {
+            if (!name) {
 
                 throw new Error(
-                    "Customer verification did not return a customer name."
+                    "The provider did not return a customer name."
                 );
 
             }
 
-
             customerName.textContent =
-                verifiedName;
-
+                name;
 
             customerAddress.textContent =
-                verifiedAddress ||
-                "Address not provided by provider.";
-
+                address || "Address not provided";
 
             customerCard.classList.remove(
                 "hidden"
             );
 
-
             amountSection.classList.remove(
                 "hidden"
             );
-
 
             continueBtn.classList.remove(
                 "hidden"
             );
 
-
             verifyMeterBtn.textContent =
                 "Verified ✓";
 
-
-            /*
-             * The meter/customer information is now
-             * verified for the selected company and
-             * meter type.
-             */
-            console.log(
-                "Electricity customer verified:",
-                {
-                    company:
-                        selectedCompany,
-
-                    meterType:
-                        selectedMeterType,
-
-                    customer:
-                        verifiedCustomer
-                }
-            );
-
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "Electricity meter verification error:",
                 error
             );
 
+            isMeterVerified = false;
 
-            verifiedCustomer =
-                null;
-
+            verifiedCustomer = null;
 
             customerCard.classList.add(
                 "hidden"
             );
 
-
             amountSection.classList.add(
                 "hidden"
             );
-
 
             continueBtn.classList.add(
                 "hidden"
             );
 
-
-            verifyMeterBtn.disabled =
-                false;
-
             verifyMeterBtn.textContent =
                 "Verify Meter";
 
-
             alert(
-                error.message ||
-                "Unable to verify meter. Please try again."
+                error?.message ||
+                "Meter verification failed. Please check the meter number and try again."
             );
+
+        } finally {
+
+            verifyMeterBtn.disabled =
+                false;
 
         }
 
     }
 );
-
 
 /* ==========================================
    CONTINUE / PURCHASE
@@ -554,10 +426,18 @@ continueBtn.addEventListener(
         const meter =
             meterNumber.value.trim();
 
-
         const amountValue =
             amount.value.trim();
 
+        if (!isMeterVerified) {
+
+            alert(
+                "Please verify your meter before continuing."
+            );
+
+            return;
+
+        }
 
         if (!meter) {
 
@@ -565,23 +445,9 @@ continueBtn.addEventListener(
                 "Please enter a meter number."
             );
 
-            meterNumber.focus();
-
             return;
 
         }
-
-
-        if (!verifiedCustomer) {
-
-            alert(
-                "Please verify your meter first."
-            );
-
-            return;
-
-        }
-
 
         if (!amountValue) {
 
@@ -589,78 +455,32 @@ continueBtn.addEventListener(
                 "Please enter an amount."
             );
 
-            amount.focus();
-
             return;
 
         }
 
+        const amountNumber =
+            Number(amountValue);
 
-        const numericAmount =
-            Number(
-                amountValue
-            );
-
-
-        if (
-            !Number.isFinite(
-                numericAmount
-            ) ||
-            numericAmount <= 0
-        ) {
-
-            alert(
-                "Please enter a valid amount."
-            );
-
-            amount.focus();
-
-            return;
-
-        }
-
-
-        /*
-         * VTU electricity purchases use NGN at the
-         * provider boundary, while NovaPay internally
-         * works in kobo.
-         *
-         * Only send a whole NGN amount to the backend.
-         */
         if (
             !Number.isInteger(
-                numericAmount
-            )
+                amountNumber
+            ) ||
+            amountNumber <= 0
         ) {
 
             alert(
-                "Please enter a whole naira amount."
-            );
-
-            amount.focus();
-
-            return;
-
-        }
-
-
-        if (!auth.currentUser) {
-
-            alert(
-                "Please log in before making an electricity purchase."
+                "Please enter a valid whole-number amount."
             );
 
             return;
 
         }
 
-
-        continueBtn.disabled =
-            true;
+        continueBtn.disabled = true;
 
         continueBtn.textContent =
             "Processing...";
-
 
         try {
 
@@ -668,228 +488,118 @@ continueBtn.addEventListener(
                 await backendRequest(
                     "/api/electricity/purchase",
                     {
-                        method:
-                            "POST",
+                        method: "POST",
 
-                        body:
-                            JSON.stringify({
+                        body: JSON.stringify({
 
-                                serviceId:
-                                    selectedCompany,
+                            serviceId:
+                                selectedCompany,
 
-                                meterType:
-                                    selectedMeterType,
+                            meterType:
+                                selectedMeterType,
 
-                                customerId:
-                                    meter,
+                            customerId:
+                                meter,
 
-                                meterNumber:
-                                    meter,
+                            meterNumber:
+                                meter,
 
-                                amount:
-                                    numericAmount
+                            amount:
+                                amountNumber
 
-                            })
+                        })
                     }
                 );
 
-
-            /*
-             * The backend is authoritative.
-             *
-             * Never assume success just because the
-             * HTTP request itself succeeded.
-             */
             const status =
                 String(
-                    result?.status ||
-                    result?.transaction?.status ||
-                    ""
+                    result?.status || ""
                 ).toUpperCase();
 
-
-            /* ======================================
-               SUCCESS
-            ====================================== */
-
             if (
-                result.success === true &&
-                (
-                    status === "SUCCESS" ||
-                    status === "COMPLETED"
-                )
+                status === "SUCCESS" ||
+                status === "COMPLETED"
             ) {
 
-                continueBtn.textContent =
-                    "Successful ✓";
-
-
                 alert(
-                    result.message ||
-                    "Electricity purchase successful."
+                    "Electricity purchase completed successfully."
                 );
 
-
                 console.log(
-                    "Electricity purchase successful:",
+                    "Electricity purchase:",
                     result
                 );
 
-
-                /*
-                 * Do not locally subtract wallet balance.
-                 *
-                 * The backend has already handled the
-                 * reservation and final wallet state.
-                 */
                 return;
 
             }
-
-
-            /* ======================================
-               DEFINITE FAILURE
-            ====================================== */
 
             if (
                 status === "FAILED"
             ) {
 
-                continueBtn.disabled =
-                    false;
-
-                continueBtn.textContent =
-                    "Continue";
-
-
                 alert(
-                    result.error ||
-                    result.message ||
-                    "Electricity purchase failed. Your reserved funds were not charged."
+                    result?.message ||
+                    "Electricity purchase failed. Your funds should remain available."
                 );
-
-
-                console.log(
-                    "Electricity purchase failed:",
-                    result
-                );
-
 
                 return;
 
             }
-
-
-            /* ======================================
-               UNKNOWN / PENDING
-            ====================================== */
 
             if (
                 status === "UNKNOWN" ||
                 status === "PENDING" ||
-                result.reconciliationRequired === true
+                result?.reconciliationRequired === true
             ) {
 
-                continueBtn.disabled =
-                    false;
-
-                continueBtn.textContent =
-                    "Continue";
-
-
                 alert(
-                    "Your electricity purchase is being checked. Your funds remain protected while we confirm the provider result."
+                    "Your electricity purchase is still being confirmed. Your funds remain reserved while we check the provider."
                 );
-
 
                 console.log(
-                    "Electricity purchase pending reconciliation:",
+                    "Electricity purchase requires reconciliation:",
                     result
                 );
-
 
                 return;
 
             }
 
-
-            /*
-             * If the backend gives an unexpected response,
-             * do NOT call it successful.
-             */
-            continueBtn.disabled =
-                false;
-
-            continueBtn.textContent =
-                "Continue";
-
-
             alert(
-                "We could not confirm the electricity purchase status. Please check your transaction history."
+                result?.message ||
+                "The purchase status could not be confirmed. Please check your transaction history."
             );
 
-
-            console.warn(
-                "Unexpected electricity purchase response:",
+            console.log(
+                "Electricity purchase response:",
                 result
             );
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "Electricity purchase error:",
                 error
             );
 
+            alert(
+                "We could not confirm the electricity purchase. Please check your transaction history before trying again."
+            );
 
-            /*
-             * A network/HTTP error is NOT treated as a
-             * definite provider failure.
-             *
-             * The backend is responsible for determining
-             * whether the transaction is unknown and
-             * keeping the reservation protected.
-             */
+        } finally {
+
             continueBtn.disabled =
                 false;
 
             continueBtn.textContent =
                 "Continue";
 
-
-            alert(
-                "We could not confirm the purchase status. Please check your transaction history before trying again."
-            );
-
         }
 
     }
 );
 
-
-/* ==========================================
-   INITIAL UI STATE
-========================================== */
-
-continueBtn.classList.add(
-    "hidden"
-);
-
-customerCard.classList.add(
-    "hidden"
-);
-
-amountSection.classList.add(
-    "hidden"
-);
-
-
-/* ==========================================
-   MODULE LOADED
-========================================== */
-
 console.log(
-    "✅ NovaPay Electricity frontend connected to backend"
+    "✅ NovaPay Electricity Module Loaded"
 );
