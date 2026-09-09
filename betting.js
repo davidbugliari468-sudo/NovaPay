@@ -61,12 +61,15 @@ let selectedProvider = "bet9ja";
 
 let verifiedAccount = null;
 
+let verificationInProgress = false;
+
+let fundingInProgress = false;
+
 /* ==========================================
    SAFE ELEMENT HELPERS
 ========================================== */
 
 function showElement(element) {
-
     if (!element) {
         return;
     }
@@ -75,7 +78,6 @@ function showElement(element) {
 }
 
 function hideElement(element) {
-
     if (!element) {
         return;
     }
@@ -88,7 +90,6 @@ function hideElement(element) {
 ========================================== */
 
 async function getAuthToken() {
-
     const user = auth.currentUser;
 
     if (!user) {
@@ -108,7 +109,6 @@ async function backendRequest(
     endpoint,
     options = {}
 ) {
-
     const token =
         await getAuthToken();
 
@@ -130,7 +130,7 @@ async function backendRequest(
                 },
 
                 body:
-                    options.body
+                    options.body !== undefined
                         ? JSON.stringify(options.body)
                         : undefined
             }
@@ -139,18 +139,13 @@ async function backendRequest(
     let data = null;
 
     try {
-
         data =
             await response.json();
-
     } catch {
-
         data = null;
-
     }
 
     if (!response.ok) {
-
         const message =
             data?.error ||
             data?.message ||
@@ -172,16 +167,61 @@ async function backendRequest(
 }
 
 /* ==========================================
+   RESET VERIFICATION
+========================================== */
+
+function resetVerificationState() {
+    verifiedAccount = null;
+
+    hideElement(accountCard);
+    hideElement(amountSection);
+    hideElement(continueBtn);
+
+    if (accountName) {
+        accountName.textContent = "—";
+    }
+
+    if (accountProvider) {
+        accountProvider.textContent = "—";
+    }
+
+    if (accountStatus) {
+        accountStatus.textContent = "—";
+    }
+
+    if (walletBalance) {
+        walletBalance.textContent = "—";
+    }
+
+    if (
+        verifyAccountBtn &&
+        !verificationInProgress
+    ) {
+        verifyAccountBtn.disabled = false;
+        verifyAccountBtn.textContent =
+            "Verify Account";
+    }
+}
+
+/* ==========================================
+   GET CURRENT CUSTOMER ID
+========================================== */
+
+function getCurrentCustomerId() {
+    return customerId?.value
+        ? customerId.value.trim()
+        : "";
+}
+
+/* ==========================================
    BACK BUTTON
 ========================================== */
 
 backBtn?.addEventListener(
     "click",
     () => {
-
         window.location.href =
             "dashboard.html";
-
     }
 );
 
@@ -190,17 +230,13 @@ backBtn?.addEventListener(
 ========================================== */
 
 providers.forEach(provider => {
-
     provider.addEventListener(
         "click",
         () => {
-
             providers.forEach(item => {
-
                 item.classList.remove(
                     "active"
                 );
-
             });
 
             provider.classList.add(
@@ -211,55 +247,35 @@ providers.forEach(provider => {
                 String(
                     provider.dataset.provider || ""
                 )
-                .trim()
-                .toLowerCase();
+                    .trim()
+                    .toLowerCase();
 
             /*
              * Changing provider invalidates
              * the previous verification.
              */
-
-            verifiedAccount = null;
-
-            hideElement(accountCard);
-            hideElement(amountSection);
-            hideElement(continueBtn);
-
-            if (verifyAccountBtn) {
-
-                verifyAccountBtn.disabled =
-                    false;
-
-                verifyAccountBtn.textContent =
-                    "Verify Account";
-
-            }
-
-            if (accountName) {
-
-                accountName.textContent =
-                    "—";
-
-            }
-
-            if (accountProvider) {
-
-                accountProvider.textContent =
-                    "—";
-
-            }
-
-            if (accountStatus) {
-
-                accountStatus.textContent =
-                    "—";
-
-            }
-
+            resetVerificationState();
         }
     );
-
 });
+
+/* ==========================================
+   CUSTOMER ID CHANGE
+========================================== */
+
+customerId?.addEventListener(
+    "input",
+    () => {
+        /*
+         * Once the customer ID changes,
+         * the previous verification can no
+         * longer be trusted.
+         */
+        if (verifiedAccount) {
+            resetVerificationState();
+        }
+    }
+);
 
 /* ==========================================
    VERIFY BETTING ACCOUNT
@@ -268,12 +284,14 @@ providers.forEach(provider => {
 verifyAccountBtn?.addEventListener(
     "click",
     async () => {
+        if (verificationInProgress) {
+            return;
+        }
 
         const customer =
-            customerId?.value.trim();
+            getCurrentCustomerId();
 
         if (!customer) {
-
             alert(
                 "Please enter your Customer ID."
             );
@@ -284,13 +302,14 @@ verifyAccountBtn?.addEventListener(
         }
 
         if (!selectedProvider) {
-
             alert(
                 "Please select a betting provider."
             );
 
             return;
         }
+
+        verificationInProgress = true;
 
         verifyAccountBtn.disabled =
             true;
@@ -299,7 +318,6 @@ verifyAccountBtn?.addEventListener(
             "Verifying...";
 
         try {
-
             const result =
                 await backendRequest(
                     "/api/betting/verify",
@@ -319,69 +337,106 @@ verifyAccountBtn?.addEventListener(
             /*
              * Backend response is authoritative.
              */
-
             const account =
                 result?.customer ||
                 result?.account ||
                 result?.data ||
                 result;
 
+            /*
+             * Use the customer ID returned by
+             * the backend when available.
+             */
+            const verifiedCustomerId =
+                String(
+                    account?.customerId ||
+                    result?.customerId ||
+                    customer
+                ).trim();
+
+            const verifiedProvider =
+                String(
+                    account?.provider ||
+                    result?.provider ||
+                    selectedProvider
+                )
+                    .trim()
+                    .toLowerCase();
+
             verifiedAccount = {
                 customerId:
-                    account?.customerId ||
-                    customer,
+                    verifiedCustomerId,
 
                 provider:
-                    account?.provider ||
-                    selectedProvider,
+                    verifiedProvider,
+
+                serviceId:
+                    account?.serviceId ||
+                    result?.serviceId ||
+                    "",
 
                 name:
                     account?.name ||
                     account?.customerName ||
                     account?.accountName ||
+                    result?.customerName ||
                     "",
 
                 status:
                     account?.status ||
+                    result?.status ||
                     "Verified"
             };
 
-            if (accountName) {
+            /*
+             * Never allow a successful verification
+             * for one customer to unlock funding for
+             * another customer.
+             */
+            if (
+                verifiedAccount.customerId !==
+                customer
+            ) {
+                throw new Error(
+                    "The verified customer ID does not match the account you entered."
+                );
+            }
 
+            if (
+                verifiedAccount.provider !==
+                selectedProvider
+            ) {
+                throw new Error(
+                    "The verified betting provider does not match the selected provider."
+                );
+            }
+
+            if (accountName) {
                 accountName.textContent =
                     verifiedAccount.name ||
                     "Verified account";
-
             }
 
             if (accountProvider) {
-
                 accountProvider.textContent =
                     String(
                         verifiedAccount.provider
                     ).toUpperCase();
-
             }
 
             if (accountStatus) {
-
                 accountStatus.textContent =
                     verifiedAccount.status;
-
             }
 
             /*
-             * Wallet balance is not fabricated.
-             * The betting verification endpoint
-             * does not establish a betting wallet
-             * balance, so leave the UI neutral.
+             * The verification endpoint does not
+             * establish a betting wallet balance.
+             * Never fabricate one.
              */
-
             if (walletBalance) {
-
                 walletBalance.textContent =
                     "—";
-
             }
 
             showElement(accountCard);
@@ -394,9 +449,7 @@ verifyAccountBtn?.addEventListener(
             alert(
                 "Betting account verified successfully."
             );
-
         } catch (error) {
-
             verifiedAccount = null;
 
             hideElement(accountCard);
@@ -404,27 +457,29 @@ verifyAccountBtn?.addEventListener(
             hideElement(continueBtn);
 
             if (walletBalance) {
-
                 walletBalance.textContent =
                     "—";
-
             }
 
             verifyAccountBtn.textContent =
                 "Verify Account";
 
+            console.error(
+                "Betting verification error:",
+                error
+            );
+
             alert(
                 error?.message ||
                 "Unable to verify betting account."
             );
-
         } finally {
+            verificationInProgress =
+                false;
 
             verifyAccountBtn.disabled =
                 false;
-
         }
-
     }
 );
 
@@ -435,15 +490,17 @@ verifyAccountBtn?.addEventListener(
 continueBtn?.addEventListener(
     "click",
     async () => {
+        if (fundingInProgress) {
+            return;
+        }
 
         const customer =
-            customerId?.value.trim();
+            getCurrentCustomerId();
 
         const amountValue =
             amount?.value.trim();
 
         if (!customer) {
-
             alert(
                 "Please enter your Customer ID."
             );
@@ -454,7 +511,6 @@ continueBtn?.addEventListener(
         }
 
         if (!verifiedAccount) {
-
             alert(
                 "Please verify the betting account first."
             );
@@ -462,8 +518,43 @@ continueBtn?.addEventListener(
             return;
         }
 
-        if (!amountValue) {
+        /*
+         * The customer must still be exactly
+         * the one that was verified.
+         */
+        if (
+            customer !==
+            verifiedAccount.customerId
+        ) {
+            resetVerificationState();
 
+            alert(
+                "The Customer ID changed. Please verify the betting account again."
+            );
+
+            customerId?.focus();
+
+            return;
+        }
+
+        /*
+         * The provider must still be exactly
+         * the provider that was verified.
+         */
+        if (
+            selectedProvider !==
+            verifiedAccount.provider
+        ) {
+            resetVerificationState();
+
+            alert(
+                "The betting provider changed. Please verify the account again."
+            );
+
+            return;
+        }
+
+        if (!amountValue) {
             alert(
                 "Please enter an amount."
             );
@@ -480,9 +571,27 @@ continueBtn?.addEventListener(
             !Number.isFinite(numericAmount) ||
             numericAmount <= 0
         ) {
-
             alert(
                 "Please enter a valid amount."
+            );
+
+            amount?.focus();
+
+            return;
+        }
+
+        /*
+         * Betting funding must be a whole NGN amount.
+         *
+         * Do not silently round what the customer entered.
+         */
+        if (
+            !Number.isInteger(
+                numericAmount
+            )
+        ) {
+            alert(
+                "Please enter a whole Naira amount."
             );
 
             amount?.focus();
@@ -496,11 +605,24 @@ continueBtn?.addEventListener(
          * Example:
          * ₦1,000 = 100000 kobo
          */
-
         const amountKobo =
-            Math.round(
-                numericAmount * 100
+            numericAmount * 100;
+
+        if (
+            !Number.isSafeInteger(
+                amountKobo
+            )
+        ) {
+            alert(
+                "The amount is too large."
             );
+
+            amount?.focus();
+
+            return;
+        }
+
+        fundingInProgress = true;
 
         continueBtn.disabled =
             true;
@@ -512,7 +634,6 @@ continueBtn?.addEventListener(
             "Processing...";
 
         try {
-
             const result =
                 await backendRequest(
                     "/api/betting/fund",
@@ -521,10 +642,10 @@ continueBtn?.addEventListener(
 
                         body: {
                             provider:
-                                selectedProvider,
+                                verifiedAccount.provider,
 
                             customerId:
-                                customer,
+                                verifiedAccount.customerId,
 
                             amountKobo
                         }
@@ -536,7 +657,6 @@ continueBtn?.addEventListener(
              * The backend/provider response determines
              * the actual transaction state.
              */
-
             const transaction =
                 result?.transaction ||
                 result?.data ||
@@ -558,45 +678,36 @@ continueBtn?.addEventListener(
                 status === "successful" ||
                 status === "success"
             ) {
-
                 alert(
                     transactionId
                         ? `Betting account funded successfully.\nTransaction: ${transactionId}`
                         : "Betting account funded successfully."
                 );
-
             } else if (
                 status === "pending"
             ) {
-
                 alert(
                     transactionId
                         ? `Your betting funding is pending confirmation.\nTransaction: ${transactionId}`
                         : "Your betting funding is pending confirmation."
                 );
-
             } else if (
                 status === "failed"
             ) {
-
                 alert(
                     transaction?.failureReason ||
                     transaction?.message ||
+                    result?.error ||
                     "Betting funding failed."
                 );
-
             } else {
-
                 alert(
                     transactionId
                         ? `Betting funding request received.\nTransaction: ${transactionId}`
                         : "Betting funding request received."
                 );
-
             }
-
         } catch (error) {
-
             console.error(
                 "Betting funding error:",
                 error
@@ -606,8 +717,9 @@ continueBtn?.addEventListener(
                 error?.message ||
                 "Unable to process the betting payment."
             );
-
         } finally {
+            fundingInProgress =
+                false;
 
             continueBtn.disabled =
                 false;
@@ -615,7 +727,6 @@ continueBtn?.addEventListener(
             continueBtn.textContent =
                 originalText;
         }
-
     }
 );
 

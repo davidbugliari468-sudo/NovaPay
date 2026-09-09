@@ -2,11 +2,17 @@ window.onload = () => {
     window.scrollTo(0, 0);
 };
 
-import { auth, db } from "./firebase.js";
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
 
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
 
 import {
     doc,
@@ -31,115 +37,138 @@ const userName =
         "userName"
     );
 
+
 const greetingText =
     document.getElementById(
         "greetingText"
     );
+
 
 const walletBalance =
     document.getElementById(
         "walletBalance"
     );
 
+
 const hideBalanceBtn =
     document.getElementById(
         "hideBalance"
     );
+
 
 const supportBtn =
     document.getElementById(
         "supportBtn"
     );
 
+
 const notificationBtn =
     document.getElementById(
         "notificationBtn"
     );
+
 
 const profileBtn =
     document.getElementById(
         "profileBtn"
     );
 
+
 const addMoneyBtn =
     document.getElementById(
         "addMoneyBtn"
     );
+
 
 const historyBtn =
     document.getElementById(
         "historyBtn"
     );
 
+
 const airtimeBtn =
     document.getElementById(
         "airtimeBtn"
     );
+
 
 const dataBtn =
     document.getElementById(
         "dataBtn"
     );
 
+
 const electricityBtn =
     document.getElementById(
         "electricityBtn"
     );
+
 
 const tvBtn =
     document.getElementById(
         "tvBtn"
     );
 
+
 const bettingBtn =
     document.getElementById(
         "bettingBtn"
     );
+
 
 const moreBtn =
     document.getElementById(
         "moreBtn"
     );
 
+
 const inviteBtn =
     document.getElementById(
         "inviteBtn"
     );
+
 
 const viewAllTransactionsBtn =
     document.getElementById(
         "viewAllTransactionsBtn"
     );
 
+
 const walletBtn =
     document.getElementById(
         "walletBtn"
     );
+
 
 const payBillsBtn =
     document.getElementById(
         "payBillsBtn"
     );
 
+
 const profileNavBtn =
     document.getElementById(
         "profileNavBtn"
     );
+
 
 const modal =
     document.getElementById(
         "customModal"
     );
 
+
 const modalTitle =
     document.getElementById(
         "modalTitle"
     );
 
+
 const modalMessage =
     document.getElementById(
         "modalMessage"
     );
+
 
 const recentTransactionsContainer =
     document.getElementById(
@@ -173,7 +202,9 @@ function markInternalNavigation() {
             "true"
         );
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.warn(
             "NovaPay internal navigation state could not be saved:",
@@ -197,7 +228,9 @@ function navigateWithinNovaPay(
 
     }
 
+
     markInternalNavigation();
+
 
     window.location.assign(
         destination
@@ -224,6 +257,7 @@ function showModal(
 
     }
 
+
     if (
         modalMessage
     ) {
@@ -232,6 +266,7 @@ function showModal(
             message;
 
     }
+
 
     if (
         modal
@@ -290,12 +325,14 @@ function formatMoney(
             amount
         );
 
+
     const safeAmount =
         Number.isFinite(
             numericAmount
         )
             ? numericAmount
             : 0;
+
 
     return (
         "₦" +
@@ -324,16 +361,17 @@ function koboToNaira(
             amountKobo
         );
 
+
     if (
         !Number.isSafeInteger(
             numericKobo
-        ) ||
-        numericKobo < 0
+        )
     ) {
 
-        return 0;
+        return null;
 
     }
+
 
     return (
         numericKobo /
@@ -341,6 +379,8 @@ function koboToNaira(
     );
 
 }
+
+
 // ======================================
 // GREETING
 // ======================================
@@ -355,8 +395,10 @@ function updateGreeting() {
 
     }
 
+
     const hour =
         new Date().getHours();
+
 
     if (
         hour < 12
@@ -403,6 +445,7 @@ function updateBalanceDisplay() {
 
     }
 
+
     if (
         balanceVisible
     ) {
@@ -435,7 +478,9 @@ hideBalanceBtn?.addEventListener(
         balanceVisible =
             !balanceVisible;
 
+
         updateBalanceDisplay();
+
 
         if (
             balanceVisible
@@ -459,17 +504,6 @@ hideBalanceBtn?.addEventListener(
 
 // ======================================
 // FETCH AUTHENTICATED WALLET
-// ======================================
-//
-// IMPORTANT:
-//
-// The frontend does NOT supply the UID.
-//
-// Firebase provides the ID token.
-//
-// The backend extracts the UID from the
-// verified token and reads the authoritative
-// wallet balance.
 // ======================================
 
 async function loadWalletBalance(
@@ -576,6 +610,7 @@ async function loadWalletBalance(
 
         }
 
+
         throw fetchError;
 
     }
@@ -667,13 +702,6 @@ async function loadWalletBalance(
 // ======================================
 // LOAD USER PROFILE
 // ======================================
-//
-// Profile information may still come from
-// Firestore.
-//
-// Wallet balance does NOT come from the
-// user profile anymore.
-// ======================================
 
 async function loadUserProfile(
     user
@@ -723,6 +751,1256 @@ async function loadUserProfile(
                 "User";
 
         }
+
+    }
+
+}
+
+
+// ======================================
+// TRANSACTION DATE VALUE
+// ======================================
+
+function getTransactionDateValue(
+    transaction
+) {
+
+    if (
+        !transaction
+    ) {
+
+        return 0;
+
+    }
+
+
+    const timestamp =
+        transaction.timestamp ??
+        transaction.createdAt ??
+        transaction.date ??
+        transaction.created_at;
+
+
+    if (
+        timestamp &&
+        typeof timestamp.toDate ===
+        "function"
+    ) {
+
+        const date =
+            timestamp.toDate();
+
+
+        return (
+            date instanceof Date &&
+            !Number.isNaN(
+                date.getTime()
+            )
+        )
+            ? date.getTime()
+            : 0;
+
+    }
+
+
+    if (
+        timestamp instanceof Date
+    ) {
+
+        return Number.isNaN(
+            timestamp.getTime()
+        )
+            ? 0
+            : timestamp.getTime();
+
+    }
+
+
+    if (
+        typeof timestamp ===
+        "number"
+    ) {
+
+        return timestamp <
+            100000000000
+            ? timestamp * 1000
+            : timestamp;
+
+    }
+
+
+    if (
+        typeof timestamp ===
+        "string"
+    ) {
+
+        const parsed =
+            Date.parse(
+                timestamp
+            );
+
+
+        return Number.isNaN(
+            parsed
+        )
+            ? 0
+            : parsed;
+
+    }
+
+
+    return 0;
+
+}
+
+
+// ======================================
+// TRANSACTION TITLE
+// ======================================
+
+function getTransactionTitle(
+    transaction
+) {
+
+    const rawTitle =
+        transaction.title ||
+        transaction.description ||
+        transaction.service ||
+        transaction.category ||
+        transaction.type ||
+        "Transaction";
+
+
+    const normalized =
+        String(
+            rawTitle
+        )
+            .trim();
+
+
+    if (
+        !normalized
+    ) {
+
+        return "Transaction";
+
+    }
+
+
+    if (
+        normalized.toLowerCase() ===
+        "deposit"
+    ) {
+
+        return "Credit Alert";
+
+    }
+
+
+    return normalized;
+
+}
+
+
+// ======================================
+// TRANSACTION STATUS
+// ======================================
+
+function getTransactionStatus(
+    transaction
+) {
+
+    const rawStatus =
+        String(
+            transaction.status ||
+            transaction.state ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        rawStatus ===
+        "success" ||
+        rawStatus ===
+        "successful" ||
+        rawStatus ===
+        "completed" ||
+        rawStatus ===
+        "complete" ||
+        rawStatus ===
+        "completed-api"
+    ) {
+
+        return "successful";
+
+    }
+
+
+    if (
+        rawStatus ===
+        "processing" ||
+        rawStatus ===
+        "pending" ||
+        rawStatus ===
+        "initiated-api" ||
+        rawStatus ===
+        "queued-api" ||
+        rawStatus ===
+        "on-hold" ||
+        rawStatus ===
+        "in_progress" ||
+        rawStatus ===
+        "in-progress"
+    ) {
+
+        return "pending";
+
+    }
+
+
+    if (
+        rawStatus ===
+        "failed" ||
+        rawStatus ===
+        "error" ||
+        rawStatus ===
+        "cancelled" ||
+        rawStatus ===
+        "canceled" ||
+        rawStatus ===
+        "refunded"
+    ) {
+
+        return "failed";
+
+    }
+
+
+    return "successful";
+
+}
+
+
+// ======================================
+// TRANSACTION DIRECTION
+// ======================================
+
+function getTransactionDirection(
+    transaction
+) {
+
+    const explicitDirection =
+        String(
+            transaction.direction ||
+            transaction.transactionType ||
+            transaction.kind ||
+            transaction.entryType ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    // --------------------------------------
+    // EXPLICIT CREDIT
+    // --------------------------------------
+
+    if (
+        explicitDirection ===
+        "credit" ||
+        explicitDirection ===
+        "income" ||
+        explicitDirection ===
+        "deposit" ||
+        explicitDirection ===
+        "funding" ||
+        explicitDirection ===
+        "credit_alert"
+    ) {
+
+        return "credit";
+
+    }
+
+
+    // --------------------------------------
+    // EXPLICIT DEBIT
+    // --------------------------------------
+
+    if (
+        explicitDirection ===
+        "debit" ||
+        explicitDirection ===
+        "expense" ||
+        explicitDirection ===
+        "withdrawal"
+    ) {
+
+        return "debit";
+
+    }
+
+
+    // --------------------------------------
+    // CHECK SERVICE / TYPE
+    // --------------------------------------
+
+    const service =
+        String(
+            transaction.service ||
+            transaction.category ||
+            transaction.type ||
+            transaction.title ||
+            transaction.description ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    const creditKeywords = [
+
+        "deposit",
+
+        "credit",
+
+        "funding",
+
+        "fund",
+
+        "cashback",
+
+        "refund",
+
+        "credit alert",
+
+        "money in",
+
+        "money received",
+
+        "wallet top up",
+
+        "wallet topup",
+
+        "top up",
+
+        "topup"
+
+    ];
+
+
+    if (
+        creditKeywords.some(
+            keyword =>
+                service.includes(
+                    keyword
+                )
+        )
+    ) {
+
+        return "credit";
+
+    }
+
+
+    // --------------------------------------
+    // CHECK SIGNED AMOUNT
+    // --------------------------------------
+
+    const amountCandidates = [
+
+        transaction.amount,
+
+        transaction.value,
+
+        transaction.total
+
+    ];
+
+
+    for (
+        const candidate
+        of amountCandidates
+    ) {
+
+        const numericAmount =
+            Number(
+                candidate
+            );
+
+
+        if (
+            Number.isFinite(
+                numericAmount
+            )
+        ) {
+
+            if (
+                numericAmount < 0
+            ) {
+
+                return "debit";
+
+            }
+
+        }
+
+    }
+
+
+    // --------------------------------------
+    // DEFAULT KNOWN SERVICE TYPES TO DEBIT
+    // --------------------------------------
+
+    const debitServices = [
+
+        "airtime",
+
+        "data",
+
+        "electricity",
+
+        "tv",
+
+        "cable",
+
+        "betting",
+
+        "withdrawal",
+
+        "payment",
+
+        "transfer",
+
+        "bill",
+
+        "bills",
+
+        "purchase",
+
+        "debit"
+
+    ];
+
+
+    if (
+        debitServices.some(
+            item =>
+                service.includes(
+                    item
+                )
+        )
+    ) {
+
+        return "debit";
+
+    }
+
+
+    return "debit";
+
+}
+
+
+// ======================================
+// TRANSACTION AMOUNT
+// ======================================
+//
+// NovaPay transaction money is stored in
+// kobo. Prefer amountKobo first.
+//
+// Example:
+//
+// 200000 kobo = ₦2,000.00
+//
+// This fixes the previous ₦0.00 problem.
+// ======================================
+
+function getTransactionAmount(
+    transaction
+) {
+
+    if (
+        !transaction
+    ) {
+
+        return 0;
+
+    }
+
+
+    // --------------------------------------
+    // AUTHORITATIVE KOBO FIELD
+    // --------------------------------------
+
+    const amountKobo =
+        Number(
+            transaction.amountKobo
+        );
+
+
+    if (
+        Number.isSafeInteger(
+            amountKobo
+        ) &&
+        amountKobo >= 0
+    ) {
+
+        return (
+            amountKobo /
+            100
+        );
+
+    }
+
+
+    // --------------------------------------
+    // OTHER POSSIBLE KOBO FIELD NAMES
+    // --------------------------------------
+
+    const koboCandidates = [
+
+        transaction.valueKobo,
+
+        transaction.totalKobo,
+
+        transaction.amount_in_kobo
+
+    ];
+
+
+    for (
+        const candidate
+        of koboCandidates
+    ) {
+
+        const numericKobo =
+            Number(
+                candidate
+            );
+
+
+        if (
+            Number.isSafeInteger(
+                numericKobo
+            ) &&
+            numericKobo >= 0
+        ) {
+
+            return (
+                numericKobo /
+                100
+            );
+
+        }
+
+    }
+
+
+    // --------------------------------------
+    // LEGACY NAIRA FIELDS
+    // --------------------------------------
+
+    const nairaCandidates = [
+
+        transaction.amount,
+
+        transaction.value,
+
+        transaction.total
+
+    ];
+
+
+    for (
+        const candidate
+        of nairaCandidates
+    ) {
+
+        if (
+            candidate ===
+            null ||
+            candidate ===
+            undefined ||
+            candidate ===
+            ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const numericAmount =
+            Number(
+                candidate
+            );
+
+
+        if (
+            Number.isFinite(
+                numericAmount
+            )
+        ) {
+
+            return Math.abs(
+                numericAmount
+            );
+
+        }
+
+    }
+
+
+    return 0;
+
+}
+
+
+// ======================================
+// TRANSACTION DATE DISPLAY
+// ======================================
+
+function formatTransactionDate(
+    transaction
+) {
+
+    const timestamp =
+        getTransactionDateValue(
+            transaction
+        );
+
+
+    if (
+        !timestamp
+    ) {
+
+        return "Date unavailable";
+
+    }
+
+
+    const date =
+        new Date(
+            timestamp
+        );
+
+
+    return date.toLocaleString(
+        "en-NG",
+        {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+// ======================================
+// RENDER RECENT TRANSACTION
+// ======================================
+
+function renderRecentTransaction(
+    transaction
+) {
+
+    const title =
+        getTransactionTitle(
+            transaction
+        );
+
+
+    const status =
+        getTransactionStatus(
+            transaction
+        );
+
+
+    const direction =
+        getTransactionDirection(
+            transaction
+        );
+
+
+    const amount =
+        getTransactionAmount(
+            transaction
+        );
+
+
+    const date =
+        formatTransactionDate(
+            transaction
+        );
+
+
+    const isCredit =
+        direction ===
+        "credit";
+
+
+    const amountClass =
+        isCredit
+            ? "money-in"
+            : "money-out";
+
+
+    const directionClass =
+        isCredit
+            ? "credit"
+            : "debit";
+
+
+    const statusClass =
+        `status-${status}`;
+
+
+    const amountPrefix =
+        isCredit
+            ? "+"
+            : "-";
+
+
+    const icon =
+        isCredit
+            ? "fa-arrow-down"
+            : "fa-arrow-up";
+
+
+    const safeTitle =
+        escapeHtml(
+            title
+        );
+
+
+    const safeDate =
+        escapeHtml(
+            date
+        );
+
+
+    const safeStatus =
+        escapeHtml(
+            capitalizeStatus(
+                status
+            )
+        );
+
+
+    return `
+
+        <div
+            class="transaction-card"
+            data-transaction-direction="${directionClass}"
+            data-transaction-status="${status}"
+        >
+
+            <div
+                class="transaction-icon ${directionClass}"
+            >
+
+                <i
+                    class="fa-solid ${icon}"
+                    aria-hidden="true"
+                ></i>
+
+            </div>
+
+
+            <div
+                class="transaction-details"
+            >
+
+                <h4>
+                    ${safeTitle}
+                </h4>
+
+
+                <p>
+
+                    ${safeDate}
+
+                    •
+
+                    <span
+                        class="${statusClass}"
+                    >
+                        ${safeStatus}
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="transaction-amount ${amountClass}"
+            >
+
+                ${amountPrefix}${formatMoney(amount)}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// ======================================
+// CAPITALIZE STATUS
+// ======================================
+
+function capitalizeStatus(
+    status
+) {
+
+    const normalized =
+        String(
+            status ||
+            ""
+        )
+            .toLowerCase();
+
+
+    if (
+        normalized ===
+        "successful"
+    ) {
+
+        return "Successful";
+
+    }
+
+
+    if (
+        normalized ===
+        "pending"
+    ) {
+
+        return "Pending";
+
+    }
+
+
+    if (
+        normalized ===
+        "failed"
+    ) {
+
+        return "Failed";
+
+    }
+
+
+    return (
+        normalized.charAt(0)
+            .toUpperCase() +
+        normalized.slice(1)
+    );
+
+}
+
+
+// ======================================
+// ESCAPE HTML
+// ======================================
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ======================================
+// LOAD RECENT TRANSACTIONS
+// ======================================
+
+async function loadRecentTransactions() {
+
+    if (
+        !recentTransactionsContainer
+    ) {
+
+        return;
+
+    }
+
+
+    recentTransactionsContainer.innerHTML = `
+
+        <div class="transaction-card">
+
+            <div class="transaction-icon">
+
+                <i
+                    class="fa-solid fa-spinner fa-spin"
+                    aria-hidden="true"
+                ></i>
+
+            </div>
+
+            <div class="transaction-details">
+
+                <h4>
+                    Loading Transactions
+                </h4>
+
+                <p>
+                    Your recent transactions are loading...
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const user =
+            auth.currentUser;
+
+
+        if (
+            !user
+        ) {
+
+            throw new Error(
+                "Authentication required."
+            );
+
+        }
+
+
+        const idToken =
+            await Promise.race([
+
+                user.getIdToken(),
+
+                new Promise(
+                    (_, reject) => {
+
+                        setTimeout(
+                            () => {
+
+                                reject(
+                                    new Error(
+                                        "Authentication token request timed out."
+                                    )
+                                );
+
+                            },
+                            8000
+                        );
+
+                    }
+                )
+
+            ]);
+
+
+        const controller =
+            new AbortController();
+
+
+        const timeoutId =
+            setTimeout(
+                () => {
+
+                    controller.abort();
+
+                },
+                8000
+            );
+
+
+        let response;
+
+
+        try {
+
+            response =
+                await fetch(
+                    `${API_BASE_URL}/api/transactions?limit=50`,
+                    {
+
+                        method:
+                            "GET",
+
+                        headers: {
+
+                            "Authorization":
+                                `Bearer ${idToken}`,
+
+                            "Accept":
+                                "application/json"
+
+                        },
+
+                        cache:
+                            "no-store",
+
+                        signal:
+                            controller.signal
+
+                    }
+                );
+
+        }
+
+        catch (fetchError) {
+
+            if (
+                fetchError?.name ===
+                "AbortError"
+            ) {
+
+                throw new Error(
+                    "Transaction server timed out."
+                );
+
+            }
+
+
+            throw fetchError;
+
+        }
+
+        finally {
+
+            clearTimeout(
+                timeoutId
+            );
+
+        }
+
+
+        let result;
+
+
+        try {
+
+            result =
+                await response.json();
+
+        }
+
+        catch {
+
+            throw new Error(
+                "Invalid response from NovaPay server."
+            );
+
+        }
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                result?.message ||
+                result?.error ||
+                `Server error (${response.status}).`
+            );
+
+        }
+
+
+        if (
+            !result?.success
+        ) {
+
+            throw new Error(
+                result?.message ||
+                result?.error ||
+                "Unable to load transactions."
+            );
+
+        }
+
+
+        const transactions =
+            Array.isArray(
+                result.transactions
+            )
+                ? result.transactions
+                : [];
+
+
+        transactions.sort(
+            (a, b) => {
+
+                return (
+                    getTransactionDateValue(b) -
+                    getTransactionDateValue(a)
+                );
+
+            }
+        );
+
+
+        const recentTransactions =
+            transactions.slice(
+                0,
+                3
+            );
+
+
+        if (
+            recentTransactions.length ===
+            0
+        ) {
+
+            recentTransactionsContainer.innerHTML = `
+
+                <div class="transaction-card">
+
+                    <div class="transaction-icon">
+
+                        <i
+                            class="fa-solid fa-receipt"
+                            aria-hidden="true"
+                        ></i>
+
+                    </div>
+
+                    <div class="transaction-details">
+
+                        <h4>
+                            No Transactions Yet
+                        </h4>
+
+                        <p>
+                            Your recent transactions will appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        recentTransactionsContainer.innerHTML =
+            recentTransactions
+                .map(
+                    transaction =>
+                        renderRecentTransaction(
+                            transaction
+                        )
+                )
+                .join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "RECENT TRANSACTIONS ERROR:",
+            error
+        );
+
+
+        recentTransactionsContainer.innerHTML = `
+
+            <div class="transaction-card">
+
+                <div class="transaction-icon">
+
+                    <i
+                        class="fa-solid fa-circle-exclamation"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+                <div class="transaction-details">
+
+                    <h4>
+                        Unable to Load
+                    </h4>
+
+                    <p>
+                        Transactions are temporarily unavailable.
+                    </p>
+
+                    <button
+                        type="button"
+                        id="retryTransactionsBtn"
+                        style="
+                            margin-top:8px;
+                            border:0;
+                            background:none;
+                            padding:0;
+                            color:inherit;
+                            font:inherit;
+                            font-weight:700;
+                            cursor:pointer;
+                        "
+                    >
+                        Tap to retry
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        const retryButton =
+            document.getElementById(
+                "retryTransactionsBtn"
+            );
+
+
+        retryButton?.addEventListener(
+            "click",
+            () => {
+
+                loadRecentTransactions();
+
+            }
+        );
 
     }
 
@@ -1052,1059 +2330,6 @@ inviteBtn?.addEventListener(
 
 
 // ======================================
-// RECENT TRANSACTIONS
-// ======================================
-
-async function loadRecentTransactions() {
-
-    if (
-        !recentTransactionsContainer
-    ) {
-
-        return;
-
-    }
-
-
-    recentTransactionsContainer.innerHTML = `
-
-        <div class="transaction-card">
-
-            <div class="transaction-icon">
-
-                <i
-                    class="fa-solid fa-spinner fa-spin"
-                ></i>
-
-            </div>
-
-            <div class="transaction-details">
-
-                <h4>
-                    Loading Transactions
-                </h4>
-
-                <p>
-                    Your recent transactions are loading...
-                </p>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    try {
-
-        const user =
-            auth.currentUser;
-
-
-        if (
-            !user
-        ) {
-
-            throw new Error(
-                "Authentication required."
-            );
-
-        }
-
-
-        const idToken =
-            await Promise.race([
-
-                user.getIdToken(),
-
-                new Promise(
-                    (_, reject) => {
-
-                        setTimeout(
-                            () => {
-
-                                reject(
-                                    new Error(
-                                        "Authentication token request timed out."
-                                    )
-                                );
-
-                            },
-                            8000
-                        );
-
-                    }
-                )
-
-            ]);
-
-
-        const controller =
-            new AbortController();
-
-
-        const timeoutId =
-            setTimeout(
-                () => {
-
-                    controller.abort();
-
-                },
-                8000
-            );
-
-
-        let response;
-
-
-        try {
-
-            response =
-                await fetch(
-                    `${API_BASE_URL}/api/transactions?limit=50`,
-                    {
-
-                        method:
-                            "GET",
-
-                        headers: {
-
-                            "Authorization":
-                                `Bearer ${idToken}`,
-
-                            "Accept":
-                                "application/json"
-
-                        },
-
-                        cache:
-                            "no-store",
-
-                        signal:
-                            controller.signal
-
-                    }
-                );
-
-        }
-
-        catch (fetchError) {
-
-            if (
-                fetchError?.name ===
-                "AbortError"
-            ) {
-
-                throw new Error(
-                    "Transaction server timed out."
-                );
-
-            }
-
-            throw fetchError;
-
-        }
-
-        finally {
-
-            clearTimeout(
-                timeoutId
-            );
-
-        }
-
-
-        let result;
-
-
-        try {
-
-            result =
-                await response.json();
-
-        }
-
-        catch {
-
-            throw new Error(
-                "Invalid response from NovaPay server."
-            );
-
-        }
-
-
-        if (
-            !response.ok
-        ) {
-
-            throw new Error(
-                result?.message ||
-                result?.error ||
-                `Server error (${response.status}).`
-            );
-
-        }
-
-
-        if (
-            !result?.success
-        ) {
-
-            throw new Error(
-                result?.message ||
-                result?.error ||
-                "Unable to load transactions."
-            );
-
-        }
-
-
-        const transactions =
-            Array.isArray(
-                result.transactions
-            )
-                ? result.transactions
-                : [];
-
-
-        transactions.sort(
-            (a, b) => {
-
-                return (
-                    getTransactionDateValue(b) -
-                    getTransactionDateValue(a)
-                );
-
-            }
-        );
-
-
-        const recentTransactions =
-            transactions.slice(
-                0,
-                3
-            );
-
-
-        if (
-            recentTransactions.length ===
-            0
-        ) {
-
-            recentTransactionsContainer.innerHTML = `
-
-                <div class="transaction-card">
-
-                    <div class="transaction-icon">
-
-                        <i
-                            class="fa-solid fa-receipt"
-                        ></i>
-
-                    </div>
-
-                    <div class="transaction-details">
-
-                        <h4>
-                            No Transactions Yet
-                        </h4>
-
-                        <p>
-                            Your recent transactions will appear here.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        recentTransactionsContainer.innerHTML =
-            recentTransactions
-                .map(
-                    transaction =>
-                        renderRecentTransaction(
-                            transaction
-                        )
-                )
-                .join("");
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "RECENT TRANSACTIONS ERROR:",
-            error
-        );
-
-
-        recentTransactionsContainer.innerHTML = `
-
-            <div class="transaction-card">
-
-                <div class="transaction-icon">
-
-                    <i
-                        class="fa-solid fa-circle-exclamation"
-                    ></i>
-
-                </div>
-
-                <div class="transaction-details">
-
-                    <h4>
-                        Unable to Load
-                    </h4>
-
-                    <p>
-                        Transactions are temporarily unavailable.
-                    </p>
-
-                    <button
-                        type="button"
-                        id="retryTransactionsBtn"
-                        style="
-                            margin-top:8px;
-                            border:0;
-                            background:none;
-                            padding:0;
-                            color:inherit;
-                            font:inherit;
-                            font-weight:700;
-                            cursor:pointer;
-                        "
-                    >
-                        Tap to retry
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        const retryButton =
-            document.getElementById(
-                "retryTransactionsBtn"
-            );
-
-
-        retryButton?.addEventListener(
-            "click",
-            () => {
-
-                loadRecentTransactions();
-
-            }
-        );
-
-    }
-
-}
-
-
-// ======================================
-// TRANSACTION DATE VALUE
-// ======================================
-
-function getTransactionDateValue(
-    transaction
-) {
-
-    if (
-        !transaction
-    ) {
-
-        return 0;
-
-    }
-
-
-    const timestamp =
-        transaction.timestamp ??
-        transaction.createdAt ??
-        transaction.date ??
-        transaction.created_at;
-
-
-    if (
-        timestamp &&
-        typeof timestamp.toDate ===
-        "function"
-    ) {
-
-        const date =
-            timestamp.toDate();
-
-
-        return (
-            date instanceof Date &&
-            !Number.isNaN(
-                date.getTime()
-            )
-        )
-            ? date.getTime()
-            : 0;
-
-    }
-
-
-    if (
-        timestamp instanceof Date
-    ) {
-
-        return Number.isNaN(
-            timestamp.getTime()
-        )
-            ? 0
-            : timestamp.getTime();
-
-    }
-
-
-    if (
-        typeof timestamp ===
-        "number"
-    ) {
-
-        return timestamp <
-            100000000000
-            ? timestamp * 1000
-            : timestamp;
-
-    }
-
-
-    if (
-        typeof timestamp ===
-        "string"
-    ) {
-
-        const parsed =
-            Date.parse(
-                timestamp
-            );
-
-
-        return Number.isNaN(
-            parsed
-        )
-            ? 0
-            : parsed;
-
-    }
-
-
-    return 0;
-
-}
-
-
-// ======================================
-// TRANSACTION LABEL
-// ======================================
-
-function getTransactionTitle(
-    transaction
-) {
-
-    return (
-        transaction.title ||
-        transaction.description ||
-        transaction.service ||
-        transaction.type ||
-        "Transaction"
-    );
-
-}
-
-
-// ======================================
-// TRANSACTION STATUS
-// ======================================
-
-function getTransactionStatus(
-    transaction
-) {
-
-    const rawStatus =
-        String(
-            transaction.status ||
-            transaction.state ||
-            "successful"
-        )
-            .trim()
-            .toLowerCase();
-
-
-    if (
-        rawStatus ===
-        "success"
-    ) {
-
-        return "successful";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "completed"
-    ) {
-
-        return "successful";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "complete"
-    ) {
-
-        return "successful";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "processing"
-    ) {
-
-        return "pending";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "in_progress"
-    ) {
-
-        return "pending";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "in-progress"
-    ) {
-
-        return "pending";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "failed"
-    ) {
-
-        return "failed";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "error"
-    ) {
-
-        return "failed";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "cancelled"
-    ) {
-
-        return "failed";
-
-    }
-
-
-    if (
-        rawStatus ===
-        "canceled"
-    ) {
-
-        return "failed";
-
-    }
-
-
-    return "successful";
-
-}
-
-
-// ======================================
-// TRANSACTION DIRECTION
-// ======================================
-
-function getTransactionDirection(
-    transaction
-) {
-
-    const explicitDirection =
-        String(
-            transaction.direction ||
-            transaction.transactionType ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
-
-
-    if (
-        explicitDirection ===
-        "credit"
-    ) {
-
-        return "credit";
-
-    }
-
-
-    if (
-        explicitDirection ===
-        "income"
-    ) {
-
-        return "credit";
-
-    }
-
-
-    if (
-        explicitDirection ===
-        "deposit"
-    ) {
-
-        return "credit";
-
-    }
-
-
-    if (
-        explicitDirection ===
-        "debit"
-    ) {
-
-        return "debit";
-
-    }
-
-
-    if (
-        explicitDirection ===
-        "expense"
-    ) {
-
-        return "debit";
-
-    }
-
-
-    if (
-        explicitDirection ===
-        "withdrawal"
-    ) {
-
-        return "debit";
-
-    }
-
-
-    const amount =
-        Number(
-            transaction.amount
-        );
-
-
-    if (
-        Number.isFinite(
-            amount
-        ) &&
-        amount < 0
-    ) {
-
-        return "debit";
-
-    }
-
-
-    const service =
-        String(
-            transaction.service ||
-            transaction.category ||
-            transaction.type ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
-
-
-    const debitServices = [
-
-        "airtime",
-
-        "data",
-
-        "electricity",
-
-        "tv",
-
-        "cable",
-
-        "betting",
-
-        "withdrawal",
-
-        "payment",
-
-        "transfer"
-
-    ];
-
-
-    if (
-        debitServices.some(
-            item =>
-                service.includes(
-                    item
-                )
-        )
-    ) {
-
-        return "debit";
-
-    }
-
-
-    return "debit";
-
-}
-
-
-// ======================================
-// TRANSACTION AMOUNT
-// ======================================
-
-function getTransactionAmount(
-    transaction
-) {
-
-    const amount =
-        Number(
-            transaction.amount ??
-            transaction.value ??
-            transaction.total ??
-            0
-        );
-
-
-    return Number.isFinite(
-        amount
-    )
-        ? Math.abs(
-            amount
-        )
-        : 0;
-
-}
-
-
-// ======================================
-// TRANSACTION DATE DISPLAY
-// ======================================
-
-function formatTransactionDate(
-    transaction
-) {
-
-    const timestamp =
-        getTransactionDateValue(
-            transaction
-        );
-
-
-    if (
-        !timestamp
-    ) {
-
-        return "Date unavailable";
-
-    }
-
-
-    const date =
-        new Date(
-            timestamp
-        );
-
-
-    return date.toLocaleString(
-        "en-NG",
-        {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit"
-        }
-    );
-
-}
-
-
-// ======================================
-// RENDER RECENT TRANSACTION
-// ======================================
-
-function renderRecentTransaction(
-    transaction
-) {
-
-    const title =
-        getTransactionTitle(
-            transaction
-        );
-
-
-    const status =
-        getTransactionStatus(
-            transaction
-        );
-
-
-    const direction =
-        getTransactionDirection(
-            transaction
-        );
-
-
-    const amount =
-        getTransactionAmount(
-            transaction
-        );
-
-
-    const date =
-        formatTransactionDate(
-            transaction
-        );
-
-
-    const isCredit =
-        direction ===
-        "credit";
-
-
-    const amountClass =
-        isCredit
-            ? "money-in"
-            : "money-out";
-
-
-    const directionClass =
-        isCredit
-            ? "credit"
-            : "debit";
-
-
-    const statusClass =
-        `status-${status}`;
-
-
-    const amountPrefix =
-        isCredit
-            ? "+"
-            : "-";
-
-
-    const icon =
-        isCredit
-            ? "fa-arrow-down"
-            : "fa-arrow-up";
-
-
-    const safeTitle =
-        escapeHtml(
-            title
-        );
-
-
-    const safeDate =
-        escapeHtml(
-            date
-        );
-
-
-    const safeStatus =
-        escapeHtml(
-            capitalizeStatus(
-                status
-            )
-        );
-
-
-    return `
-
-        <div
-            class="transaction-card"
-        >
-
-            <div
-                class="transaction-icon ${directionClass}"
-            >
-
-                <i
-                    class="fa-solid ${icon}"
-                ></i>
-
-            </div>
-
-
-            <div
-                class="transaction-details"
-            >
-
-                <h4>
-                    ${safeTitle}
-                </h4>
-
-
-                <p>
-                    ${safeDate}
-                    •
-                    <span
-                        class="${statusClass}"
-                    >
-                        ${safeStatus}
-                    </span>
-                </p>
-
-            </div>
-
-
-            <div
-                class="transaction-amount ${amountClass}"
-            >
-
-                ${amountPrefix}${formatMoney(amount)}
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-// ======================================
-// CAPITALIZE STATUS
-// ======================================
-
-function capitalizeStatus(
-    status
-) {
-
-    const normalized =
-        String(
-            status ||
-            ""
-        )
-            .toLowerCase();
-
-
-    if (
-        normalized ===
-        "successful"
-    ) {
-
-        return "Successful";
-
-    }
-
-
-    if (
-        normalized ===
-        "pending"
-    ) {
-
-        return "Pending";
-
-    }
-
-
-    if (
-        normalized ===
-        "failed"
-    ) {
-
-        return "Failed";
-
-    }
-
-
-    return (
-        normalized.charAt(0)
-            .toUpperCase() +
-        normalized.slice(1)
-    );
-
-}
-
-
-// ======================================
-// ESCAPE HTML
-// ======================================
-
-function escapeHtml(
-    value
-) {
-
-    return String(
-        value ?? ""
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-// ======================================
 // INTERNAL HTML LINK DETECTION
 // ======================================
 
@@ -2278,21 +2503,26 @@ function runDashboardStartupCheck() {
         "NovaPay Dashboard initialized."
     );
 
+
     console.log(
         "Firebase authentication: ENABLED"
     );
+
 
     console.log(
         "Backend wallet API: ENABLED"
     );
 
+
     console.log(
         "Secure transaction history: ENABLED"
     );
 
+
     console.log(
         "Dashboard navigation: ENABLED"
     );
+
 
     console.log(
         "Dashboard transaction rendering: ENABLED"

@@ -3,234 +3,299 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
-<title>NovaPay Receipt</title>
+    <meta
+        name="theme-color"
+        content="#F5F7FC"
+    >
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>NovaPay Receipt</title>
 
-<link rel="stylesheet"
-href="receipt.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="receipt.css"
+    >
 
 </head>
 
 <body>
 
-<div class="receipt-page">
+    <main class="receipt-page">
 
-<!-- ===========================
-HEADER
-=========================== -->
+        <!-- =========================
+             HEADER
+        ========================== -->
 
-<header class="receipt-header">
+        <header class="receipt-header">
 
-<button id="backBtn" class="back-btn">
+            <button
+                type="button"
+                id="backBtn"
+                class="back-btn"
+                aria-label="Go back"
+            >
 
-<i class="fas fa-arrow-left"></i>
+                <i
+                    class="fas fa-chevron-left"
+                    aria-hidden="true"
+                ></i>
 
-</button>
+            </button>
 
-<h1>Receipt</h1>
+            <h1>
+                Receipt
+            </h1>
 
-<div class="header-space"></div>
+            <div
+                class="header-space"
+                aria-hidden="true"
+            ></div>
 
-</header>
+        </header>
 
-<!-- ===========================
-RECEIPT CARD
-=========================== -->
 
-<section class="receipt-card">
+        <!-- =========================
+             MAIN RECEIPT
+        ========================== -->
 
-<div class="receipt-top">
+        <section
+            class="receipt-card"
+            aria-label="Transaction receipt"
+        >
 
-<div id="receiptIcon" class="status-icon">
+            <!-- =====================
+                 STATUS / AMOUNT
+            ====================== -->
 
-<i class="fas fa-check"></i>
+            <div class="receipt-top">
 
-</div>
+                <div
+                    id="receiptIcon"
+                    class="status-icon success"
+                    aria-hidden="true"
+                >
 
-<h2 id="transactionTitle">
+                    <i class="fas fa-check"></i>
 
-Credit Alert
+                </div>
 
-</h2>
 
-<p id="transactionStatus">
+                <div class="receipt-heading">
 
-Successful
+                    <h2 id="transactionTitle">
+                        Credit Alert
+                    </h2>
 
-</p>
+                    <p id="transactionStatus">
+                        Successful
+                    </p>
 
-<h1 id="amount">
+                </div>
 
-+₦0.00
 
-</h1>
+                <h2
+                    id="amount"
+                    class="receipt-amount credit-amount"
+                >
+                    +₦0.00
+                </h2>
 
-</div>
+            </div>
 
-<div class="receipt-details"> 
-    <div class="detail-row">
 
-<span>
+            <!-- =====================
+                 TRANSACTION DETAILS
+            ====================== -->
 
-Recipient
+            <div class="receipt-details">
 
-</span>
 
-<strong id="recipient">
+                <div class="detail-row">
 
-NovaPay Wallet
+                    <div class="detail-label">
 
-</strong>
+                        <span>
+                            Recipient
+                        </span>
 
-</div>
+                    </div>
 
-<div class="detail-row">
+                    <strong id="recipient">
+                        NovaPay Wallet
+                    </strong>
 
-<span>
+                </div>
 
-Transaction Amount
 
-</span>
+                <div class="detail-row">
 
-<strong id="amountText">
+                    <div class="detail-label">
 
-+₦0.00
+                        <span>
+                            Transaction Amount
+                        </span>
 
-</strong>
+                    </div>
 
-</div>
+                    <strong id="amountText">
+                        +₦0.00
+                    </strong>
 
-<div class="detail-row">
+                </div>
 
-<span>
 
-Transaction Date
+                <div class="detail-row">
 
-</span>
+                    <div class="detail-label">
 
-<strong id="date">
+                        <span>
+                            Transaction Date
+                        </span>
 
---
+                    </div>
 
-</strong>
+                    <strong id="date">
+                        --
+                    </strong>
 
-</div>
+                </div>
 
-<div class="detail-row">
 
-<span>
+                <div class="detail-row">
 
-Reference No.
+                    <div class="detail-label">
 
-</span>
+                        <span>
+                            Reference No.
+                        </span>
 
-<strong id="transactionId">
+                    </div>
 
-NVP000000
+                    <strong id="transactionId">
+                        NVP000000
+                    </strong>
 
-</strong>
+                </div>
 
-</div>
 
-<div class="detail-row">
+                <div class="detail-row">
 
-<span>
+                    <div class="detail-label">
 
-Category
+                        <span>
+                            Category
+                        </span>
 
-</span>
+                    </div>
 
-<strong id="category">
+                    <strong id="category">
+                        Credit Alert
+                    </strong>
 
-Credit Alert
+                </div>
 
-</strong>
 
-</div>
+                <div class="detail-row last-row">
 
-<div class="detail-row">
+                    <div class="detail-label">
 
-<span>
+                        <span>
+                            Status
+                        </span>
 
-Status
+                    </div>
 
-</span>
+                    <strong id="statusText">
+                        Successful
+                    </strong>
 
-<strong id="statusText">
+                </div>
 
-Successful
 
-</strong>
+            </div>
 
-</div>
+        </section>
 
-</div>
 
-</section> 
-<!-- ===========================
-SUPPORT
-=========================== -->
+        <!-- =========================
+             SUPPORT
+        ========================== -->
 
-<section
-id="supportBtn"
-class="support-card">
+        <button
+            type="button"
+            id="supportBtn"
+            class="support-card"
+        >
 
-<div class="support-left">
+            <span class="support-left">
 
-<div class="support-icon">
+                <span
+                    class="support-icon"
+                    aria-hidden="true"
+                >
 
-<i class="fas fa-headset"></i>
+                    <i class="fas fa-headset"></i>
 
-</div>
+                </span>
 
-<div>
 
-<h3>
+                <span class="support-content">
 
-Contact NovaPay Support
+                    <strong>
+                        Need help?
+                    </strong>
 
-</h3>
+                    <small>
+                        Contact NovaPay Support
+                    </small>
 
-<p>
+                </span>
 
-Need help with this transaction?
+            </span>
 
-</p>
 
-</div>
+            <i
+                class="fas fa-chevron-right support-arrow"
+                aria-hidden="true"
+            ></i>
 
-</div>
+        </button>
 
-<i class="fas fa-chevron-right"></i>
 
-</section>
+        <!-- =========================
+             DONE
+        ========================== -->
 
-<!-- ===========================
-DONE BUTTON
-=========================== -->
+        <button
+            type="button"
+            id="doneBtn"
+            class="done-btn"
+        >
+            Done
+        </button>
 
-<button
-id="doneBtn"
-class="done-btn">
+    </main>
 
-Done
 
-</button>
+    <!-- =========================
+         RECEIPT JAVASCRIPT
+    ========================== -->
 
-</div>
-
-<script
-type="module"
-src="receipt.js">
-
-</script>
+    <script
+        type="module"
+        src="receipt.js"
+    ></script>
 
 </body>
 

@@ -1,128 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563eb"
+    >
 
     <title>Login | NovaPay</title>
 
     <link rel="stylesheet" href="login.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 </head>
 
 <body>
 
-    <div class="container">
+    <main class="login-page">
 
-        <a href="index.html" class="logo">
-            <span>Nova</span>Pay
+        <!-- =========================================
+             NOVAPAY BRAND
+        ========================================== -->
+
+        <a
+            href="index.html"
+            class="login-logo"
+            aria-label="NovaPay home"
+        >
+            Nova<span>Pay</span>
         </a>
 
-        <h2>Welcome Back</h2>
 
-        <p>
-            Login to continue to your NovaPay account.
-        </p>
+        <!-- =========================================
+             LOGIN HEADER
+        ========================================== -->
 
-        <form id="loginForm">
+        <header class="login-header">
 
-            <div class="input-group">
+            <h1>
+                Log in to your Account
+            </h1>
 
-                <label>Email Address</label>
+            <p>
+                Welcome back!
+            </p>
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter your email"
-                    required>
+        </header>
 
-            </div>
 
-            <div class="input-group">
+        <!-- =========================================
+             LOGIN CARD
+        ========================================== -->
 
-                <label>Password</label>
+        <section class="login-card">
 
-                <div class="password-box">
+            <form
+                id="loginForm"
+                novalidate
+            >
+
+                <!-- =================================
+                     EMAIL
+                ================================== -->
+
+                <div class="input-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
 
                     <input
-                        type="password"
-                        id="password"
-                        placeholder="Enter password"
-                        required>
-
-                    <button
-                        type="button"
-                        onclick="togglePassword('password',this)">
-
-                        Show
-
-                    </button>
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email Address"
+                        autocomplete="email"
+                        inputmode="email"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        required
+                    >
 
                 </div>
 
-            </div>
 
-            <div class="options">
+                <!-- =================================
+                     PASSWORD
+                ================================== -->
 
-                <label class="remember">
+                <div class="input-group">
 
-                    <input type="checkbox" id="rememberMe">
+                    <label for="password">
+                        Password
+                    </label>
 
-                    Remember Me
+                    <div class="password-wrapper">
 
-                </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Password"
+                            autocomplete="current-password"
+                            required
+                        >
 
-                <a href="#" id="forgotPassword">
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('password', this)"
+                            aria-label="Show password"
+                        >
+                            Show
+                        </button>
 
-                    Forgot Password?
+                    </div>
 
-                </a>
+                </div>
 
-            </div>
+
+                <!-- =================================
+                     OPTIONS
+                ================================== -->
+
+                <div class="login-options">
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="forgot-password.html"
+                        id="forgotPassword"
+                        class="forgot-password"
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- =================================
+                     LOGIN BUTTON
+                ================================== -->
+
+                <button
+                    id="loginBtn"
+                    class="login-button"
+                    type="submit"
+                >
+                    Login
+                </button>
+
+
+                <!-- =================================
+                     CREATE ACCOUNT
+                ================================== -->
+
+                <p class="register-link">
+
+                    Don't have an account?
+
+                    <a href="register.html">
+                        Create an account
+                    </a>
+
+                </p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         CUSTOM MODAL
+    ========================================== -->
+
+    <div
+        id="customModal"
+        class="custom-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+        aria-describedby="modalMessage"
+    >
+
+        <div class="custom-modal-content">
+
+            <h3 id="modalTitle">
+                NovaPay
+            </h3>
+
+            <p id="modalMessage"></p>
 
             <button
-                id="loginBtn"
-                type="submit">
-
-                Login
-
+                id="modalButton"
+                type="button"
+            >
+                OK
             </button>
 
-            <div class="bottom-text">
-
-                Don't have an account?
-
-                <a href="register.html">
-
-                    Create Account
-
-                </a>
-
-            </div>
-
-        </form>
+        </div>
 
     </div>
 
-    <script type="module" src="login.js"></script>
-<div id="customModal" class="modal">
 
-    <div class="modal-content">
+    <!-- =========================================
+         LOGIN JAVASCRIPT
+    ========================================== -->
 
-        <h3 id="modalTitle">NovaPay</h3>
+    <script
+        type="module"
+        src="login.js"
+    ></script>
 
-        <p id="modalMessage"></p>
-
-        <button id="modalButton">OK</button>
-
-    </div>
-
-</div>
 </body>
-
 </html>
