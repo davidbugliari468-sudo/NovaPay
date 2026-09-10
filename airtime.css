@@ -1,49 +1,29 @@
 /* ==========================================
    NOVAPAY AIRTIME
-   COMPACT MOBILE LAYOUT
+   COMPACT + PROFESSIONAL MOBILE LAYOUT
 ========================================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
-
-/* ==========================================
-   VARIABLES
-========================================== */
-
 :root {
+    --primary: #2F6BFF;
+    --primary-light: #4B7DFF;
+    --bg: #F5F7FF;
+    --white: #FFFFFF;
 
-    --primary:
-        #2F6BFF;
+    --text: #172033;
+    --heading: #111827;
+    --muted: #7A8496;
+    --soft-muted: #9AA3B2;
 
-    --primary-light:
-        #4B7DFF;
+    --border: #E4E9F2;
 
-    --bg:
-        #F5F7FF;
+    --success: #10B981;
+    --danger: #EF4444;
 
-    --white:
-        #FFFFFF;
+    --shadow: 0 7px 22px rgba(31, 53, 92, 0.06);
 
-    --text:
-        #111827;
-
-    --sub:
-        #6B7280;
-
-    --border:
-        #E8ECF5;
-
-    --shadow:
-        0 8px 24px rgba(
-            47,
-            107,
-            255,
-            .07
-        );
-
-    --radius:
-        20px;
-
+    --radius: 20px;
 }
 
 
@@ -52,45 +32,24 @@
 ========================================== */
 
 * {
-
-    margin:
-        0;
-
-    padding:
-        0;
-
-    box-sizing:
-        border-box;
-
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-
 
 html {
-
-    scroll-behavior:
-        smooth;
-
+    scroll-behavior: smooth;
 }
 
-
 body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
 
-    font-family:
-        "Poppins",
-        sans-serif;
+    font-family: "Poppins", sans-serif;
 
-    background:
-        var(--bg);
-
-    color:
-        var(--text);
-
-    -webkit-font-smoothing:
-        antialiased;
-
-    overflow-x:
-        hidden;
-
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 
@@ -99,22 +58,17 @@ body {
 ========================================== */
 
 .container {
+    width: 100%;
+    max-width: 460px;
 
-    width:
-        100%;
+    min-height: 100vh;
 
-    max-width:
-        460px;
-
-    min-height:
-        100vh;
-
-    margin:
-        0 auto;
+    margin: 0 auto;
 
     padding:
-        18px 22px 28px;
-
+        17px
+        22px
+        24px;
 }
 
 
@@ -123,111 +77,67 @@ body {
 ========================================== */
 
 .top-bar {
+    display: flex;
+    align-items: center;
 
-    display:
-        flex;
+    gap: 13px;
 
-    align-items:
-        center;
-
-    gap:
-        14px;
-
-    margin-bottom:
-        24px;
-
+    margin-bottom: 22px;
 }
-
 
 .back-btn {
+    width: 54px;
+    height: 54px;
 
-    width:
-        56px;
+    flex: 0 0 54px;
 
-    height:
-        56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    flex:
-        0 0 56px;
+    border: none;
+    border-radius: 18px;
 
-    border:
-        none;
+    background: var(--white);
 
-    border-radius:
-        18px;
+    color: var(--primary);
 
-    background:
-        var(--white);
+    font-size: 27px;
+    line-height: 1;
 
-    display:
-        flex;
+    box-shadow: var(--shadow);
 
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    font-size:
-        27px;
-
-    line-height:
-        1;
-
-    color:
-        var(--primary);
-
-    cursor:
-        pointer;
-
-    box-shadow:
-        var(--shadow);
+    cursor: pointer;
 
     transition:
-        transform .2s ease;
-
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 }
-
 
 .back-btn:active {
-
-    transform:
-        scale(.96);
-
+    transform: scale(0.96);
 }
-
 
 .top-bar h1 {
+    margin: 0;
 
-    font-size:
-        27px;
+    color: var(--heading);
 
-    font-weight:
-        700;
+    font-size: 27px;
+    font-weight: 700;
 
-    line-height:
-        1.15;
-
-    color:
-        var(--text);
-
+    line-height: 1.1;
 }
 
-
 .top-bar p {
+    margin: 3px 0 0;
 
-    margin-top:
-        3px;
+    color: var(--muted);
 
-    font-size:
-        14px;
+    font-size: 13px;
+    font-weight: 400;
 
-    line-height:
-        1.35;
-
-    color:
-        var(--sub);
-
+    line-height: 1.3;
 }
 
 
@@ -236,380 +146,319 @@ body {
 ========================================== */
 
 section {
-
-    margin-bottom:
-        22px;
-
+    margin-bottom: 19px;
 }
 
-
 section h2 {
+    margin: 0 0 10px;
 
-    margin:
-        0 0 12px;
+    color: var(--heading);
 
-    font-size:
-        18px;
+    font-size: 18px;
+    font-weight: 700;
 
-    font-weight:
-        700;
-
-    line-height:
-        1.25;
-
+    line-height: 1.2;
 }
 
 
 /* ==========================================
-   PROVIDER SECTION
+   SERVICE PROVIDERS
 ========================================== */
 
 .provider-section {
-
-    margin-bottom:
-        22px;
-
+    margin-bottom: 20px;
 }
-
 
 .providers {
-
-    display:
-        grid;
+    display: grid;
 
     grid-template-columns:
-        repeat(
-            4,
-            minmax(
-                0,
-                1fr
-            )
-        );
+        repeat(4, minmax(0, 1fr));
 
-    gap:
-        10px;
-
+    gap: 9px;
 }
-
 
 .provider {
+    width: 100%;
+    height: 76px;
 
-    width:
-        100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    height:
-        78px;
-
-    background:
-        var(--white);
+    background: var(--white);
 
     border:
-        2px solid transparent;
+        2px solid
+        transparent;
 
-    border-radius:
-        19px;
+    border-radius: 18px;
 
-    display:
-        flex;
+    box-shadow: var(--shadow);
 
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    box-shadow:
-        var(--shadow);
+    cursor: pointer;
 
     transition:
-        transform .2s ease,
-        border-color .2s ease,
-        background-color .2s ease;
-
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background-color 0.18s ease;
 }
-
 
 .provider img {
+    width: 44px;
+    height: 44px;
 
-    width:
-        46px;
-
-    height:
-        46px;
-
-    object-fit:
-        contain;
-
+    object-fit: contain;
 }
-
 
 .provider.active {
+    border-color: var(--primary);
 
-    border-color:
-        var(--primary);
-
-    background:
-        #F7FAFF;
-
+    background: #F8FAFF;
 }
 
-
 .provider:active {
-
-    transform:
-        scale(.97);
-
+    transform: scale(0.97);
 }
 
 
 /* ==========================================
-   PHONE SECTION
+   PHONE NUMBER
 ========================================== */
 
 .phone-section {
+    position: relative;
 
-    margin-bottom:
-        22px;
-
+    margin-bottom: 20px;
 }
 
 
-.section-title {
+/*
+   Keep the existing HTML structure.
 
-    display:
-        flex;
+   The Beneficiaries button is visually moved
+   onto the phone input.
+*/
 
-    align-items:
-        center;
+.phone-section .section-title {
+    display: block;
 
-    justify-content:
-        space-between;
+    position: relative;
 
-    gap:
-        10px;
-
-    margin-bottom:
-        10px;
-
+    margin-bottom: 9px;
 }
 
-
-.section-title h2 {
-
-    margin:
-        0;
-
-}
-
-
-.beneficiary-btn {
-
-    flex:
-        0 0 auto;
-
-    border:
-        none;
-
-    background:
-        #EEF4FF;
-
-    color:
-        var(--primary);
-
-    padding:
-        8px 12px;
-
-    border-radius:
-        13px;
-
-    font-size:
-        12px;
-
-    font-weight:
-        600;
-
-    line-height:
-        1.2;
-
-    cursor:
-        pointer;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        6px;
-
-    white-space:
-        nowrap;
-
-    transition:
-        transform .2s ease;
-
-}
-
-
-.beneficiary-btn:active {
-
-    transform:
-        scale(.97);
-
-}
-
-
-.phone-section input {
-
-    display:
-        block;
-
-    width:
-        100%;
-
-    height:
-        54px;
-
-    padding:
-        0 16px;
-
-    background:
-        var(--white);
-
-    border:
-        1.5px solid var(--border);
-
-    border-radius:
-        17px;
-
-    font-family:
-        inherit;
-
-    font-size:
-        15px;
-
-    font-weight:
-        500;
-
-    color:
-        var(--text);
-
-    outline:
-        none;
-
-    box-shadow:
-        var(--shadow);
-
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease;
-
-}
-
-
-.phone-section input:focus {
-
-    border-color:
-        var(--primary);
-
-    box-shadow:
-        0 0 0 3px rgba(
-            47,
-            107,
-            255,
-            .09
-        );
-
-}
-
-
-.phone-section input::placeholder {
-
-    color:
-        #9CA3AF;
-
-    font-weight:
-        400;
-
-}
-
-
-.save-beneficiary {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        9px;
-
-    margin-top:
-        10px;
-
-    font-size:
-        13px;
-
-    font-weight:
-        500;
-
-    line-height:
-        1.2;
-
-    color:
-        var(--sub);
-
-    cursor:
-        pointer;
-
-    user-select:
-        none;
-
-}
-
-
-.save-beneficiary input {
-
-    width:
-        18px;
-
-    height:
-        18px;
-
-    margin:
-        0;
-
-    accent-color:
-        var(--primary);
-
-    cursor:
-        pointer;
-
+.phone-section .section-title h2 {
+    margin: 0;
 }
 
 
 /* ==========================================
-   TOP UP SECTION
+   BENEFICIARIES BUTTON
 ========================================== */
 
-.amount-section {
+.phone-section .beneficiary-btn {
+    position: absolute;
 
-    margin-bottom:
-        18px;
+    right: 9px;
 
+    /*
+       Places the button inside the input.
+       This is calculated from the existing
+       HTML structure without changing it.
+    */
+    top: 45px;
+
+    z-index: 3;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 36px;
+
+    padding:
+        7px
+        10px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #EEF4FF;
+
+    color: var(--primary);
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease;
+}
+
+.phone-section .beneficiary-btn:active {
+    transform: scale(0.97);
 }
 
 
+/* ==========================================
+   PHONE INPUT
+========================================== */
+
+.phone-section input {
+    display: block;
+
+    width: 100%;
+    height: 54px;
+
+    padding:
+        0
+        142px
+        0
+        16px;
+
+    border:
+        1.5px solid
+        var(--border);
+
+    border-radius: 17px;
+
+    outline: none;
+
+    background: var(--white);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.phone-section input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(47, 107, 255, 0.08);
+}
+
+.phone-section input::placeholder {
+    color: #9CA5B5;
+
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+/* ==========================================
+   SAVE BENEFICIARY
+========================================== */
+
+.save-beneficiary {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 9px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    line-height: 1.2;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+.save-beneficiary input {
+    width: 18px;
+    height: 18px;
+
+    flex: 0 0 18px;
+
+    margin: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    border:
+        1.5px solid
+        #AAB1BD;
+
+    border-radius: 6px;
+
+    background: var(--white);
+
+    cursor: pointer;
+
+    position: relative;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.save-beneficiary input:checked {
+    background: var(--primary);
+
+    border-color: var(--primary);
+}
+
+.save-beneficiary input:checked::after {
+    content: "";
+
+    position: absolute;
+
+    width: 4px;
+    height: 8px;
+
+    left: 6px;
+    top: 3px;
+
+    border:
+        solid
+        #FFFFFF;
+
+    border-width:
+        0
+        2px
+        2px
+        0;
+
+    transform: rotate(45deg);
+}
+
+
+/* ==========================================
+   TOP UP
+========================================== */
+
+.amount-section {
+    margin-bottom: 17px;
+}
+
 .amount-section h2 {
-
-    margin-bottom:
-        10px;
-
+    margin-bottom: 9px;
 }
 
 
@@ -618,207 +467,144 @@ section h2 {
 ========================================== */
 
 .amount-card {
-
-    width:
-        100%;
-
-    background:
-        var(--white);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        21px;
+    width: 100%;
 
     padding:
-        17px 18px;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.amount-input {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-    min-height:
-        42px;
-
-    margin:
-        0;
-
-}
-
-
-.naira {
-
-    flex:
-        0 0 auto;
-
-    font-size:
-        27px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-
-    color:
-        var(--text);
-
-}
-
-
-.amount-input input {
-
-    flex:
-        1;
-
-    min-width:
-        0;
-
-    height:
-        42px;
-
-    padding:
-        0;
-
-    border:
-        none;
-
-    outline:
-        none;
-
-    background:
-        transparent;
-
-    font-family:
-        inherit;
-
-    font-size:
-        26px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-
-    color:
-        var(--text);
-
-}
-
-
-.amount-input input::placeholder {
-
-    font-size:
+        15px
         17px;
 
-    font-weight:
-        500;
-
-    color:
-        #9CA3AF;
-
-}
-
-
-.amount-card hr {
-
-    width:
-        100%;
+    background: var(--white);
 
     border:
-        none;
+        1px solid
+        var(--border);
 
-    border-top:
-        1px solid var(--border);
+    border-radius: 20px;
 
-    margin:
-        12px 0;
-
+    box-shadow: var(--shadow);
 }
 
 
 /* ==========================================
-   WALLET ROW
+   AMOUNT INPUT
+========================================== */
+
+.amount-input {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 40px;
+}
+
+.naira {
+    flex: 0 0 auto;
+
+    color: #667085;
+
+    font-size: 25px;
+    font-weight: 600;
+
+    line-height: 1;
+}
+
+.amount-input input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 40px;
+
+    padding: 0;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 23px;
+    font-weight: 600;
+
+    line-height: 1;
+}
+
+.amount-input input::placeholder {
+    color: #A0A8B7;
+
+    font-size: 16px;
+    font-weight: 400;
+}
+
+
+/* ==========================================
+   DIVIDER
+========================================== */
+
+.amount-card hr {
+    width: 100%;
+
+    margin:
+        10px
+        0;
+
+    border: none;
+
+    border-top:
+        1px solid
+        #E8ECF3;
+}
+
+
+/* ==========================================
+   PROFESSIONAL WALLET BALANCE
 ========================================== */
 
 .wallet-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    display:
-        flex;
+    gap: 12px;
 
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        12px;
-
+    min-height: 30px;
 }
-
 
 .wallet-left {
+    display: flex;
+    align-items: center;
 
-    display:
-        flex;
+    gap: 7px;
 
-    align-items:
-        center;
+    min-width: 0;
 
-    gap:
-        7px;
+    color: #70798A;
 
-    min-width:
-        0;
+    font-size: 12px;
+    font-weight: 500;
 
-    font-size:
-        13px;
-
-    font-weight:
-        500;
-
-    line-height:
-        1.2;
-
-    color:
-        var(--sub);
-
+    line-height: 1.2;
 }
 
+.wallet-left::first-letter {
+    color: #70798A;
+}
 
 .wallet-balance {
+    flex: 0 0 auto;
 
-    flex:
-        0 0 auto;
+    color: #344054;
 
-    font-size:
-        17px;
+    font-size: 16px;
+    font-weight: 700;
 
-    font-weight:
-        700;
+    letter-spacing: -0.2px;
 
-    line-height:
-        1.2;
-
-    color:
-        var(--text);
-
+    line-height: 1.2;
 }
 
 
@@ -827,92 +613,51 @@ section h2 {
 ========================================== */
 
 .continue-btn {
+    display: block;
 
-    display:
-        block;
+    width: 100%;
+    height: 52px;
 
-    width:
-        100%;
+    margin: 0;
 
-    height:
-        54px;
-
-    margin:
-        0;
-
-    border:
-        none;
-
-    border-radius:
-        17px;
+    border: none;
+    border-radius: 17px;
 
     background:
         linear-gradient(
             135deg,
-            var(--primary-light),
-            var(--primary)
+            #4B7DFF,
+            #2F6BFF
         );
 
-    color:
-        #FFFFFF;
+    color: #FFFFFF;
 
-    font-family:
-        inherit;
+    font-family: inherit;
 
-    font-size:
-        16px;
+    font-size: 16px;
+    font-weight: 600;
 
-    font-weight:
-        600;
-
-    line-height:
-        1;
-
-    cursor:
-        pointer;
+    line-height: 1;
 
     box-shadow:
-        0 10px 24px rgba(
-            47,
-            107,
-            255,
-            .22
-        );
+        0 9px 22px
+        rgba(47, 107, 255, 0.20);
+
+    cursor: pointer;
 
     transition:
-        transform .2s ease,
-        opacity .2s ease;
-
+        transform 0.18s ease,
+        opacity 0.18s ease;
 }
-
-
-.continue-btn:hover {
-
-    transform:
-        translateY(-1px);
-
-}
-
 
 .continue-btn:active {
-
-    transform:
-        scale(.98);
-
+    transform: scale(0.985);
 }
 
-
 .continue-btn:disabled {
+    opacity: 0.65;
 
-    opacity:
-        .65;
-
-    cursor:
-        not-allowed;
-
-    transform:
-        none;
-
+    cursor: not-allowed;
 }
 
 
@@ -921,109 +666,66 @@ section h2 {
 ========================================== */
 
 .hidden {
-
-    display:
-        none !important;
-
+    display: none !important;
 }
 
 
 /* ==========================================
-   LOADING OVERLAY
+   LOADING
 ========================================== */
 
 .loading-overlay {
+    position: fixed;
 
-    position:
-        fixed;
+    inset: 0;
 
-    inset:
-        0;
+    width: 100%;
+    height: 100%;
 
-    width:
-        100%;
+    display: flex;
+    flex-direction: column;
 
-    height:
-        100%;
+    align-items: center;
+    justify-content: center;
 
     background:
-        rgba(
-            255,
-            255,
-            255,
-            .92
-        );
+        rgba(255, 255, 255, 0.94);
 
-    display:
-        flex;
+    backdrop-filter: blur(4px);
 
-    flex-direction:
-        column;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-    backdrop-filter:
-        blur(4px);
-
-    z-index:
-        9999;
-
+    z-index: 9999;
 }
-
 
 .loader {
-
-    width:
-        48px;
-
-    height:
-        48px;
+    width: 46px;
+    height: 46px;
 
     border:
-        5px solid #E5E7EB;
+        5px solid
+        #E5E7EB;
 
-    border-top:
-        5px solid var(--primary);
+    border-top-color:
+        var(--primary);
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     animation:
-        spin .8s linear infinite;
-
+        spin 0.8s linear infinite;
 }
-
 
 @keyframes spin {
-
-    100% {
-
-        transform:
-            rotate(360deg);
-
+    to {
+        transform: rotate(360deg);
     }
-
 }
 
-
 .loading-overlay p {
+    margin-top: 11px;
 
-    margin-top:
-        12px;
+    color: var(--heading);
 
-    font-size:
-        14px;
-
-    font-weight:
-        600;
-
-    color:
-        var(--text);
-
+    font-size: 13px;
+    font-weight: 600;
 }
 
 
@@ -1032,62 +734,38 @@ section h2 {
 ========================================== */
 
 .message-box {
+    position: fixed;
 
-    position:
-        fixed;
+    left: 50%;
+    bottom: 22px;
 
-    left:
-        50%;
+    transform: translateX(-50%);
 
-    bottom:
-        24px;
-
-    transform:
-        translateX(-50%);
-
-    width:
-        max-content;
-
-    max-width:
-        calc(
-            100% - 32px
-        );
+    width: max-content;
+    max-width: calc(100% - 32px);
 
     padding:
-        12px 18px;
+        11px
+        17px;
 
-    border-radius:
-        14px;
+    border-radius: 13px;
 
-    background:
-        #111827;
+    background: #172033;
 
-    color:
-        #FFFFFF;
+    color: #FFFFFF;
 
-    font-size:
-        14px;
+    font-size: 13px;
+    font-weight: 500;
 
-    font-weight:
-        500;
+    line-height: 1.3;
 
-    line-height:
-        1.35;
-
-    text-align:
-        center;
+    text-align: center;
 
     box-shadow:
-        0 10px 26px rgba(
-            0,
-            0,
-            0,
-            .18
-        );
+        0 10px 25px
+        rgba(0, 0, 0, 0.16);
 
-    z-index:
-        10000;
-
+    z-index: 10000;
 }
 
 
@@ -1095,247 +773,173 @@ section h2 {
    MOBILE
 ========================================== */
 
-@media (
-    max-width: 480px
-) {
+@media (max-width: 480px) {
 
     .container {
-
-        max-width:
-            100%;
+        max-width: 100%;
 
         padding:
-            16px 16px 22px;
-
+            15px
+            16px
+            20px;
     }
-
 
     .top-bar {
+        gap: 11px;
 
-        gap:
-            12px;
-
-        margin-bottom:
-            20px;
-
+        margin-bottom: 18px;
     }
-
 
     .back-btn {
+        width: 50px;
+        height: 50px;
 
-        width:
-            52px;
+        flex-basis: 50px;
 
-        height:
-            52px;
+        border-radius: 16px;
 
-        flex-basis:
-            52px;
-
-        border-radius:
-            17px;
-
-        font-size:
-            25px;
-
+        font-size: 25px;
     }
-
 
     .top-bar h1 {
-
-        font-size:
-            25px;
-
+        font-size: 25px;
     }
-
 
     .top-bar p {
-
-        font-size:
-            13px;
-
+        font-size: 12px;
     }
-
 
     section {
-
-        margin-bottom:
-            18px;
-
+        margin-bottom: 17px;
     }
-
 
     section h2 {
+        font-size: 17px;
 
-        font-size:
-            17px;
-
-        margin-bottom:
-            10px;
-
+        margin-bottom: 9px;
     }
 
+    .provider-section {
+        margin-bottom: 18px;
+    }
 
     .providers {
-
-        gap:
-            8px;
-
+        gap: 7px;
     }
-
 
     .provider {
+        height: 70px;
 
-        height:
-            72px;
-
-        border-radius:
-            17px;
-
+        border-radius: 17px;
     }
-
 
     .provider img {
-
-        width:
-            43px;
-
-        height:
-            43px;
-
+        width: 41px;
+        height: 41px;
     }
 
-
-    .section-title {
-
-        margin-bottom:
-            9px;
-
+    .phone-section {
+        margin-bottom: 18px;
     }
 
+    .phone-section .beneficiary-btn {
+        top: 43px;
+        right: 8px;
 
-    .beneficiary-btn {
+        min-height: 34px;
 
         padding:
-            8px 10px;
+            6px
+            9px;
 
-        font-size:
-            11px;
-
-        border-radius:
-            12px;
-
+        font-size: 10px;
     }
-
 
     .phone-section input {
+        height: 52px;
 
-        height:
-            52px;
+        padding-right: 133px;
 
-        border-radius:
-            16px;
+        border-radius: 16px;
 
-        font-size:
-            14px;
-
+        font-size: 14px;
     }
 
+    .phone-section input::placeholder {
+        font-size: 14px;
+    }
 
     .save-beneficiary {
+        margin-top: 8px;
 
-        margin-top:
-            9px;
-
-        font-size:
-            12px;
-
+        font-size: 12px;
     }
 
+    .save-beneficiary input {
+        width: 17px;
+        height: 17px;
+
+        flex-basis: 17px;
+
+        border-radius: 5px;
+    }
+
+    .save-beneficiary input:checked::after {
+        left: 5px;
+        top: 2px;
+    }
+
+    .amount-section {
+        margin-bottom: 15px;
+    }
 
     .amount-card {
-
         padding:
-            15px 16px;
-
-        border-radius:
-            19px;
-
-    }
-
-
-    .naira {
-
-        font-size:
-            25px;
-
-    }
-
-
-    .amount-input {
-
-        min-height:
-            39px;
-
-    }
-
-
-    .amount-input input {
-
-        height:
-            39px;
-
-        font-size:
-            24px;
-
-    }
-
-
-    .amount-input input::placeholder {
-
-        font-size:
-            16px;
-
-    }
-
-
-    .amount-card hr {
-
-        margin:
-            10px 0;
-
-    }
-
-
-    .wallet-left {
-
-        font-size:
-            12px;
-
-    }
-
-
-    .wallet-balance {
-
-        font-size:
-            16px;
-
-    }
-
-
-    .continue-btn {
-
-        height:
-            52px;
-
-        border-radius:
-            16px;
-
-        font-size:
+            14px
             15px;
 
+        border-radius: 19px;
     }
 
+    .amount-input {
+        min-height: 38px;
+    }
+
+    .naira {
+        font-size: 23px;
+    }
+
+    .amount-input input {
+        height: 38px;
+
+        font-size: 22px;
+    }
+
+    .amount-input input::placeholder {
+        font-size: 15px;
+    }
+
+    .amount-card hr {
+        margin:
+            9px
+            0;
+    }
+
+    .wallet-left {
+        font-size: 11px;
+    }
+
+    .wallet-balance {
+        font-size: 15px;
+    }
+
+    .continue-btn {
+        height: 50px;
+
+        border-radius: 16px;
+
+        font-size: 15px;
+    }
 }
 
 
@@ -1343,144 +947,87 @@ section h2 {
    SMALL HEIGHT PHONES
 ========================================== */
 
-@media (
-    max-height: 700px
-) {
+@media (max-height: 700px) {
 
     .container {
-
-        padding-top:
-            12px;
-
-        padding-bottom:
-            16px;
-
+        padding-top: 11px;
+        padding-bottom: 15px;
     }
-
 
     .top-bar {
-
-        margin-bottom:
-            16px;
-
+        margin-bottom: 14px;
     }
-
 
     .back-btn {
+        width: 47px;
+        height: 47px;
 
-        width:
-            48px;
-
-        height:
-            48px;
-
-        flex-basis:
-            48px;
-
+        flex-basis: 47px;
     }
-
 
     .top-bar h1 {
-
-        font-size:
-            23px;
-
+        font-size: 23px;
     }
-
 
     .top-bar p {
-
-        font-size:
-            12px;
-
+        font-size: 11px;
     }
-
 
     section {
-
-        margin-bottom:
-            14px;
-
+        margin-bottom: 13px;
     }
-
 
     section h2 {
+        margin-bottom: 7px;
 
-        margin-bottom:
-            8px;
-
-        font-size:
-            16px;
-
+        font-size: 16px;
     }
-
 
     .provider {
-
-        height:
-            66px;
-
+        height: 62px;
     }
-
 
     .provider img {
-
-        width:
-            39px;
-
-        height:
-            39px;
-
+        width: 37px;
+        height: 37px;
     }
 
+    .phone-section .beneficiary-btn {
+        top: 39px;
+    }
 
     .phone-section input {
-
-        height:
-            48px;
-
+        height: 48px;
     }
-
 
     .save-beneficiary {
-
-        margin-top:
-            7px;
-
+        margin-top: 6px;
     }
-
 
     .amount-card {
-
         padding:
-            13px 15px;
-
+            12px
+            14px;
     }
 
+    .amount-input {
+        min-height: 35px;
+    }
 
     .amount-input input {
-
-        font-size:
-            22px;
-
+        height: 35px;
+        font-size: 20px;
     }
-
 
     .amount-card hr {
-
         margin:
-            8px 0;
-
+            7px
+            0;
     }
-
 
     .continue-btn {
-
-        height:
-            48px;
-
+        height: 47px;
     }
-
 }
 
 
@@ -1488,241 +1035,137 @@ section h2 {
    VERY SMALL PHONES
 ========================================== */
 
-@media (
-    max-height: 620px
-) {
+@media (max-height: 620px) {
 
     .container {
-
-        padding-top:
-            9px;
-
-        padding-bottom:
-            12px;
-
+        padding-top: 8px;
+        padding-bottom: 11px;
     }
-
 
     .top-bar {
-
-        margin-bottom:
-            12px;
-
+        margin-bottom: 10px;
     }
-
 
     .back-btn {
+        width: 43px;
+        height: 43px;
 
-        width:
-            44px;
+        flex-basis: 43px;
 
-        height:
-            44px;
+        border-radius: 14px;
 
-        flex-basis:
-            44px;
-
-        border-radius:
-            14px;
-
-        font-size:
-            22px;
-
+        font-size: 21px;
     }
-
 
     .top-bar h1 {
-
-        font-size:
-            21px;
-
+        font-size: 21px;
     }
-
 
     .top-bar p {
-
-        display:
-            none;
-
+        display: none;
     }
-
 
     section {
-
-        margin-bottom:
-            11px;
-
+        margin-bottom: 9px;
     }
-
 
     section h2 {
+        margin-bottom: 5px;
 
-        margin-bottom:
-            6px;
-
-        font-size:
-            15px;
-
+        font-size: 15px;
     }
-
 
     .providers {
-
-        gap:
-            6px;
-
+        gap: 5px;
     }
-
 
     .provider {
+        height: 56px;
 
-        height:
-            58px;
-
-        border-radius:
-            15px;
-
+        border-radius: 14px;
     }
-
 
     .provider img {
-
-        width:
-            34px;
-
-        height:
-            34px;
-
+        width: 32px;
+        height: 32px;
     }
 
+    .phone-section .beneficiary-btn {
+        top: 36px;
 
-    .beneficiary-btn {
+        min-height: 31px;
 
         padding:
-            6px 8px;
+            5px
+            8px;
 
-        font-size:
-            10px;
-
+        font-size: 9px;
     }
-
 
     .phone-section input {
+        height: 43px;
 
-        height:
-            44px;
+        padding-right: 122px;
 
-        border-radius:
-            14px;
-
+        border-radius: 13px;
     }
-
 
     .save-beneficiary {
+        margin-top: 4px;
 
-        margin-top:
-            5px;
-
-        font-size:
-            11px;
-
+        font-size: 10px;
     }
-
 
     .save-beneficiary input {
+        width: 15px;
+        height: 15px;
 
-        width:
-            16px;
-
-        height:
-            16px;
-
+        flex-basis: 15px;
     }
-
 
     .amount-card {
-
         padding:
-            11px 13px;
+            10px
+            12px;
 
-        border-radius:
-            17px;
-
+        border-radius: 16px;
     }
-
 
     .amount-input {
-
-        min-height:
-            34px;
-
+        min-height: 32px;
     }
-
 
     .naira {
-
-        font-size:
-            22px;
-
+        font-size: 21px;
     }
-
 
     .amount-input input {
+        height: 32px;
 
-        height:
-            34px;
-
-        font-size:
-            20px;
-
+        font-size: 19px;
     }
-
-
-    .amount-input input::placeholder {
-
-        font-size:
-            14px;
-
-    }
-
 
     .amount-card hr {
-
         margin:
-            6px 0;
-
+            5px
+            0;
     }
-
 
     .wallet-left {
-
-        font-size:
-            11px;
-
+        font-size: 10px;
     }
-
 
     .wallet-balance {
-
-        font-size:
-            14px;
-
+        font-size: 13px;
     }
-
 
     .continue-btn {
+        height: 42px;
 
-        height:
-            44px;
+        border-radius: 13px;
 
-        border-radius:
-            14px;
-
-        font-size:
-            14px;
-
+        font-size: 13px;
     }
-
 }
 
 
@@ -1730,53 +1173,33 @@ section h2 {
    TABLETS / DESKTOP
 ========================================== */
 
-@media (
-    min-width: 481px
-) {
+@media (min-width: 481px) {
 
     .container {
-
-        padding-top:
-            24px;
-
-        padding-bottom:
-            32px;
-
+        padding-top: 23px;
+        padding-bottom: 30px;
     }
-
 }
 
 
 /* ==========================================
-   ACCESSIBILITY / TOUCH
+   ACCESSIBILITY
 ========================================== */
 
 button,
 input {
+    font-family: inherit;
 
-    font-family:
-        inherit;
-
-    -webkit-tap-highlight-color:
-        transparent;
-
+    -webkit-tap-highlight-color: transparent;
 }
-
 
 button:focus-visible,
 input:focus-visible {
-
     outline:
-        3px solid rgba(
-            47,
-            107,
-            255,
-            .22
-        );
+        3px solid
+        rgba(47, 107, 255, 0.20);
 
-    outline-offset:
-        2px;
-
+    outline-offset: 2px;
 }
 
 
@@ -1784,25 +1207,17 @@ input:focus-visible {
    REDUCED MOTION
 ========================================== */
 
-@media (
-    prefers-reduced-motion: reduce
-) {
+@media (prefers-reduced-motion: reduce) {
 
     *,
     *::before,
     *::after {
+        scroll-behavior: auto !important;
 
-        scroll-behavior:
-            auto !important;
+        animation: none !important;
 
-        animation:
-            none !important;
-
-        transition:
-            none !important;
-
+        transition: none !important;
     }
-
 }
 
 
@@ -1811,8 +1226,5 @@ input:focus-visible {
 ========================================== */
 
 ::-webkit-scrollbar {
-
-    display:
-        none;
-
+    display: none;
 }
