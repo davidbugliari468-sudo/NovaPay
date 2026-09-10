@@ -1227,4 +1227,109 @@ input:focus-visible {
 
 ::-webkit-scrollbar {
     display: none;
+} 
+/* ==========================================
+   SAVE BENEFICIARY — FINAL CHECKBOX FIX
+   ONLY CHANGE: checkbox size
+========================================== */
+
+.save-beneficiary {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-top: 8px;
+
+    color: #70798A;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    line-height: 1.2;
+}
+
+
+/* Force the checkbox to remain a small square */
+.save-beneficiary input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+
+    height: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+
+    flex: 0 0 18px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 1.5px solid #AAB1BD !important;
+    border-radius: 5px !important;
+
+    background: #FFFFFF;
+
+    box-shadow: none !important;
+
+    cursor: pointer;
+
+    position: relative;
+
+    display: block;
+}
+
+
+/* Checked state */
+.save-beneficiary input[type="checkbox"]:checked {
+    background: #2F6BFF;
+
+    border-color: #2F6BFF !important;
+}
+
+
+/* Check mark */
+.save-beneficiary input[type="checkbox"]:checked::after {
+    content: "";
+
+    position: absolute;
+
+    width: 4px;
+    height: 8px;
+
+    left: 5px;
+    top: 2px;
+
+    border:
+        solid
+        #FFFFFF;
+
+    border-width:
+        0
+        2px
+        2px
+        0;
+
+    transform: rotate(45deg);
+}
+
+
+/* Keep the text normal */
+.save-beneficiary label {
+    display: inline-flex;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+
+    color: #70798A;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    line-height: 18px;
+
+    cursor: pointer;
 }
