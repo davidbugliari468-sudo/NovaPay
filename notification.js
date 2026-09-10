@@ -1,24 +1,4 @@
-/* =========================================================
-   NOVAPAY — NOTIFICATIONS
-   ---------------------------------------------------------
-   Responsibilities:
-   - Authenticate the current Firebase user
-   - Load notification history from NovaPay backend
-   - Search notifications
-   - Filter notification tabs
-   - Mark notifications as read
-   - Mark all notifications as read
-   - Register the browser/PWA for Firebase Cloud Messaging
-   - Send the FCM device token to NovaPay backend
-   - Display foreground push notifications
-   - Refresh notification history when a foreground
-     push message arrives
-   - Preserve existing page navigation and UI
-   ========================================================= */
-
-import {
-    auth
-} from "./firebase.js";
+import { auth } from "./firebase.js";
 
 import {
     onAuthStateChanged
@@ -32,9 +12,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging.js";
 
 
-/* =========================================================
-   CONFIG
-   ========================================================= */
+// ============================================================
+// NOVAPAY NOTIFICATIONS
+// ============================================================
 
 const API_BASE_URL =
     "https://novapay-server.onrender.com";
@@ -42,229 +22,553 @@ const API_BASE_URL =
 const NOTIFICATIONS_API =
     `${API_BASE_URL}/api/notifications`;
 
-const DEFAULT_LIMIT =
-    30;
-
-const FCM_SERVICE_WORKER_PATH =
-    "/firebase-messaging-sw.js";
-
-/*
- * Firebase Web Push public VAPID key.
- *
- * This is the public key generated in Firebase Console.
- */
-const FCM_VAPID_KEY =
+const VAPID_KEY =
     "BFMyRPGHe8g5MPJOjkd8DaVZX_rwVrYnR1nyGQMMU44GMA6zVb2rKbblTTFWdfj2CKSwenno3w7nHwNOFDD5FMA";
 
+const SERVICE_WORKER_PATH =
+    "/firebase-messaging-sw.js";
 
-/* =========================================================
-   DOM
-   ========================================================= */
+const DEFAULT_LIMIT = 30;
 
-const backBtn =
-    document.getElementById(
-        "backBtn"
-    );
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
 
 const notificationList =
-    document.getElementById(
-        "notificationList"
-    );
+    document.getElementById("notificationList");
 
 const emptyState =
-    document.getElementById(
-        "emptyState"
-    );
+    document.getElementById("emptyState");
 
 const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
+    document.getElementById("searchInput");
+
+const backBtn =
+    document.getElementById("backBtn");
 
 const tabs =
-    document.querySelectorAll(
-        ".tab"
-    );
-
-const markAllBtn =
-    document.getElementById(
-        "markAllRead"
-    );
+    document.querySelectorAll(".tab");
 
 
-/* =========================================================
-   STATE
-   ========================================================= */
+// ============================================================
+// STATE
+// ============================================================
 
-let currentUser =
-    null;
+let currentUser = null;
 
-let allNotifications =
-    [];
+let notifications = [];
 
-let nextCursor =
-    null;
+let currentTab = "all";
 
-let hasMore =
-    false;
+let currentSearch = "";
 
-let isLoading =
-    false;
+let nextCursor = null;
 
-let activeTab =
-    "All";
+let hasMore = false;
 
-let messagingInstance =
-    null;
+let loading = false;
 
-let foregroundListenerStarted =
-    false;
+let pushSetupInProgress = false;
 
-let pushSetupStarted =
-    false;
+let pushSetupCompleted = false;
+
+let foregroundListenerStarted = false;
+
+let pushControl = null;
+
+let pushButton = null;
+
+let pushStatus = null;
 
 
-/* =========================================================
-   BACK BUTTON
-   ========================================================= */
+// ============================================================
+// BACK BUTTON
+// ============================================================
 
-backBtn?.addEventListener(
-    "click",
-    event => {
+if (backBtn) {
 
-        event.preventDefault();
+    backBtn.addEventListener("click", () => {
+
+        if (
+            document.referrer &&
+            document.referrer !== window.location.href
+        ) {
+            window.history.back();
+            return;
+        }
 
         window.location.href =
             "dashboard.html";
+    });
+}
 
+
+// ============================================================
+// CREATE PUSH NOTIFICATION CONTROL
+// ============================================================
+
+function createPushControl() {
+
+    if (pushControl) {
+        return;
     }
-);
+
+    const header =
+        document.querySelector(".header");
+
+    if (!header) {
+        return;
+    }
+
+    pushControl =
+        document.createElement("div");
+
+    pushControl.id =
+        "pushControl";
+
+    pushControl.style.width =
+        "100%";
+
+    pushControl.style.margin =
+        "14px 0 4px";
+
+    pushControl.style.padding =
+        "12px 14px";
+
+    pushControl.style.borderRadius =
+        "16px";
+
+    pushControl.style.background =
+        "#f5f8ff";
+
+    pushControl.style.border =
+        "1px solid #dce7ff";
+
+    pushControl.style.boxSizing =
+        "border-box";
 
 
-/* =========================================================
-   AUTHENTICATION
-   ========================================================= */
+    pushButton =
+        document.createElement("button");
+
+    pushButton.id =
+        "enablePushBtn";
+
+    pushButton.type =
+        "button";
+
+    pushButton.innerHTML =
+        `<i class="fa-solid fa-bell"></i>
+         <span>Enable Push Notifications</span>`;
+
+    pushButton.style.width =
+        "100%";
+
+    pushButton.style.minHeight =
+        "44px";
+
+    pushButton.style.border =
+        "none";
+
+    pushButton.style.borderRadius =
+        "12px";
+
+    pushButton.style.background =
+        "#1769ff";
+
+    pushButton.style.color =
+        "#ffffff";
+
+    pushButton.style.fontSize =
+        "14px";
+
+    pushButton.style.fontWeight =
+        "700";
+
+    pushButton.style.cursor =
+        "pointer";
+
+    pushButton.style.display =
+        "flex";
+
+    pushButton.style.alignItems =
+        "center";
+
+    pushButton.style.justifyContent =
+        "center";
+
+    pushButton.style.gap =
+        "8px";
+
+    pushButton.style.padding =
+        "10px 14px";
+
+
+    pushStatus =
+        document.createElement("div");
+
+    pushStatus.id =
+        "pushStatus";
+
+    pushStatus.style.marginTop =
+        "7px";
+
+    pushStatus.style.textAlign =
+        "center";
+
+    pushStatus.style.fontSize =
+        "11px";
+
+    pushStatus.style.lineHeight =
+        "1.4";
+
+    pushStatus.style.color =
+        "#64748b";
+
+
+    pushControl.appendChild(
+        pushButton
+    );
+
+    pushControl.appendChild(
+        pushStatus
+    );
+
+
+    header.insertAdjacentElement(
+        "afterend",
+        pushControl
+    );
+
+
+    pushButton.addEventListener(
+        "click",
+        async () => {
+
+            if (
+                pushSetupInProgress
+            ) {
+                return;
+            }
+
+            await setupPushNotifications(
+                true
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// PUSH STATUS
+// ============================================================
+
+function setPushStatus(
+    message,
+    color = "#64748b"
+) {
+
+    if (!pushStatus) {
+        return;
+    }
+
+    pushStatus.textContent =
+        message;
+
+    pushStatus.style.color =
+        color;
+}
+
+
+// ============================================================
+// UPDATE PUSH UI
+// ============================================================
+
+function updatePushUI(
+    state
+) {
+
+    if (
+        !pushButton ||
+        !pushStatus
+    ) {
+        return;
+    }
+
+
+    if (state === "enabled") {
+
+        pushButton.disabled =
+            true;
+
+        pushButton.style.background =
+            "#16a34a";
+
+        pushButton.innerHTML =
+            `<i class="fa-solid fa-check"></i>
+             <span>Push Notifications Enabled</span>`;
+
+        setPushStatus(
+            "NovaPay can now send alerts to this device.",
+            "#15803d"
+        );
+
+        return;
+    }
+
+
+    if (state === "loading") {
+
+        pushButton.disabled =
+            true;
+
+        pushButton.style.background =
+            "#64748b";
+
+        pushButton.innerHTML =
+            `<i class="fa-solid fa-spinner fa-spin"></i>
+             <span>Enabling Notifications...</span>`;
+
+        setPushStatus(
+            "Please wait...",
+            "#64748b"
+        );
+
+        return;
+    }
+
+
+    if (state === "blocked") {
+
+        pushButton.disabled =
+            true;
+
+        pushButton.style.background =
+            "#94a3b8";
+
+        pushButton.innerHTML =
+            `<i class="fa-solid fa-bell-slash"></i>
+             <span>Push Notifications Blocked</span>`;
+
+        setPushStatus(
+            "Notifications are blocked. Enable them in your browser or device settings.",
+            "#b45309"
+        );
+
+        return;
+    }
+
+
+    if (state === "ios-home-screen") {
+
+        pushButton.disabled =
+            false;
+
+        pushButton.style.background =
+            "#1769ff";
+
+        pushButton.innerHTML =
+            `<i class="fa-solid fa-mobile-screen-button"></i>
+             <span>Enable Push Notifications</span>`;
+
+        setPushStatus(
+            "On iPhone, first add NovaPay to your Home Screen and open it there.",
+            "#475569"
+        );
+
+        return;
+    }
+
+
+    if (state === "unsupported") {
+
+        pushButton.disabled =
+            true;
+
+        pushButton.style.background =
+            "#94a3b8";
+
+        pushButton.innerHTML =
+            `<i class="fa-solid fa-bell-slash"></i>
+             <span>Push Not Available</span>`;
+
+        setPushStatus(
+            "Push notifications are not supported in this browser.",
+            "#b45309"
+        );
+
+        return;
+    }
+
+
+    pushButton.disabled =
+        false;
+
+    pushButton.style.background =
+        "#1769ff";
+
+    pushButton.innerHTML =
+        `<i class="fa-solid fa-bell"></i>
+         <span>Enable Push Notifications</span>`;
+
+    setPushStatus(
+        "Get important NovaPay alerts on this device.",
+        "#64748b"
+    );
+}
+
+
+// ============================================================
+// IOS DETECTION
+// ============================================================
+
+function isIOSDevice() {
+
+    const userAgent =
+        navigator.userAgent ||
+        navigator.vendor ||
+        window.opera ||
+        "";
+
+    const classicIOS =
+        /iPhone|iPad|iPod/i.test(
+            userAgent
+        );
+
+    const iPadDesktopMode =
+        /Macintosh/i.test(
+            userAgent
+        ) &&
+        "ontouchend" in document;
+
+    return (
+        classicIOS ||
+        iPadDesktopMode
+    );
+}
+
+
+// ============================================================
+// HOME SCREEN / STANDALONE DETECTION
+// ============================================================
+
+function isStandaloneWebApp() {
+
+    const standaloneMedia =
+        window.matchMedia &&
+        window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches;
+
+    const navigatorStandalone =
+        window.navigator &&
+        window.navigator.standalone === true;
+
+    return (
+        standaloneMedia ||
+        navigatorStandalone
+    );
+}
+
+
+// ============================================================
+// AUTH STATE
+// ============================================================
 
 onAuthStateChanged(
     auth,
     async user => {
 
-        if (!user) {
-
-            currentUser =
-                null;
-
-            window.location.href =
-                "login.html";
-
-            return;
-
-        }
-
-
         currentUser =
             user;
 
-
-        console.log(
-            "NovaPay notification authentication ready."
-        );
+        createPushControl();
 
 
-        console.log(
-            "Authenticated UID:",
-            currentUser.uid
-        );
+        if (!user) {
+
+            notifications = [];
+
+            renderNotifications();
+
+            updatePushUI(
+                "unsupported"
+            );
+
+            return;
+        }
 
 
-        /*
-         * Load existing notification history.
-         */
         await loadNotifications(
             true
         );
 
 
         /*
-         * Register this authenticated browser/PWA
-         * for push notifications.
+         * IMPORTANT:
          *
-         * Prevent duplicate setup if Firebase
-         * fires the auth observer more than once.
+         * We do NOT request notification
+         * permission automatically here.
+         *
+         * iPhone requires permission requests
+         * to happen after a direct user action.
+         *
+         * If permission was already granted,
+         * we can silently finish setup.
          */
-        if (!pushSetupStarted) {
 
-            pushSetupStarted =
-                true;
+        if (
+            typeof Notification !==
+            "undefined" &&
+            Notification.permission ===
+            "granted"
+        ) {
 
-            await setupPushNotifications();
+            await setupPushNotifications(
+                false
+            );
 
+        } else {
+
+            updatePushUI(
+                "default"
+            );
         }
-
     }
 );
 
 
-/* =========================================================
-   LOAD NOTIFICATIONS
-   ========================================================= */
+// ============================================================
+// LOAD NOTIFICATIONS
+// ============================================================
 
 async function loadNotifications(
     reset = false
 ) {
 
-    if (isLoading) {
-
-        return;
-
-    }
-
-
     if (
-        !reset &&
-        !hasMore
+        !currentUser ||
+        loading
     ) {
-
         return;
-
     }
 
-
-    if (!currentUser) {
-
-        return;
-
-    }
-
-
-    isLoading =
-        true;
-
-
-    if (reset) {
-
-        allNotifications =
-            [];
-
-        nextCursor =
-            null;
-
-        hasMore =
-            false;
-
-        showLoading();
-
-    }
+    loading = true;
 
 
     try {
 
-        /*
-         * Firebase Auth supplies the identity token.
-         *
-         * The backend verifies this token and determines
-         * the user's UID itself.
-         */
+        if (reset) {
+
+            nextCursor =
+                null;
+
+            hasMore =
+                false;
+        }
+
+
         const idToken =
             await currentUser.getIdToken();
 
@@ -275,9 +579,7 @@ async function loadNotifications(
 
         params.set(
             "limit",
-            String(
-                DEFAULT_LIMIT
-            )
+            String(DEFAULT_LIMIT)
         );
 
 
@@ -290,7 +592,6 @@ async function loadNotifications(
                 "cursor",
                 nextCursor
             );
-
         }
 
 
@@ -298,29 +599,17 @@ async function loadNotifications(
             await fetch(
                 `${NOTIFICATIONS_API}?${params.toString()}`,
                 {
-
-                    method:
-                        "GET",
+                    method: "GET",
 
                     headers: {
-
-                        "Authorization":
-                            `Bearer ${idToken}`,
-
-                        "Accept":
-                            "application/json"
-
-                    },
-
-                    cache:
-                        "no-store"
-
+                        Authorization:
+                            `Bearer ${idToken}`
+                    }
                 }
             );
 
 
-        let result =
-            null;
+        let result = null;
 
 
         try {
@@ -330,10 +619,8 @@ async function loadNotifications(
 
         } catch {
 
-            throw new Error(
-                "Unable to read the notification response."
-            );
-
+            result =
+                null;
         }
 
 
@@ -341,27 +628,15 @@ async function loadNotifications(
 
             throw new Error(
                 result?.error ||
-                "Unable to load notifications."
+                result?.message ||
+                `Unable to load notifications. Status ${response.status}.`
             );
-
         }
 
 
-        if (
-            result?.success !== true
-        ) {
-
-            throw new Error(
-                result?.error ||
-                "Unable to load notifications."
-            );
-
-        }
-
-
-        const notifications =
+        const incoming =
             Array.isArray(
-                result.notifications
+                result?.notifications
             )
                 ? result.notifications
                 : [];
@@ -369,24 +644,39 @@ async function loadNotifications(
 
         if (reset) {
 
-            allNotifications =
-                notifications;
+            notifications =
+                incoming;
 
         } else {
 
-            allNotifications = [
+            const existingIds =
+                new Set(
+                    notifications.map(
+                        item => item.id
+                    )
+                );
 
-                ...allNotifications,
 
-                ...notifications
+            const newItems =
+                incoming.filter(
+                    item =>
+                        !existingIds.has(
+                            item.id
+                        )
+                );
 
-            ];
 
+            notifications =
+                [
+                    ...notifications,
+                    ...newItems
+                ];
         }
 
 
         hasMore =
-            result?.pagination?.hasMore === true;
+            result?.pagination?.hasMore ===
+            true;
 
 
         nextCursor =
@@ -396,12 +686,6 @@ async function loadNotifications(
 
         renderNotifications();
 
-
-        console.log(
-            `NovaPay: loaded ${notifications.length} notification(s).`
-        );
-
-
     } catch (error) {
 
         console.error(
@@ -409,39 +693,87 @@ async function loadNotifications(
             error
         );
 
-
         if (reset) {
 
-            showError();
+            notifications = [];
 
+            renderNotifications(
+                "Unable to load notifications right now."
+            );
         }
 
     } finally {
 
-        isLoading =
-            false;
-
+        loading = false;
     }
-
 }
 
 
-/* =========================================================
-   PUSH NOTIFICATION SETUP
-   ========================================================= */
+// ============================================================
+// PUSH NOTIFICATION SETUP
+// ============================================================
 
-async function setupPushNotifications() {
+async function setupPushNotifications(
+    requestPermission = false
+) {
 
-    if (!currentUser) {
+    if (
+        !currentUser
+    ) {
+        return false;
+    }
 
-        return;
 
+    if (
+        pushSetupInProgress
+    ) {
+        return false;
+    }
+
+
+    if (
+        pushSetupCompleted
+    ) {
+
+        updatePushUI(
+            "enabled"
+        );
+
+        return true;
     }
 
 
     /*
-     * Check Firebase Messaging browser support.
+     * iPhone / iPad:
+     *
+     * Web Push works for Home Screen
+     * web apps. A normal Safari/Chrome
+     * browser tab is not the correct
+     * environment for this flow.
      */
+
+    if (
+        isIOSDevice() &&
+        !isStandaloneWebApp()
+    ) {
+
+        updatePushUI(
+            "ios-home-screen"
+        );
+
+        return false;
+    }
+
+
+    pushSetupInProgress =
+        true;
+
+
+    updatePushUI(
+        "loading"
+    );
+
+
     try {
 
         const supported =
@@ -450,104 +782,71 @@ async function setupPushNotifications() {
 
         if (!supported) {
 
-            console.log(
-                "NovaPay push notifications are not supported in this browser."
+            updatePushUI(
+                "unsupported"
             );
 
-            return;
-
+            return false;
         }
 
-    } catch (error) {
 
-        console.error(
-            "NovaPay push support check failed:",
-            error
-        );
+        if (
+            typeof Notification ===
+            "undefined"
+        ) {
 
-        return;
+            updatePushUI(
+                "unsupported"
+            );
 
-    }
+            return false;
+        }
 
-
-    /*
-     * Service workers are required for web push.
-     */
-    if (
-        !("serviceWorker" in navigator)
-    ) {
-
-        console.log(
-            "NovaPay: Service workers are not supported."
-        );
-
-        return;
-
-    }
-
-
-    /*
-     * Browser Notification API is required.
-     */
-    if (
-        !("Notification" in window)
-    ) {
-
-        console.log(
-            "NovaPay: Browser notifications are unavailable."
-        );
-
-        return;
-
-    }
-
-
-    try {
 
         /*
-         * Register the Firebase Messaging service worker.
+         * Register the Firebase
+         * messaging service worker.
          */
-        const serviceWorkerRegistration =
+
+        const registration =
             await navigator.serviceWorker.register(
-                FCM_SERVICE_WORKER_PATH,
+                SERVICE_WORKER_PATH,
                 {
-                    scope:
-                        "/"
+                    scope: "/",
+                    updateViaCache: "none"
                 }
             );
 
 
-        console.log(
-            "NovaPay FCM service worker registered.",
-            serviceWorkerRegistration.scope
-        );
-
-
-        /*
-         * Wait for the service worker to become ready.
-         */
         await navigator.serviceWorker.ready;
 
 
         /*
-         * Check notification permission.
+         * Only request permission after
+         * the user presses the button.
          */
+
         let permission =
             Notification.permission;
 
 
-        /*
-         * Only request permission when the browser
-         * has not decided yet.
-         */
         if (
             permission ===
             "default"
         ) {
 
+            if (!requestPermission) {
+
+                updatePushUI(
+                    "default"
+                );
+
+                return false;
+            }
+
+
             permission =
                 await Notification.requestPermission();
-
         }
 
 
@@ -556,59 +855,61 @@ async function setupPushNotifications() {
             "granted"
         ) {
 
-            console.log(
-                "NovaPay notification permission was not granted."
-            );
+            if (
+                permission ===
+                "denied"
+            ) {
 
-            return;
+                updatePushUI(
+                    "blocked"
+                );
 
+            } else {
+
+                updatePushUI(
+                    "default"
+                );
+            }
+
+            return false;
         }
 
 
         /*
-         * Create Firebase Messaging instance.
+         * Get the Firebase Cloud
+         * Messaging registration token.
          */
-        messagingInstance =
+
+        const messaging =
             getMessaging();
 
 
-        /*
-         * Obtain the browser/PWA FCM registration token.
-         *
-         * IMPORTANT:
-         * The VAPID public key is required for web push.
-         */
         const token =
             await getToken(
-                messagingInstance,
+                messaging,
                 {
                     vapidKey:
-                        FCM_VAPID_KEY,
+                        VAPID_KEY,
 
-                    serviceWorkerRegistration
+                    serviceWorkerRegistration:
+                        registration
                 }
             );
 
 
         if (!token) {
 
-            console.error(
-                "NovaPay: Firebase did not return an FCM token."
+            throw new Error(
+                "Firebase did not return a push notification token."
             );
-
-            return;
-
         }
 
 
-        console.log(
-            "NovaPay FCM token obtained successfully."
-        );
-
-
         /*
-         * Send the token to our backend.
+         * Register the device token
+         * with NovaPay backend.
          */
+
         const registered =
             await registerDeviceToken(
                 token
@@ -617,25 +918,27 @@ async function setupPushNotifications() {
 
         if (!registered) {
 
-            console.error(
-                "NovaPay: FCM token could not be registered with the backend."
+            throw new Error(
+                "NovaPay could not register this device for push notifications."
             );
-
-            return;
-
         }
 
 
-        /*
-         * Start foreground listener once.
-         */
-        setupForegroundMessageListener();
+        pushSetupCompleted =
+            true;
 
 
-        console.log(
-            "✅ NovaPay push notification setup completed."
+        updatePushUI(
+            "enabled"
         );
 
+
+        setupForegroundListener(
+            messaging
+        );
+
+
+        return true;
 
     } catch (error) {
 
@@ -644,14 +947,53 @@ async function setupPushNotifications() {
             error
         );
 
-    }
 
+        const errorMessage =
+            String(
+                error?.message ||
+                ""
+            ).toLowerCase();
+
+
+        if (
+            errorMessage.includes(
+                "permission"
+            ) &&
+            errorMessage.includes(
+                "denied"
+            )
+        ) {
+
+            updatePushUI(
+                "blocked"
+            );
+
+        } else {
+
+            updatePushUI(
+                "default"
+            );
+
+            setPushStatus(
+                "Push setup could not be completed. Tap the button to try again.",
+                "#b45309"
+            );
+        }
+
+
+        return false;
+
+    } finally {
+
+        pushSetupInProgress =
+            false;
+    }
 }
 
 
-/* =========================================================
-   REGISTER DEVICE TOKEN WITH BACKEND
-   ========================================================= */
+// ============================================================
+// REGISTER DEVICE TOKEN
+// ============================================================
 
 async function registerDeviceToken(
     token
@@ -661,9 +1003,7 @@ async function registerDeviceToken(
         !currentUser ||
         !token
     ) {
-
         return false;
-
     }
 
 
@@ -673,46 +1013,31 @@ async function registerDeviceToken(
             await currentUser.getIdToken();
 
 
-        const platform =
-            detectPlatform();
-
-
         const response =
             await fetch(
                 `${NOTIFICATIONS_API}/device-token`,
                 {
-
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
-                        "Authorization":
-                            `Bearer ${idToken}`,
-
                         "Content-Type":
                             "application/json",
 
-                        "Accept":
-                            "application/json"
-
+                        Authorization:
+                            `Bearer ${idToken}`
                     },
 
                     body:
                         JSON.stringify({
-
                             token,
-
-                            platform
-
+                            platform:
+                                detectPlatform()
                         })
-
                 }
             );
 
 
-        let result =
-            null;
+        let result = null;
 
 
         try {
@@ -724,33 +1049,40 @@ async function registerDeviceToken(
 
             result =
                 null;
+        }
 
+
+        if (!response.ok) {
+
+            console.error(
+                "NovaPay device token registration failed:",
+                result
+            );
+
+            return false;
         }
 
 
         if (
-            !response.ok ||
-            result?.success !== true
+            result &&
+            result.success === false
         ) {
 
             console.error(
                 "NovaPay device token registration failed:",
-                result?.error ||
-                `HTTP ${response.status}`
+                result
             );
 
             return false;
-
         }
 
 
         console.log(
-            "✅ NovaPay device token registered with backend."
+            "✅ NovaPay push token registered."
         );
 
 
         return true;
-
 
     } catch (error) {
 
@@ -760,15 +1092,13 @@ async function registerDeviceToken(
         );
 
         return false;
-
     }
-
 }
 
 
-/* =========================================================
-   PLATFORM DETECTION
-   ========================================================= */
+// ============================================================
+// PLATFORM DETECTION
+// ============================================================
 
 function detectPlatform() {
 
@@ -776,14 +1106,7 @@ function detectPlatform() {
         navigator.userAgent ||
         "";
 
-    const platform =
-        navigator.platform ||
-        "";
 
-
-    /*
-     * iPhone / iPad / iPod.
-     */
     if (
         /iPhone|iPad|iPod/i.test(
             userAgent
@@ -791,29 +1114,9 @@ function detectPlatform() {
     ) {
 
         return "ios";
-
     }
 
 
-    /*
-     * Modern iPad browsers may identify themselves
-     * as Macintosh devices.
-     */
-    if (
-        /Macintosh/i.test(
-            userAgent
-        ) &&
-        "ontouchend" in document
-    ) {
-
-        return "ios";
-
-    }
-
-
-    /*
-     * Android.
-     */
     if (
         /Android/i.test(
             userAgent
@@ -821,67 +1124,55 @@ function detectPlatform() {
     ) {
 
         return "android";
-
     }
 
 
-    /*
-     * Windows.
-     */
     if (
-        /Win/i.test(
-            platform
+        /Windows/i.test(
+            userAgent
         )
     ) {
 
         return "windows";
-
     }
 
 
-    /*
-     * macOS.
-     */
     if (
-        /Mac/i.test(
-            platform
+        /Macintosh|Mac OS X/i.test(
+            userAgent
         )
     ) {
 
         return "macos";
+    }
 
+
+    if (
+        /Linux/i.test(
+            userAgent
+        )
+    ) {
+
+        return "linux";
     }
 
 
     return "web";
-
 }
 
 
-/* =========================================================
-   FOREGROUND PUSH MESSAGE LISTENER
-   ========================================================= */
+// ============================================================
+// FOREGROUND PUSH LISTENER
+// ============================================================
 
-function setupForegroundMessageListener() {
+function setupForegroundListener(
+    messaging
+) {
 
-    if (
-        !messagingInstance
-    ) {
-
-        return;
-
-    }
-
-
-    /*
-     * Prevent duplicate listeners.
-     */
     if (
         foregroundListenerStarted
     ) {
-
         return;
-
     }
 
 
@@ -890,57 +1181,52 @@ function setupForegroundMessageListener() {
 
 
     onMessage(
-        messagingInstance,
-        payload => {
+        messaging,
+        async payload => {
 
             console.log(
-                "🔔 NovaPay foreground push received:",
+                "NovaPay foreground notification received:",
                 payload
             );
 
 
             /*
-             * Backend remains authoritative for notification
-             * history.
+             * Reload notification history
+             * so the new notification appears
+             * inside the website.
              */
-            loadNotifications(
+
+            await loadNotifications(
                 true
             );
 
 
             /*
-             * Display an actual browser notification
-             * while the NovaPay page is open.
+             * Show a browser notification
+             * while NovaPay is open.
              */
-            showForegroundPushNotification(
+
+            showForegroundNotification(
                 payload
             );
-
         }
     );
-
-
-    console.log(
-        "NovaPay foreground push listener ready."
-    );
-
 }
 
 
-/* =========================================================
-   FOREGROUND PUSH NOTIFICATION
-   ========================================================= */
+// ============================================================
+// FOREGROUND NOTIFICATION DISPLAY
+// ============================================================
 
-function showForegroundPushNotification(
+function showForegroundNotification(
     payload
 ) {
 
     if (
-        !("Notification" in window)
+        typeof Notification ===
+        "undefined"
     ) {
-
         return;
-
     }
 
 
@@ -948,36 +1234,33 @@ function showForegroundPushNotification(
         Notification.permission !==
         "granted"
     ) {
-
         return;
-
     }
+
+
+    const notification =
+        payload?.notification ||
+        {};
+
+    const data =
+        payload?.data ||
+        {};
 
 
     const title =
         String(
-            payload?.notification?.title ||
-            payload?.data?.title ||
+            notification.title ||
+            data.title ||
             "NovaPay"
-        )
-            .trim();
+        ).trim();
 
 
     const body =
         String(
-            payload?.notification?.body ||
-            payload?.data?.body ||
+            notification.body ||
+            data.body ||
             "You have a new notification."
-        )
-            .trim();
-
-
-    const notificationId =
-        String(
-            payload?.data?.notificationId ||
-            ""
-        )
-            .trim();
+        ).trim();
 
 
     try {
@@ -986,656 +1269,372 @@ function showForegroundPushNotification(
             new Notification(
                 title,
                 {
-
                     body,
-
                     icon:
                         "/icon-192.png",
-
                     badge:
                         "/icon-192.png",
-
                     tag:
-                        notificationId ||
-                        "novapay-notification",
-
-                    data: {
-
-                        notificationId
-
-                    }
-
+                        String(
+                            data.notificationId ||
+                            "novapay-notification"
+                        )
                 }
             );
 
 
-        /*
-         * Open the notification page when the
-         * foreground browser notification is clicked.
-         */
         browserNotification.onclick =
             () => {
 
                 window.focus();
+
+                const notificationId =
+                    String(
+                        data.notificationId ||
+                        ""
+                    ).trim();
+
 
                 if (
                     notificationId
                 ) {
 
                     window.location.href =
-                        `notifications.html?notificationId=${encodeURIComponent(
-                            notificationId
-                        )}`;
-
+                        `notifications.html?notificationId=${encodeURIComponent(notificationId)}`;
                 }
-
-                browserNotification.close();
-
             };
-
 
     } catch (error) {
 
-        console.error(
-            "NovaPay foreground browser notification error:",
+        console.warn(
+            "NovaPay could not display foreground browser notification:",
             error
         );
-
     }
-
 }
 
 
-/* =========================================================
-   NOTIFICATION TYPE
-   ========================================================= */
+// ============================================================
+// FILTER NOTIFICATIONS
+// ============================================================
 
-function getNotificationType(
-    notification
-) {
+function getFilteredNotifications() {
 
-    return String(
-        notification?.type ||
-        "system"
-    )
-        .trim()
-        .toLowerCase();
-
-}
-
-
-/* =========================================================
-   NOTIFICATION TITLE
-   ========================================================= */
-
-function getNotificationTitle(
-    notification
-) {
-
-    return String(
-        notification?.title ||
-        "Notification"
-    )
-        .trim();
-
-}
-
-
-/* =========================================================
-   NOTIFICATION BODY
-   ========================================================= */
-
-function getNotificationBody(
-    notification
-) {
-
-    return String(
-        notification?.body ||
-        ""
-    )
-        .trim();
-
-}
-
-
-/* =========================================================
-   READ STATE
-   ========================================================= */
-
-function isNotificationRead(
-    notification
-) {
-
-    return notification?.read === true;
-
-}
-
-
-/* =========================================================
-   TIMESTAMP
-   ========================================================= */
-
-function timestampToMillis(
-    timestamp
-) {
-
-    if (!timestamp) {
-
-        return 0;
-
-    }
-
-
-    if (
-        typeof timestamp ===
-        "number"
-    ) {
-
-        if (
-            timestamp >
-            100000000000
-        ) {
-
-            return timestamp;
-
-        }
-
-
-        return timestamp * 1000;
-
-    }
-
-
-    if (
-        typeof timestamp ===
-        "string"
-    ) {
-
-        const numeric =
-            Number(
-                timestamp
-            );
-
-
-        if (
-            Number.isFinite(
-                numeric
-            )
-        ) {
-
-            if (
-                numeric >
-                100000000000
-            ) {
-
-                return numeric;
-
-            }
-
-
-            if (
-                numeric >
-                1000000000
-            ) {
-
-                return numeric * 1000;
-
-            }
-
-        }
-
-
-        const parsed =
-            new Date(
-                timestamp
-            ).getTime();
-
-
-        return Number.isFinite(
-            parsed
-        )
-            ? parsed
-            : 0;
-
-    }
-
-
-    if (
-        typeof timestamp ===
-        "object"
-    ) {
-
-        if (
-            Number.isFinite(
-                Number(
-                    timestamp.seconds
-                )
-            )
-        ) {
-
-            return (
-                Number(
-                    timestamp.seconds
-                ) *
-                1000
-            );
-
-        }
-
-
-        if (
-            Number.isFinite(
-                Number(
-                    timestamp._seconds
-                )
-            )
-        ) {
-
-            return (
-                Number(
-                    timestamp._seconds
-                ) *
-                1000
-            );
-
-        }
-
-    }
-
-
-    return 0;
-
-}
-
-
-/* =========================================================
-   DATE FORMAT
-   ========================================================= */
-
-function formatNotificationTime(
-    notification
-) {
-
-    const milliseconds =
-        timestampToMillis(
-            notification?.createdAt
-        );
-
-
-    if (!milliseconds) {
-
-        return "Just now";
-
-    }
-
-
-    const date =
-        new Date(
-            milliseconds
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "Just now";
-
-    }
-
-
-    return date.toLocaleString(
-        "en-NG",
-        {
-
-            day:
-                "numeric",
-
-            month:
-                "short",
-
-            year:
-                "numeric",
-
-            hour:
-                "numeric",
-
-            minute:
-                "2-digit"
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ICON
-   ========================================================= */
-
-function getIconClass(
-    notification
-) {
-
-    const type =
-        getNotificationType(
-            notification
-        );
-
-
-    const iconMap = {
-
-        wallet:
-            "fa-wallet icon-wallet",
-
-        payment:
-            "fa-wallet icon-wallet",
-
-        transaction:
-            "fa-receipt icon-wallet",
-
-        airtime:
-            "fa-mobile-screen icon-airtime",
-
-        data:
-            "fa-wifi icon-data",
-
-        electricity:
-            "fa-bolt icon-electricity",
-
-        tv:
-            "fa-tv icon-tv",
-
-        promotion:
-            "fa-gift icon-gift",
-
-        giveaway:
-            "fa-gift icon-gift",
-
-        security:
-            "fa-shield-halved icon-security",
-
-        account:
-            "fa-user-shield icon-security",
-
-        system:
-            "fa-bullhorn icon-announcement",
-
-        announcement:
-            "fa-bullhorn icon-announcement"
-
-    };
-
-
-    return (
-        iconMap[type] ||
-        "fa-bell icon-announcement"
-    );
-
-}
-
-
-/* =========================================================
-   TAB FILTER
-   ========================================================= */
-
-function notificationMatchesTab(
-    notification
-) {
-
-    if (
-        activeTab ===
-        "All"
-    ) {
-
-        return true;
-
-    }
-
-
-    if (
-        activeTab ===
-        "Unread"
-    ) {
-
-        return !isNotificationRead(
-            notification
-        );
-
-    }
-
-
-    if (
-        activeTab ===
-        "Read"
-    ) {
-
-        return isNotificationRead(
-            notification
-        );
-
-    }
-
-
-    const type =
-        getNotificationType(
-            notification
-        );
+    let filtered =
+        [...notifications];
 
 
     /*
-     * Transactions.
+     * Tabs
      */
+
     if (
-        activeTab.toLowerCase() ===
+        currentTab ===
         "transactions"
     ) {
 
-        return [
-
-            "transaction",
-
-            "payment",
-
-            "wallet"
-
-        ].includes(
-            type
-        );
-
+        filtered =
+            filtered.filter(
+                notification =>
+                    isTransactionNotification(
+                        notification
+                    )
+            );
     }
 
 
-    /*
-     * Services.
-     */
     if (
-        activeTab.toLowerCase() ===
+        currentTab ===
         "services"
     ) {
 
-        return [
+        filtered =
+            filtered.filter(
+                notification =>
+                    isServiceNotification(
+                        notification
+                    )
+            );
+    }
 
-            "airtime",
 
-            "data",
+    if (
+        currentTab ===
+        "novapay"
+    ) {
 
-            "electricity",
+        filtered =
+            filtered.filter(
+                notification =>
+                    isNovaPayNotification(
+                        notification
+                    )
+            );
+    }
 
-            "tv"
 
-        ].includes(
-            type
-        );
+    if (
+        currentTab ===
+        "unread"
+    ) {
 
+        filtered =
+            filtered.filter(
+                notification =>
+                    notification.read !==
+                    true
+            );
+    }
+
+
+    if (
+        currentTab ===
+        "read"
+    ) {
+
+        filtered =
+            filtered.filter(
+                notification =>
+                    notification.read ===
+                    true
+            );
     }
 
 
     /*
-     * NovaPay.
+     * Search
      */
-    if (
-        activeTab.toLowerCase() ===
-        "novapay"
-    ) {
-
-        return [
-
-            "system",
-
-            "promotion",
-
-            "announcement",
-
-            "security",
-
-            "account"
-
-        ].includes(
-            type
-        );
-
-    }
-
-
-    return (
-        type ===
-        activeTab.toLowerCase()
-    );
-
-}
-
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
-
-function notificationMatchesSearch(
-    notification
-) {
 
     const search =
-        String(
-            searchInput?.value ||
-            ""
-        )
+        currentSearch
             .trim()
             .toLowerCase();
 
 
-    if (!search) {
+    if (search) {
 
-        return true;
+        filtered =
+            filtered.filter(
+                notification => {
 
-    }
-
-
-    const searchable = [
-
-        getNotificationTitle(
-            notification
-        ),
-
-        getNotificationBody(
-            notification
-        ),
-
-        getNotificationType(
-            notification
-        )
-
-    ]
-        .join(" ")
-        .toLowerCase();
+                    const text =
+                        [
+                            notification.title,
+                            notification.body,
+                            notification.message,
+                            notification.type
+                        ]
+                            .filter(Boolean)
+                            .join(" ")
+                            .toLowerCase();
 
 
-    return searchable.includes(
-        search
-    );
-
-}
-
-
-/* =========================================================
-   VISIBLE NOTIFICATIONS
-   ========================================================= */
-
-function getVisibleNotifications() {
-
-    return allNotifications.filter(
-        notification => {
-
-            return (
-                notificationMatchesTab(
-                    notification
-                ) &&
-                notificationMatchesSearch(
-                    notification
-                )
+                    return text.includes(
+                        search
+                    );
+                }
             );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   RENDER
-   ========================================================= */
-
-function renderNotifications() {
-
-    if (!notificationList) {
-
-        return;
-
     }
 
 
-    const notifications =
-        getVisibleNotifications();
+    /*
+     * Newest first
+     */
+
+    filtered.sort(
+        (
+            a,
+            b
+        ) =>
+            getTimestamp(
+                b.createdAt
+            ) -
+            getTimestamp(
+                a.createdAt
+            )
+    );
+
+
+    return filtered;
+}
+
+
+// ============================================================
+// NOTIFICATION CATEGORIES
+// ============================================================
+
+function isTransactionNotification(
+    notification
+) {
+
+    const type =
+        String(
+            notification?.type ||
+            ""
+        ).toLowerCase();
+
+
+    return [
+        "transaction",
+        "payment",
+        "wallet",
+        "airtime",
+        "data",
+        "electricity",
+        "tv",
+        "refund",
+        "failed",
+        "reversed",
+        "add_money"
+    ].includes(type);
+}
+
+
+function isServiceNotification(
+    notification
+) {
+
+    const type =
+        String(
+            notification?.type ||
+            ""
+        ).toLowerCase();
+
+
+    return [
+        "airtime",
+        "data",
+        "electricity",
+        "tv",
+        "service"
+    ].includes(type);
+}
+
+
+function isNovaPayNotification(
+    notification
+) {
+
+    const type =
+        String(
+            notification?.type ||
+            ""
+        ).toLowerCase();
+
+
+    return [
+        "security",
+        "account",
+        "promotion",
+        "system"
+    ].includes(type);
+}
+
+
+// ============================================================
+// RENDER NOTIFICATIONS
+// ============================================================
+
+function renderNotifications(
+    errorMessage = ""
+) {
+
+    if (
+        !notificationList ||
+        !emptyState
+    ) {
+        return;
+    }
+
+
+    const filtered =
+        getFilteredNotifications();
 
 
     notificationList.innerHTML =
         "";
 
 
-    if (
-        notifications.length ===
-        0
-    ) {
+    if (errorMessage) {
 
-        showEmptyState();
+        emptyState.style.display =
+            "flex";
+
+        emptyState.innerHTML =
+            `
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <h2>
+                Unable to Load
+            </h2>
+
+            <p>
+                ${escapeHTML(errorMessage)}
+            </p>
+            `;
 
         return;
-
     }
 
 
-    hideEmptyState();
+    if (
+        filtered.length ===
+        0
+    ) {
+
+        notificationList.style.display =
+            "none";
+
+        emptyState.style.display =
+            "flex";
+
+        emptyState.innerHTML =
+            `
+            <i class="fa-regular fa-bell"></i>
+
+            <h2>
+                No Notifications
+            </h2>
+
+            <p>
+                You're all caught up.
+                New transactions, services
+                and NovaPay updates will
+                appear here.
+            </p>
+            `;
+
+        return;
+    }
 
 
-    notifications.forEach(
-        notification => {
+    notificationList.style.display =
+        "flex";
 
-            notificationList.appendChild(
-                createNotificationCard(
-                    notification
-                )
+    emptyState.style.display =
+        "none";
+
+
+    for (
+        const notification of filtered
+    ) {
+
+        const card =
+            createNotificationCard(
+                notification
             );
 
-        }
-    );
 
+        notificationList.appendChild(
+            card
+        );
+    }
 }
 
 
-/* =========================================================
-   NOTIFICATION CARD
-   ========================================================= */
+// ============================================================
+// CREATE NOTIFICATION CARD
+// ============================================================
 
 function createNotificationCard(
     notification
@@ -1643,7 +1642,7 @@ function createNotificationCard(
 
     const card =
         document.createElement(
-            "div"
+            "article"
         );
 
 
@@ -1652,146 +1651,235 @@ function createNotificationCard(
 
 
     if (
-        !isNotificationRead(
-            notification
-        )
+        notification.read !==
+        true
     ) {
 
         card.classList.add(
             "unread"
         );
-
     }
 
 
-    const iconClass =
-        getIconClass(
-            notification
+    const icon =
+        document.createElement(
+            "div"
         );
+
+
+    icon.className =
+        "notification-icon";
+
+
+    icon.innerHTML =
+        getNotificationIcon(
+            notification.type
+        );
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+
+    content.className =
+        "notification-content";
 
 
     const title =
-        getNotificationTitle(
-            notification
+        document.createElement(
+            "h3"
         );
 
 
-    const body =
-        getNotificationBody(
-            notification
+    title.className =
+        "notification-title";
+
+
+    title.textContent =
+        String(
+            notification.title ||
+            "NovaPay"
+        );
+
+
+    const message =
+        document.createElement(
+            "p"
+        );
+
+
+    message.className =
+        "notification-message";
+
+
+    message.textContent =
+        String(
+            notification.body ||
+            notification.message ||
+            ""
         );
 
 
     const time =
-        formatNotificationTime(
-            notification
+        document.createElement(
+            "span"
         );
 
 
-    const notificationId =
-        String(
-            notification?.id ||
-            ""
-        )
-            .trim();
+    time.className =
+        "notification-time";
 
 
-    card.innerHTML = `
-
-        <div class="notification-icon">
-
-            <i
-                class="fa-solid ${escapeHTML(
-                    iconClass
-                )}"
-            ></i>
-
-        </div>
+    time.textContent =
+        formatTimestamp(
+            notification.createdAt
+        );
 
 
-        <div class="notification-content">
+    content.appendChild(
+        title
+    );
 
-            <div class="notification-title">
+    content.appendChild(
+        message
+    );
 
-                ${escapeHTML(
-                    title
-                )}
-
-            </div>
-
-
-            <div class="notification-message">
-
-                ${escapeHTML(
-                    body
-                )}
-
-            </div>
+    content.appendChild(
+        time
+    );
 
 
-            <div class="notification-footer">
+    card.appendChild(
+        icon
+    );
 
-                <span class="notification-time">
-
-                    ${escapeHTML(
-                        time
-                    )}
-
-                </span>
+    card.appendChild(
+        content
+    );
 
 
-                ${
-                    !isNotificationRead(
-                        notification
-                    )
-                        ? '<span class="unread-dot"></span>'
-                        : ""
-                }
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    /*
-     * Clicking an unread notification marks it as read.
-     */
     if (
-        notificationId
+        notification.read !==
+        true
     ) {
 
-        card.addEventListener(
-            "click",
-            () => {
+        const unreadDot =
+            document.createElement(
+                "span"
+            );
 
-                if (
-                    !isNotificationRead(
-                        notification
-                    )
-                ) {
 
-                    markNotificationAsRead(
-                        notificationId
-                    );
+        unreadDot.className =
+            "unread-dot";
 
-                }
 
-            }
+        card.appendChild(
+            unreadDot
         );
-
     }
 
 
-    return card;
+    card.addEventListener(
+        "click",
+        async () => {
 
+            if (
+                notification.read !==
+                true
+            ) {
+
+                await markNotificationAsRead(
+                    notification.id
+                );
+            }
+        }
+    );
+
+
+    return card;
 }
 
 
-/* =========================================================
-   MARK ONE AS READ
-   ========================================================= */
+// ============================================================
+// NOTIFICATION ICON
+// ============================================================
+
+function getNotificationIcon(
+    type
+) {
+
+    const normalizedType =
+        String(
+            type ||
+            ""
+        ).toLowerCase();
+
+
+    const icons = {
+
+        airtime:
+            "fa-solid fa-phone",
+
+        data:
+            "fa-solid fa-wifi",
+
+        electricity:
+            "fa-solid fa-bolt",
+
+        tv:
+            "fa-solid fa-tv",
+
+        refund:
+            "fa-solid fa-rotate-left",
+
+        failed:
+            "fa-solid fa-circle-xmark",
+
+        reversed:
+            "fa-solid fa-arrow-rotate-left",
+
+        add_money:
+            "fa-solid fa-circle-plus",
+
+        transaction:
+            "fa-solid fa-money-bill-transfer",
+
+        payment:
+            "fa-solid fa-credit-card",
+
+        wallet:
+            "fa-solid fa-wallet",
+
+        security:
+            "fa-solid fa-shield-halved",
+
+        account:
+            "fa-solid fa-user",
+
+        promotion:
+            "fa-solid fa-gift",
+
+        system:
+            "fa-solid fa-bell"
+    };
+
+
+    const icon =
+        icons[
+            normalizedType
+        ] ||
+        "fa-solid fa-bell";
+
+
+    return `<i class="${icon}"></i>`;
+}
+
+
+// ============================================================
+// MARK ONE NOTIFICATION AS READ
+// ============================================================
 
 async function markNotificationAsRead(
     notificationId
@@ -1801,9 +1889,7 @@ async function markNotificationAsRead(
         !currentUser ||
         !notificationId
     ) {
-
         return;
-
     }
 
 
@@ -1815,65 +1901,28 @@ async function markNotificationAsRead(
 
         const response =
             await fetch(
-                `${NOTIFICATIONS_API}/${encodeURIComponent(
-                    notificationId
-                )}/read`,
+                `${NOTIFICATIONS_API}/${encodeURIComponent(notificationId)}/read`,
                 {
-
-                    method:
-                        "PATCH",
+                    method: "PATCH",
 
                     headers: {
-
-                        "Authorization":
-                            `Bearer ${idToken}`,
-
-                        "Accept":
-                            "application/json"
-
+                        Authorization:
+                            `Bearer ${idToken}`
                     }
-
                 }
             );
 
 
-        let result =
-            null;
-
-
-        try {
-
-            result =
-                await response.json();
-
-        } catch {
-
-            result =
-                null;
-
-        }
-
-
-        if (
-            !response.ok ||
-            result?.success !== true
-        ) {
-
-            console.error(
-                "NovaPay could not mark notification as read."
-            );
+        if (!response.ok) {
 
             return;
-
         }
 
 
         const notification =
-            allNotifications.find(
+            notifications.find(
                 item =>
-                    String(
-                        item?.id
-                    ) ===
+                    item.id ===
                     notificationId
             );
 
@@ -1882,12 +1931,10 @@ async function markNotificationAsRead(
 
             notification.read =
                 true;
-
         }
 
 
         renderNotifications();
-
 
     } catch (error) {
 
@@ -1895,22 +1942,20 @@ async function markNotificationAsRead(
             "NovaPay mark notification read error:",
             error
         );
-
     }
-
 }
 
 
-/* =========================================================
-   MARK ALL AS READ
-   ========================================================= */
+// ============================================================
+// MARK ALL AS READ
+// ============================================================
 
 async function markAllNotificationsAsRead() {
 
-    if (!currentUser) {
-
+    if (
+        !currentUser
+    ) {
         return;
-
     }
 
 
@@ -1924,129 +1969,103 @@ async function markAllNotificationsAsRead() {
             await fetch(
                 `${NOTIFICATIONS_API}/read-all`,
                 {
-
-                    method:
-                        "PATCH",
+                    method: "PATCH",
 
                     headers: {
-
-                        "Authorization":
-                            `Bearer ${idToken}`,
-
-                        "Accept":
-                            "application/json"
-
+                        Authorization:
+                            `Bearer ${idToken}`
                     }
-
                 }
             );
 
 
-        let result =
-            null;
+        if (!response.ok) {
 
-
-        try {
-
-            result =
-                await response.json();
-
-        } catch {
-
-            result =
-                null;
-
-        }
-
-
-        if (
-            !response.ok ||
-            result?.success !== true
-        ) {
-
-            console.error(
-                "NovaPay could not mark all notifications as read."
+            throw new Error(
+                "Unable to mark all notifications as read."
             );
-
-            return;
-
         }
 
 
-        allNotifications.forEach(
-            notification => {
-
-                notification.read =
-                    true;
-
-            }
-        );
+        notifications =
+            notifications.map(
+                notification => ({
+                    ...notification,
+                    read: true
+                })
+            );
 
 
         renderNotifications();
-
 
     } catch (error) {
 
         console.error(
-            "NovaPay mark-all-notifications-read error:",
+            "NovaPay mark all notifications read error:",
             error
         );
-
     }
-
 }
 
 
-/* =========================================================
-   MARK-ALL BUTTON
-   ========================================================= */
+// ============================================================
+// MARK-ALL BUTTON
+// ============================================================
 
-markAllBtn?.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-        markAllNotificationsAsRead();
-
-    }
-);
+const markAllBtn =
+    document.getElementById(
+        "markAllRead"
+    );
 
 
-/* =========================================================
-   SEARCH
-   ========================================================= */
+if (markAllBtn) {
 
-searchInput?.addEventListener(
-    "input",
-    () => {
+    markAllBtn.addEventListener(
+        "click",
+        async () => {
 
-        renderNotifications();
-
-    }
-);
+            await markAllNotificationsAsRead();
+        }
+    );
+}
 
 
-/* =========================================================
-   TABS
-   ========================================================= */
+// ============================================================
+// SEARCH
+// ============================================================
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        event => {
+
+            currentSearch =
+                event.target.value ||
+                "";
+
+            renderNotifications();
+        }
+    );
+}
+
+
+// ============================================================
+// TABS
+// ============================================================
 
 tabs.forEach(
-    tab => {
+    (tab, index) => {
 
         tab.addEventListener(
             "click",
             () => {
 
                 tabs.forEach(
-                    button => {
-
-                        button.classList.remove(
+                    item =>
+                        item.classList.remove(
                             "active"
-                        );
-
-                    }
+                        )
                 );
 
 
@@ -2055,210 +2074,430 @@ tabs.forEach(
                 );
 
 
-                activeTab =
+                const tabText =
                     String(
-                        tab.dataset.tab ||
                         tab.textContent ||
-                        "All"
+                        ""
                     )
-                        .trim();
+                        .trim()
+                        .toLowerCase();
 
 
                 if (
-                    activeTab.toLowerCase() ===
-                    "all notifications"
+                    tabText ===
+                    "transactions"
                 ) {
 
-                    activeTab =
-                        "All";
+                    currentTab =
+                        "transactions";
 
-                }
-
-
-                if (
-                    activeTab.toLowerCase() ===
-                    "unread notifications"
+                } else if (
+                    tabText ===
+                    "services"
                 ) {
 
-                    activeTab =
-                        "Unread";
+                    currentTab =
+                        "services";
 
-                }
-
-
-                if (
-                    activeTab.toLowerCase() ===
-                    "read notifications"
+                } else if (
+                    tabText ===
+                    "novapay"
                 ) {
 
-                    activeTab =
-                        "Read";
+                    currentTab =
+                        "novapay";
 
+                } else if (
+                    tabText ===
+                    "unread"
+                ) {
+
+                    currentTab =
+                        "unread";
+
+                } else if (
+                    tabText ===
+                    "read"
+                ) {
+
+                    currentTab =
+                        "read";
+
+                } else {
+
+                    currentTab =
+                        "all";
                 }
 
 
                 renderNotifications();
-
             }
         );
-
     }
 );
 
 
-/* =========================================================
-   LOADING STATE
-   ========================================================= */
+// ============================================================
+// TIMESTAMP
+// ============================================================
 
-function showLoading() {
+function getTimestamp(
+    value
+) {
 
-    if (!notificationList) {
-
-        return;
-
+    if (!value) {
+        return 0;
     }
 
 
-    if (emptyState) {
+    if (
+        typeof value ===
+        "number"
+    ) {
 
-        emptyState.style.display =
-            "none";
-
+        return value;
     }
 
 
-    notificationList.innerHTML = `
+    if (
+        typeof value?.seconds ===
+        "number"
+    ) {
 
-        <div class="notification-loading">
+        return (
+            value.seconds *
+            1000
+        );
+    }
 
-            <i class="fa-solid fa-spinner fa-spin"></i>
 
-            <span>
-                Loading notifications...
-            </span>
+    if (
+        typeof value?._seconds ===
+        "number"
+    ) {
 
-        </div>
+        return (
+            value._seconds *
+            1000
+        );
+    }
 
-    `;
 
+    if (
+        typeof value ===
+        "string"
+    ) {
+
+        const parsed =
+            Date.parse(
+                value
+            );
+
+
+        if (
+            !Number.isNaN(
+                parsed
+            )
+        ) {
+
+            return parsed;
+        }
+    }
+
+
+    return 0;
 }
 
 
-/* =========================================================
-   EMPTY STATE
-   ========================================================= */
+// ============================================================
+// FORMAT TIMESTAMP
+// ============================================================
 
-function showEmptyState() {
+function formatTimestamp(
+    value
+) {
 
-    if (notificationList) {
+    const timestamp =
+        getTimestamp(
+            value
+        );
 
-        notificationList.innerHTML =
-            "";
 
+    if (!timestamp) {
+
+        return "Just now";
     }
 
 
-    if (emptyState) {
+    const date =
+        new Date(
+            timestamp
+        );
 
-        emptyState.style.display =
-            "flex";
 
+    const now =
+        new Date();
+
+
+    const difference =
+        now.getTime() -
+        date.getTime();
+
+
+    if (
+        difference <
+        60 * 1000
+    ) {
+
+        return "Just now";
     }
 
+
+    if (
+        difference <
+        60 * 60 * 1000
+    ) {
+
+        const minutes =
+            Math.floor(
+                difference /
+                (60 * 1000)
+            );
+
+
+        return `${minutes} min ago`;
+    }
+
+
+    if (
+        difference <
+        24 * 60 * 60 * 1000
+    ) {
+
+        const hours =
+            Math.floor(
+                difference /
+                (60 * 60 * 1000)
+            );
+
+
+        return `${hours} hr ago`;
+    }
+
+
+    if (
+        difference <
+        7 * 24 * 60 * 60 * 1000
+    ) {
+
+        const days =
+            Math.floor(
+                difference /
+                (24 * 60 * 60 * 1000)
+            );
+
+
+        return `${days} day${days === 1 ? "" : "s"} ago`;
+    }
+
+
+    return date.toLocaleString(
+        undefined,
+        {
+            day: "numeric",
+            month: "short",
+            year:
+                date.getFullYear() !==
+                now.getFullYear()
+                    ? "numeric"
+                    : undefined,
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
 }
 
 
-/* =========================================================
-   HIDE EMPTY STATE
-   ========================================================= */
-
-function hideEmptyState() {
-
-    if (emptyState) {
-
-        emptyState.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   ERROR STATE
-   ========================================================= */
-
-function showError() {
-
-    if (notificationList) {
-
-        notificationList.innerHTML = `
-
-            <div class="notification-loading">
-
-                <i class="fa-solid fa-circle-exclamation"></i>
-
-                <span>
-                    We couldn't load your notifications right now.
-                    Please try again later.
-                </span>
-
-            </div>
-
-        `;
-
-    }
-
-
-    if (emptyState) {
-
-        emptyState.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   HTML ESCAPING
-   ========================================================= */
+// ============================================================
+// ESCAPE HTML
+// ============================================================
 
 function escapeHTML(
     value
 ) {
 
-    return String(
-        value ?? ""
-    )
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-        .replaceAll(
-            "'",
-            "&#039;"
+    const div =
+        document.createElement(
+            "div"
         );
 
+
+    div.textContent =
+        String(
+            value ??
+            ""
+        );
+
+
+    return div.innerHTML;
 }
 
 
-/* =========================================================
-   STARTUP
-   ========================================================= */
+// ============================================================
+// LOAD MORE WHEN NEEDED
+// ============================================================
 
-console.log(
-    "🔐 NovaPay Notifications frontend loaded — backend-authoritative + FCM push mode."
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (
+            !hasMore ||
+            loading
+        ) {
+            return;
+        }
+
+
+        const scrollPosition =
+            window.innerHeight +
+            window.scrollY;
+
+
+        const pageHeight =
+            document.documentElement
+                .scrollHeight;
+
+
+        if (
+            scrollPosition >=
+            pageHeight - 300
+        ) {
+
+            loadNotifications(
+                false
+            );
+        }
+    },
+    {
+        passive: true
+    }
+);
+
+
+// ============================================================
+// NOTIFICATION LINK HANDLING
+// ============================================================
+
+function openNotificationFromURL() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const notificationId =
+        params.get(
+            "notificationId"
+        );
+
+
+    if (!notificationId) {
+        return;
+    }
+
+
+    const notification =
+        notifications.find(
+            item =>
+                item.id ===
+                notificationId
+        );
+
+
+    if (!notification) {
+        return;
+    }
+
+
+    setTimeout(
+        () => {
+
+            const cards =
+                document.querySelectorAll(
+                    ".notification-card"
+                );
+
+
+            const index =
+                notifications.findIndex(
+                    item =>
+                        item.id ===
+                        notificationId
+                );
+
+
+            if (
+                index >= 0 &&
+                cards[index]
+            ) {
+
+                cards[index].scrollIntoView(
+                    {
+                        behavior: "smooth",
+                        block: "center"
+                    }
+                );
+
+
+                cards[index].style.outline =
+                    "3px solid rgba(23,105,255,0.25)";
+
+
+                setTimeout(
+                    () => {
+
+                        cards[index].style.outline =
+                            "";
+
+                    },
+                    2500
+                );
+            }
+
+        },
+        300
+    );
+}
+
+
+// ============================================================
+// ONLINE / OFFLINE REFRESH
+// ============================================================
+
+window.addEventListener(
+    "online",
+    async () => {
+
+        if (!currentUser) {
+            return;
+        }
+
+
+        await loadNotifications(
+            true
+        );
+    }
+);
+
+
+// ============================================================
+// STARTUP
+// ============================================================
+
+createPushControl();
+
+updatePushUI(
+    "default"
 );

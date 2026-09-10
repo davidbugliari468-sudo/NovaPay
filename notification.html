@@ -28,7 +28,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <button
 id="backBtn"
-class="back-btn">
+class="back-btn"
+type="button">
 
 <i class="fa-solid fa-arrow-left"></i>
 
@@ -39,15 +40,14 @@ class="back-btn">
 <h1>Notifications</h1>
 
 <p>
-
 Stay updated with every
 activity on your account.
-
 </p>
 
 </div>
 
 </header>
+
 
 <!-- Search -->
 
@@ -58,43 +58,105 @@ activity on your account.
 <input
 id="searchInput"
 type="text"
-placeholder="Search notifications">
+placeholder="Search notifications"
+autocomplete="off">
 
 </div>
+
+
+<!-- Push Notifications -->
+
+<div
+id="pushNotificationBox"
+class="push-notification-box">
+
+<div class="push-notification-content">
+
+<div class="push-notification-icon">
+
+<i class="fa-solid fa-bell"></i>
+
+</div>
+
+<div class="push-notification-text">
+
+<h2>
+Stay Updated
+</h2>
+
+<p>
+Allow NovaPay to send you important
+transaction and service alerts.
+</p>
+
+</div>
+
+</div>
+
+<button
+id="enablePushBtn"
+class="enable-push-btn"
+type="button">
+
+<i class="fa-solid fa-bell"></i>
+
+<span>
+Enable Push Notifications
+</span>
+
+</button>
+
+<p
+id="pushNotificationStatus"
+class="push-notification-status"
+aria-live="polite">
+</p>
+
+</div>
+
 
 <!-- Tabs -->
 
 <div class="tabs">
 
 <button
-class="tab active">
+class="tab active"
+type="button"
+data-tab="all">
 
 All
 
 </button>
 
 <button
-class="tab">
+class="tab"
+type="button"
+data-tab="transactions">
 
 Transactions
 
 </button>
 
 <button
-class="tab">
+class="tab"
+type="button"
+data-tab="services">
 
 Services
 
 </button>
 
 <button
-class="tab">
+class="tab"
+type="button"
+data-tab="novapay">
 
 NovaPay
 
 </button>
 
 </div>
+
 
 <!-- Notification List -->
 
@@ -103,6 +165,7 @@ id="notificationList"
 class="notification-list">
 
 </div>
+
 
 <!-- Empty -->
 
@@ -113,29 +176,25 @@ class="empty">
 <i class="fa-regular fa-bell"></i>
 
 <h2>
-
 No Notifications
-
 </h2>
 
 <p>
-
 You're all caught up.
 
 New transactions,
 services and NovaPay
 updates will appear here.
-
 </p>
 
 </div>
 
 </div>
 
+
 <script
 type="module"
 src="notifications.js">
-
 </script>
 
 </body>
