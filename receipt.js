@@ -9,49 +9,112 @@ import {
 // NOVAPAY BACKEND
 // =====================================================
 
-const BACKEND_URL = "https://novapay-server.onrender.com";
+const API_BASE_URL =
+    "https://novapay-server.onrender.com";
 
 
 // =====================================================
-// ELEMENTS
+// DOM ELEMENTS
 // =====================================================
 
 const elements = {
-    title: document.getElementById("transactionTitle"),
-    status: document.getElementById("transactionStatus"),
-    amount: document.getElementById("amount"),
 
-    recipient: document.getElementById("recipient"),
-    amountText: document.getElementById("amountText"),
-    date: document.getElementById("date"),
-    transactionId: document.getElementById("transactionId"),
-    category: document.getElementById("category"),
-    statusText: document.getElementById("statusText"),
+    title:
+        document.getElementById(
+            "transactionTitle"
+        ),
 
-    receiptIcon: document.getElementById("receiptIcon"),
+    status:
+        document.getElementById(
+            "transactionStatus"
+        ),
 
-    supportBtn: document.getElementById("supportBtn"),
-    doneBtn: document.getElementById("doneBtn"),
-    backBtn: document.getElementById("backBtn")
+    amount:
+        document.getElementById(
+            "amount"
+        ),
+
+    recipient:
+        document.getElementById(
+            "recipient"
+        ),
+
+    amountText:
+        document.getElementById(
+            "amountText"
+        ),
+
+    date:
+        document.getElementById(
+            "date"
+        ),
+
+    transactionId:
+        document.getElementById(
+            "transactionId"
+        ),
+
+    category:
+        document.getElementById(
+            "category"
+        ),
+
+    statusText:
+        document.getElementById(
+            "statusText"
+        ),
+
+    receiptIcon:
+        document.getElementById(
+            "receiptIcon"
+        ),
+
+    supportBtn:
+        document.getElementById(
+            "supportBtn"
+        ),
+
+    doneBtn:
+        document.getElementById(
+            "doneBtn"
+        ),
+
+    backBtn:
+        document.getElementById(
+            "backBtn"
+        )
+
 };
 
 
 // =====================================================
-// BASIC VALUE HELPER
+// VALUE HELPER
 // =====================================================
 
-function firstValue(...values) {
-    for (const value of values) {
+function firstValue(
+    ...values
+) {
+
+    for (
+        const value
+        of values
+    ) {
+
         if (
             value !== undefined &&
             value !== null &&
             String(value).trim() !== ""
         ) {
+
             return value;
+
         }
+
     }
 
+
     return null;
+
 }
 
 
@@ -59,421 +122,468 @@ function firstValue(...values) {
 // NORMALIZE ID
 // =====================================================
 
-function normalizeId(value) {
-    if (value === undefined || value === null) {
+function normalizeId(
+    value
+) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
         return "";
-    }
 
-    return String(value).trim();
-}
-
-
-// =====================================================
-// GET LOCAL NOVAPAY TRANSACTION ID
-// =====================================================
-
-function getTransactionId(transaction) {
-    return normalizeId(
-        firstValue(
-            transaction.id,
-            transaction.transactionId,
-            transaction.transaction_id,
-            transaction.txId,
-            transaction.tx_id,
-            transaction.reference,
-            transaction.referenceId,
-            transaction.reference_id
-        )
-    );
-}
-
-
-// =====================================================
-// GET PROVIDER REFERENCE
-// =====================================================
-
-function getProviderReference(transaction) {
-    return normalizeId(
-        firstValue(
-            transaction.providerReference,
-            transaction.provider_reference,
-
-            transaction.providerTransactionId,
-            transaction.provider_transaction_id,
-
-            transaction.providerRequestId,
-            transaction.provider_request_id,
-
-            transaction.requestId,
-            transaction.request_id
-        )
-    );
-}
-
-
-// =====================================================
-// GET AMOUNT IN NAIRA
-// =====================================================
-
-function getAmountNaira(transaction) {
-
-    const koboAmount = firstValue(
-        transaction.amountKobo,
-        transaction.amount_kobo,
-
-        transaction.valueKobo,
-        transaction.value_kobo,
-
-        transaction.totalKobo,
-        transaction.total_kobo
-    );
-
-
-    if (koboAmount !== null) {
-
-        const numericKobo = Number(koboAmount);
-
-        if (Number.isFinite(numericKobo)) {
-            return Math.abs(numericKobo) / 100;
-        }
     }
 
 
-    const nairaAmount = firstValue(
-        transaction.amount,
-        transaction.value,
-        transaction.total,
+    return String(
+        value
+    ).trim();
 
-        transaction.amountNaira,
-        transaction.amount_naira
+}
+
+
+// =====================================================
+// READ SELECTED TRANSACTION
+// =====================================================
+//
+// transaction-history.js stores the selected
+// transaction here before opening receipt.html.
+//
+// This is the PRIMARY receipt data source.
+// =====================================================
+
+function getStoredTransaction() {
+
+    try {
+
+        const stored =
+            localStorage.getItem(
+                "selectedTransaction"
+            );
+
+
+        if (
+            !stored
+        ) {
+
+            return null;
+
+        }
+
+
+        const transaction =
+            JSON.parse(
+                stored
+            );
+
+
+        if (
+            !transaction ||
+            typeof transaction !== "object"
+        ) {
+
+            return null;
+
+        }
+
+
+        return transaction;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "NovaPay could not read selected transaction:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+// =====================================================
+// TRANSACTION ID
+// =====================================================
+
+function getTransactionId(
+    transaction
+) {
+
+    return normalizeId(
+
+        firstValue(
+
+            transaction?.id,
+
+            transaction?.transactionId,
+
+            transaction?.transaction_id,
+
+            transaction?.txId,
+
+            transaction?.tx_id
+
+        )
+
     );
 
+}
 
-    if (nairaAmount !== null) {
 
-        const numericAmount = Number(nairaAmount);
+// =====================================================
+// REFERENCE
+// =====================================================
 
-        if (Number.isFinite(numericAmount)) {
-            return Math.abs(numericAmount);
-        }
+function getReference(
+    transaction
+) {
+
+    return normalizeId(
+
+        firstValue(
+
+            transaction?.reference,
+
+            transaction?.referenceId,
+
+            transaction?.reference_id,
+
+            transaction?.providerReference,
+
+            transaction?.provider_reference
+
+        )
+
+    );
+
+}
+
+
+// =====================================================
+// AMOUNT
+// =====================================================
+//
+// History already stores both:
+//
+// amount     = Naira
+// amountKobo = Kobo
+//
+// Prefer amountKobo because it is the authoritative
+// money representation.
+// =====================================================
+
+function getAmountNaira(
+    transaction
+) {
+
+    const amountKobo =
+        Number(
+            transaction?.amountKobo
+        );
+
+
+    if (
+        Number.isSafeInteger(
+            amountKobo
+        ) &&
+        amountKobo >= 0
+    ) {
+
+        return (
+            amountKobo /
+            100
+        );
+
+    }
+
+
+    const amount =
+        Number(
+            transaction?.amount
+        );
+
+
+    if (
+        Number.isFinite(
+            amount
+        )
+    ) {
+
+        return Math.abs(
+            amount
+        );
+
     }
 
 
     return 0;
+
 }
 
 
 // =====================================================
-// FORMAT NAIRA
+// FORMAT MONEY
 // =====================================================
 
-function formatCurrency(amount) {
+function formatMoney(
+    amount
+) {
 
-    const numericAmount = Number(amount);
+    const numericAmount =
+        Number(
+            amount
+        );
 
-    if (!Number.isFinite(numericAmount)) {
+
+    if (
+        !Number.isFinite(
+            numericAmount
+        )
+    ) {
+
         return "₦0.00";
+
     }
 
 
-    return `₦${numericAmount.toLocaleString("en-NG", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    })}`;
-}
+    return (
+        "₦" +
+        numericAmount.toLocaleString(
+            "en-NG",
+            {
+                minimumFractionDigits:
+                    2,
 
-
-// =====================================================
-// GET TRANSACTION DIRECTION
-// =====================================================
-
-function getTransactionDirection(transaction) {
-
-    const values = [
-        transaction.direction,
-
-        transaction.transactionDirection,
-        transaction.transaction_direction,
-
-        transaction.type,
-
-        transaction.transactionType,
-        transaction.transaction_type,
-
-        transaction.category,
-
-        transaction.service
-    ]
-        .filter(Boolean)
-        .map(value => String(value).toLowerCase());
-
-
-    const creditWords = [
-        "credit",
-        "deposit",
-        "funding",
-        "fund",
-        "cash in",
-        "cash-in",
-        "refund",
-        "reversal",
-        "topup",
-        "top-up"
-    ];
-
-
-    const debitWords = [
-        "debit",
-        "withdraw",
-        "withdrawal",
-        "purchase",
-        "payment",
-        "data",
-        "airtime",
-        "electricity",
-        "betting",
-        "bill"
-    ];
-
-
-    if (
-        values.some(value =>
-            creditWords.some(word =>
-                value.includes(word)
-            )
+                maximumFractionDigits:
+                    2
+            }
         )
-    ) {
-        return "credit";
-    }
-
-
-    if (
-        values.some(value =>
-            debitWords.some(word =>
-                value.includes(word)
-            )
-        )
-    ) {
-        return "debit";
-    }
-
-
-    const rawAmount = firstValue(
-        transaction.amountKobo,
-        transaction.amount_kobo,
-
-        transaction.amount,
-        transaction.value,
-        transaction.total
     );
 
+}
+
+
+// =====================================================
+// DIRECTION
+// =====================================================
+//
+// History stores:
+//
+// type: "in"
+// type: "out"
+//
+// This is the first thing we use.
+// =====================================================
+
+function getDirection(
+    transaction
+) {
+
+    const type =
+        String(
+            transaction?.type ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
 
     if (
-        typeof rawAmount === "number" &&
-        rawAmount < 0
+        type === "in"
     ) {
-        return "debit";
+
+        return "credit";
+
     }
 
 
     if (
-        typeof rawAmount === "string" &&
-        rawAmount.trim().startsWith("-")
+        type === "out"
     ) {
+
         return "debit";
+
+    }
+
+
+    const direction =
+        String(
+            transaction?.direction ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        direction === "credit"
+    ) {
+
+        return "credit";
+
+    }
+
+
+    if (
+        direction === "debit"
+    ) {
+
+        return "debit";
+
+    }
+
+
+    const category =
+        String(
+            transaction?.title ||
+            transaction?.category ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        category.includes(
+            "credit"
+        ) ||
+        category.includes(
+            "deposit"
+        ) ||
+        category.includes(
+            "refund"
+        )
+    ) {
+
+        return "credit";
+
     }
 
 
     return "debit";
+
 }
 
 
 // =====================================================
-// GET RAW STATUS
+// STATUS
 // =====================================================
 
-function getStatus(transaction) {
+function getStatus(
+    transaction
+) {
 
-    return String(
-        firstValue(
-            transaction.status,
-
-            transaction.transactionStatus,
-            transaction.transaction_status,
-
-            "pending"
+    const rawStatus =
+        String(
+            transaction?.status ||
+            ""
         )
-    ).toLowerCase();
-}
+            .trim()
+            .toLowerCase();
 
 
-// =====================================================
-// SUCCESS STATUS
-// =====================================================
+    if (
+        rawStatus === "successful" ||
+        rawStatus === "success" ||
+        rawStatus === "completed" ||
+        rawStatus === "complete" ||
+        rawStatus === "paid" ||
+        rawStatus === "approved" ||
+        rawStatus === "completed-api"
+    ) {
 
-function isSuccessful(status) {
-
-    return [
-        "successful",
-        "success",
-        "completed",
-        "completed-api",
-        "complete",
-        "paid",
-        "approved"
-    ].some(value =>
-        status.includes(value)
-    );
-}
-
-
-// =====================================================
-// FAILED STATUS
-// =====================================================
-
-function isFailed(status) {
-
-    return [
-        "failed",
-        "failure",
-        "cancelled",
-        "canceled",
-        "refunded",
-        "rejected",
-        "declined"
-    ].some(value =>
-        status.includes(value)
-    );
-}
-
-
-// =====================================================
-// DISPLAY STATUS
-// =====================================================
-
-function getDisplayStatus(status) {
-
-    if (isSuccessful(status)) {
         return "Successful";
+
     }
 
 
-    if (isFailed(status)) {
+    if (
+        rawStatus === "failed" ||
+        rawStatus === "fail" ||
+        rawStatus === "cancelled" ||
+        rawStatus === "canceled" ||
+        rawStatus === "reversed" ||
+        rawStatus === "refunded"
+    ) {
+
         return "Failed";
+
     }
 
 
-    return "Pending";
+    if (
+        rawStatus === "pending" ||
+        rawStatus === "processing" ||
+        rawStatus === "initiated-api" ||
+        rawStatus === "queued-api" ||
+        rawStatus === "on-hold"
+    ) {
+
+        return "Pending";
+
+    }
+
+
+    // History already normalizes its own status,
+    // so preserve it when it is present.
+    if (
+        rawStatus
+    ) {
+
+        return (
+            rawStatus.charAt(0).toUpperCase() +
+            rawStatus.slice(1)
+        );
+
+    }
+
+
+    return "Successful";
+
 }
 
 
 // =====================================================
-// TRANSACTION TITLE
+// TITLE
 // =====================================================
 
-function getTransactionTitle(transaction) {
+function getTitle(
+    transaction
+) {
 
-    const explicitTitle = firstValue(
-        transaction.title,
-
-        transaction.transactionTitle,
-        transaction.transaction_title,
-
-        transaction.description
-    );
-
-
-    if (explicitTitle) {
-        return String(explicitTitle);
-    }
-
-
-    const type = String(
+    const title =
         firstValue(
-            transaction.transactionType,
-            transaction.transaction_type,
 
-            transaction.type,
+            transaction?.title,
 
-            transaction.category,
+            transaction?.description,
 
-            transaction.service,
+            transaction?.category,
 
-            "Transaction"
-        )
-    ).toLowerCase();
+            transaction?.service
+
+        );
 
 
-    if (type.includes("deposit")) {
-        return "Deposit";
-    }
+    if (
+        title
+    ) {
 
+        return String(
+            title
+        );
 
-    if (type.includes("data")) {
-        return "Data";
-    }
-
-
-    if (type.includes("airtime")) {
-        return "Airtime";
-    }
-
-
-    if (type.includes("electric")) {
-        return "Electricity";
-    }
-
-
-    if (type.includes("bet")) {
-        return "Betting";
-    }
-
-
-    if (type.includes("withdraw")) {
-        return "Withdrawal";
-    }
-
-
-    if (type.includes("refund")) {
-        return "Refund";
     }
 
 
     return "Transaction";
-}
 
-
-// =====================================================
-// RECIPIENT
-// =====================================================
-
-function getRecipient(transaction) {
-
-    return String(
-        firstValue(
-            transaction.recipientName,
-            transaction.recipient_name,
-
-            transaction.recipient,
-
-            transaction.customerName,
-            transaction.customer_name,
-
-            transaction.customerId,
-            transaction.customer_id,
-
-            transaction.phoneNumber,
-            transaction.phone,
-
-            transaction.mobile,
-
-            transaction.beneficiary,
-
-            transaction.description,
-
-            "—"
-        )
-    );
 }
 
 
@@ -481,353 +591,385 @@ function getRecipient(transaction) {
 // CATEGORY
 // =====================================================
 
-function getCategory(transaction) {
+function getCategory(
+    transaction
+) {
 
-    const category = firstValue(
-        transaction.category,
+    const category =
+        String(
+            firstValue(
 
-        transaction.service,
+                transaction?.category,
 
-        transaction.transactionType,
-        transaction.transaction_type,
+                transaction?.title,
 
-        transaction.type
-    );
+                transaction?.service,
 
+                transaction?.type
 
-    if (!category) {
-        return "General";
-    }
-
-
-    return String(category)
-        .replace(/[-_]/g, " ")
-        .replace(/\b\w/g, letter =>
-            letter.toUpperCase()
-        );
-}
-
-
-// =====================================================
-// PARSE DATE
-// =====================================================
-
-function parseDateValue(value) {
-
-    if (!value) {
-        return null;
-    }
-
-
-    if (value instanceof Date) {
-        return value;
-    }
-
-
-    if (typeof value === "object") {
-
-        if (typeof value.toDate === "function") {
-            return value.toDate();
-        }
-
-
-        if (typeof value.seconds === "number") {
-            return new Date(
-                value.seconds * 1000
-            );
-        }
-
-
-        if (typeof value._seconds === "number") {
-            return new Date(
-                value._seconds * 1000
-            );
-        }
-    }
-
-
-    if (typeof value === "number") {
-
-        if (value < 10000000000) {
-            return new Date(
-                value * 1000
-            );
-        }
-
-
-        return new Date(value);
-    }
-
-
-    const parsed = new Date(value);
-
-
-    if (!Number.isNaN(parsed.getTime())) {
-        return parsed;
-    }
-
-
-    return null;
-}
-
-
-// =====================================================
-// TRANSACTION DATE
-// =====================================================
-
-function getTransactionDate(transaction) {
-
-    return firstValue(
-        transaction.createdAt,
-        transaction.created_at,
-
-        transaction.timestamp,
-
-        transaction.date,
-
-        transaction.transactionDate,
-        transaction.transaction_date,
-
-        transaction.completedAt,
-        transaction.completed_at
-    );
-}
-
-
-// =====================================================
-// FORMAT DATE
-// =====================================================
-
-function formatDate(value) {
-
-    const date = parseDateValue(value);
-
-
-    if (!date) {
-        return "—";
-    }
-
-
-    return date.toLocaleString("en-NG", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-}
-
-
-// =====================================================
-// GET TRANSACTION ID FROM URL
-// =====================================================
-
-function getRequestedTransactionId() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    return normalizeId(
-        firstValue(
-
-            params.get("transactionId"),
-
-            params.get("transaction_id"),
-
-            params.get("txId"),
-
-            params.get("tx_id"),
-
-            params.get("id"),
-
-            params.get("reference")
+            ) ||
+            ""
         )
-    );
-}
+            .trim()
+            .toLowerCase();
 
 
-// =====================================================
-// GET FIREBASE TOKEN
-// =====================================================
+    if (
+        category.includes(
+            "deposit"
+        ) ||
+        category.includes(
+            "credit"
+        ) ||
+        category.includes(
+            "refund"
+        )
+    ) {
 
-async function getFirebaseToken(user) {
+        return "Credit Alert";
 
-    if (!user) {
-        throw new Error(
-            "No authenticated user was found."
-        );
-    }
-
-
-    const token =
-        await user.getIdToken(true);
-
-
-    if (!token) {
-        throw new Error(
-            "Authentication token was not received."
-        );
-    }
-
-
-    return token;
-}
-
-
-// =====================================================
-// FETCH TRANSACTIONS
-// =====================================================
-
-async function fetchTransactions(token) {
-
-    const response = await fetch(
-        `${BACKEND_URL}/api/transactions?limit=50`,
-        {
-            method: "GET",
-
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json"
-            },
-
-            cache: "no-store"
-        }
-    );
-
-
-    if (!response.ok) {
-
-        let message =
-            `Unable to load transactions. Server returned ${response.status}.`;
-
-
-        try {
-
-            const errorData =
-                await response.json();
-
-
-            if (
-                typeof errorData?.error === "string"
-            ) {
-                message = errorData.error;
-            } else if (
-                typeof errorData?.message === "string"
-            ) {
-                message = errorData.message;
-            }
-
-        } catch {
-            // Keep the HTTP status message.
-        }
-
-
-        throw new Error(message);
-    }
-
-
-    const payload =
-        await response.json();
-
-
-    if (Array.isArray(payload)) {
-        return payload;
-    }
-
-
-    if (Array.isArray(payload.transactions)) {
-        return payload.transactions;
-    }
-
-
-    if (Array.isArray(payload.data)) {
-        return payload.data;
     }
 
 
     if (
-        payload.data &&
-        Array.isArray(
-            payload.data.transactions
+        category.includes(
+            "transfer"
         )
     ) {
-        return payload.data.transactions;
+
+        return "Transfer";
+
     }
 
 
-    return [];
+    if (
+        category.includes(
+            "airtime"
+        )
+    ) {
+
+        return "Airtime";
+
+    }
+
+
+    if (
+        category.includes(
+            "data"
+        )
+    ) {
+
+        return "Data";
+
+    }
+
+
+    if (
+        category.includes(
+            "electric"
+        ) ||
+        category.includes(
+            "power"
+        )
+    ) {
+
+        return "Electricity";
+
+    }
+
+
+    if (
+        category.includes(
+            "tv"
+        ) ||
+        category.includes(
+            "dstv"
+        ) ||
+        category.includes(
+            "gotv"
+        ) ||
+        category.includes(
+            "startimes"
+        )
+    ) {
+
+        return "TV";
+
+    }
+
+
+    if (
+        category.includes(
+            "bet"
+        )
+    ) {
+
+        return "Betting";
+
+    }
+
+
+    if (
+        category
+    ) {
+
+        return (
+            category.charAt(0).toUpperCase() +
+            category.slice(1)
+        );
+
+    }
+
+
+    return "Transaction";
+
 }
 
 
 // =====================================================
-// FIND TRANSACTION
+// RECIPIENT
 // =====================================================
 
-function findTransaction(
-    transactions,
-    requestedId
+function getRecipient(
+    transaction
 ) {
 
-    if (!requestedId) {
-        return null;
+    const recipient =
+        firstValue(
+
+            transaction?.recipientName,
+
+            transaction?.recipient_name,
+
+            transaction?.recipient,
+
+            transaction?.customerName,
+
+            transaction?.customer_name,
+
+            transaction?.customerId,
+
+            transaction?.customer_id,
+
+            transaction?.phoneNumber,
+
+            transaction?.phone,
+
+            transaction?.mobile,
+
+            transaction?.beneficiary
+
+        );
+
+
+    if (
+        recipient
+    ) {
+
+        return String(
+            recipient
+        );
+
     }
 
 
-    const wanted =
-        requestedId.toLowerCase();
+    const category =
+        getCategory(
+            transaction
+        );
 
 
-    // -----------------------------------------------
-    // FIRST: NOVAPAY TRANSACTION ID
-    // -----------------------------------------------
+    if (
+        category ===
+        "Credit Alert"
+    ) {
 
-    const exactMatch =
-        transactions.find(transaction => {
+        return "NovaPay Wallet";
 
-            const id =
-                getTransactionId(transaction);
+    }
 
 
-            return (
-                id &&
-                id.toLowerCase() === wanted
+    return "—";
+
+}
+
+
+// =====================================================
+// DATE
+// =====================================================
+//
+// transaction-history already stores:
+//
+// "10 Sep 2026 · 5:20 PM"
+//
+// We preserve that exact formatted date.
+// =====================================================
+
+function getDate(
+    transaction
+) {
+
+    if (
+        transaction?.date
+    ) {
+
+        return String(
+            transaction.date
+        );
+
+    }
+
+
+    const timestamp =
+        firstValue(
+
+            transaction?.createdAt,
+
+            transaction?.timestamp,
+
+            transaction?.created_at
+
+        );
+
+
+    if (
+        !timestamp
+    ) {
+
+        return "Date unavailable";
+
+    }
+
+
+    let milliseconds = 0;
+
+
+    if (
+        typeof timestamp?.toMillis ===
+        "function"
+    ) {
+
+        milliseconds =
+            timestamp.toMillis();
+
+    }
+
+
+    else if (
+        typeof timestamp?.toDate ===
+        "function"
+    ) {
+
+        const date =
+            timestamp.toDate();
+
+
+        milliseconds =
+            date.getTime();
+
+    }
+
+
+    else if (
+        typeof timestamp ===
+        "object"
+    ) {
+
+        if (
+            Number.isFinite(
+                Number(
+                    timestamp.seconds
+                )
+            )
+        ) {
+
+            milliseconds =
+                Number(
+                    timestamp.seconds
+                ) *
+                1000;
+
+        }
+
+        else if (
+            Number.isFinite(
+                Number(
+                    timestamp._seconds
+                )
+            )
+        ) {
+
+            milliseconds =
+                Number(
+                    timestamp._seconds
+                ) *
+                1000;
+
+        }
+
+    }
+
+
+    else if (
+        typeof timestamp ===
+        "number"
+    ) {
+
+        milliseconds =
+            timestamp < 100000000000
+                ? timestamp * 1000
+                : timestamp;
+
+    }
+
+
+    else if (
+        typeof timestamp ===
+        "string"
+    ) {
+
+        milliseconds =
+            Date.parse(
+                timestamp
             );
-        });
 
-
-    if (exactMatch) {
-        return exactMatch;
     }
 
 
-    // -----------------------------------------------
-    // SECOND: PROVIDER REFERENCE
-    // -----------------------------------------------
+    if (
+        !Number.isFinite(
+            milliseconds
+        ) ||
+        milliseconds <= 0
+    ) {
 
-    const providerMatch =
-        transactions.find(transaction => {
+        return "Date unavailable";
 
-            const reference =
-                getProviderReference(transaction);
-
-
-            return (
-                reference &&
-                reference.toLowerCase() === wanted
-            );
-        });
-
-
-    if (providerMatch) {
-        return providerMatch;
     }
 
 
-    return null;
+    return new Date(
+        milliseconds
+    ).toLocaleString(
+        "en-NG",
+        {
+            day:
+                "numeric",
+
+            month:
+                "short",
+
+            year:
+                "numeric",
+
+            hour:
+                "numeric",
+
+            minute:
+                "2-digit"
+        }
+    );
+
 }
 
 
@@ -837,61 +979,99 @@ function findTransaction(
 
 function setLoadingState() {
 
-    if (elements.title) {
+    if (
+        elements.title
+    ) {
+
         elements.title.textContent =
             "Loading transaction";
+
     }
 
 
-    if (elements.status) {
+    if (
+        elements.status
+    ) {
+
         elements.status.textContent =
             "Please wait";
+
     }
 
 
-    if (elements.amount) {
+    if (
+        elements.amount
+    ) {
+
         elements.amount.textContent =
             "₦0.00";
+
     }
 
 
-    if (elements.recipient) {
+    if (
+        elements.recipient
+    ) {
+
         elements.recipient.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.amountText) {
+    if (
+        elements.amountText
+    ) {
+
         elements.amountText.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.date) {
+    if (
+        elements.date
+    ) {
+
         elements.date.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.transactionId) {
+    if (
+        elements.transactionId
+    ) {
+
         elements.transactionId.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.category) {
+    if (
+        elements.category
+    ) {
+
         elements.category.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.statusText) {
+    if (
+        elements.statusText
+    ) {
+
         elements.statusText.textContent =
             "Loading...";
+
     }
 
 
-    if (elements.receiptIcon) {
+    if (
+        elements.receiptIcon
+    ) {
 
         elements.receiptIcon.classList.remove(
             "success",
@@ -902,7 +1082,9 @@ function setLoadingState() {
         elements.receiptIcon.classList.add(
             "pending"
         );
+
     }
+
 }
 
 
@@ -910,63 +1092,103 @@ function setLoadingState() {
 // ERROR STATE
 // =====================================================
 
-function setErrorState(message) {
+function setErrorState(
+    message
+) {
 
-    if (elements.title) {
+    if (
+        elements.title
+    ) {
+
         elements.title.textContent =
             "Transaction unavailable";
+
     }
 
 
-    if (elements.status) {
+    if (
+        elements.status
+    ) {
+
         elements.status.textContent =
             "Unable to load";
+
     }
 
 
-    if (elements.amount) {
+    if (
+        elements.amount
+    ) {
+
         elements.amount.textContent =
             "₦0.00";
+
     }
 
 
-    if (elements.recipient) {
+    if (
+        elements.recipient
+    ) {
+
         elements.recipient.textContent =
             "—";
+
     }
 
 
-    if (elements.amountText) {
+    if (
+        elements.amountText
+    ) {
+
         elements.amountText.textContent =
             "—";
+
     }
 
 
-    if (elements.date) {
+    if (
+        elements.date
+    ) {
+
         elements.date.textContent =
             "—";
+
     }
 
 
-    if (elements.transactionId) {
+    if (
+        elements.transactionId
+    ) {
+
         elements.transactionId.textContent =
             "Not available";
+
     }
 
 
-    if (elements.category) {
+    if (
+        elements.category
+    ) {
+
         elements.category.textContent =
             "—";
+
     }
 
 
-    if (elements.statusText) {
+    if (
+        elements.statusText
+    ) {
+
         elements.statusText.textContent =
             "Unavailable";
+
     }
 
 
-    if (elements.receiptIcon) {
+    if (
+        elements.receiptIcon
+    ) {
 
         elements.receiptIcon.classList.remove(
             "success",
@@ -977,6 +1199,7 @@ function setErrorState(message) {
         elements.receiptIcon.classList.add(
             "failed"
         );
+
     }
 
 
@@ -984,101 +1207,86 @@ function setErrorState(message) {
         "NovaPay receipt error:",
         message
     );
+
 }
 
 
 // =====================================================
-// RENDER TRANSACTION
+// RENDER RECEIPT
 // =====================================================
 
-function renderTransaction(transaction) {
+function renderReceipt(
+    transaction
+) {
 
     const amount =
-        getAmountNaira(transaction);
+        getAmountNaira(
+            transaction
+        );
 
 
     const direction =
-        getTransactionDirection(transaction);
+        getDirection(
+            transaction
+        );
 
 
-    const rawStatus =
-        getStatus(transaction);
-
-
-    const displayStatus =
-        getDisplayStatus(rawStatus);
+    const status =
+        getStatus(
+            transaction
+        );
 
 
     const title =
-        getTransactionTitle(transaction);
-
-
-    const recipient =
-        getRecipient(transaction);
+        getTitle(
+            transaction
+        );
 
 
     const category =
-        getCategory(transaction);
+        getCategory(
+            transaction
+        );
+
+
+    const recipient =
+        getRecipient(
+            transaction
+        );
 
 
     const date =
-        formatDate(
-            getTransactionDate(transaction)
+        getDate(
+            transaction
         );
 
 
     const transactionId =
-        getTransactionId(transaction);
+        getTransactionId(
+            transaction
+        );
 
 
-    const providerReference =
-        getProviderReference(transaction);
+    const reference =
+        getReference(
+            transaction
+        );
 
 
     /*
     |--------------------------------------------------------------------------
     | IMPORTANT
     |--------------------------------------------------------------------------
-    | Prefer the actual NovaPay transaction ID.
-    | Provider reference is only a fallback.
+    | The local NovaPay transaction ID is preferred.
+    | Reference is only a fallback.
     |--------------------------------------------------------------------------
     */
 
-    const reference =
+    const displayedReference =
         transactionId ||
-        providerReference ||
+        reference ||
         "Not available";
 
-
-    // -----------------------------------------------
-    // TITLE
-    // -----------------------------------------------
-
-    if (elements.title) {
-        elements.title.textContent =
-            title;
-    }
-
-
-    // -----------------------------------------------
-    // STATUS
-    // -----------------------------------------------
-
-    if (elements.status) {
-        elements.status.textContent =
-            displayStatus;
-    }
-
-
-    if (elements.statusText) {
-        elements.statusText.textContent =
-            displayStatus;
-    }
-
-
-    // -----------------------------------------------
-    // AMOUNT
-    // -----------------------------------------------
 
     const prefix =
         direction === "credit"
@@ -1087,10 +1295,54 @@ function renderTransaction(transaction) {
 
 
     const formattedAmount =
-        `${prefix}${formatCurrency(amount)}`;
+        `${prefix}${formatMoney(amount)}`;
 
 
-    if (elements.amount) {
+    // =================================================
+    // TITLE
+    // =================================================
+
+    if (
+        elements.title
+    ) {
+
+        elements.title.textContent =
+            title;
+
+    }
+
+
+    // =================================================
+    // STATUS
+    // =================================================
+
+    if (
+        elements.status
+    ) {
+
+        elements.status.textContent =
+            status;
+
+    }
+
+
+    if (
+        elements.statusText
+    ) {
+
+        elements.statusText.textContent =
+            status;
+
+    }
+
+
+    // =================================================
+    // AMOUNT
+    // =================================================
+
+    if (
+        elements.amount
+    ) {
 
         elements.amount.textContent =
             formattedAmount;
@@ -1104,69 +1356,99 @@ function renderTransaction(transaction) {
 
 
         if (
-            displayStatus === "Pending"
+            status ===
+            "Pending"
         ) {
 
             elements.amount.classList.add(
                 "pending-amount"
             );
 
-        } else if (
-            direction === "credit"
+        }
+
+        else if (
+            direction ===
+            "credit"
         ) {
 
             elements.amount.classList.add(
                 "credit-amount"
             );
 
-        } else {
+        }
+
+        else {
 
             elements.amount.classList.add(
                 "debit-amount"
             );
+
         }
+
     }
 
 
-    // -----------------------------------------------
+    // =================================================
     // DETAILS
-    // -----------------------------------------------
+    // =================================================
 
-    if (elements.recipient) {
+    if (
+        elements.recipient
+    ) {
+
         elements.recipient.textContent =
             recipient;
+
     }
 
 
-    if (elements.amountText) {
+    if (
+        elements.amountText
+    ) {
+
         elements.amountText.textContent =
             formattedAmount;
+
     }
 
 
-    if (elements.date) {
+    if (
+        elements.date
+    ) {
+
         elements.date.textContent =
             date;
+
     }
 
 
-    if (elements.transactionId) {
+    if (
+        elements.transactionId
+    ) {
+
         elements.transactionId.textContent =
-            reference;
+            displayedReference;
+
     }
 
 
-    if (elements.category) {
+    if (
+        elements.category
+    ) {
+
         elements.category.textContent =
             category;
+
     }
 
 
-    // -----------------------------------------------
-    // RECEIPT ICON
-    // -----------------------------------------------
+    // =================================================
+    // ICON STATE
+    // =================================================
 
-    if (elements.receiptIcon) {
+    if (
+        elements.receiptIcon
+    ) {
 
         elements.receiptIcon.classList.remove(
             "success",
@@ -1176,44 +1458,176 @@ function renderTransaction(transaction) {
 
 
         if (
-            displayStatus === "Successful"
+            status ===
+            "Successful"
         ) {
 
             elements.receiptIcon.classList.add(
                 "success"
             );
 
-        } else if (
-            displayStatus === "Failed"
+        }
+
+        else if (
+            status ===
+            "Failed"
         ) {
 
             elements.receiptIcon.classList.add(
                 "failed"
             );
 
-        } else {
+        }
+
+        else {
 
             elements.receiptIcon.classList.add(
                 "pending"
             );
+
         }
+
     }
 
 
-    // -----------------------------------------------
-    // DEBUG INFORMATION
-    // -----------------------------------------------
+    // =================================================
+    // DEVELOPER CONSOLE
+    // =================================================
 
     console.log(
         "NovaPay receipt loaded:",
         {
-            transactionId: reference,
-            amount,
-            direction,
-            status: displayStatus,
-            category
+            transactionId:
+                displayedReference,
+
+            amount:
+                amount,
+
+            direction:
+                direction,
+
+            status:
+                status,
+
+            category:
+                category
         }
     );
+
+}
+
+
+// =====================================================
+// OPTIONAL API FALLBACK
+// =====================================================
+//
+// This is only used if localStorage does not contain
+// the selected transaction.
+//
+// We do NOT make the API the primary source because
+// your existing History page already passes the exact
+// selected transaction to the receipt.
+// =====================================================
+
+async function loadTransactionFromAPI(
+    user,
+    transactionId
+) {
+
+    if (
+        !user ||
+        !transactionId
+    ) {
+
+        return null;
+
+    }
+
+
+    const token =
+        await user.getIdToken();
+
+
+    const response =
+        await fetch(
+            `${API_BASE_URL}/api/transactions?limit=50`,
+            {
+
+                method:
+                    "GET",
+
+                headers: {
+
+                    Authorization:
+                        `Bearer ${token}`,
+
+                    Accept:
+                        "application/json"
+
+                },
+
+                cache:
+                    "no-store"
+
+            }
+        );
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            `Transaction request failed (${response.status}).`
+        );
+
+    }
+
+
+    const result =
+        await response.json();
+
+
+    if (
+        !result?.success ||
+        !Array.isArray(
+            result.transactions
+        )
+    ) {
+
+        throw new Error(
+            "Invalid transaction response."
+        );
+
+    }
+
+
+    const wantedId =
+        transactionId.toLowerCase();
+
+
+    const transaction =
+        result.transactions.find(
+            item => {
+
+                const id =
+                    getTransactionId(
+                        item
+                    );
+
+
+                return (
+                    id &&
+                    id.toLowerCase() ===
+                    wantedId
+                );
+
+            }
+        );
+
+
+    return transaction || null;
+
 }
 
 
@@ -1227,160 +1641,221 @@ function setupButtons() {
     // DONE
     // -----------------------------------------------
 
-    if (elements.doneBtn) {
+    elements.doneBtn?.addEventListener(
+        "click",
+        () => {
 
-        elements.doneBtn.addEventListener(
-            "click",
-            () => {
+            window.location.replace(
+                "dashboard.html"
+            );
 
-                window.location.replace(
-                    "dashboard.html"
-                );
-            }
-        );
-    }
+        }
+    );
 
 
     // -----------------------------------------------
     // BACK
     // -----------------------------------------------
 
-    if (elements.backBtn) {
+    elements.backBtn?.addEventListener(
+        "click",
+        () => {
 
-        elements.backBtn.addEventListener(
-            "click",
-            () => {
+            if (
+                window.history.length > 1
+            ) {
 
-                if (
-                    window.history.length > 1
-                ) {
+                window.history.back();
 
-                    window.history.back();
-
-                } else {
-
-                    window.location.replace(
-                        "dashboard.html"
-                    );
-                }
             }
-        );
-    }
+
+            else {
+
+                window.location.replace(
+                    "transaction-history.html"
+                );
+
+            }
+
+        }
+    );
 
 
     // -----------------------------------------------
     // SUPPORT
     // -----------------------------------------------
 
-    if (elements.supportBtn) {
+    elements.supportBtn?.addEventListener(
+        "click",
+        () => {
 
-        elements.supportBtn.addEventListener(
-            "click",
-            () => {
-
-                const transactionId =
-                    getRequestedTransactionId();
+            const transaction =
+                getStoredTransaction();
 
 
-                const subject =
-                    encodeURIComponent(
-                        "NovaPay transaction support"
-                    );
+            const transactionId =
+                getTransactionId(
+                    transaction || {}
+                );
 
 
-                const body =
-                    encodeURIComponent(
-                        transactionId
-                            ? `I need help with transaction ${transactionId}.`
-                            : "I need help with a transaction."
-                    );
+            const subject =
+                encodeURIComponent(
+                    "NovaPay transaction support"
+                );
 
 
-                window.location.href =
-                    `mailto:support@novapay.com?subject=${subject}&body=${body}`;
-            }
-        );
-    }
+            const body =
+                encodeURIComponent(
+
+                    transactionId
+
+                        ? `I need help with transaction ${transactionId}.`
+
+                        : "I need help with a transaction."
+
+                );
+
+
+            window.location.href =
+                `mailto:support@novapay.com?subject=${subject}&body=${body}`;
+
+        }
+    );
+
 }
 
 
 // =====================================================
-// LOAD RECEIPT
+// MAIN RECEIPT LOADER
 // =====================================================
 
-async function loadReceipt(user) {
+async function loadReceipt(
+    user
+) {
 
     setLoadingState();
 
 
     try {
 
-        // -------------------------------------------
-        // GET TRANSACTION ID
-        // -------------------------------------------
+        // =================================================
+        // FIRST: READ THE TRANSACTION THAT HISTORY SAVED
+        // =================================================
+
+        const storedTransaction =
+            getStoredTransaction();
+
+
+        if (
+            storedTransaction
+        ) {
+
+            /*
+            * This is the normal NovaPay flow.
+            *
+            * History already selected the transaction
+            * and stored it before opening receipt.html.
+            */
+
+            renderReceipt(
+                storedTransaction
+            );
+
+            return;
+
+        }
+
+
+        // =================================================
+        // FALLBACK: URL ID
+        // =================================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
 
         const requestedId =
-            getRequestedTransactionId();
+            normalizeId(
 
+                firstValue(
 
-        if (!requestedId) {
+                    params.get(
+                        "transactionId"
+                    ),
 
-            throw new Error(
-                "No transaction ID was supplied to the receipt page."
+                    params.get(
+                        "transaction_id"
+                    ),
+
+                    params.get(
+                        "txId"
+                    ),
+
+                    params.get(
+                        "tx_id"
+                    ),
+
+                    params.get(
+                        "id"
+                    ),
+
+                    params.get(
+                        "reference"
+                    )
+
+                )
+
             );
+
+
+        if (
+            requestedId
+        ) {
+
+            const transaction =
+                await loadTransactionFromAPI(
+                    user,
+                    requestedId
+                );
+
+
+            if (
+                transaction
+            ) {
+
+                renderReceipt(
+                    transaction
+                );
+
+                return;
+
+            }
+
         }
 
 
-        // -------------------------------------------
-        // FIREBASE TOKEN
-        // -------------------------------------------
+        // =================================================
+        // NOTHING FOUND
+        // =================================================
 
-        const token =
-            await getFirebaseToken(user);
-
-
-        // -------------------------------------------
-        // LOAD TRANSACTIONS
-        // -------------------------------------------
-
-        const transactions =
-            await fetchTransactions(token);
-
-
-        // -------------------------------------------
-        // FIND EXACT TRANSACTION
-        // -------------------------------------------
-
-        const transaction =
-            findTransaction(
-                transactions,
-                requestedId
-            );
-
-
-        if (!transaction) {
-
-            throw new Error(
-                `Transaction "${requestedId}" was not found in the user's transactions.`
-            );
-        }
-
-
-        // -------------------------------------------
-        // RENDER
-        // -------------------------------------------
-
-        renderTransaction(
-            transaction
+        throw new Error(
+            "No selected transaction was found."
         );
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         setErrorState(
             error?.message ||
             "Unable to load transaction."
         );
+
     }
+
 }
 
 
@@ -1395,16 +1870,22 @@ onAuthStateChanged(
     auth,
     user => {
 
-        if (!user) {
+        if (
+            !user
+        ) {
 
             window.location.replace(
                 "login.html"
             );
 
             return;
+
         }
 
 
-        loadReceipt(user);
+        loadReceipt(
+            user
+        );
+
     }
 );
