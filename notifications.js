@@ -573,11 +573,11 @@ function isWebPushSupported() {
 
     return (
         "serviceWorker" in navigator &&
-        "PushManager" in window &&
-        "Notification" in window
+        "Notification" in window &&
+        typeof ServiceWorkerRegistration !== "undefined" &&
+        "pushManager" in ServiceWorkerRegistration.prototype
     );
 }
-
 
 // ============================================================
 // AUTH STATE
