@@ -2,10 +2,11 @@ import { auth } from "./firebase.js";
 
 
 // =====================================================
-// NOVAPAY NOTIFICATION SERVICE
+// NOVAPAY — NOTIFICATION SERVICE
 // =====================================================
 //
-// Frontend notification requests go through the backend.
+// Frontend notification requests go through the NovaPay
+// backend.
 //
 // Frontend
 //    ↓
@@ -17,10 +18,14 @@ import { auth } from "./firebase.js";
 //    ↓
 // Firestore
 //    ↓
-// FCM push notification
+// Web Push / legacy FCM
 //
-// The frontend NEVER writes notification documents
+// IMPORTANT:
+// The frontend does NOT write notification documents
 // directly to Firestore.
+//
+// Push subscription management is handled separately
+// by notifications.js.
 // =====================================================
 
 
@@ -37,24 +42,21 @@ const NOTIFICATIONS_API =
 // =====================================================
 
 export async function createNotification({
-
     type,
-
     title,
-
     message,
-
     body,
-
     data = {},
-
     sendPush = true
-
-}) {
+} = {}) {
 
     const user =
         auth.currentUser;
 
+
+    // -------------------------------------------------
+    // Authentication check
+    // -------------------------------------------------
 
     if (!user) {
 
@@ -63,15 +65,21 @@ export async function createNotification({
         );
 
         return {
-
             success: false,
-
-            error:
-                "User is not authenticated."
-
+            error: "User is not authenticated."
         };
-
     }
+
+
+    // -------------------------------------------------
+    // Clean notification values
+    // -------------------------------------------------
+
+    const notificationType =
+        String(
+            type ?? "system"
+        ).trim()
+        .toLowerCase();
 
 
     const notificationTitle =
@@ -88,12 +96,9 @@ export async function createNotification({
         ).trim();
 
 
-    const notificationType =
-        String(
-            type ??
-            "system"
-        ).trim();
-
+    // -------------------------------------------------
+    // Validate title
+    // -------------------------------------------------
 
     if (!notificationTitle) {
 
@@ -102,16 +107,15 @@ export async function createNotification({
         );
 
         return {
-
             success: false,
-
-            error:
-                "Notification title is required."
-
+            error: "Notification title is required."
         };
-
     }
 
+
+    // -------------------------------------------------
+    // Validate body
+    // -------------------------------------------------
 
     if (!notificationBody) {
 
@@ -120,16 +124,33 @@ export async function createNotification({
         );
 
         return {
-
             success: false,
-
-            error:
-                "Notification message is required."
-
+            error: "Notification message is required."
         };
-
     }
 
+
+    // -------------------------------------------------
+    // Prepare notification data
+    // -------------------------------------------------
+
+    let notificationData = {};
+
+    if (
+        data &&
+        typeof data === "object" &&
+        !Array.isArray(data)
+    ) {
+
+        notificationData = {
+            ...data
+        };
+    }
+
+
+    // -------------------------------------------------
+    // Get Firebase authentication token
+    // -------------------------------------------------
 
     try {
 
@@ -137,27 +158,26 @@ export async function createNotification({
             await user.getIdToken();
 
 
+        // -------------------------------------------------
+        // Send notification request to backend
+        // -------------------------------------------------
+
         const response =
             await fetch(
                 NOTIFICATIONS_API,
                 {
-
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json",
 
-                        Authorization:
+                        "Authorization":
                             `Bearer ${idToken}`
-
                     },
 
                     body:
                         JSON.stringify({
-
                             type:
                                 notificationType,
 
@@ -168,20 +188,18 @@ export async function createNotification({
                                 notificationBody,
 
                             data:
-                                data &&
-                                typeof data ===
-                                "object"
-                                    ? data
-                                    : {},
+                                notificationData,
 
                             sendPush:
                                 sendPush === true
-
                         })
-
                 }
             );
 
+
+        // -------------------------------------------------
+        // Read backend response
+        // -------------------------------------------------
 
         let result = null;
 
@@ -191,14 +209,15 @@ export async function createNotification({
             result =
                 await response.json();
 
-        }
-
-        catch {
+        } catch {
 
             result = null;
-
         }
 
+
+        // -------------------------------------------------
+        // HTTP error
+        // -------------------------------------------------
 
         if (!response.ok) {
 
@@ -215,16 +234,16 @@ export async function createNotification({
 
 
             return {
-
                 success: false,
-
-                error:
-                    errorMessage
-
+                error: errorMessage,
+                status: response.status
             };
-
         }
 
+
+        // -------------------------------------------------
+        // Backend reported failure
+        // -------------------------------------------------
 
         if (
             result &&
@@ -244,37 +263,35 @@ export async function createNotification({
 
 
             return {
-
                 success: false,
-
-                error:
-                    errorMessage
-
+                error: errorMessage
             };
-
         }
 
 
+        // -------------------------------------------------
+        // Success
+        // -------------------------------------------------
+
         console.log(
-            "✅ NovaPay notification created."
+            "NovaPay notification created successfully."
         );
 
 
         return {
-
             success: true,
 
             ...(result &&
-            typeof result ===
-            "object"
+            typeof result === "object"
                 ? result
                 : {})
-
         };
 
-    }
+    } catch (error) {
 
-    catch (error) {
+        // -------------------------------------------------
+        // Network / unexpected error
+        // -------------------------------------------------
 
         console.error(
             "NovaPay notification request error:",
@@ -283,15 +300,23 @@ export async function createNotification({
 
 
         return {
-
             success: false,
 
             error:
                 error?.message ||
                 "Unable to create notification."
-
         };
-
     }
-
 }
+
+
+// =====================================================
+// EXPORT API URL
+// -----------------------------------------------------
+// Useful if another frontend module needs the same
+// notification API endpoint.
+// =====================================================
+
+export {
+    NOTIFICATIONS_API
+};
