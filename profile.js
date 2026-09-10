@@ -159,8 +159,11 @@ onAuthStateChanged(
 
 
         /*
-         * Prevent Loading... from staying
-         * on the screen.
+         * Temporary fallback while Firestore
+         * profile information is loading.
+         *
+         * The Firestore nickname will replace
+         * this value once the profile loads.
          */
 
         if (userName) {
@@ -225,13 +228,13 @@ onAuthStateChanged(
 
 
             /* --------------------------------
-               NAME
+               NICKNAME
             -------------------------------- */
 
             if (userName) {
 
                 userName.textContent =
-                    data.fullName ||
+                    data.nickname ||
                     user.displayName ||
                     user.email?.split("@")[0] ||
                     "NovaPay User";
@@ -536,7 +539,9 @@ Object.values(
 
 console.log(
     "✅ NovaPay Profile Ready"
-); 
+);
+
+
 /* ==========================================
    LANGUAGE DROPDOWN
 ========================================== */
