@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#F5F7FC"
     >
 
     <title>Buy Data</title>
@@ -24,7 +30,9 @@
 
 <div class="data-page">
 
-    <!-- ================= HEADER ================= -->
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
 
     <header class="page-header">
 
@@ -38,39 +46,80 @@
         </button>
 
         <div class="header-content">
+
             <h1>Buy Data</h1>
-            <p>Purchase data bundles for all networks.</p>
+
+            <p>
+                Purchase data bundles for all networks.
+            </p>
+
         </div>
 
     </header>
 
 
-    <!-- ================= WALLET BALANCE ================= -->
+    <!-- ==========================================
+         SERVICE PROVIDER
+    =========================================== -->
 
-    <section class="section">
+    <section class="section provider-section">
 
-        <div class="balance-card">
+        <h2>
+            Service Provider
+        </h2>
 
-            <div class="balance-left">
-
-                <i class="fas fa-wallet"></i>
-
-                <div>
-                    <span>Wallet Balance</span>
-
-                    <strong id="walletBalance">
-                        ₦--
-                    </strong>
-                </div>
-
-            </div>
+        <div class="network-grid">
 
             <button
-                id="refreshBalanceBtn"
-                class="balance-btn"
+                class="network-card active"
+                data-network="MTN"
                 type="button"
+                aria-selected="true"
+                aria-label="MTN"
             >
-                <i class="fas fa-rotate"></i>
+                <img
+                    src="images/mtn.png"
+                    alt="MTN"
+                >
+            </button>
+
+            <button
+                class="network-card"
+                data-network="Airtel"
+                type="button"
+                aria-selected="false"
+                aria-label="Airtel"
+            >
+                <img
+                    src="images/airtel.png"
+                    alt="Airtel"
+                >
+            </button>
+
+            <button
+                class="network-card"
+                data-network="Glo"
+                type="button"
+                aria-selected="false"
+                aria-label="Glo"
+            >
+                <img
+                    src="images/glo.png"
+                    alt="Glo"
+                >
+            </button>
+
+            <button
+                class="network-card"
+                data-network="9mobile"
+                type="button"
+                aria-selected="false"
+                aria-label="9mobile"
+            >
+                <img
+                    src="images/9mobile.png"
+                    alt="9mobile"
+                >
             </button>
 
         </div>
@@ -78,66 +127,17 @@
     </section>
 
 
-    <!-- ================= SERVICE PROVIDER ================= -->
+    <!-- ==========================================
+         PHONE NUMBER
+    =========================================== -->
 
-    <section class="section">
-
-        <h2>Service Provider</h2>
-
-        <div class="network-grid">
-
-            <div
-                class="network-card active"
-                data-network="MTN"
-            >
-                <img
-                    src="images/mtn.png"
-                    alt="MTN"
-                >
-            </div>
-
-            <div
-                class="network-card"
-                data-network="Airtel"
-            >
-                <img
-                    src="images/airtel.png"
-                    alt="Airtel"
-                >
-            </div>
-
-            <div
-                class="network-card"
-                data-network="Glo"
-            >
-                <img
-                    src="images/glo.png"
-                    alt="Glo"
-                >
-            </div>
-
-            <div
-                class="network-card"
-                data-network="9mobile"
-            >
-                <img
-                    src="images/9mobile.png"
-                    alt="9mobile"
-                >
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= PHONE NUMBER ================= -->
-
-    <section class="section">
+    <section class="section phone-section">
 
         <div class="section-title">
 
-            <h2>Phone Number</h2>
+            <h2>
+                Phone Number
+            </h2>
 
             <button
                 id="beneficiaryBtn"
@@ -145,10 +145,14 @@
                 type="button"
             >
                 <i class="fas fa-user"></i>
-                Beneficiaries
+
+                <span>
+                    Beneficiaries
+                </span>
             </button>
 
         </div>
+
 
         <div class="input-card">
 
@@ -159,130 +163,172 @@
                 inputmode="numeric"
                 autocomplete="tel"
                 placeholder="Enter phone number"
+                aria-label="Phone number"
             >
 
         </div>
 
-        <label class="save-beneficiary">
+
+        <label
+            class="save-beneficiary"
+            for="saveBeneficiary"
+        >
 
             <input
                 type="checkbox"
                 id="saveBeneficiary"
             >
 
-            <span>Save Beneficiary</span>
+            <span>
+                Save Beneficiary
+            </span>
 
         </label>
 
     </section>
 
 
-    <!-- ================= DATA BALANCE ================= -->
+    <!-- ==========================================
+         DATA PLANS
+    =========================================== -->
 
-    <section class="section">
+    <section class="section plans-section">
 
-        <div class="balance-card">
+        <div class="plans-heading">
 
-            <div class="balance-left">
+            <h2>
+                Data Plans
+            </h2>
 
-                <i class="fas fa-signal"></i>
+        </div>
 
-                <span>Data Balance</span>
+
+        <!-- CATEGORY TABS -->
+
+        <div
+            class="plan-tabs-wrapper"
+            aria-label="Data plan categories"
+        >
+
+            <div
+                class="plan-tabs"
+                role="tablist"
+            >
+
+                <button
+                    class="plan-tab active"
+                    data-category="Hot"
+                    type="button"
+                    role="tab"
+                    aria-selected="true"
+                >
+                    🔥 Hot
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Daily"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Daily
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Weekly"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Weekly
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Monthly"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Monthly
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Router"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Router
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Night"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Night
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="SME"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    SME
+                </button>
+
+                <button
+                    class="plan-tab"
+                    data-category="Extra Value"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    Extra Value
+                </button>
 
             </div>
 
-            <button
-                id="checkBalanceBtn"
-                class="balance-btn"
-                type="button"
-            >
-                *323*4#
-            </button>
+        </div>
+
+
+        <!-- ======================================
+             FIXED DATA PLAN BOX
+
+             The box stays a fixed height.
+             The plans inside it scroll.
+        ======================================= -->
+
+        <div class="plans-box">
+
+            <div
+                id="plansContainer"
+                class="plans-grid"
+                aria-live="polite"
+            ></div>
 
         </div>
 
     </section>
 
 
-    <!-- ================= PLAN SECTION ================= -->
-
-    <section class="section">
-
-        <div class="plan-tabs">
-
-            <button
-                class="plan-tab active"
-                type="button"
-            >
-                🔥 Hot
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Daily
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Weekly
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Monthly
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Router
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Social
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                Night
-            </button>
-
-            <button
-                class="plan-tab"
-                type="button"
-            >
-                SME
-            </button>
-
-        </div>
-
-
-        <div
-            id="plansContainer"
-            class="plans-grid"
-        ></div>
-
-    </section>
-
-
-    <!-- ================= CONTINUE ================= -->
+    <!-- ==========================================
+         CONTINUE
+    =========================================== -->
 
     <button
         id="continueBtn"
         class="continue-btn"
         type="button"
+        disabled
     >
         Continue
     </button>
@@ -290,7 +336,9 @@
 </div>
 
 
-<!-- IMPORTANT: data.js uses Firebase modules -->
+<!-- ==========================================
+     DATA JAVASCRIPT
+=========================================== -->
 
 <script
     type="module"
