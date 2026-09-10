@@ -1,10 +1,40 @@
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 
-import {
-    collection,
-    addDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+// =====================================================
+// NOVAPAY NOTIFICATION SERVICE
+// =====================================================
+//
+// Frontend notification requests go through the backend.
+//
+// Frontend
+//    ↓
+// POST /api/notifications
+//    ↓
+// Backend authentication
+//    ↓
+// createNotification()
+//    ↓
+// Firestore
+//    ↓
+// FCM push notification
+//
+// The frontend NEVER writes notification documents
+// directly to Firestore.
+// =====================================================
+
+
+const API_BASE_URL =
+    "https://novapay-server.onrender.com";
+
+
+const NOTIFICATIONS_API =
+    `${API_BASE_URL}/api/notifications`;
+
+
+// =====================================================
+// CREATE NOTIFICATION
+// =====================================================
 
 export async function createNotification({
 
@@ -12,52 +42,255 @@ export async function createNotification({
 
     title,
 
-    message
+    message,
+
+    body,
+
+    data = {},
+
+    sendPush = true
 
 }) {
 
-    const user = auth.currentUser;
+    const user =
+        auth.currentUser;
 
-    if (!user) return;
+
+    if (!user) {
+
+        console.warn(
+            "NovaPay notification: user is not authenticated."
+        );
+
+        return {
+
+            success: false,
+
+            error:
+                "User is not authenticated."
+
+        };
+
+    }
+
+
+    const notificationTitle =
+        String(
+            title ?? ""
+        ).trim();
+
+
+    const notificationBody =
+        String(
+            body ??
+            message ??
+            ""
+        ).trim();
+
+
+    const notificationType =
+        String(
+            type ??
+            "system"
+        ).trim();
+
+
+    if (!notificationTitle) {
+
+        console.warn(
+            "NovaPay notification: title is required."
+        );
+
+        return {
+
+            success: false,
+
+            error:
+                "Notification title is required."
+
+        };
+
+    }
+
+
+    if (!notificationBody) {
+
+        console.warn(
+            "NovaPay notification: message is required."
+        );
+
+        return {
+
+            success: false,
+
+            error:
+                "Notification message is required."
+
+        };
+
+    }
+
 
     try {
 
-        await addDoc(
+        const idToken =
+            await user.getIdToken();
 
-            collection(
-                db,
-                "users",
-                user.uid,
-                "notifications"
-            ),
 
-            {
+        const response =
+            await fetch(
+                NOTIFICATIONS_API,
+                {
 
-                type,
+                    method:
+                        "POST",
 
-                title,
+                    headers: {
 
-                message,
+                        "Content-Type":
+                            "application/json",
 
-                isRead: false,
+                        Authorization:
+                            `Bearer ${idToken}`
 
-                createdAt: serverTimestamp()
+                    },
 
-            }
+                    body:
+                        JSON.stringify({
 
+                            type:
+                                notificationType,
+
+                            title:
+                                notificationTitle,
+
+                            body:
+                                notificationBody,
+
+                            data:
+                                data &&
+                                typeof data ===
+                                "object"
+                                    ? data
+                                    : {},
+
+                            sendPush:
+                                sendPush === true
+
+                        })
+
+                }
+            );
+
+
+        let result = null;
+
+
+        try {
+
+            result =
+                await response.json();
+
+        }
+
+        catch {
+
+            result = null;
+
+        }
+
+
+        if (!response.ok) {
+
+            const errorMessage =
+                result?.error ||
+                result?.message ||
+                `Notification request failed with status ${response.status}.`;
+
+
+            console.error(
+                "NovaPay notification error:",
+                errorMessage
+            );
+
+
+            return {
+
+                success: false,
+
+                error:
+                    errorMessage
+
+            };
+
+        }
+
+
+        if (
+            result &&
+            result.success === false
+        ) {
+
+            const errorMessage =
+                result.error ||
+                result.message ||
+                "Notification creation failed.";
+
+
+            console.error(
+                "NovaPay notification error:",
+                errorMessage
+            );
+
+
+            return {
+
+                success: false,
+
+                error:
+                    errorMessage
+
+            };
+
+        }
+
+
+        console.log(
+            "✅ NovaPay notification created."
         );
 
-        console.log("✅ Notification Created");
 
-    } catch (error) {
+        return {
+
+            success: true,
+
+            ...(result &&
+            typeof result ===
+            "object"
+                ? result
+                : {})
+
+        };
+
+    }
+
+    catch (error) {
 
         console.error(
-
-            "Notification Error:",
-
+            "NovaPay notification request error:",
             error
-
         );
+
+
+        return {
+
+            success: false,
+
+            error:
+                error?.message ||
+                "Unable to create notification."
+
+        };
 
     }
 
