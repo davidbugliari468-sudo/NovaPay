@@ -22,7 +22,6 @@
     <div class="personal-page">
 
         <!-- HEADER -->
-
         <header class="personal-header">
 
             <button
@@ -39,29 +38,32 @@
         </header>
 
 
-        <!-- PROFILE -->
-
+        <!-- PROFILE SUMMARY -->
         <section class="profile-summary">
 
             <div class="profile-avatar">
                 <span>👤</span>
             </div>
 
-            <h2>Personal Information</h2>
+            <h2>
+                Personal Information
+            </h2>
 
-            <p>Your account information</p>
+            <p>
+                Your account information
+            </p>
 
         </section>
 
 
         <!-- PERSONAL DETAILS -->
-
         <section class="information-section">
 
             <h3>PERSONAL DETAILS</h3>
 
             <div class="information-card">
 
+                <!-- NICKNAME -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -70,9 +72,9 @@
 
                     <div class="row-content">
 
-                        <span>Full Name</span>
+                        <span>Nickname</span>
 
-                        <strong>
+                        <strong id="nickname">
                             Not available
                         </strong>
 
@@ -81,6 +83,67 @@
                 </div>
 
 
+                <!-- FULL NAME -->
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        👤
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>First Name</span>
+
+                        <strong id="fullName">
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MIDDLE NAME -->
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        👤
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Middle Name</span>
+
+                        <strong id="middleName">
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SURNAME -->
+                <div class="information-row">
+
+                    <div class="row-icon">
+                        👤
+                    </div>
+
+                    <div class="row-content">
+
+                        <span>Surname</span>
+
+                        <strong id="surname">
+                            Not available
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -91,7 +154,7 @@
 
                         <span>Email</span>
 
-                        <strong>
+                        <strong id="email">
                             Not available
                         </strong>
 
@@ -100,6 +163,7 @@
                 </div>
 
 
+                <!-- PHONE NUMBER -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -110,7 +174,7 @@
 
                         <span>Phone Number</span>
 
-                        <strong>
+                        <strong id="phoneNumber">
                             Not available
                         </strong>
 
@@ -124,13 +188,13 @@
 
 
         <!-- ACCOUNT INFORMATION -->
-
         <section class="information-section">
 
             <h3>ACCOUNT</h3>
 
             <div class="information-card">
 
+                <!-- USER ID -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -141,7 +205,7 @@
 
                         <span>User ID</span>
 
-                        <strong>
+                        <strong id="userId">
                             Not available
                         </strong>
 
@@ -150,6 +214,7 @@
                 </div>
 
 
+                <!-- DATE JOINED -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -160,7 +225,7 @@
 
                         <span>Date Joined</span>
 
-                        <strong>
+                        <strong id="dateJoined">
                             Not available
                         </strong>
 
@@ -169,6 +234,7 @@
                 </div>
 
 
+                <!-- ACCOUNT TIER -->
                 <div class="information-row">
 
                     <div class="row-icon">
@@ -177,10 +243,13 @@
 
                     <div class="row-content">
 
-                        <span>Verification</span>
+                        <span>Tier</span>
 
-                        <strong class="tier-status">
-                            Tier 1 · Basic
+                        <strong
+                            id="accountTier"
+                            class="tier-status"
+                        >
+                            Tier 1
                         </strong>
 
                     </div>
@@ -191,9 +260,10 @@
 
         </section>
 
+    </div>
 
     </div>
 
+    <script type="module" src="personal-information.js"></script>
 </body>
-
 </html>
