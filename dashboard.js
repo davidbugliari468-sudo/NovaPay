@@ -1877,7 +1877,7 @@ async function loadRecentTransactions() {
         const recentTransactions =
             transactions.slice(
                 0,
-                3
+                2
             );
 
 
