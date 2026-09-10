@@ -563,20 +563,67 @@ function isStandaloneWebApp() {
         navigatorStandalone
     );
 }
-
-
 // ============================================================
 // WEB PUSH SUPPORT CHECK
 // ============================================================
 
 function isWebPushSupported() {
 
-    return (
-        "serviceWorker" in navigator &&
-        "Notification" in window &&
-        typeof ServiceWorkerRegistration !== "undefined" &&
-        "pushManager" in ServiceWorkerRegistration.prototype
-    );
+    const hasServiceWorker =
+        "serviceWorker" in navigator;
+
+    const hasNotification =
+        "Notification" in window;
+
+    const hasServiceWorkerRegistration =
+        typeof ServiceWorkerRegistration !== "undefined";
+
+    const hasPushManager =
+        hasServiceWorkerRegistration &&
+        "pushManager" in ServiceWorkerRegistration.prototype;
+
+    console.log("NovaPay Web Push diagnostic:", {
+        hasServiceWorker,
+        hasNotification,
+        hasServiceWorkerRegistration,
+        hasPushManager,
+        isIOS: isIOSDevice(),
+        isStandalone: isStandaloneWebApp()
+    });
+
+    if (!hasServiceWorker) {
+        setPushStatus(
+            "Web Push check failed: Service Workers are unavailable.",
+            "#b45309"
+        );
+        return false;
+    }
+
+    if (!hasNotification) {
+        setPushStatus(
+            "Web Push check failed: Notifications API is unavailable.",
+            "#b45309"
+        );
+        return false;
+    }
+
+    if (!hasServiceWorkerRegistration) {
+        setPushStatus(
+            "Web Push check failed: Service Worker Registration is unavailable.",
+            "#b45309"
+        );
+        return false;
+    }
+
+    if (!hasPushManager) {
+        setPushStatus(
+            "Web Push check failed: Push Manager is unavailable in this Home Screen app.",
+            "#b45309"
+        );
+        return false;
+    }
+
+    return true;
 }
 
 // ============================================================
