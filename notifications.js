@@ -218,7 +218,6 @@ function getHomeScreenDiagnostic() {
 /* =========================================================
    WEB PUSH SUPPORT
    ========================================================= */
-
 function isWebPushSupported() {
     const hasServiceWorker =
         "serviceWorker" in navigator;
@@ -227,7 +226,11 @@ function isWebPushSupported() {
         "Notification" in window;
 
     const hasPushManager =
-        typeof PushManager !== "undefined";
+        "PushManager" in window ||
+        (
+            typeof ServiceWorkerRegistration !== "undefined" &&
+            "pushManager" in ServiceWorkerRegistration.prototype
+        );
 
     return (
         hasServiceWorker &&
@@ -235,6 +238,7 @@ function isWebPushSupported() {
         hasPushManager
     );
 }
+
 
 /* =========================================================
    AUTH STATE
