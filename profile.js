@@ -31,9 +31,6 @@ const personalInformationBtn =
 const userName =
     document.getElementById("userName");
 
-const userEmail =
-    document.getElementById("userEmail");
-
 const userPoints =
     document.getElementById("userPoints");
 
@@ -74,19 +71,11 @@ personalInformationBtn?.addEventListener("click", () => {
 
 logoutBtn?.addEventListener("click", async () => {
 
-    /*
-     * Ask the user before logging out.
-     * OK = Yes
-     * Cancel = No
-     */
-
     const confirmed =
         window.confirm(
             "Are you sure you want to logout?"
         );
 
-
-    /* User selected No */
 
     if (!confirmed) {
 
@@ -94,8 +83,6 @@ logoutBtn?.addEventListener("click", async () => {
 
     }
 
-
-    /* User selected Yes */
 
     try {
 
@@ -147,27 +134,8 @@ onAuthStateChanged(
 
 
         /* ----------------------------------
-           USER EMAIL
+           DEFAULT PROFILE INFORMATION
         ---------------------------------- */
-
-        if (userEmail) {
-
-            userEmail.textContent =
-                user.email || "";
-
-        }
-
-
-        /* ----------------------------------
-           DEFAULT PROFILE NAME
-        ---------------------------------- */
-
-        /*
-         * Do NOT use email here.
-         *
-         * The profile name must come from
-         * the Firestore nickname field.
-         */
 
         if (userName) {
 
@@ -177,10 +145,6 @@ onAuthStateChanged(
         }
 
 
-        /* ----------------------------------
-           DEFAULT POINTS
-        ---------------------------------- */
-
         if (userPoints) {
 
             userPoints.textContent =
@@ -188,10 +152,6 @@ onAuthStateChanged(
 
         }
 
-
-        /* ----------------------------------
-           DEFAULT REWARDS
-        ---------------------------------- */
 
         if (userRewards) {
 
@@ -251,8 +211,14 @@ onAuthStateChanged(
 
             if (userName) {
 
+                const nickname =
+                    typeof data.nickname === "string"
+                        ? data.nickname.trim()
+                        : "";
+
+
                 userName.textContent =
-                    data.nickname?.trim() ||
+                    nickname ||
                     "NovaPay User";
 
             }
@@ -305,8 +271,7 @@ onAuthStateChanged(
 
 
             /*
-             * Do NOT display email if
-             * Firestore fails.
+             * Never display email here.
              */
 
             if (userName) {
@@ -355,14 +320,6 @@ function updateLoginPinButton(
             ? "Change Login PIN"
             : "Login PIN";
 
-
-    /*
-     * Walk through ALL text nodes inside
-     * the link.
-     *
-     * This means the icon, arrow and other
-     * HTML elements stay untouched.
-     */
 
     const walker =
         document.createTreeWalker(
@@ -427,11 +384,6 @@ function updateLoginPinButton(
 
     if (!changed) {
 
-        /*
-         * Look for a common text element
-         * inside the link.
-         */
-
         const possibleTextElement =
             loginPinLink.querySelector(
                 "span, p, div"
@@ -447,12 +399,6 @@ function updateLoginPinButton(
 
         }
 
-
-        /*
-         * Last fallback:
-         * preserve the link's HTML as much
-         * as possible and add the label.
-         */
 
         const label =
             document.createElement("span");
