@@ -147,7 +147,7 @@ onAuthStateChanged(
 
 
         /* ----------------------------------
-           DEFAULT USER INFORMATION
+           USER EMAIL
         ---------------------------------- */
 
         if (userEmail) {
@@ -158,23 +158,28 @@ onAuthStateChanged(
         }
 
 
+        /* ----------------------------------
+           DEFAULT PROFILE NAME
+        ---------------------------------- */
+
         /*
-         * Temporary fallback while Firestore
-         * profile information is loading.
+         * Do NOT use email here.
          *
-         * The Firestore nickname will replace
-         * this value once the profile loads.
+         * The profile name must come from
+         * the Firestore nickname field.
          */
 
         if (userName) {
 
             userName.textContent =
-                user.displayName ||
-                user.email?.split("@")[0] ||
-                "NovaPay User";
+                "Loading...";
 
         }
 
+
+        /* ----------------------------------
+           DEFAULT POINTS
+        ---------------------------------- */
 
         if (userPoints) {
 
@@ -183,6 +188,10 @@ onAuthStateChanged(
 
         }
 
+
+        /* ----------------------------------
+           DEFAULT REWARDS
+        ---------------------------------- */
 
         if (userRewards) {
 
@@ -216,6 +225,15 @@ onAuthStateChanged(
                     "NovaPay user document not found."
                 );
 
+
+                if (userName) {
+
+                    userName.textContent =
+                        "NovaPay User";
+
+                }
+
+
                 updateLoginPinButton(false);
 
                 return;
@@ -234,9 +252,7 @@ onAuthStateChanged(
             if (userName) {
 
                 userName.textContent =
-                    data.nickname ||
-                    user.displayName ||
-                    user.email?.split("@")[0] ||
+                    data.nickname?.trim() ||
                     "NovaPay User";
 
             }
@@ -289,15 +305,13 @@ onAuthStateChanged(
 
 
             /*
-             * Keep the profile usable even if
-             * Firestore temporarily fails.
+             * Do NOT display email if
+             * Firestore fails.
              */
 
             if (userName) {
 
                 userName.textContent =
-                    user.displayName ||
-                    user.email?.split("@")[0] ||
                     "NovaPay User";
 
             }
