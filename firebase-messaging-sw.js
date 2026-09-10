@@ -2,25 +2,26 @@
    NOVAPAY — FIREBASE CLOUD MESSAGING SERVICE WORKER
    ---------------------------------------------------------
    Handles background push notifications for NovaPay.
-   This file must remain at the frontend project root so
-   the service worker has the correct scope.
+
+   IMPORTANT:
+   - Keep this file at the frontend project root.
+   - Firebase SDK version matches the frontend: 10.12.5.
    ========================================================= */
 
 importScripts(
-    "https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"
+    "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"
 );
 
 importScripts(
-    "https://www.gstatic.com/firebasejs/12.2.1/firebase-messaging-compat.js"
+    "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging-compat.js"
 );
 
 
 /* =========================================================
-   FIREBASE CONFIGURATION
+   FIREBASE INITIALIZATION
    ========================================================= */
 
 firebase.initializeApp({
-
     apiKey:
         "AIzaSyDNqTAQKGGW0Km4P7VIxZw9jyv8hGEiDvc",
 
@@ -38,7 +39,6 @@ firebase.initializeApp({
 
     appId:
         "1:99118341312:web:9d353e75280fa36bcee125"
-
 });
 
 
@@ -46,16 +46,15 @@ firebase.initializeApp({
    FIREBASE MESSAGING
    ========================================================= */
 
-const messaging =
-    firebase.messaging();
+const messaging = firebase.messaging();
 
 
 /* =========================================================
-   BACKGROUND MESSAGE HANDLER
+   BACKGROUND PUSH NOTIFICATIONS
    ========================================================= */
 
 messaging.onBackgroundMessage(
-    (payload) => {
+    payload => {
 
         console.log(
             "NovaPay background notification received:",
@@ -72,18 +71,26 @@ messaging.onBackgroundMessage(
 
 
         const title =
-            notification.title ||
-            "NovaPay";
+            String(
+                notification.title ||
+                data.title ||
+                "NovaPay"
+            ).trim();
 
 
         const body =
-            notification.body ||
-            "You have a new notification.";
+            String(
+                notification.body ||
+                data.body ||
+                "You have a new notification."
+            ).trim();
 
 
         const notificationId =
-            data.notificationId ||
-            "";
+            String(
+                data.notificationId ||
+                ""
+            ).trim();
 
 
         const notificationOptions = {
@@ -101,24 +108,19 @@ messaging.onBackgroundMessage(
                 "novapay-notification",
 
             data: {
-
                 notificationId,
-
                 ...data
-
             },
 
             requireInteraction:
                 false
-
         };
 
 
-        self.registration.showNotification(
+        return self.registration.showNotification(
             title,
             notificationOptions
         );
-
     }
 );
 
@@ -129,7 +131,7 @@ messaging.onBackgroundMessage(
 
 self.addEventListener(
     "notificationclick",
-    (event) => {
+    event => {
 
         event.notification.close();
 
@@ -140,8 +142,10 @@ self.addEventListener(
 
 
         const notificationId =
-            notificationData.notificationId ||
-            "";
+            String(
+                notificationData.notificationId ||
+                ""
+            ).trim();
 
 
         const targetUrl =
@@ -157,11 +161,13 @@ self.addEventListener(
             clients.matchAll({
                 type:
                     "window",
+
                 includeUncontrolled:
                     true
             })
+
                 .then(
-                    (clientList) => {
+                    clientList => {
 
                         for (
                             const client
@@ -172,14 +178,18 @@ self.addEventListener(
                                 "focus" in client
                             ) {
 
-                                client.navigate(
-                                    targetUrl
-                                );
+                                return Promise
+                                    .resolve(
+                                        client.navigate(
+                                            targetUrl
+                                        )
+                                    )
 
-                                return client.focus();
-
+                                    .then(
+                                        () =>
+                                            client.focus()
+                                    );
                             }
-
                         }
 
 
@@ -190,13 +200,12 @@ self.addEventListener(
                             return clients.openWindow(
                                 targetUrl
                             );
-
                         }
 
+
+                        return undefined;
                     }
                 )
-
         );
-
     }
 );
