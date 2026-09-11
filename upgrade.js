@@ -1,41 +1,44 @@
 /* =========================================================
    NovaPay — Upgrade Account
-   Frontend KYC controller
+   Firebase + Render KYC frontend
    ========================================================= */
+
+import {
+  auth
+} from "./firebase.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
 
 (() => {
   "use strict";
+
 
   /* =======================================================
      Configuration
      ======================================================= */
 
-  const API_BASE_URL = "/api";
+  const BACKEND_URL =
+    "https://novapay-server.onrender.com";
+
+  const API_BASE_URL =
+    `${BACKEND_URL}/api`;
 
   const ENDPOINTS = {
-    accountStatus: `${API_BASE_URL}/kyc/status`,
-    verifyNin: `${API_BASE_URL}/kyc/verify-nin`,
-    verifyBvn: `${API_BASE_URL}/kyc/verify-bvn`
+    status:
+      `${API_BASE_URL}/kyc/status`,
+
+    nin:
+      `${API_BASE_URL}/kyc/nin`,
+
+    bvn:
+      `${API_BASE_URL}/kyc/bvn`
   };
 
-  const REQUEST_TIMEOUT = 30000;
-
-  const TIERS = {
-    1: {
-      name: "Free",
-      verification: null
-    },
-
-    2: {
-      name: "Verified",
-      verification: "NIN"
-    },
-
-    3: {
-      name: "Advanced",
-      verification: "BVN"
-    }
-  };
+  const REQUEST_TIMEOUT =
+    30000;
 
 
   /* =======================================================
@@ -44,9 +47,6 @@
 
   const backBtn =
     document.getElementById("backBtn");
-
-  const accountStatus =
-    document.getElementById("accountStatus");
 
   const currentTier =
     document.getElementById("currentTier");
@@ -101,12 +101,11 @@
 
 
   /* =======================================================
-     Required element validation
+     Validate HTML
      ======================================================= */
 
   const requiredElements = [
     backBtn,
-    accountStatus,
     currentTier,
     statusBadge,
     upgradeTier2Btn,
@@ -126,13 +125,14 @@
     pageMessage
   ];
 
+
   if (
     requiredElements.some(
       (element) => !element
     )
   ) {
     console.error(
-      "NovaPay Upgrade: one or more required HTML elements are missing."
+      "NovaPay Upgrade: required HTML element is missing."
     );
 
     return;
@@ -145,85 +145,21 @@
 
   let accountTier = null;
 
-  let selectedVerificationTier = null;
+  let selectedVerification =
+    null;
 
   let isSubmitting = false;
 
-
-  /* =======================================================
-     Messages
-     ======================================================= */
-
-  function showPageMessage(
-    message,
-    type = "info"
-  ) {
-    pageMessage.textContent = message;
-
-    pageMessage.className =
-      `page-message ${type}`;
-
-    pageMessage.hidden = false;
-  }
-
-
-  function hidePageMessage() {
-    pageMessage.hidden = true;
-
-    pageMessage.textContent = "";
-
-    pageMessage.className =
-      "page-message";
-  }
-
-
-  function hideVerificationMessages() {
-    verificationError.hidden = true;
-    verificationPending.hidden = true;
-    verificationSuccess.hidden = true;
-
-    verificationError.textContent = "";
-    verificationPending.textContent = "";
-    verificationSuccess.textContent = "";
-  }
-
-
-  function showVerificationError(message) {
-    hideVerificationMessages();
-
-    verificationError.textContent =
-      message;
-
-    verificationError.hidden = false;
-  }
-
-
-  function showVerificationPending(message) {
-    hideVerificationMessages();
-
-    verificationPending.textContent =
-      message;
-
-    verificationPending.hidden = false;
-  }
-
-
-  function showVerificationSuccess(message) {
-    hideVerificationMessages();
-
-    verificationSuccess.textContent =
-      message;
-
-    verificationSuccess.hidden = false;
-  }
+  let currentUser = null;
 
 
   /* =======================================================
-     Tier helpers
+     Helpers
      ======================================================= */
 
   function normalizeTier(value) {
-    const tier = Number(value);
+    const tier =
+      Number(value);
 
     if (
       tier === 1 ||
@@ -237,36 +173,6 @@
   }
 
 
-  function getVerificationName(tier) {
-    if (tier === 2) {
-      return "NIN";
-    }
-
-    if (tier === 3) {
-      return "BVN";
-    }
-
-    return null;
-  }
-
-
-  function getVerificationEndpoint(tier) {
-    if (tier === 2) {
-      return ENDPOINTS.verifyNin;
-    }
-
-    if (tier === 3) {
-      return ENDPOINTS.verifyBvn;
-    }
-
-    return null;
-  }
-
-
-  /* =======================================================
-     Identity number validation
-     ======================================================= */
-
   function sanitizeIdentityNumber(value) {
     return String(value || "")
       .replace(/\D/g, "")
@@ -279,65 +185,218 @@
   }
 
 
+  function getVerificationName() {
+    if (
+      selectedVerification === "nin"
+    ) {
+      return "NIN";
+    }
+
+    if (
+      selectedVerification === "bvn"
+    ) {
+      return "BVN";
+    }
+
+    return "";
+  }
+
+
+  function getVerificationEndpoint() {
+    if (
+      selectedVerification === "nin"
+    ) {
+      return ENDPOINTS.nin;
+    }
+
+    if (
+      selectedVerification === "bvn"
+    ) {
+      return ENDPOINTS.bvn;
+    }
+
+    return null;
+  }
+
+
   /* =======================================================
-     Firebase authentication
+     Page messages
      ======================================================= */
 
-  async function getFirebaseIdToken() {
-    /*
-     * NovaPay backend requires a Firebase ID token.
-     *
-     * This supports the Firebase compat/global setup used
-     * by the existing frontend.
-     */
+  function showPageMessage(
+    message,
+    type = "info"
+  ) {
+    pageMessage.textContent =
+      message;
 
+    pageMessage.className =
+      `page-message ${type}`;
+
+    pageMessage.hidden =
+      false;
+  }
+
+
+  function hidePageMessage() {
+    pageMessage.hidden =
+      true;
+
+    pageMessage.textContent =
+      "";
+
+    pageMessage.className =
+      "page-message";
+  }
+
+
+  /* =======================================================
+     Verification messages
+     ======================================================= */
+
+  function hideVerificationMessages() {
+    verificationError.hidden =
+      true;
+
+    verificationPending.hidden =
+      true;
+
+    verificationSuccess.hidden =
+      true;
+
+    verificationError.textContent =
+      "";
+
+    verificationPending.textContent =
+      "";
+
+    verificationSuccess.textContent =
+      "";
+  }
+
+
+  function showVerificationError(
+    message
+  ) {
+    hideVerificationMessages();
+
+    verificationError.textContent =
+      message;
+
+    verificationError.hidden =
+      false;
+  }
+
+
+  function showVerificationPending(
+    message
+  ) {
+    hideVerificationMessages();
+
+    verificationPending.textContent =
+      message;
+
+    verificationPending.hidden =
+      false;
+  }
+
+
+  function showVerificationSuccess(
+    message
+  ) {
+    hideVerificationMessages();
+
+    verificationSuccess.textContent =
+      message;
+
+    verificationSuccess.hidden =
+      false;
+  }
+
+
+  /* =======================================================
+     Safe server message
+     ======================================================= */
+
+  function getSafeServerMessage(
+    response,
+    fallback
+  ) {
     if (
-      typeof window.firebase === "undefined"
+      !response ||
+      typeof response !== "object"
     ) {
-      throw new Error(
-        "Firebase is not available on this page."
-      );
+      return fallback;
     }
 
 
+    const possibleMessage =
+      typeof response.error === "string"
+        ? response.error.trim()
+        : typeof response.message === "string"
+          ? response.message.trim()
+          : "";
+
+
     if (
-      typeof window.firebase.auth !== "function"
+      !possibleMessage ||
+      possibleMessage.length > 220
     ) {
-      throw new Error(
-        "Firebase Authentication is not available on this page."
-      );
+      return fallback;
     }
 
 
-    const auth =
-      window.firebase.auth();
+    const blockedTerms = [
+      "api_key",
+      "BABSPAY_API_KEY",
+      "authorization",
+      "bearer",
+      "secret",
+      "token"
+    ];
 
 
-    const user =
-      auth.currentUser;
+    const lowerMessage =
+      possibleMessage.toLowerCase();
 
 
-    if (!user) {
+    const containsSensitiveTerm =
+      blockedTerms.some(
+        (term) =>
+          lowerMessage.includes(
+            term.toLowerCase()
+          )
+      );
+
+
+    if (
+      containsSensitiveTerm
+    ) {
+      return fallback;
+    }
+
+
+    return possibleMessage;
+  }
+
+
+  /* =======================================================
+     Authenticated request
+     ======================================================= */
+
+  async function authenticatedRequest(
+    endpoint,
+    options = {}
+  ) {
+    if (!currentUser) {
       throw new Error(
         "Please sign in to your NovaPay account first."
       );
     }
 
 
-    return user.getIdToken(true);
-  }
-
-
-  /* =======================================================
-     Authenticated backend request
-     ======================================================= */
-
-  async function authenticatedRequest(
-    url,
-    options = {}
-  ) {
     const token =
-      await getFirebaseIdToken();
+      await currentUser.getIdToken();
 
 
     const headers =
@@ -360,8 +419,9 @@
 
     if (
       options.body &&
-      !(options.body instanceof FormData) &&
-      !headers.has("Content-Type")
+      !headers.has(
+        "Content-Type"
+      )
     ) {
       headers.set(
         "Content-Type",
@@ -386,35 +446,33 @@
     try {
       const response =
         await fetch(
-          url,
+          endpoint,
           {
             ...options,
             headers,
             signal:
-              controller.signal,
-            credentials:
-              "same-origin"
+              controller.signal
           }
         );
 
 
-      let responseData = null;
+      let data = null;
 
 
       try {
-        responseData =
+        data =
           await response.json();
       } catch {
-        responseData = null;
+        data = null;
       }
 
 
       if (!response.ok) {
         const error =
           new Error(
-            getBackendErrorMessage(
-              responseData,
-              response.status
+            getSafeServerMessage(
+              data,
+              `Request failed with status ${response.status}.`
             )
           );
 
@@ -424,14 +482,14 @@
 
 
         error.data =
-          responseData;
+          data;
 
 
         throw error;
       }
 
 
-      return responseData;
+      return data;
     } finally {
       window.clearTimeout(
         timeoutId
@@ -441,173 +499,125 @@
 
 
   /* =======================================================
-     Backend error handling
+     Account status
      ======================================================= */
 
-  function getBackendErrorMessage(
-    data,
-    status
-  ) {
+  function extractTier(response) {
     if (
-      data &&
-      typeof data.message === "string" &&
-      data.message.trim()
+      !response ||
+      typeof response !== "object"
     ) {
-      return data.message.trim();
-    }
-
-
-    if (
-      data &&
-      typeof data.msg === "string" &&
-      data.msg.trim()
-    ) {
-      return data.msg.trim();
-    }
-
-
-    if (status === 401) {
-      return "Your session has expired. Please sign in again.";
-    }
-
-
-    if (status === 403) {
-      return "You are not allowed to perform this verification.";
-    }
-
-
-    if (status === 404) {
-      return "The requested verification service was not found.";
-    }
-
-
-    if (status === 429) {
-      return "Too many verification requests. Please try again later.";
-    }
-
-
-    if (status >= 500) {
-      return "The verification service is temporarily unavailable.";
-    }
-
-
-    return "The request could not be completed.";
-  }
-
-
-  function getSafeErrorMessage(
-    error,
-    fallback
-  ) {
-    if (!error) {
-      return fallback;
-    }
-
-
-    const message =
-      typeof error.message === "string"
-        ? error.message.trim()
-        : "";
-
-
-    if (!message) {
-      return fallback;
-    }
-
-
-    /*
-     * Never expose provider credentials,
-     * provider internals or authorization
-     * details to the user.
-     */
-
-    const blockedTerms = [
-      "BABSPAY",
-      "api_key",
-      "API_KEY",
-      "Authorization",
-      "Bearer",
-      "secret",
-      "token"
-    ];
-
-
-    const containsBlockedTerm =
-      blockedTerms.some(
-        (term) =>
-          message
-            .toLowerCase()
-            .includes(
-              term.toLowerCase()
-            )
-      );
-
-
-    if (
-      containsBlockedTerm ||
-      message.length > 180
-    ) {
-      return fallback;
-    }
-
-
-    return message;
-  }
-
-
-  /* =======================================================
-     Extract account status
-     ======================================================= */
-
-  function extractAccountData(response) {
-    if (
-      response &&
-      response.data &&
-      typeof response.data === "object"
-    ) {
-      return response.data;
-    }
-
-
-    return response;
-  }
-
-
-  function extractTier(data) {
-    if (!data) {
       return null;
     }
 
 
     return normalizeTier(
-      data.tier ??
-      data.accountTier ??
-      data.currentTier
+      response.tier ??
+      response.accountTier ??
+      response.currentTier
     );
   }
 
 
+  async function loadAccountStatus() {
+    currentTier.textContent =
+      "Checking...";
+
+    statusBadge.textContent =
+      "Loading";
+
+    upgradeTier2Btn.disabled =
+      true;
+
+    upgradeTier3Btn.disabled =
+      true;
+
+    hidePageMessage();
+
+
+    try {
+      const response =
+        await authenticatedRequest(
+          ENDPOINTS.status,
+          {
+            method: "GET"
+          }
+        );
+
+
+      const tier =
+        extractTier(
+          response
+        );
+
+
+      if (!tier) {
+        console.error(
+          "NovaPay Upgrade: unexpected status response.",
+          response
+        );
+
+        throw new Error(
+          "The server returned an invalid account status."
+        );
+      }
+
+
+      updateTierInterface(
+        tier
+      );
+    } catch (error) {
+      console.error(
+        "NovaPay Upgrade: status request failed.",
+        error
+      );
+
+
+      currentTier.textContent =
+        "Unavailable";
+
+      statusBadge.textContent =
+        "Error";
+
+
+      showPageMessage(
+        getSafeServerMessage(
+          error.data,
+          error.message ||
+            "We could not load your account status."
+        ),
+        "error"
+      );
+    }
+  }
+
+
   /* =======================================================
-     Update tier UI
+     Tier interface
      ======================================================= */
 
-  function updateTierInterface(tier) {
-    if (
-      !TIERS[tier]
-    ) {
-      return;
-    }
-
-
-    accountTier = tier;
+  function updateTierInterface(
+    tier
+  ) {
+    accountTier =
+      tier;
 
 
     currentTier.textContent =
-      `Tier ${tier} — ${TIERS[tier].name}`;
+      `Tier ${tier} — ${
+        tier === 1
+          ? "Free"
+          : tier === 2
+            ? "Verified"
+            : "Advanced"
+      }`;
 
 
-    upgradeTier2Btn.disabled = true;
-    upgradeTier3Btn.disabled = true;
+    upgradeTier2Btn.disabled =
+      true;
+
+    upgradeTier3Btn.disabled =
+      true;
 
 
     if (tier === 1) {
@@ -642,120 +652,15 @@
 
 
   /* =======================================================
-     Load account status
+     Open verification
      ======================================================= */
 
-  async function loadAccountStatus() {
-    accountTier = null;
-
-
-    currentTier.textContent =
-      "Checking...";
-
-
-    statusBadge.textContent =
-      "Loading";
-
-
-    upgradeTier2Btn.disabled =
-      true;
-
-    upgradeTier3Btn.disabled =
-      true;
-
-
-    hidePageMessage();
-
-
-    try {
-      const response =
-        await authenticatedRequest(
-          ENDPOINTS.accountStatus,
-          {
-            method: "GET"
-          }
-        );
-
-
-      const data =
-        extractAccountData(
-          response
-        );
-
-
-      const tier =
-        extractTier(data);
-
-
-      if (!tier) {
-        console.error(
-          "NovaPay Upgrade: invalid account status response.",
-          {
-            hasResponse:
-              Boolean(response),
-            responseKeys:
-              response &&
-              typeof response === "object"
-                ? Object.keys(response)
-                : []
-          }
-        );
-
-
-        throw new Error(
-          "The server returned an invalid account status."
-        );
-      }
-
-
-      updateTierInterface(
-        tier
-      );
-    } catch (error) {
-      console.error(
-        "NovaPay Upgrade: account status request failed.",
-        error
-      );
-
-
-      currentTier.textContent =
-        "Unavailable";
-
-
-      statusBadge.textContent =
-        "Error";
-
-
-      showPageMessage(
-        getSafeErrorMessage(
-          error,
-          "We could not load your account status. Please try again."
-        ),
-        "error"
-      );
-    }
-  }
-
-
-  /* =======================================================
-     Open verification panel
-     ======================================================= */
-
-  function openVerificationPanel(
-    targetTier
+  function openVerification(
+    verification
   ) {
-    const tier =
-      normalizeTier(
-        targetTier
-      );
-
-
-    if (!tier) {
-      return;
-    }
-
-
-    if (accountTier === null) {
+    if (
+      accountTier === null
+    ) {
       showPageMessage(
         "Your account status is still loading. Please wait.",
         "info"
@@ -765,16 +670,12 @@
     }
 
 
-    /*
-     * The frontend only allows the next
-     * tier. The backend remains authoritative.
-     */
-
     if (
-      tier !== accountTier + 1
+      verification === "nin" &&
+      accountTier !== 1
     ) {
       showPageMessage(
-        "This verification is not available for your current account tier.",
+        "NIN verification is not available for your current account tier.",
         "error"
       );
 
@@ -782,44 +683,49 @@
     }
 
 
-    const verificationName =
-      getVerificationName(
-        tier
+    if (
+      verification === "bvn" &&
+      accountTier !== 2
+    ) {
+      showPageMessage(
+        "BVN verification is not available for your current account tier.",
+        "error"
       );
 
-
-    if (!verificationName) {
       return;
     }
 
 
-    selectedVerificationTier =
-      tier;
+    selectedVerification =
+      verification;
+
+
+    const name =
+      getVerificationName();
 
 
     verificationTierLabel.textContent =
-      `Tier ${tier} verification`;
+      verification === "nin"
+        ? "Tier 2 verification"
+        : "Tier 3 verification";
 
 
     verificationTitle.textContent =
-      `Verify your ${verificationName}`;
+      `Verify your ${name}`;
 
 
-    if (tier === 2) {
-      verificationDescription.textContent =
-        "Enter your 11-digit NIN to request Tier 2 verification.";
-    } else {
-      verificationDescription.textContent =
-        "Enter your 11-digit BVN to request Tier 3 verification.";
-    }
+    verificationDescription.textContent =
+      verification === "nin"
+        ? "Enter your 11-digit NIN to request Tier 2 verification."
+        : "Enter your 11-digit BVN to request Tier 3 verification.";
 
 
     verificationInputLabel.textContent =
-      verificationName;
+      name;
 
 
     identityNumber.placeholder =
-      `Enter 11-digit ${verificationName}`;
+      `Enter 11-digit ${name}`;
 
 
     identityNumber.value =
@@ -830,17 +736,9 @@
       11;
 
 
-    identityNumber.inputMode =
-      "numeric";
-
-
-    identityNumber.autocomplete =
-      "off";
-
-
     identityNumber.setAttribute(
       "aria-label",
-      `${verificationName} number`
+      `${name} number`
     );
 
 
@@ -851,7 +749,7 @@
 
 
     submitVerificationBtn.textContent =
-      `Verify ${verificationName}`;
+      `Verify ${name}`;
 
 
     submitVerificationBtn.disabled =
@@ -874,15 +772,23 @@
         identityNumber.focus();
       }
     );
+
+
+    verificationPanel.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
   }
 
 
   /* =======================================================
-     Close verification panel
+     Close verification
      ======================================================= */
 
-  function closeVerificationPanel() {
-    if (isSubmitting) {
+  function closeVerification() {
+    if (
+      isSubmitting
+    ) {
       return;
     }
 
@@ -891,13 +797,12 @@
       true;
 
 
-    selectedVerificationTier =
+    selectedVerification =
       null;
 
 
     identityNumber.value =
       "";
-
 
     identityNumber.disabled =
       false;
@@ -914,10 +819,10 @@
 
 
   /* =======================================================
-     Validate identity number
+     Validate input
      ======================================================= */
 
-  function validateIdentityInput() {
+  function validateIdentityNumber() {
     const value =
       sanitizeIdentityNumber(
         identityNumber.value
@@ -940,7 +845,7 @@
 
 
       showVerificationError(
-        "Enter exactly 11 digits."
+        `Enter exactly 11 digits for your ${getVerificationName()}.`
       );
 
 
@@ -959,59 +864,19 @@
 
 
   /* =======================================================
-     Extract verification result
-     ======================================================= */
-
-  function extractVerificationResult(
-    response
-  ) {
-    if (
-      response &&
-      response.data &&
-      typeof response.data === "object"
-    ) {
-      return response.data;
-    }
-
-
-    return response;
-  }
-
-
-  function getVerificationStatus(
-    result
-  ) {
-    if (
-      !result ||
-      typeof result !== "object"
-    ) {
-      return "";
-    }
-
-
-    return String(
-      result.status ??
-      result.state ??
-      result.verificationStatus ??
-      ""
-    )
-      .trim()
-      .toLowerCase();
-  }
-
-
-  /* =======================================================
-     Submit verification
+     Submit NIN/BVN
      ======================================================= */
 
   async function submitVerification() {
-    if (isSubmitting) {
+    if (
+      isSubmitting
+    ) {
       return;
     }
 
 
     if (
-      !selectedVerificationTier
+      !selectedVerification
     ) {
       showVerificationError(
         "Please select a verification level."
@@ -1021,11 +886,9 @@
     }
 
 
-    const valid =
-      validateIdentityInput();
-
-
-    if (!valid) {
+    if (
+      !validateIdentityNumber()
+    ) {
       identityNumber.focus();
 
       return;
@@ -1033,24 +896,20 @@
 
 
     const endpoint =
-      getVerificationEndpoint(
-        selectedVerificationTier
-      );
+      getVerificationEndpoint();
 
 
     if (!endpoint) {
       showVerificationError(
-        "This verification level is not available."
+        "This verification service is unavailable."
       );
 
       return;
     }
 
 
-    const verificationName =
-      getVerificationName(
-        selectedVerificationTier
-      );
+    const name =
+      getVerificationName();
 
 
     const identifier =
@@ -1073,12 +932,12 @@
 
 
     submitVerificationBtn.textContent =
-      `Verifying ${verificationName}...`;
+      `Verifying ${name}...`;
 
 
     try {
       const payload =
-        selectedVerificationTier === 2
+        selectedVerification === "nin"
           ? {
               nin: identifier
             }
@@ -1088,11 +947,12 @@
 
 
       /*
-       * The identity number is sent only to
-       * the NovaPay backend.
+       * IMPORTANT:
        *
-       * It is NOT sent directly from the
-       * browser to BabsPay.
+       * The browser sends the identity number
+       * only to NovaPay's Render backend.
+       *
+       * The browser does NOT call BabsPay.
        */
 
       const response =
@@ -1108,37 +968,38 @@
         );
 
 
-      const result =
-        extractVerificationResult(
-          response
-        );
+      /*
+       * Your backend returns:
+       *
+       * success
+       * state
+       * tier
+       * message
+       */
+
+      const state =
+        typeof response?.state === "string"
+          ? response.state
+              .trim()
+              .toLowerCase()
+          : "";
 
 
-      const verificationStatus =
-        getVerificationStatus(
-          result
-        );
+      const success =
+        response?.success === true;
 
 
       /*
-       * SUCCESS
-       *
-       * The backend has confirmed the
-       * verification request.
-       *
-       * We still refresh the account status
-       * rather than changing the tier
-       * ourselves.
+       * VERIFIED
        */
 
       if (
-        verificationStatus ===
-          "success" ||
-        verificationStatus ===
-          "verified"
+        success &&
+        state === "verified"
       ) {
         showVerificationSuccess(
-          `${verificationName} verification was completed successfully.`
+          response.message ||
+            `${name} verification completed successfully.`
         );
 
 
@@ -1146,8 +1007,13 @@
           "Verification successful";
 
 
-        await refreshAccountAfterVerification();
+        /*
+         * Do not manually set the tier.
+         * Ask the backend for the new
+         * authoritative account status.
+         */
 
+        await refreshAccountStatusAfterVerification();
 
         return;
       }
@@ -1155,19 +1021,15 @@
 
       /*
        * PENDING
-       *
-       * Never upgrade the account while
-       * verification is pending.
        */
 
       if (
-        verificationStatus ===
-          "pending" ||
-        verificationStatus ===
-          "processing"
+        state === "pending" ||
+        state === "processing"
       ) {
         showVerificationPending(
-          `${verificationName} verification is still processing. Your account tier will not change until verification is confirmed.`
+          response.message ||
+            `${name} verification is still processing. Your account tier will not change until verification is confirmed.`
         );
 
 
@@ -1176,7 +1038,7 @@
 
 
         submitVerificationBtn.textContent =
-          `Check ${verificationName} status`;
+          `Check ${name} status`;
 
 
         return;
@@ -1184,14 +1046,39 @@
 
 
       /*
-       * FAILURE / UNKNOWN PROVIDER RESULT
+       * FAILED
        */
 
-      showVerificationError(
-        getSafeVerificationResultMessage(
-          result,
-          `${verificationName} verification was not successful.`
-        )
+      if (
+        state === "failed" ||
+        success === false
+      ) {
+        showVerificationError(
+          getSafeServerMessage(
+            response,
+            `${name} verification was unsuccessful.`
+          )
+        );
+
+
+        submitVerificationBtn.disabled =
+          false;
+
+
+        submitVerificationBtn.textContent =
+          `Verify ${name}`;
+
+
+        return;
+      }
+
+
+      /*
+       * Unknown response
+       */
+
+      showVerificationPending(
+        "The verification request was received, but its final status could not be confirmed. Refresh your account status before trying again."
       );
 
 
@@ -1200,19 +1087,13 @@
 
 
       submitVerificationBtn.textContent =
-        `Verify ${verificationName}`;
+        `Check ${name} status`;
     } catch (error) {
       console.error(
         "NovaPay Upgrade: verification request failed.",
         error
       );
 
-
-      /*
-       * A timeout/network/server error does
-       * NOT automatically mean the provider
-       * failed the verification.
-       */
 
       if (
         error.name ===
@@ -1222,18 +1103,36 @@
           "The verification request timed out. Refresh your account status before trying again."
         );
       } else if (
+        error.status === 401
+      ) {
+        showVerificationError(
+          "Your session has expired. Please sign in again."
+        );
+      } else if (
+        error.status === 403
+      ) {
+        showVerificationError(
+          error.message ||
+            "You are not allowed to perform this verification."
+        );
+      } else if (
+        error.status === 429
+      ) {
+        showVerificationError(
+          error.message ||
+            "Too many verification attempts. Please try again later."
+        );
+      } else if (
         error.status >= 500 ||
         !error.status
       ) {
         showVerificationPending(
-          "We could not confirm the verification result. Refresh your account status before trying again."
+          "We could not confirm the verification result. Please refresh your account status before trying again."
         );
       } else {
         showVerificationError(
-          getSafeErrorMessage(
-            error,
+          error.message ||
             "Verification could not be completed."
-          )
         );
       }
 
@@ -1243,7 +1142,7 @@
 
 
       submitVerificationBtn.textContent =
-        `Verify ${verificationName}`;
+        `Verify ${name}`;
     } finally {
       isSubmitting =
         false;
@@ -1256,84 +1155,16 @@
 
 
   /* =======================================================
-     Safe verification message
+     Refresh backend account status
      ======================================================= */
 
-  function getSafeVerificationResultMessage(
-    result,
-    fallback
-  ) {
-    if (
-      !result ||
-      typeof result !== "object"
-    ) {
-      return fallback;
-    }
-
-
-    const message =
-      typeof result.message === "string"
-        ? result.message.trim()
-        : typeof result.msg === "string"
-          ? result.msg.trim()
-          : "";
-
-
-    if (
-      !message ||
-      message.length > 180
-    ) {
-      return fallback;
-    }
-
-
-    const blockedTerms = [
-      "BABSPAY",
-      "api_key",
-      "API_KEY",
-      "Authorization",
-      "Bearer",
-      "secret"
-    ];
-
-
-    const unsafe =
-      blockedTerms.some(
-        (term) =>
-          message
-            .toLowerCase()
-            .includes(
-              term.toLowerCase()
-            )
-      );
-
-
-    if (unsafe) {
-      return fallback;
-    }
-
-
-    return message;
-  }
-
-
-  /* =======================================================
-     Refresh account after verification
-     ======================================================= */
-
-  async function refreshAccountAfterVerification() {
+  async function refreshAccountStatusAfterVerification() {
     try {
-      /*
-       * Give Firestore persistence a short
-       * moment before requesting the
-       * authoritative account status.
-       */
-
       await new Promise(
         (resolve) => {
           window.setTimeout(
             resolve,
-            700
+            600
           );
         }
       );
@@ -1341,32 +1172,24 @@
 
       const response =
         await authenticatedRequest(
-          ENDPOINTS.accountStatus,
+          ENDPOINTS.status,
           {
             method: "GET"
           }
         );
 
 
-      const data =
-        extractAccountData(
+      const newTier =
+        extractTier(
           response
         );
 
 
-      const newTier =
-        extractTier(data);
-
-
       if (!newTier) {
         throw new Error(
-          "The server returned an invalid account status."
+          "Invalid account status returned by the server."
         );
       }
-
-
-      const requestedTier =
-        selectedVerificationTier;
 
 
       updateTierInterface(
@@ -1374,15 +1197,14 @@
       );
 
 
-      /*
-       * Only consider the upgrade complete
-       * when the backend's account status
-       * actually reflects the requested tier.
-       */
+      const requiredTier =
+        selectedVerification === "nin"
+          ? 2
+          : 3;
+
 
       if (
-        requestedTier &&
-        newTier >= requestedTier
+        newTier >= requiredTier
       ) {
         showVerificationSuccess(
           `Your account is now Tier ${newTier}.`
@@ -1395,10 +1217,8 @@
 
         window.setTimeout(
           () => {
-            if (
-              !isSubmitting
-            ) {
-              closeVerificationPanel();
+            if (!isSubmitting) {
+              closeVerification();
             }
           },
           1200
@@ -1410,9 +1230,8 @@
 
 
       /*
-       * Provider returned success but the
-       * authoritative account status has
-       * not changed yet.
+       * Provider success does not automatically
+       * mean the account tier has changed.
        */
 
       showVerificationPending(
@@ -1424,21 +1243,19 @@
         false;
 
 
-      if (requestedTier) {
-        submitVerificationBtn.textContent =
-          `Check ${getVerificationName(
-            requestedTier
-          )} status`;
-      }
+      submitVerificationBtn.textContent =
+        `Check ${
+          getVerificationName()
+        } status`;
     } catch (error) {
       console.error(
-        "NovaPay Upgrade: failed to refresh account status.",
+        "NovaPay Upgrade: account refresh failed.",
         error
       );
 
 
       showVerificationPending(
-        "Verification was received, but we could not refresh your account status. Refresh the page before submitting again."
+        "Verification was received, but we could not refresh your account status. Refresh this page before submitting again."
       );
 
 
@@ -1453,7 +1270,91 @@
 
 
   /* =======================================================
-     Input handling
+     Firebase authentication
+     ======================================================= */
+
+  onAuthStateChanged(
+    auth,
+    async (user) => {
+      if (!user) {
+        currentUser =
+          null;
+
+        accountTier =
+          null;
+
+
+        currentTier.textContent =
+          "Sign in required";
+
+        statusBadge.textContent =
+          "Not signed in";
+
+
+        upgradeTier2Btn.disabled =
+          true;
+
+        upgradeTier3Btn.disabled =
+          true;
+
+
+        showPageMessage(
+          "Please sign in to your NovaPay account to manage your account verification.",
+          "error"
+        );
+
+
+        return;
+      }
+
+
+      currentUser =
+        user;
+
+
+      hidePageMessage();
+
+
+      /*
+       * The backend requires a verified email.
+       * We do not expose or log the user's
+       * Firebase token.
+       */
+
+      if (
+        !user.emailVerified
+      ) {
+        currentTier.textContent =
+          "Email verification required";
+
+        statusBadge.textContent =
+          "Action required";
+
+
+        upgradeTier2Btn.disabled =
+          true;
+
+        upgradeTier3Btn.disabled =
+          true;
+
+
+        showPageMessage(
+          "Please verify your email address before upgrading your NovaPay account.",
+          "error"
+        );
+
+
+        return;
+      }
+
+
+      await loadAccountStatus();
+    }
+  );
+
+
+  /* =======================================================
+     Input
      ======================================================= */
 
   identityNumber.addEventListener(
@@ -1480,24 +1381,8 @@
   );
 
 
-  identityNumber.addEventListener(
-    "paste",
-    () => {
-      window.setTimeout(
-        () => {
-          identityNumber.value =
-            sanitizeIdentityNumber(
-              identityNumber.value
-            );
-        },
-        0
-      );
-    }
-  );
-
-
   /* =======================================================
-     Form submit
+     Form
      ======================================================= */
 
   verificationForm.addEventListener(
@@ -1511,7 +1396,39 @@
 
 
   /* =======================================================
-     Back button
+     Buttons
+     ======================================================= */
+
+  upgradeTier2Btn.addEventListener(
+    "click",
+    () => {
+      openVerification(
+        "nin"
+      );
+    }
+  );
+
+
+  upgradeTier3Btn.addEventListener(
+    "click",
+    () => {
+      openVerification(
+        "bvn"
+      );
+    }
+  );
+
+
+  closeVerificationBtn.addEventListener(
+    "click",
+    () => {
+      closeVerification();
+    }
+  );
+
+
+  /* =======================================================
+     Back
      ======================================================= */
 
   backBtn.addEventListener(
@@ -1522,46 +1439,15 @@
       ) {
         window.history.back();
       } else {
-        window.location.href = "/";
+        window.location.href =
+          "/";
       }
     }
   );
 
 
   /* =======================================================
-     Tier buttons
-     ======================================================= */
-
-  upgradeTier2Btn.addEventListener(
-    "click",
-    () => {
-      openVerificationPanel(2);
-    }
-  );
-
-
-  upgradeTier3Btn.addEventListener(
-    "click",
-    () => {
-      openVerificationPanel(3);
-    }
-  );
-
-
-  /* =======================================================
-     Close verification
-     ======================================================= */
-
-  closeVerificationBtn.addEventListener(
-    "click",
-    () => {
-      closeVerificationPanel();
-    }
-  );
-
-
-  /* =======================================================
-     Escape key
+     Escape
      ======================================================= */
 
   document.addEventListener(
@@ -1572,32 +1458,23 @@
         !verificationPanel.hidden &&
         !isSubmitting
       ) {
-        closeVerificationPanel();
+        closeVerification();
       }
     }
   );
 
 
   /* =======================================================
-     Initial state
+     Initial UI state
      ======================================================= */
 
   verificationPanel.hidden =
     true;
 
-
   upgradeTier2Btn.disabled =
     true;
 
-
   upgradeTier3Btn.disabled =
     true;
-
-
-  /* =======================================================
-     Start
-     ======================================================= */
-
-  loadAccountStatus();
 
 })();

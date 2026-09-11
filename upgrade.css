@@ -1,71 +1,67 @@
 /* =========================================================
    NovaPay — Upgrade Account
-   Complete page styling
+   Responsive mobile-first design
    ========================================================= */
 
 :root {
   --primary: #0b63ce;
-  --primary-dark: #084fa8;
+  --primary-dark: #084f9f;
   --primary-light: #eaf3ff;
-  --primary-soft: #f4f8ff;
 
-  --text: #10233f;
-  --text-soft: #5d6b7e;
-  --text-muted: #7b8798;
+  --text: #10284a;
+  --text-secondary: #66758a;
+  --text-light: #8a97a8;
 
-  --white: #ffffff;
-  --background: #f5f8fc;
-  --border: #e2e8f0;
-  --border-light: #edf1f6;
+  --border: #dce6f2;
+  --border-strong: #c9d9eb;
 
-  --success: #16834b;
+  --surface: #ffffff;
+  --surface-soft: #f7faff;
+  --page: #f5f8fc;
+
+  --success: #23834b;
   --success-bg: #eaf8f0;
 
-  --warning: #a76500;
-  --warning-bg: #fff6e5;
+  --error: #c83a3a;
+  --error-bg: #fff0f0;
 
-  --danger: #c62828;
-  --danger-bg: #fff0f0;
+  --warning: #9a6800;
+  --warning-bg: #fff8df;
 
-  --shadow-sm: 0 2px 8px rgba(16, 35, 63, 0.06);
-  --shadow-md: 0 8px 24px rgba(16, 35, 63, 0.08);
-  --shadow-lg: 0 18px 45px rgba(16, 35, 63, 0.14);
+  --shadow-sm:
+    0 2px 8px rgba(22, 53, 89, 0.05);
+
+  --shadow-md:
+    0 8px 24px rgba(22, 53, 89, 0.08);
 
   --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+
+  --max-width: 760px;
 }
 
 
 /* =========================================================
-   RESET
+   Reset
    ========================================================= */
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
   min-height: 100%;
-  background: var(--background);
+  background: var(--page);
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100%;
   margin: 0;
-  background:
-    linear-gradient(
-      180deg,
-      #f7faff 0,
-      #f5f8fc 260px,
-      #f5f8fc 100%
-    );
+  background: var(--page);
   color: var(--text);
   font-family:
-    Inter,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
@@ -73,9 +69,8 @@ body {
     Helvetica,
     Arial,
     sans-serif;
-  line-height: 1.5;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -84,456 +79,537 @@ input {
 }
 
 button {
-  border: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:focus-visible,
 input:focus-visible {
-  outline: 3px solid rgba(11, 99, 206, 0.22);
+  outline: 3px solid rgba(11, 99, 206, 0.2);
   outline-offset: 2px;
 }
 
 
 /* =========================================================
-   MAIN PAGE
+   Page
    ========================================================= */
 
 .upgrade-page {
-  width: min(100%, 1080px);
+  width: min(100%, var(--max-width));
   margin: 0 auto;
-  padding: 24px 20px 40px;
+  padding:
+    18px
+    16px
+    calc(28px + env(safe-area-inset-bottom));
 }
 
 
 /* =========================================================
-   HEADER
+   Header
    ========================================================= */
 
 .upgrade-header {
   display: grid;
-  grid-template-columns: minmax(80px, 1fr) auto minmax(80px, 1fr);
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
-  min-height: 64px;
-  margin-bottom: 22px;
+  gap: 12px;
+  min-height: 48px;
+  margin-bottom: 18px;
 }
-
-.upgrade-header-title {
-  text-align: center;
-}
-
-.upgrade-header-title h1 {
-  color: var(--text);
-  font-size: 25px;
-  font-weight: 750;
-  letter-spacing: -0.5px;
-  line-height: 1.15;
-}
-
-.upgrade-header-title p {
-  margin-top: 5px;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-
-/* =========================================================
-   BACK BUTTON
-   ========================================================= */
 
 .back-btn {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
-  width: fit-content;
-  min-height: 42px;
-  padding: 8px 12px;
-  border-radius: 11px;
+  gap: 7px;
+
+  min-width: 72px;
+  height: 42px;
+  padding: 0;
+
+  border: 0;
   background: transparent;
+
   color: var(--primary);
+  font-size: 16px;
+  font-weight: 700;
+
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 650;
-  transition:
-    background-color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.back-btn:hover {
-  background: var(--primary-light);
-}
-
-.back-btn:active {
-  transform: scale(0.97);
 }
 
 .back-icon {
   position: relative;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
+
+  width: 20px;
+  height: 20px;
 }
 
 .back-icon::before {
   content: "";
+
   position: absolute;
-  top: 8px;
-  left: 3px;
-  width: 11px;
+  left: 2px;
+  top: 9px;
+
+  width: 15px;
   height: 2px;
+
   border-radius: 2px;
   background: currentColor;
 }
 
 .back-icon::after {
   content: "";
+
   position: absolute;
-  top: 5px;
-  left: 3px;
-  width: 7px;
-  height: 7px;
+  left: 2px;
+  top: 4px;
+
+  width: 10px;
+  height: 10px;
+
   border-left: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
+
   transform: rotate(45deg);
+}
+
+.header-title {
+  min-width: 0;
+  text-align: center;
+}
+
+.header-title h1 {
+  margin: 0;
+
+  color: var(--text);
+  font-size: clamp(20px, 5vw, 27px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.header-title p {
+  display: none;
+
+  margin: 4px 0 0;
+
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.header-spacer {
+  width: 72px;
 }
 
 
 /* =========================================================
-   ACCOUNT STATUS
+   Account status
    ========================================================= */
 
 .account-status {
-  padding: 18px 20px;
-  border: 1px solid #dce8f7;
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f5f9ff 100%
-    );
-  box-shadow: var(--shadow-sm);
-}
-
-.account-status-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+
+  padding: 17px 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f7faff 100%
+    );
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
 }
 
-.account-status-heading h2 {
-  color: var(--text-soft);
-  font-size: 13px;
-  font-weight: 650;
-  letter-spacing: 0.1px;
+.account-status-copy {
+  min-width: 0;
+}
+
+.account-status h2 {
+  margin: 0 0 3px;
+
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .current-tier {
-  margin-top: 5px;
+  margin: 0;
+
   color: var(--primary);
   font-size: 21px;
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: -0.3px;
+}
+
+.status-badge,
+.tier-status {
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 30px;
+  padding: 5px 10px;
+
+  border-radius: 10px;
+
+  background: #f0f4f9;
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 27px;
-  padding: 4px 10px;
-  border-radius: 999px;
   background: var(--primary-light);
   color: var(--primary);
-  font-size: 11px;
-  font-weight: 750;
-  white-space: nowrap;
 }
 
-
-/* =========================================================
-   INTRO
-   ========================================================= */
-
-.upgrade-intro {
-  padding: 25px 4px 18px;
-}
-
-.upgrade-intro h2 {
-  color: var(--text);
-  font-size: 18px;
-  font-weight: 750;
-  letter-spacing: -0.2px;
-}
-
-.upgrade-intro p {
-  max-width: 650px;
-  margin-top: 5px;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-
-/* =========================================================
-   TIER GRID
-   ========================================================= */
-
-.tiers {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  align-items: stretch;
-}
-
-
-/* =========================================================
-   TIER CARD
-   ========================================================= */
-
-.tier-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.tier-card:hover {
-  border-color: #cfdced;
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.current-tier-card {
-  border-color: #cbdff7;
-  background:
-    linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #fafdff 100%
-    );
-}
-
-.tier-card.recommended {
-  border: 1.5px solid #9bc6f6;
-  box-shadow:
-    0 8px 26px rgba(11, 99, 206, 0.10);
-}
-
-.tier-card.recommended::before {
-  content: "RECOMMENDED";
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px 11px;
-  border-bottom-left-radius: 10px;
-  background: var(--primary);
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-
-/* =========================================================
-   TIER HEADER
-   ========================================================= */
-
-.tier-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 57px;
-}
-
-.tier-label {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--primary);
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.tier-header h3 {
-  color: var(--text);
-  font-size: 20px;
-  font-weight: 750;
-  letter-spacing: -0.3px;
-  line-height: 1.15;
-}
-
-.tier-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  min-height: 25px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: #f1f5f9;
-  color: var(--text-soft);
-  font-size: 10px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.current-tier-card .tier-status {
+.tier-status.current {
   background: var(--success-bg);
   color: var(--success);
 }
 
 
 /* =========================================================
-   TIER DESCRIPTION
+   Page message
    ========================================================= */
 
-.tier-description {
-  min-height: 62px;
-  margin-top: 15px;
-  color: var(--text-soft);
-  font-size: 12.5px;
-  line-height: 1.55;
+.page-message {
+  margin-top: 12px;
+  padding: 11px 13px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.page-message.info {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.page-message.error {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.page-message.success {
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 
 /* =========================================================
-   DIVIDER
+   Introduction
    ========================================================= */
 
-.tier-divider {
-  height: 1px;
-  margin: 16px 0 13px;
-  background: var(--border-light);
+.upgrade-intro {
+  margin:
+    23px
+    2px
+    12px;
+}
+
+.upgrade-intro h2 {
+  margin: 0 0 4px;
+
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.upgrade-intro p {
+  max-width: 680px;
+  margin: 0;
+
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 
 /* =========================================================
-   TIER DETAILS
+   Tier list
    ========================================================= */
 
-.tier-details {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
+.tiers {
+  display: grid;
+  gap: 12px;
 }
 
-.detail-row {
+
+/* =========================================================
+   Tier card
+   ========================================================= */
+
+.tier-card {
+  position: relative;
+
+  padding: 16px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  overflow: hidden;
+}
+
+.tier-card-current {
+  border-color: #d5e2f1;
+}
+
+.tier-card-recommended {
+  border-color: #9bc8fa;
+  box-shadow:
+    0 5px 20px rgba(11, 99, 206, 0.07);
+}
+
+.tier-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
+}
+
+.tier-label {
+  margin: 0 0 2px;
+
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.tier-header h2 {
+  margin: 0;
+
+  color: var(--text);
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.tier-description {
+  margin: 11px 0 0;
+
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.tier-divider {
+  height: 1px;
+  margin: 13px 0 10px;
+
+  background: #e9eef5;
+}
+
+
+/* =========================================================
+   Recommended badge
+   ========================================================= */
+
+.tier-recommended {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  padding: 6px 11px;
+
+  border-radius:
+    0
+    0
+    0
+    12px;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   Tier details
+   ========================================================= */
+
+.tier-details {
+  display: grid;
+  gap: 7px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
 }
 
 .detail-row span {
-  color: var(--text-muted);
-  font-size: 11.5px;
-  line-height: 1.4;
+  min-width: 0;
+
+  color: var(--text-light);
+  font-size: 13px;
+  line-height: 1.3;
 }
 
 .detail-row strong {
-  max-width: 58%;
   color: var(--text);
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 1.4;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.3;
   text-align: right;
 }
 
 
 /* =========================================================
-   TIER BUTTON
+   Tier buttons
    ========================================================= */
 
-.tier-button {
+.tier-button,
+.submit-verification-btn {
   width: 100%;
-  min-height: 43px;
-  margin-top: auto;
-  padding: 10px 14px;
-  border: 1px solid var(--primary);
-  border-radius: 11px;
-  background: var(--primary);
-  color: var(--white);
+
+  border: 0;
+  border-radius: 13px;
+
+  font-weight: 800;
+
   cursor: pointer;
-  font-size: 12.5px;
-  font-weight: 750;
+
   transition:
-    background-color 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+    background 0.18s ease,
+    transform 0.12s ease,
+    opacity 0.18s ease;
 }
 
-.tier-details + .tier-button {
-  margin-top: 22px;
+.tier-button {
+  min-height: 43px;
+  margin-top: 14px;
+  padding: 10px 14px;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  font-size: 14px;
 }
 
-.tier-button:hover:not(:disabled) {
-  border-color: var(--primary-dark);
+.tier-button:not(:disabled):active,
+.submit-verification-btn:not(:disabled):active {
+  transform: scale(0.985);
+}
+
+.tier-button:not(:disabled):hover {
   background: var(--primary-dark);
-  box-shadow: 0 6px 15px rgba(11, 99, 206, 0.20);
-}
-
-.tier-button:active:not(:disabled) {
-  transform: translateY(1px);
 }
 
 .tier-button:disabled {
-  border-color: #e1e7ee;
-  background: #eef2f6;
-  color: #8995a4;
+  background: #edf1f5;
+  color: #8c98a7;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
 
 /* =========================================================
-   VERIFICATION PANEL
+   Security notice
+   ========================================================= */
+
+.upgrade-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+
+  margin-top: 12px;
+  padding: 14px;
+
+  background: #f8fbff;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.notice-icon {
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  background: var(--success-bg);
+  color: var(--success);
+
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.upgrade-notice strong {
+  display: block;
+
+  margin: 1px 0 2px;
+
+  color: var(--text);
+  font-size: 13px;
+}
+
+.upgrade-notice p {
+  margin: 0;
+
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   Verification panel
    ========================================================= */
 
 .verification-panel {
   position: relative;
-  margin-top: 18px;
-  padding: 22px;
-  border: 1px solid #bcd5f2;
+
+  margin-top: 12px;
+  padding: 17px;
+
+  background: var(--surface);
+
+  border: 1px solid #a8c9ec;
   border-radius: var(--radius-lg);
-  background: var(--white);
-  box-shadow: var(--shadow-lg);
-  animation: verificationPanelIn 0.22s ease-out;
+
+  box-shadow: var(--shadow-md);
 }
 
-@keyframes verificationPanelIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.verification-panel[hidden] {
+  display: none;
 }
 
 .verification-panel-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
+  gap: 12px;
 }
 
 .verification-panel-copy {
@@ -541,75 +617,71 @@ input:focus-visible {
 }
 
 .verification-panel-label {
-  display: inline-block;
-  margin-bottom: 5px;
+  margin: 0 0 3px;
+
   color: var(--primary);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.7px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
 }
 
 .verification-panel h2 {
+  margin: 0;
+
   color: var(--text);
-  font-size: 20px;
-  font-weight: 750;
-  letter-spacing: -0.3px;
-  line-height: 1.2;
+  font-size: 21px;
+  font-weight: 800;
 }
 
 .verification-panel-description {
-  max-width: 620px;
-  margin-top: 6px;
-  color: var(--text-soft);
-  font-size: 12.5px;
-  line-height: 1.5;
+  margin: 5px 0 0;
+
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
-
-/* =========================================================
-   CLOSE BUTTON
-   ========================================================= */
-
 .close-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: #ffffff;
-  color: var(--text-soft);
+
+  background: #f7f9fc;
+  color: var(--text-secondary);
+
   cursor: pointer;
-  transition:
-    background-color 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease;
 }
 
 .close-btn:hover {
-  border-color: #cbd5e1;
-  background: #f8fafc;
-  color: var(--text);
+  background: #eef3f8;
 }
 
 .close-icon {
   position: relative;
-  display: block;
-  width: 16px;
-  height: 16px;
+
+  width: 15px;
+  height: 15px;
 }
 
 .close-icon::before,
 .close-icon::after {
   content: "";
+
   position: absolute;
-  top: 7px;
-  left: 1px;
-  width: 15px;
-  height: 2px;
+  left: 7px;
+  top: 0;
+
+  width: 2px;
+  height: 16px;
+
   border-radius: 2px;
   background: currentColor;
 }
@@ -624,550 +696,239 @@ input:focus-visible {
 
 
 /* =========================================================
-   VERIFICATION FORM
+   Verification form
    ========================================================= */
 
 .verification-form {
-  margin-top: 22px;
+  margin-top: 17px;
 }
 
-.verification-input-group {
-  display: flex;
-  flex-direction: column;
+.input-group {
+  display: grid;
+  gap: 6px;
 }
 
-.verification-input-group label {
-  margin-bottom: 7px;
+.input-group label {
   color: var(--text);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 750;
 }
 
 .identity-input {
   width: 100%;
-  min-height: 48px;
-  padding: 12px 14px;
-  border: 1px solid #cfd8e3;
-  border-radius: 11px;
+  height: 48px;
+
+  padding: 0 13px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+
   background: #ffffff;
   color: var(--text);
-  font-size: 15px;
+
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+
   outline: none;
+
   transition:
     border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    background-color 0.18s ease;
+    box-shadow 0.18s ease;
 }
 
 .identity-input::placeholder {
-  color: #9aa5b3;
-  font-weight: 450;
-  letter-spacing: 0;
-}
-
-.identity-input:hover {
-  border-color: #b9c5d4;
+  color: #a1adbc;
+  font-weight: 500;
 }
 
 .identity-input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(11, 99, 206, 0.10);
+  box-shadow:
+    0 0 0 3px rgba(11, 99, 206, 0.1);
 }
 
 .identity-input[aria-invalid="true"] {
-  border-color: var(--danger);
-  background: #fffafa;
-}
-
-.identity-input:disabled {
-  background: #f5f7fa;
-  color: #7e8998;
-  cursor: not-allowed;
+  border-color: var(--error);
 }
 
 .input-hint {
-  margin-top: 6px;
-  color: var(--text-muted);
+  margin: 0;
+
+  color: var(--text-light);
   font-size: 11px;
-  line-height: 1.4;
 }
 
 
 /* =========================================================
-   VERIFICATION MESSAGES
+   Verification messages
    ========================================================= */
 
 .verification-message {
-  margin-top: 13px;
-  padding: 11px 12px;
-  border: 1px solid transparent;
+  margin-top: 10px;
+  padding: 10px 12px;
+
   border-radius: 10px;
+
   font-size: 12px;
   line-height: 1.45;
 }
 
 .verification-error {
-  border-color: #f2c5c5;
-  background: var(--danger-bg);
-  color: var(--danger);
+  background: var(--error-bg);
+  color: var(--error);
 }
 
 .verification-pending {
-  border-color: #f0d49f;
   background: var(--warning-bg);
   color: var(--warning);
 }
 
 .verification-success {
-  border-color: #b9e2c9;
   background: var(--success-bg);
   color: var(--success);
 }
 
-
-/* =========================================================
-   SUBMIT BUTTON
-   ========================================================= */
-
 .submit-verification-btn {
-  width: 100%;
   min-height: 46px;
-  margin-top: 16px;
-  padding: 11px 16px;
-  border-radius: 11px;
+  margin-top: 12px;
+  padding: 10px 14px;
+
   background: var(--primary);
   color: #ffffff;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 750;
-  transition:
-    background-color 0.18s ease,
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+
+  font-size: 14px;
 }
 
 .submit-verification-btn:hover:not(:disabled) {
   background: var(--primary-dark);
-  box-shadow: 0 7px 18px rgba(11, 99, 206, 0.20);
-}
-
-.submit-verification-btn:active:not(:disabled) {
-  transform: translateY(1px);
 }
 
 .submit-verification-btn:disabled {
-  background: #aeb9c7;
-  color: #ffffff;
+  opacity: 0.65;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
 
 /* =========================================================
-   SECURITY NOTICE
+   Tablet / desktop
    ========================================================= */
 
-.upgrade-notice {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-top: 18px;
-  padding: 15px 17px;
-  border: 1px solid #dbe8f7;
-  border-radius: var(--radius-md);
-  background: #f8fbff;
-}
+@media (min-width: 700px) {
 
-.notice-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 25px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: var(--success-bg);
-  color: var(--success);
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.notice-content {
-  min-width: 0;
-}
-
-.notice-content strong {
-  display: block;
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 750;
-}
-
-.notice-content p {
-  margin-top: 3px;
-  color: var(--text-soft);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-
-/* =========================================================
-   GENERAL PAGE MESSAGE
-   ========================================================= */
-
-.page-message {
-  margin-top: 15px;
-  padding: 12px 14px;
-  border: 1px solid #dbe3ec;
-  border-radius: 10px;
-  background: #ffffff;
-  color: var(--text-soft);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.page-message.info {
-  border-color: #c9def5;
-  background: #f2f8ff;
-  color: #175b9f;
-}
-
-.page-message.error {
-  border-color: #f0c4c4;
-  background: var(--danger-bg);
-  color: var(--danger);
-}
-
-.page-message.success {
-  border-color: #b9e2c9;
-  background: var(--success-bg);
-  color: var(--success);
-}
-
-
-/* =========================================================
-   HIDDEN STATE
-   ========================================================= */
-
-[hidden] {
-  display: none !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
-
-@media (max-width: 850px) {
   .upgrade-page {
-    padding-right: 16px;
-    padding-left: 16px;
-  }
-
-  .tiers {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .tier-card {
-    padding: 18px;
-  }
-
-  .tier-description {
-    min-height: auto;
-  }
-
-  .tier-details {
-    gap: 10px;
-  }
-
-  .tier-details + .tier-button {
-    margin-top: 18px;
-  }
-}
-
-
-/* =========================================================
-   RESPONSIVE — PHONE
-   ========================================================= */
-
-@media (max-width: 600px) {
-  .upgrade-page {
-    width: 100%;
-    padding: 12px 12px 28px;
+    padding-top: 30px;
   }
 
   .upgrade-header {
-    grid-template-columns: 62px 1fr 62px;
-    gap: 8px;
-    min-height: 58px;
-    margin-bottom: 15px;
+    margin-bottom: 22px;
   }
 
-  .back-btn {
-    min-height: 38px;
-    padding: 7px 8px;
-    gap: 5px;
-    font-size: 12px;
-  }
-
-  .back-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  .upgrade-header-title h1 {
-    font-size: 20px;
-  }
-
-  .upgrade-header-title p {
-    display: none;
+  .header-title p {
+    display: block;
   }
 
   .account-status {
-    padding: 15px;
-    border-radius: 15px;
+    padding: 20px 22px;
   }
 
   .current-tier {
-    font-size: 18px;
-  }
-
-  .status-badge {
-    min-height: 24px;
-    padding: 3px 8px;
-    font-size: 10px;
+    font-size: 23px;
   }
 
   .upgrade-intro {
-    padding: 19px 2px 13px;
+    margin-top: 27px;
   }
 
   .upgrade-intro h2 {
-    font-size: 16px;
-  }
-
-  .upgrade-intro p {
-    font-size: 12px;
-  }
-
-  .tiers {
-    gap: 12px;
+    font-size: 23px;
   }
 
   .tier-card {
-    padding: 16px;
-    border-radius: 15px;
-  }
-
-  .tier-card:hover {
-    transform: none;
-  }
-
-  .tier-card.recommended::before {
-    padding: 4px 8px;
-    font-size: 8px;
-  }
-
-  .tier-header {
-    min-height: 49px;
-  }
-
-  .tier-label {
-    margin-bottom: 3px;
-    font-size: 9px;
-  }
-
-  .tier-header h3 {
-    font-size: 18px;
-  }
-
-  .tier-status {
-    min-height: 23px;
-    padding: 3px 7px;
-    font-size: 9px;
+    padding: 19px;
   }
 
   .tier-description {
-    margin-top: 11px;
-    font-size: 11.5px;
-  }
-
-  .tier-divider {
-    margin: 13px 0 11px;
-  }
-
-  .tier-details {
-    gap: 9px;
-  }
-
-  .detail-row {
-    gap: 10px;
+    font-size: 14px;
   }
 
   .detail-row span,
   .detail-row strong {
-    font-size: 11px;
-  }
-
-  .detail-row strong {
-    max-width: 55%;
-  }
-
-  .tier-details + .tier-button {
-    margin-top: 16px;
-  }
-
-  .tier-button {
-    min-height: 41px;
-    padding: 9px 12px;
-    font-size: 12px;
-  }
-
-  .verification-panel {
-    margin-top: 12px;
-    padding: 16px;
-    border-radius: 15px;
-  }
-
-  .verification-panel-header {
-    gap: 10px;
-  }
-
-  .verification-panel-label {
-    font-size: 9px;
-  }
-
-  .verification-panel h2 {
-    font-size: 18px;
-  }
-
-  .verification-panel-description {
-    font-size: 11.5px;
-  }
-
-  .close-btn {
-    flex-basis: 34px;
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-  }
-
-  .verification-form {
-    margin-top: 18px;
-  }
-
-  .identity-input {
-    min-height: 46px;
     font-size: 14px;
   }
 
-  .submit-verification-btn {
-    min-height: 44px;
-    margin-top: 14px;
-    font-size: 12.5px;
-  }
-
-  .upgrade-notice {
-    margin-top: 12px;
-    padding: 13px;
-    gap: 9px;
-  }
-
-  .notice-icon {
-    flex-basis: 23px;
-    width: 23px;
-    height: 23px;
-    font-size: 11px;
-  }
-
-  .notice-content strong {
-    font-size: 11.5px;
-  }
-
-  .notice-content p {
-    font-size: 10.5px;
-  }
-
-  .page-message {
-    margin-top: 12px;
-    padding: 10px 12px;
-    font-size: 11px;
+  .tier-button {
+    min-height: 46px;
   }
 }
 
 
 /* =========================================================
-   RESPONSIVE — VERY SMALL PHONES
+   Small phones
    ========================================================= */
 
 @media (max-width: 380px) {
+
   .upgrade-page {
-    padding-right: 9px;
-    padding-left: 9px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .upgrade-header {
-    grid-template-columns: 58px 1fr 58px;
+    gap: 7px;
   }
 
   .back-btn {
-    padding-right: 5px;
-    padding-left: 5px;
-    font-size: 11px;
+    min-width: 61px;
+    font-size: 14px;
   }
 
-  .upgrade-header-title h1 {
-    font-size: 18px;
+  .header-spacer {
+    width: 61px;
+  }
+
+  .header-title h1 {
+    font-size: 19px;
   }
 
   .account-status {
-    padding: 13px;
+    padding: 14px;
   }
 
   .current-tier {
-    font-size: 17px;
+    font-size: 19px;
   }
 
   .tier-card {
     padding: 14px;
+    border-radius: 16px;
   }
 
-  .tier-header h3 {
-    font-size: 17px;
+  .tier-header h2 {
+    font-size: 21px;
   }
 
   .tier-status {
-    max-width: 100px;
-    white-space: normal;
-    text-align: center;
+    font-size: 11px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .detail-row {
-    flex-direction: column;
-    gap: 2px;
+    gap: 8px;
   }
 
+  .detail-row span,
   .detail-row strong {
-    max-width: 100%;
-    text-align: left;
+    font-size: 12px;
   }
-}
 
+  .tier-button {
+    min-height: 41px;
+    margin-top: 12px;
+    font-size: 13px;
+  }
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
+  .upgrade-notice {
+    padding: 12px;
   }
 }

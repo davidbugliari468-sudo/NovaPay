@@ -5,7 +5,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
   <meta
@@ -15,7 +15,7 @@
 
   <meta
     name="description"
-    content="NovaPay account verification and upgrade"
+    content="Manage your NovaPay account verification and account limits."
   >
 
   <title>Upgrade Account - NovaPay</title>
@@ -27,11 +27,13 @@
 </head>
 
 <body>
+
   <div class="upgrade-page">
 
     <!-- =====================================================
-         HEADER
+         Header
          ===================================================== -->
+
     <header class="upgrade-header">
 
       <button
@@ -48,16 +50,13 @@
         <span>Back</span>
       </button>
 
-      <div class="upgrade-header-title">
+      <div class="header-title">
         <h1>Upgrade Account</h1>
-
-        <p>
-          Verify your identity to unlock higher account limits.
-        </p>
+        <p>Increase your NovaPay account limits.</p>
       </div>
 
       <div
-        class="upgrade-header-spacer"
+        class="header-spacer"
         aria-hidden="true"
       ></div>
 
@@ -65,42 +64,58 @@
 
 
     <!-- =====================================================
-         ACCOUNT STATUS
+         Account status
          ===================================================== -->
+
     <section
       class="account-status"
-      id="accountStatus"
       aria-labelledby="accountStatusTitle"
     >
 
-      <div class="account-status-heading">
+      <div class="account-status-copy">
+
         <h2 id="accountStatusTitle">
           Your account
         </h2>
 
-        <span
-          class="status-badge"
-          id="statusBadge"
+        <p
+          id="currentTier"
+          class="current-tier"
         >
-          Loading
-        </span>
+          Checking...
+        </p>
+
       </div>
 
-      <div class="current-tier" id="currentTier">
-        Checking...
-      </div>
+      <span
+        id="statusBadge"
+        class="status-badge"
+      >
+        Loading
+      </span>
 
     </section>
 
 
     <!-- =====================================================
-         INTRODUCTION
+         Page message
          ===================================================== -->
+
+    <div
+      id="pageMessage"
+      class="page-message"
+      role="alert"
+      hidden
+    ></div>
+
+
+    <!-- =====================================================
+         Introduction
+         ===================================================== -->
+
     <section class="upgrade-intro">
 
-      <h2>
-        Account levels
-      </h2>
+      <h2>Account levels</h2>
 
       <p>
         Start with a free NovaPay account and complete
@@ -111,45 +126,43 @@
 
 
     <!-- =====================================================
-         ACCOUNT TIERS
+         Account tiers
          ===================================================== -->
+
     <main
-      class="tiers"
       id="tiers"
+      class="tiers"
     >
 
       <!-- ===================================================
-           TIER 1
+           Tier 1
            =================================================== -->
-      <article class="tier-card current-tier-card">
+
+      <article
+        class="tier-card tier-card-current"
+        data-tier="1"
+      >
 
         <div class="tier-header">
 
           <div>
-            <span class="tier-label">
-              Tier 1
-            </span>
+            <p class="tier-label">Tier 1</p>
 
-            <h3>
-              Free
-            </h3>
+            <h2>Free</h2>
           </div>
 
-          <span class="tier-status">
+          <span class="tier-status current">
             Current
           </span>
 
         </div>
 
-
         <p class="tier-description">
-          Your NovaPay account starts here. No NIN or BVN
-          verification is required.
+          Your NovaPay account starts here.
+          No NIN or BVN verification is required.
         </p>
 
-
         <div class="tier-divider"></div>
-
 
         <div class="tier-details">
 
@@ -175,10 +188,9 @@
 
         </div>
 
-
         <button
           type="button"
-          class="tier-button"
+          class="tier-button tier-button-disabled"
           disabled
         >
           Current Tier
@@ -188,20 +200,24 @@
 
 
       <!-- ===================================================
-           TIER 2
+           Tier 2
            =================================================== -->
-      <article class="tier-card recommended">
+
+      <article
+        class="tier-card tier-card-recommended"
+        data-tier="2"
+      >
+
+        <div class="tier-recommended">
+          Recommended
+        </div>
 
         <div class="tier-header">
 
           <div>
-            <span class="tier-label">
-              Tier 2
-            </span>
+            <p class="tier-label">Tier 2</p>
 
-            <h3>
-              Verified
-            </h3>
+            <h2>Verified</h2>
           </div>
 
           <span class="tier-status">
@@ -210,15 +226,12 @@
 
         </div>
 
-
         <p class="tier-description">
-          Verify your National Identification Number to
-          unlock a higher account limit.
+          Verify your National Identification Number
+          to unlock a higher account limit.
         </p>
 
-
         <div class="tier-divider"></div>
-
 
         <div class="tier-details">
 
@@ -239,7 +252,6 @@
 
         </div>
 
-
         <button
           type="button"
           class="tier-button"
@@ -253,20 +265,20 @@
 
 
       <!-- ===================================================
-           TIER 3
+           Tier 3
            =================================================== -->
-      <article class="tier-card">
+
+      <article
+        class="tier-card"
+        data-tier="3"
+      >
 
         <div class="tier-header">
 
           <div>
-            <span class="tier-label">
-              Tier 3
-            </span>
+            <p class="tier-label">Tier 3</p>
 
-            <h3>
-              Advanced
-            </h3>
+            <h2>Advanced</h2>
           </div>
 
           <span class="tier-status">
@@ -275,15 +287,12 @@
 
         </div>
 
-
         <p class="tier-description">
           Complete BVN verification to access the highest
           NovaPay account level.
         </p>
 
-
         <div class="tier-divider"></div>
-
 
         <div class="tier-details">
 
@@ -304,7 +313,6 @@
 
         </div>
 
-
         <button
           type="button"
           class="tier-button"
@@ -320,39 +328,68 @@
 
 
     <!-- =====================================================
-         VERIFICATION PANEL
+         Security notice
          ===================================================== -->
+
     <section
-      class="verification-panel"
+      class="upgrade-notice"
+      aria-label="Security information"
+    >
+
+      <div class="notice-icon">
+        ✓
+      </div>
+
+      <div>
+        <strong>
+          Your information is protected
+        </strong>
+
+        <p>
+          NovaPay securely processes identity verification.
+          Your verification details are not used to charge
+          your NovaPay wallet.
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         Verification panel
+         ===================================================== -->
+
+    <section
       id="verificationPanel"
-      hidden
+      class="verification-panel"
       aria-labelledby="verificationTitle"
+      hidden
     >
 
       <div class="verification-panel-header">
 
         <div class="verification-panel-copy">
 
-          <span
-            class="verification-panel-label"
+          <p
             id="verificationTierLabel"
+            class="verification-panel-label"
           >
-            Verification
-          </span>
+            Tier 2 verification
+          </p>
 
           <h2 id="verificationTitle">
-            Verify your identity
+            Verify your NIN
           </h2>
 
           <p
-            class="verification-panel-description"
             id="verificationDescription"
+            class="verification-panel-description"
           >
-            Enter your identity number to continue.
+            Enter your 11-digit NIN to request
+            Tier 2 verification.
           </p>
 
         </div>
-
 
         <button
           type="button"
@@ -369,41 +406,38 @@
       </div>
 
 
-      <!-- ===================================================
-           VERIFICATION FORM
-           =================================================== -->
       <form
-        class="verification-form"
         id="verificationForm"
+        class="verification-form"
         novalidate
       >
 
-        <div class="verification-input-group">
+        <div class="input-group">
 
           <label
             for="identityNumber"
             id="verificationInputLabel"
           >
-            Identity Number
+            NIN
           </label>
 
           <input
-            type="text"
             id="identityNumber"
             name="identityNumber"
             class="identity-input"
+            type="text"
             inputmode="numeric"
             autocomplete="off"
             maxlength="11"
-            placeholder="Enter 11-digit number"
+            placeholder="Enter 11-digit NIN"
             aria-describedby="identityNumberHint"
             aria-invalid="false"
             required
           >
 
           <p
-            class="input-hint"
             id="identityNumberHint"
+            class="input-hint"
           >
             Enter exactly 11 digits.
           </p>
@@ -411,31 +445,26 @@
         </div>
 
 
-        <!-- ERROR -->
         <div
-          class="verification-message verification-error"
           id="verificationError"
+          class="verification-message verification-error"
           role="alert"
           hidden
         ></div>
 
 
-        <!-- PENDING -->
         <div
-          class="verification-message verification-pending"
           id="verificationPending"
+          class="verification-message verification-pending"
           role="status"
-          aria-live="polite"
           hidden
         ></div>
 
 
-        <!-- SUCCESS -->
         <div
-          class="verification-message verification-success"
           id="verificationSuccess"
+          class="verification-message verification-success"
           role="status"
-          aria-live="polite"
           hidden
         ></div>
 
@@ -445,61 +474,26 @@
           class="submit-verification-btn"
           id="submitVerificationBtn"
         >
-          Verify
+          Verify NIN
         </button>
 
       </form>
 
     </section>
 
-
-    <!-- =====================================================
-         SECURITY / VERIFICATION NOTICE
-         ===================================================== -->
-    <aside
-      class="upgrade-notice"
-      id="upgrade-notice"
-    >
-
-      <div class="notice-icon" aria-hidden="true">
-        ✓
-      </div>
-
-      <div class="notice-content">
-
-        <strong>
-          Your information is protected
-        </strong>
-
-        <p>
-          NovaPay securely processes identity verification.
-          Your verification details are not used to charge
-          your NovaPay wallet.
-        </p>
-
-      </div>
-
-    </aside>
-
-
-    <!-- =====================================================
-         GENERAL PAGE MESSAGE
-         ===================================================== -->
-    <div
-      class="page-message"
-      id="pageMessage"
-      role="status"
-      aria-live="polite"
-      hidden
-    ></div>
-
   </div>
 
 
-  <!-- =======================================================
-       FRONTEND CONTROLLER
-       ======================================================= -->
-  <script src="upgrade.js"></script>
+  <!--
+    Firebase is imported by upgrade.js.
+    upgrade.js uses the same modular Firebase
+    configuration used by the rest of NovaPay.
+  -->
+
+  <script
+    type="module"
+    src="upgrade.js"
+  ></script>
 
 </body>
 </html>
