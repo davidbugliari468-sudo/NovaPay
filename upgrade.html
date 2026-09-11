@@ -1,21 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta
+  <meta charset="UTF-8">
+
+  <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
->
+  >
 
-<meta
+  <meta
     name="theme-color"
     content="#0b63ce"
->
+  >
 
-<title>Upgrade Account - NovaPay</title>
+  <meta
+    name="description"
+    content="NovaPay account verification and upgrade"
+  >
 
-<link
+  <title>Upgrade Account - NovaPay</title>
+
+  <link
     rel="stylesheet"
-    href="upgrade.css">
+    href="upgrade.css"
+  >
+</head>
+
+<body>
+  <div class="upgrade-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+    <header class="upgrade-header">
+
+      <button
+        type="button"
+        class="back-btn"
+        id="backBtn"
+        aria-label="Go back"
+      >
+        <span
+          class="back-icon"
+          aria-hidden="true"
+        ></span>
+
+        <span>Back</span>
+      </button>
+
+      <div class="upgrade-header-title">
+        <h1>Upgrade Account</h1>
+
+        <p>
+          Verify your identity to unlock higher account limits.
+        </p>
+      </div>
+
+      <div
+        class="upgrade-header-spacer"
+        aria-hidden="true"
+      ></div>
+
+    </header>
+
+
+    <!-- =====================================================
+         ACCOUNT STATUS
+         ===================================================== -->
+    <section
+      class="account-status"
+      id="accountStatus"
+      aria-labelledby="accountStatusTitle"
+    >
+
+      <div class="account-status-heading">
+        <h2 id="accountStatusTitle">
+          Your account
+        </h2>
+
+        <span
+          class="status-badge"
+          id="statusBadge"
+        >
+          Loading
+        </span>
+      </div>
+
+      <div class="current-tier" id="currentTier">
+        Checking...
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INTRODUCTION
+         ===================================================== -->
+    <section class="upgrade-intro">
+
+      <h2>
+        Account levels
+      </h2>
+
+      <p>
+        Start with a free NovaPay account and complete
+        identity verification when you need higher limits.
+      </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACCOUNT TIERS
+         ===================================================== -->
+    <main
+      class="tiers"
+      id="tiers"
+    >
+
+      <!-- ===================================================
+           TIER 1
+           =================================================== -->
+      <article class="tier-card current-tier-card">
+
+        <div class="tier-header">
+
+          <div>
+            <span class="tier-label">
+              Tier 1
+            </span>
+
+            <h3>
+              Free
+            </h3>
+          </div>
+
+          <span class="tier-status">
+            Current
+          </span>
+
+        </div>
+
+
+        <p class="tier-description">
+          Your NovaPay account starts here. No NIN or BVN
+          verification is required.
+        </p>
+
+
+        <div class="tier-divider"></div>
+
+
+        <div class="tier-details">
+
+          <div class="detail-row">
+            <span>Verification</span>
+            <strong>Not required</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Daily deposit limit</span>
+            <strong>₦50,000</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Maximum balance</span>
+            <strong>₦100,000</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Daily spending / transfer-out</span>
+            <strong>₦50,000</strong>
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="tier-button"
+          disabled
+        >
+          Current Tier
+        </button>
+
+      </article>
+
+
+      <!-- ===================================================
+           TIER 2
+           =================================================== -->
+      <article class="tier-card recommended">
+
+        <div class="tier-header">
+
+          <div>
+            <span class="tier-label">
+              Tier 2
+            </span>
+
+            <h3>
+              Verified
+            </h3>
+          </div>
+
+          <span class="tier-status">
+            NIN Required
+          </span>
+
+        </div>
+
+
+        <p class="tier-description">
+          Verify your National Identification Number to
+          unlock a higher account limit.
+        </p>
+
+
+        <div class="tier-divider"></div>
+
+
+        <div class="tier-details">
+
+          <div class="detail-row">
+            <span>Verification</span>
+            <strong>NIN</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Account limit</span>
+            <strong>₦200,000 – ₦500,000</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Verification fee</span>
+            <strong>No charge to wallet</strong>
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="tier-button"
+          id="upgradeTier2Btn"
+          disabled
+        >
+          Verify NIN
+        </button>
+
+      </article>
+
+
+      <!-- ===================================================
+           TIER 3
+           =================================================== -->
+      <article class="tier-card">
+
+        <div class="tier-header">
+
+          <div>
+            <span class="tier-label">
+              Tier 3
+            </span>
+
+            <h3>
+              Advanced
+            </h3>
+          </div>
+
+          <span class="tier-status">
+            BVN Required
+          </span>
+
+        </div>
+
+
+        <p class="tier-description">
+          Complete BVN verification to access the highest
+          NovaPay account level.
+        </p>
+
+
+        <div class="tier-divider"></div>
+
+
+        <div class="tier-details">
+
+          <div class="detail-row">
+            <span>Verification</span>
+            <strong>BVN</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Daily transaction limit</span>
+            <strong>₦5,000,000</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Maximum balance</span>
+            <strong>Unlimited</strong>
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="tier-button"
+          id="upgradeTier3Btn"
+          disabled
+        >
+          Verify BVN
+        </button>
+
+      </article>
+
+    </main>
+
+
+    <!-- =====================================================
+         VERIFICATION PANEL
+         ===================================================== -->
+    <section
+      class="verification-panel"
+      id="verificationPanel"
+      hidden
+      aria-labelledby="verificationTitle"
+    >
+
+      <div class="verification-panel-header">
+
+        <div class="verification-panel-copy">
+
+          <span
+            class="verification-panel-label"
+            id="verificationTierLabel"
+          >
+            Verification
+          </span>
+
+          <h2 id="verificationTitle">
+            Verify your identity
+          </h2>
+
+          <p
+            class="verification-panel-description"
+            id="verificationDescription"
+          >
+            Enter your identity number to continue.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-btn"
+          id="closeVerificationBtn"
+          aria-label="Close verification"
+        >
+          <span
+            class="close-icon"
+            aria-hidden="true"
+          ></span>
+        </button>
+
+      </div>
+
+
+      <!-- ===================================================
+           VERIFICATION FORM
+           =================================================== -->
+      <form
+        class="verification-form"
+        id="verificationForm"
+        novalidate
+      >
+
+        <div class="verification-input-group">
+
+          <label
+            for="identityNumber"
+            id="verificationInputLabel"
+          >
+            Identity Number
+          </label>
+
+          <input
+            type="text"
+            id="identityNumber"
+            name="identityNumber"
+            class="identity-input"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="11"
+            placeholder="Enter 11-digit number"
+            aria-describedby="identityNumberHint"
+            aria-invalid="false"
+            required
+          >
+
+          <p
+            class="input-hint"
+            id="identityNumberHint"
+          >
+            Enter exactly 11 digits.
+          </p>
+
+        </div>
+
+
+        <!-- ERROR -->
+        <div
+          class="verification-message verification-error"
+          id="verificationError"
+          role="alert"
+          hidden
+        ></div>
+
+
+        <!-- PENDING -->
+        <div
+          class="verification-message verification-pending"
+          id="verificationPending"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+
+        <!-- SUCCESS -->
+        <div
+          class="verification-message verification-success"
+          id="verificationSuccess"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+
+        <button
+          type="submit"
+          class="submit-verification-btn"
+          id="submitVerificationBtn"
+        >
+          Verify
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECURITY / VERIFICATION NOTICE
+         ===================================================== -->
+    <aside
+      class="upgrade-notice"
+      id="upgrade-notice"
+    >
+
+      <div class="notice-icon" aria-hidden="true">
+        ✓
+      </div>
+
+      <div class="notice-content">
+
+        <strong>
+          Your information is protected
+        </strong>
+
+        <p>
+          NovaPay securely processes identity verification.
+          Your verification details are not used to charge
+          your NovaPay wallet.
+        </p>
+
+      </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         GENERAL PAGE MESSAGE
+         ===================================================== -->
+    <div
+      class="page-message"
+      id="pageMessage"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+  </div>
+
+
+  <!-- =======================================================
+       FRONTEND CONTROLLER
+       ======================================================= -->
+  <script src="upgrade.js"></script>
+
 </body>
 </html>
