@@ -1,455 +1,929 @@
-/* =========================================
-   NOVAPAY — UPGRADE ACCOUNT
-   ========================================= */
+/* =========================================================
+   NovaPay — Upgrade Account
+   Complete replacement stylesheet
+   ========================================================= */
 
 :root {
-    --primary: #2563eb;
-    --primary-light: #eef4ff;
-    --text: #111827;
-    --muted: #667085;
-    --border: #e5e7eb;
-    --background: #f7f9fc;
-    --white: #ffffff;
-    --green: #16a34a;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-soft: #eff6ff;
+
+  --text: #172033;
+  --text-strong: #111827;
+  --muted: #667085;
+
+  --background: #f6f8fb;
+  --surface: #ffffff;
+
+  --border: #e4e7ec;
+  --border-strong: #d0d5dd;
+
+  --success: #15803d;
+  --success-soft: #ecfdf3;
+
+  --warning: #b54708;
+  --warning-soft: #fffaeb;
+
+  --danger: #dc2626;
+  --danger-soft: #fef3f2;
+
+  --shadow-sm: 0 2px 8px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 15px;
 }
 
-
-/* RESET */
+/* =========================================================
+   Reset
+   ========================================================= */
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-
-    background: var(--background);
-    color: var(--text);
-
-    -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+button,
+input {
+  font: inherit;
+}
 
-/* PAGE */
+button {
+  border: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input {
+  outline: none;
+}
+
+/* =========================================================
+   Page
+   ========================================================= */
 
 .upgrade-page {
-    width: 100%;
-    max-width: 720px;
-
-    margin: 0 auto;
-
-    padding: 0 16px 35px;
+  width: 100%;
+  max-width: 680px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 14px 28px;
 }
 
-
-/* =========================================
-   HEADER
-   ========================================= */
+/* =========================================================
+   Header
+   ========================================================= */
 
 .upgrade-header {
-    position: relative;
-
-    height: 72px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-bottom: 1px solid var(--border);
+  position: relative;
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 .upgrade-header h1 {
-    font-size: 22px;
-    font-weight: 700;
-
-    letter-spacing: -0.4px;
+  color: var(--text-strong);
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-align: center;
 }
+
+.upgrade-header > div {
+  min-width: 0;
+}
+
+.upgrade-header h1 + p {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* =========================================================
+   Back button
+   ========================================================= */
 
 .back-btn {
-    position: absolute;
-    left: 0;
+  min-width: 64px;
+  height: 38px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 
-    width: 46px;
-    height: 46px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 9px;
 
-    border: none;
-    border-radius: 50%;
+  font-size: 13px;
+  font-weight: 650;
 
-    background: var(--white);
-    color: var(--primary);
-
-    font-size: 29px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 3px 12px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
 }
 
+.back-btn:hover {
+  background: var(--surface);
+  border-color: var(--border);
+}
 
-/* =========================================
-   INTRO
-   ========================================= */
+.back-btn:active {
+  transform: translateY(1px);
+}
+
+.back-btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+.back-icon {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.back-icon::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 7px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+.back-icon::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 4px;
+  width: 7px;
+  height: 7px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
+/* =========================================================
+   Account status
+   ========================================================= */
+
+.account-status {
+  margin-top: 12px;
+  padding: 11px 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.account-status-copy {
+  min-width: 0;
+}
+
+.account-status-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.account-status h2 {
+  margin-top: 2px;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.status-badge {
+  flex: 0 0 auto;
+  min-height: 27px;
+  padding: 5px 9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Intro
+   ========================================================= */
 
 .upgrade-intro {
-    padding: 28px 4px 22px;
+  padding: 18px 2px 13px;
 }
 
-.upgrade-icon {
-    width: 48px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 14px;
-
-    border-radius: 14px;
-
-    background: var(--primary-light);
-
-    color: var(--primary);
-
-    font-size: 25px;
-    font-weight: 800;
+.intro-label {
+  margin-bottom: 5px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .upgrade-intro h2 {
-    font-size: 22px;
-    font-weight: 800;
-
-    letter-spacing: -0.4px;
-
-    margin-bottom: 8px;
+  color: var(--text-strong);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .upgrade-intro p {
-    color: var(--muted);
-
-    font-size: 14px;
-
-    line-height: 1.55;
+  max-width: 590px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
 }
 
-
-/* =========================================
-   TIERS
-   ========================================= */
+/* =========================================================
+   Tier cards
+   ========================================================= */
 
 .tiers {
-    display: flex;
-    flex-direction: column;
-
-    gap: 12px;
+  display: grid;
+  gap: 10px;
 }
 
-
-/* =========================================
-   TIER CARD
-   ========================================= */
-
 .tier-card {
-    padding: 18px;
+  padding: 14px;
 
-    background: var(--white);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 
-    border: 1px solid var(--border);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 3px 12px rgba(15, 23, 42, 0.035);
+  box-shadow: var(--shadow-sm);
 }
 
 .tier-card.current {
-    border-color: #cbdcff;
+  border-color: #93c5fd;
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.04),
+    var(--shadow-sm);
 }
 
 .tier-card.featured {
-    border-color: #b9d0ff;
-    box-shadow:
-        0 6px 20px rgba(37, 99, 235, 0.08);
+  border-color: #60a5fa;
 }
 
-
-/* =========================================
-   TIER HEADER
-   ========================================= */
+/* =========================================================
+   Tier header
+   ========================================================= */
 
 .tier-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .tier-label {
-    display: block;
-
-    margin-bottom: 4px;
-
-    color: var(--primary);
-
-    font-size: 11px;
-    font-weight: 800;
-
-    letter-spacing: 1px;
+  display: block;
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
 }
 
 .tier-header h2 {
-    font-size: 20px;
-    font-weight: 800;
-
-    letter-spacing: -0.3px;
+  margin-top: 3px;
+  color: var(--text-strong);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
+.tier-status,
+.recommended {
+  flex: 0 0 auto;
+  padding: 4px 8px;
 
-/* STATUS */
+  border-radius: 999px;
+
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+}
 
 .tier-status {
-    padding: 6px 9px;
-
-    border-radius: 999px;
-
-    background: #ecfdf3;
-
-    color: var(--green);
-
-    font-size: 10px;
-    font-weight: 800;
-
-    white-space: nowrap;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border: 1px solid #bfdbfe;
 }
 
 .recommended {
-    padding: 6px 9px;
-
-    border-radius: 999px;
-
-    background: var(--primary-light);
-
-    color: var(--primary);
-
-    font-size: 10px;
-    font-weight: 800;
-
-    white-space: nowrap;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
-
-/* =========================================
-   DESCRIPTION
-   ========================================= */
+/* =========================================================
+   Tier description
+   ========================================================= */
 
 .tier-description {
-    margin-top: 8px;
-
-    color: var(--muted);
-
-    font-size: 13px;
-
-    line-height: 1.5;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
 }
 
-
-/* =========================================
-   DIVIDER
-   ========================================= */
+/* =========================================================
+   Divider
+   ========================================================= */
 
 .tier-divider {
-    height: 1px;
+  height: 1px;
+  margin: 11px 0;
 
-    margin: 15px 0;
-
-    background: var(--border);
+  background: var(--border);
 }
 
-
-/* =========================================
-   DETAILS
-   ========================================= */
+/* =========================================================
+   Tier details
+   ========================================================= */
 
 .tier-details {
-    display: flex;
-    flex-direction: column;
-
-    gap: 10px;
+  display: grid;
+  gap: 7px;
 }
 
 .detail-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
 
-    gap: 15px;
+  font-size: 11px;
 }
 
 .detail-row span {
-    color: var(--muted);
-
-    font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
 }
 
 .detail-row strong {
-    max-width: 60%;
-
-    color: var(--text);
-
-    font-size: 12px;
-
-    line-height: 1.4;
-
-    text-align: right;
+  max-width: 62%;
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: right;
 }
 
-
-/* =========================================
-   BUTTON
-   ========================================= */
+/* =========================================================
+   Tier buttons
+   ========================================================= */
 
 .tier-button {
-    width: 100%;
+  width: 100%;
+  min-height: 42px;
+  margin-top: 12px;
+  padding: 9px 13px;
 
-    min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    margin-top: 16px;
+  background: var(--primary);
+  color: #ffffff;
 
-    border: none;
-    border-radius: 13px;
+  border: 1px solid var(--primary);
+  border-radius: 9px;
 
-    background: var(--primary);
+  font-size: 12px;
+  font-weight: 750;
 
-    color: #ffffff;
+  cursor: pointer;
 
-    font-family: inherit;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
 
-    font-size: 13px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
+.tier-button:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
 }
 
 .tier-button:active {
-    transform: scale(0.99);
+  transform: translateY(1px);
 }
 
-.current-button {
-    background: #f1f5f9;
-
-    color: #64748b;
-
-    cursor: default;
+.tier-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
 }
 
+.tier-button:disabled {
+  background: #f2f4f7;
+  color: #98a2b3;
+  border-color: #e4e7ec;
+  box-shadow: none;
+  cursor: not-allowed;
+}
 
-/* =========================================
-   NOTICE
-   ========================================= */
+/* =========================================================
+   Verification panel
+   ========================================================= */
+
+.verification-panel {
+  margin-top: 10px;
+  padding: 15px;
+
+  background: var(--surface);
+  border: 1px solid #93c5fd;
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-md);
+}
+
+.verification-panel[hidden] {
+  display: none;
+}
+
+.verification-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.verification-panel-copy {
+  min-width: 0;
+}
+
+.verification-panel-label {
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.verification-panel h2 {
+  margin-top: 3px;
+  color: var(--text-strong);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.verification-panel-description {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   Close button
+   ========================================================= */
+
+.close-btn {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  color: var(--muted);
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.close-btn:hover {
+  background: #f2f4f7;
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.close-btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+.close-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+
+.close-icon::before,
+.close-icon::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  width: 2px;
+  height: 14px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+.close-icon::before {
+  transform: rotate(45deg);
+}
+
+.close-icon::after {
+  transform: rotate(-45deg);
+}
+
+/* =========================================================
+   Verification form
+   ========================================================= */
+
+.verification-form {
+  margin-top: 14px;
+}
+
+.verification-form label {
+  display: block;
+  margin-bottom: 6px;
+
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.identity-input {
+  width: 100%;
+  height: 43px;
+  padding: 0 12px;
+
+  background: #ffffff;
+  color: var(--text-strong);
+
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.identity-input::placeholder {
+  color: #98a2b3;
+}
+
+.identity-input:hover {
+  border-color: #98a2b3;
+}
+
+.identity-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.identity-input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.identity-input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.input-hint {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   Verification messages
+   ========================================================= */
+
+.verification-message {
+  margin-top: 10px;
+  padding: 9px 10px;
+
+  border-radius: 8px;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.verification-message[hidden] {
+  display: none;
+}
+
+.verification-error {
+  background: var(--danger-soft);
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+
+.verification-pending {
+  background: var(--warning-soft);
+  color: var(--warning);
+  border: 1px solid #fedf89;
+}
+
+.verification-success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid #abefc6;
+}
+
+/* =========================================================
+   Verification submit
+   ========================================================= */
+
+.submit-verification-btn {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 12px;
+  padding: 9px 13px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  border: 1px solid var(--primary);
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.submit-verification-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+}
+
+.submit-verification-btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+.submit-verification-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   General notice
+   ========================================================= */
 
 .upgrade-notice {
-    display: flex;
-    align-items: flex-start;
+  margin-top: 10px;
+  padding: 12px 13px;
 
-    gap: 12px;
-
-    margin-top: 18px;
-
-    padding: 16px;
-
-    background: var(--primary-light);
-
-    border: 1px solid #dbe7ff;
-
-    border-radius: 17px;
+  background: var(--primary-soft);
+  border: 1px solid #dbeafe;
+  border-radius: var(--radius-md);
 }
 
-.notice-icon {
-    flex: 0 0 auto;
-
-    width: 34px;
-    height: 34px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    font-size: 17px;
-}
-
-.upgrade-notice h3 {
-    margin-bottom: 3px;
-
-    color: var(--primary);
-
-    font-size: 14px;
-    font-weight: 800;
+.upgrade-notice h2 {
+  color: #1e40af;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
 }
 
 .upgrade-notice p {
-    color: var(--muted);
-
-    font-size: 12px;
-
-    line-height: 1.45;
+  margin-top: 4px;
+  color: #475467;
+  font-size: 10px;
+  line-height: 1.5;
 }
 
+/* =========================================================
+   Page message
+   ========================================================= */
 
-/* =========================================
-   SMALL PHONES
-   ========================================= */
+.page-message {
+  margin-top: 10px;
+  padding: 10px 12px;
+
+  border-radius: 9px;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.page-message[hidden] {
+  display: none;
+}
+
+.page-message.error {
+  background: var(--danger-soft);
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+
+.page-message.success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid #abefc6;
+}
+
+.page-message.info {
+  background: var(--primary-soft);
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+/* =========================================================
+   Loading state
+   ========================================================= */
+
+.is-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* =========================================================
+   Small phones
+   ========================================================= */
 
 @media (max-width: 380px) {
+  .upgrade-page {
+    padding-left: 11px;
+    padding-right: 11px;
+    padding-bottom: 22px;
+  }
 
-    .upgrade-page {
-        padding-left: 13px;
-        padding-right: 13px;
-    }
+  .upgrade-header {
+    min-height: 58px;
+    gap: 6px;
+  }
 
-    .upgrade-header {
-        height: 68px;
-    }
+  .upgrade-header h1 {
+    font-size: 17px;
+  }
 
-    .upgrade-header h1 {
-        font-size: 20px;
-    }
+  .upgrade-header h1 + p {
+    font-size: 10px;
+  }
 
-    .upgrade-intro h2 {
-        font-size: 20px;
-    }
+  .back-btn {
+    min-width: 58px;
+    padding-left: 6px;
+    padding-right: 6px;
+    gap: 5px;
+    font-size: 12px;
+  }
 
-    .tier-card {
-        padding: 15px;
+  .account-status {
+    padding: 10px 11px;
+  }
 
-        border-radius: 15px;
-    }
+  .upgrade-intro {
+    padding-top: 15px;
+  }
 
-    .tier-header h2 {
-        font-size: 18px;
-    }
+  .upgrade-intro h2 {
+    font-size: 18px;
+  }
 
-    .detail-row strong {
-        max-width: 55%;
-    }
+  .tier-card {
+    padding: 12px;
+  }
+
+  .tier-header h2 {
+    font-size: 16px;
+  }
+
+  .detail-row {
+    gap: 9px;
+  }
+
+  .detail-row strong {
+    max-width: 60%;
+  }
+
+  .verification-panel {
+    padding: 12px;
+  }
+}
+
+/* =========================================================
+   Larger screens
+   ========================================================= */
+
+@media (min-width: 681px) {
+  .upgrade-page {
+    padding-top: 4px;
+  }
+
+  .upgrade-header {
+    min-height: 68px;
+  }
+
+  .upgrade-intro {
+    padding-top: 22px;
+    padding-bottom: 15px;
+  }
+
+  .tiers {
+    gap: 12px;
+  }
+
+  .tier-card {
+    padding: 16px;
+  }
+}
+
+/* =========================================================
+   Accessibility
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
