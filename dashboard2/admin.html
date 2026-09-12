@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b63f6"
+    >
+
+    <meta
+        name="description"
+        content="NovaPay Admin Dashboard"
+    >
+
+    <title>NovaPay Admin Dashboard</title>
+
+    <link rel="stylesheet" href="./admin.css">
+</head>
+
+<body class="admin-body">
+
+    <!--
+        ============================================================
+        NOVAPAY ADMIN APPLICATION
+        ============================================================
+
+        Current build stage:
+        1. Dashboard
+        2. Manual button
+        3. Manual button menu
+
+        Individual manual-button pages are NOT built here.
+        They will be handled later by:
+
+        admin-buttons.html
+        admin-buttons.css
+        admin-button.js
+        ============================================================
+    -->
+
+    <div id="adminApp" class="admin-app">
+
+        <!-- ========================================================
+             TOP HEADER
+             ======================================================== -->
+
+        <header class="admin-header">
+
+            <div class="admin-brand">
+
+                <a
+                    href="./admin.html"
+                    class="admin-brand-link"
+                    aria-label="NovaPay Admin Dashboard"
+                >
+
+                    <span
+                        class="admin-brand-mark"
+                        aria-hidden="true"
+                    >
+                        N
+                    </span>
+
+                    <span class="admin-brand-text">
+                        <strong>NOVAPAY</strong>
+                        <small>ADMIN</small>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="admin-header-actions">
+
+                <!--
+                    MANUAL is a button, not a page.
+                    JavaScript will open the manual panel later.
+                -->
+
+                <button
+                    type="button"
+                    id="manualToggle"
+                    class="admin-manual-button"
+                    aria-controls="adminManual"
+                    aria-expanded="false"
+                >
+                    <span
+                        class="admin-manual-button-icon"
+                        aria-hidden="true"
+                    >
+                        ☰
+                    </span>
+
+                    <span class="admin-manual-button-text">
+                        MANUAL
+                    </span>
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ========================================================
+             MAIN DASHBOARD
+             ======================================================== -->
+
+        <main
+            id="dashboardView"
+            class="admin-dashboard"
+        >
+
+            <!-- Dashboard heading -->
+
+            <section class="dashboard-heading">
+
+                <div class="dashboard-heading-content">
+
+                    <p class="dashboard-eyebrow">
+                        NOVAPAY ADMINISTRATION
+                    </p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Platform overview and activity
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 DASHBOARD SUMMARY CARDS
+                 ==================================================== -->
+
+            <section
+                class="dashboard-summary"
+                aria-label="Dashboard summary"
+            >
+
+                <!-- Total Users -->
+
+                <article class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-card-header">
+
+                        <div class="dashboard-stat-icon dashboard-stat-icon-users">
+                            <span aria-hidden="true">●</span>
+                        </div>
+
+                        <span class="dashboard-stat-label">
+                            TOTAL USERS
+                        </span>
+
+                    </div>
+
+                    <div
+                        id="totalUsers"
+                        class="dashboard-stat-value"
+                    >
+                        —
+                    </div>
+
+                    <p class="dashboard-stat-description">
+                        Registered NovaPay users
+                    </p>
+
+                </article>
+
+
+                <!-- Today Active Users -->
+
+                <article class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-card-header">
+
+                        <div class="dashboard-stat-icon dashboard-stat-icon-active">
+                            <span aria-hidden="true">●</span>
+                        </div>
+
+                        <span class="dashboard-stat-label">
+                            TODAY ACTIVE USERS
+                        </span>
+
+                    </div>
+
+                    <div
+                        id="todayActiveUsers"
+                        class="dashboard-stat-value"
+                    >
+                        —
+                    </div>
+
+                    <p class="dashboard-stat-description">
+                        Users active today
+                    </p>
+
+                </article>
+
+
+                <!-- Total Profit -->
+
+                <article class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-card-header">
+
+                        <div class="dashboard-stat-icon dashboard-stat-icon-profit">
+                            <span aria-hidden="true">₦</span>
+                        </div>
+
+                        <span class="dashboard-stat-label">
+                            TOTAL PROFIT
+                        </span>
+
+                    </div>
+
+                    <div
+                        id="totalProfit"
+                        class="dashboard-stat-value dashboard-stat-value-money"
+                    >
+                        —
+                    </div>
+
+                    <p class="dashboard-stat-description">
+                        Platform profit
+                    </p>
+
+                </article>
+
+            </section>
+
+
+            <!-- ====================================================
+                 DASHBOARD MAIN CONTENT
+                 ==================================================== -->
+
+            <section
+                class="dashboard-content-grid"
+                aria-label="Dashboard activity"
+            >
+
+                <!-- =================================================
+                     ANALYSIS
+                     ================================================= -->
+
+                <article class="dashboard-panel dashboard-analysis-panel">
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <p class="dashboard-panel-kicker">
+                                PLATFORM ACTIVITY
+                            </p>
+
+                            <h2>
+                                Analysis
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="analysisChart"
+                        class="dashboard-analysis-chart"
+                        aria-label="Platform analysis chart"
+                    >
+
+                        <div class="analysis-empty-state">
+
+                            <div
+                                class="analysis-empty-icon"
+                                aria-hidden="true"
+                            >
+                                ↗
+                            </div>
+
+                            <h3>
+                                Analysis
+                            </h3>
+
+                            <p>
+                                Platform activity analysis will appear here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- =================================================
+                     RECENT TRANSACTIONS
+                     ================================================= -->
+
+                <article class="dashboard-panel dashboard-transactions-panel">
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <p class="dashboard-panel-kicker">
+                                PLATFORM ACTIVITY
+                            </p>
+
+                            <h2>
+                                Recent Transactions
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-table-wrapper">
+
+                        <table class="dashboard-transactions-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th scope="col">
+                                        DATE
+                                    </th>
+
+                                    <th scope="col">
+                                        USER
+                                    </th>
+
+                                    <th scope="col">
+                                        TYPE
+                                    </th>
+
+                                    <th scope="col">
+                                        AMOUNT
+                                    </th>
+
+                                    <th scope="col">
+                                        STATUS
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="recentTransactionsBody">
+
+                                <tr class="dashboard-empty-row">
+
+                                    <td
+                                        colspan="5"
+                                        class="dashboard-empty-cell"
+                                    >
+
+                                        <div class="dashboard-empty-state">
+
+                                            <div
+                                                class="dashboard-empty-icon"
+                                                aria-hidden="true"
+                                            >
+                                                —
+                                            </div>
+
+                                            <strong>
+                                                No transaction data loaded
+                                            </strong>
+
+                                            <span>
+                                                Recent transactions will appear here.
+                                            </span>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+        </main>
+
+
+        <!-- ========================================================
+             MANUAL BACKDROP
+             ========================================================
+
+             Hidden until the MANUAL button is opened.
+             JavaScript will control this later.
+        ======================================================== -->
+
+        <button
+            type="button"
+            id="manualBackdrop"
+            class="admin-manual-backdrop"
+            aria-label="Close manual"
+            hidden
+        ></button>
+
+
+        <!-- ========================================================
+             ADMIN MANUAL PANEL
+             ========================================================
+
+             IMPORTANT:
+             These are BUTTONS.
+
+             They are NOT the individual feature pages.
+
+             The individual feature pages will be built later inside
+             admin-buttons.html / admin-buttons.css / admin-button.js.
+        ======================================================== -->
+
+        <aside
+            id="adminManual"
+            class="admin-manual"
+            aria-label="Admin manual"
+            hidden
+        >
+
+            <!-- Manual header -->
+
+            <div class="admin-manual-header">
+
+                <div>
+
+                    <p class="admin-manual-kicker">
+                        NOVAPAY CONTROL
+                    </p>
+
+                    <h2>
+                        Admin Manual
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="manualClose"
+                    class="admin-manual-close"
+                    aria-label="Close admin manual"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!--
+                Scrollable manual content.
+
+                CSS will make this area vertically scrollable on
+                laptop and phone when all buttons cannot fit.
+            -->
+
+            <div
+                class="admin-manual-scroll"
+                id="adminManualScroll"
+            >
+
+
+                <!-- =================================================
+                     PLATFORM
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        PLATFORM
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="user-information"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                U
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    User Information
+                                </strong>
+
+                                <small>
+                                    View and manage user information
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="active-users"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                A
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Active Users
+                                </strong>
+
+                                <small>
+                                    View users currently active
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="pending-transactions"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                P
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Pending Transactions
+                                </strong>
+
+                                <small>
+                                    Review pending transactions
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="failed-transactions"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                F
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Failed Transactions
+                                </strong>
+
+                                <small>
+                                    Review failed transactions
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="transactions"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                T
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Transactions
+                                </strong>
+
+                                <small>
+                                    View platform transactions
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="profit"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                ₦
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Profit
+                                </strong>
+
+                                <small>
+                                    View platform profit
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     KYC & VERIFICATION
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        KYC &amp; VERIFICATION
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="verification-records"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                V
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Verification Records
+                                </strong>
+
+                                <small>
+                                    View verification records
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="approve-user-kyc"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                ✓
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Approve User KYC
+                                </strong>
+
+                                <small>
+                                    Review and approve KYC
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     CUSTOMER SERVICE
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        CUSTOMER SERVICE
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="live-chat"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                C
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Live Chat
+                                </strong>
+
+                                <small>
+                                    Manage live customer conversations
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="customer-support"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                S
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Customer Support
+                                </strong>
+
+                                <small>
+                                    Manage customer support
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     USER MANAGEMENT
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        USER MANAGEMENT
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="suspended-accounts"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                S
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Suspended Accounts
+                                </strong>
+
+                                <small>
+                                    View suspended accounts
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="suspend-user"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                −
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Suspend User
+                                </strong>
+
+                                <small>
+                                    Suspend a user account
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="banned-accounts"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                B
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Banned Accounts
+                                </strong>
+
+                                <small>
+                                    View banned accounts
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="reward-user"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                R
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Reward User
+                                </strong>
+
+                                <small>
+                                    Manage user rewards
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     PLATFORM CONTROL
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        PLATFORM CONTROL
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="system-color"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                C
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    System Color
+                                </strong>
+
+                                <small>
+                                    Manage platform colors
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="notifications"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                N
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Notifications
+                                </strong>
+
+                                <small>
+                                    Manage platform notifications
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="settings"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                ⚙
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Settings
+                                </strong>
+
+                                <small>
+                                    Manage platform settings
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="legal-content"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                L
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Legal &amp; Content
+                                </strong>
+
+                                <small>
+                                    Manage legal platform content
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="content"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                D
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Content
+                                </strong>
+
+                                <small>
+                                    Manage platform content
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="system-information"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                I
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    System &amp; Information
+                                </strong>
+
+                                <small>
+                                    View system information
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SECURITY & RISK
+                     ================================================= -->
+
+                <section class="admin-manual-group">
+
+                    <h3 class="admin-manual-group-title">
+                        SECURITY &amp; RISK
+                    </h3>
+
+
+                    <div class="admin-manual-buttons">
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="fraud-risk"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                F
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Fraud &amp; Risk
+                                </strong>
+
+                                <small>
+                                    Review fraud and risk activity
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-manual-item"
+                            data-admin-view="audit"
+                        >
+                            <span
+                                class="admin-manual-item-icon"
+                                aria-hidden="true"
+                            >
+                                A
+                            </span>
+
+                            <span class="admin-manual-item-content">
+
+                                <strong>
+                                    Audit
+                                </strong>
+
+                                <small>
+                                    Review administrative activity
+                                </small>
+
+                            </span>
+
+                            <span
+                                class="admin-manual-item-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ========================================================
+             ACCESSIBLE STATUS AREA
+             ======================================================== -->
+
+        <div
+            id="adminPageStatus"
+            class="admin-screen-reader-status"
+            aria-live="polite"
+            aria-atomic="true"
+        ></div>
+
+    </div>
+
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================
+
+         The actual dashboard/manual functionality will be built
+         later in admin.js.
+    ============================================================ -->
+
+    <script
+        type="module"
+        src="./admin.js"
+    ></script>
+
+</body>
+</html>
