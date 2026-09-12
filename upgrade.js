@@ -1315,39 +1315,6 @@ import {
       hidePageMessage();
 
 
-      /*
-       * The backend requires a verified email.
-       * We do not expose or log the user's
-       * Firebase token.
-       */
-
-      if (
-        !user.emailVerified
-      ) {
-        currentTier.textContent =
-          "Email verification required";
-
-        statusBadge.textContent =
-          "Action required";
-
-
-        upgradeTier2Btn.disabled =
-          true;
-
-        upgradeTier3Btn.disabled =
-          true;
-
-
-        showPageMessage(
-          "Please verify your email address before upgrading your NovaPay account.",
-          "error"
-        );
-
-
-        return;
-      }
-
-
       await loadAccountStatus();
     }
   );
