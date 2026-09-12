@@ -1,35 +1,24 @@
-/* ================================================================
+/* =========================================================
    NOVAPAY ADMIN DASHBOARD
    admin.js
-   =================================================================
+   ========================================================= */
 
-   Current stage:
-   - Dashboard
-   - MANUAL open/close
-   - Manual scrolling
-   - Keyboard accessibility
-   - Dashboard placeholder state
-
-   Individual manual-button pages will be handled later by:
-   - admin-buttons.html
-   - admin-buttons.css
-   - admin-button.js
-   ================================================================= */
+"use strict";
 
 
-/* ================================================================
-   1. DOM REFERENCES
-   ================================================================= */
+/* =========================================================
+   DOM REFERENCES
+   ========================================================= */
 
 const adminApp = document.getElementById("adminApp");
 
 const manualToggle = document.getElementById("manualToggle");
 const manualClose = document.getElementById("manualClose");
-const adminManual = document.getElementById("adminManual");
 const manualBackdrop = document.getElementById("manualBackdrop");
+const adminManual = document.getElementById("adminManual");
 const adminManualScroll = document.getElementById("adminManualScroll");
+const adminManualContent = document.getElementById("adminManualContent");
 
-const dashboardView = document.getElementById("dashboardView");
 const adminPageStatus = document.getElementById("adminPageStatus");
 
 const totalUsersElement = document.getElementById("totalUsers");
@@ -41,126 +30,110 @@ const recentTransactionsBody = document.getElementById(
     "recentTransactionsBody"
 );
 
-const manualItems = document.querySelectorAll(
-    ".admin-manual-item[data-admin-view]"
-);
 
+/* =========================================================
+   APPLICATION STATE
+   ========================================================= */
 
-/* ================================================================
-   2. APPLICATION STATE
-   ================================================================= */
-
-const adminState = {
+const state = {
     manualOpen: false,
-    selectedManualView: null,
     dashboardReady: false
 };
 
 
-/* ================================================================
-   3. BASIC DOM SAFETY
-   ================================================================= */
+/* =========================================================
+   STATUS ANNOUNCEMENT
+   ========================================================= */
 
-if (!adminApp) {
-    throw new Error(
-        "NovaPay Admin: #adminApp was not found in admin.html."
-    );
-}
-
-
-/* ================================================================
-   4. ACCESSIBILITY STATUS
-   ================================================================= */
-
-function announceStatus(message) {
+function announce(message) {
     if (!adminPageStatus) {
         return;
     }
 
     adminPageStatus.textContent = "";
 
-    window.setTimeout(() => {
+    window.requestAnimationFrame(() => {
         adminPageStatus.textContent = message;
-    }, 20);
+    });
 }
 
 
-/* ================================================================
-   5. MANUAL OPEN
-   ================================================================= */
+/* =========================================================
+   OPEN MANUAL
+   ========================================================= */
 
 function openManual() {
-    if (!adminManual || !manualToggle) {
+    if (
+        !adminManual ||
+        !manualToggle ||
+        !manualBackdrop
+    ) {
         return;
     }
 
-    adminState.manualOpen = true;
+    state.manualOpen = true;
 
     adminManual.hidden = false;
+    manualBackdrop.hidden = false;
 
-    if (manualBackdrop) {
-        manualBackdrop.hidden = false;
-    }
-
-    manualToggle.setAttribute(
-        "aria-expanded",
-        "true"
-    );
+    adminManual.setAttribute("aria-hidden", "false");
+    manualToggle.setAttribute("aria-expanded", "true");
+    manualBackdrop.setAttribute("aria-hidden", "false");
 
     document.body.classList.add("manual-is-open");
 
-    announceStatus(
-        "Admin manual opened."
-    );
+    announce("Admin manual opened.");
 
-    window.setTimeout(() => {
+    if (adminManualScroll) {
+        adminManualScroll.scrollTop = 0;
+    }
+
+    window.requestAnimationFrame(() => {
         if (manualClose) {
             manualClose.focus();
         }
-    }, 50);
+    });
 }
 
 
-/* ================================================================
-   6. MANUAL CLOSE
-   ================================================================= */
+/* =========================================================
+   CLOSE MANUAL
+   ========================================================= */
 
 function closeManual() {
-    if (!adminManual || !manualToggle) {
+    if (
+        !adminManual ||
+        !manualToggle ||
+        !manualBackdrop
+    ) {
         return;
     }
 
-    adminState.manualOpen = false;
+    state.manualOpen = false;
 
     adminManual.hidden = true;
+    manualBackdrop.hidden = true;
 
-    if (manualBackdrop) {
-        manualBackdrop.hidden = true;
-    }
-
-    manualToggle.setAttribute(
-        "aria-expanded",
-        "false"
-    );
+    adminManual.setAttribute("aria-hidden", "true");
+    manualToggle.setAttribute("aria-expanded", "false");
+    manualBackdrop.setAttribute("aria-hidden", "true");
 
     document.body.classList.remove("manual-is-open");
 
-    announceStatus(
-        "Admin manual closed."
-    );
+    announce("Admin manual closed.");
 
-    window.setTimeout(() => {
+    window.requestAnimationFrame(() => {
         manualToggle.focus();
-    }, 20);
+    });
 }
 
 
-/* ================================================================
-   7. TOGGLE MANUAL
-   ================================================================= */
+/* =========================================================
+   TOGGLE MANUAL
+   ========================================================= */
 
 function toggleManual() {
-    if (adminState.manualOpen) {
+    if (state.manualOpen) {
         closeManual();
         return;
     }
@@ -169,64 +142,16 @@ function toggleManual() {
 }
 
 
-/* ================================================================
-   8. MANUAL BUTTON HANDLING
-   =================================================================
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
 
-   IMPORTANT:
-
-   These buttons are NOT building the individual pages yet.
-
-   For now they:
-   - identify which manual button was selected
-   - close the manual
-   - preserve the selected view in application state
-
-   The actual pages will be connected later through:
-   admin-buttons.html
-   admin-buttons.css
-   admin-button.js
-   ================================================================= */
-
-function handleManualItemClick(event) {
-    const button = event.currentTarget;
-
-    if (!(button instanceof HTMLButtonElement)) {
-        return;
-    }
-
-    const selectedView = button.dataset.adminView;
-
-    if (!selectedView) {
-        return;
-    }
-
-    adminState.selectedManualView = selectedView;
-
-    /*
-        The individual page is intentionally NOT opened here yet.
-
-        That functionality belongs to the next build stage.
-    */
-
-    announceStatus(
-        `${button.textContent.trim()} selected.`
-    );
-
-    closeManual();
-}
-
-
-/* ================================================================
-   9. ESCAPE KEY
-   ================================================================= */
-
-function handleGlobalKeydown(event) {
+function handleKeyboard(event) {
     if (event.key !== "Escape") {
         return;
     }
 
-    if (!adminState.manualOpen) {
+    if (!state.manualOpen) {
         return;
     }
 
@@ -234,258 +159,169 @@ function handleGlobalKeydown(event) {
 }
 
 
-/* ================================================================
-   10. PREVENT BACKGROUND INTERACTION STATE
-   =================================================================
+/* =========================================================
+   BACKDROP CLICK
+   ========================================================= */
 
-   We do not disable scrolling on the entire document.
-
-   This is intentional because the dashboard is designed to allow
-   vertical and horizontal scrolling on smaller screens.
-
-   The manual panel itself has its own vertical scroll container.
-   ================================================================= */
-
-function updateManualScrollState() {
-    if (!adminManualScroll) {
+function handleBackdropClick(event) {
+    if (event.target !== manualBackdrop) {
         return;
     }
 
-    /*
-        Force the browser to preserve the scroll position naturally.
-
-        No artificial height or JavaScript scrolling is applied.
-        CSS controls the actual scroll behavior.
-    */
-
-    adminManualScroll.style.overscrollBehavior = "contain";
+    closeManual();
 }
 
 
-/* ================================================================
-   11. DASHBOARD INITIALIZATION
-   ================================================================= */
+/* =========================================================
+   DASHBOARD SUMMARY
+   ========================================================= */
 
-function initializeDashboard() {
-    /*
-        The backend connection is deliberately not added yet.
-
-        Therefore we keep the dashboard values as "—" rather than
-        inventing production data.
-    */
-
+function updateDashboardSummary({
+    totalUsers = null,
+    todayActiveUsers = null,
+    totalProfit = null
+} = {}) {
     if (totalUsersElement) {
-        totalUsersElement.textContent = "—";
+        totalUsersElement.textContent =
+            totalUsers === null
+                ? "—"
+                : formatInteger(totalUsers);
     }
 
     if (todayActiveUsersElement) {
-        todayActiveUsersElement.textContent = "—";
+        todayActiveUsersElement.textContent =
+            todayActiveUsers === null
+                ? "—"
+                : formatInteger(todayActiveUsers);
     }
 
     if (totalProfitElement) {
-        totalProfitElement.textContent = "—";
-    }
-
-    /*
-        Keep the current empty analysis state until real dashboard
-        data is connected.
-    */
-
-    if (analysisChart) {
-        analysisChart.setAttribute(
-            "data-state",
-            "waiting-for-data"
-        );
-    }
-
-    /*
-        Keep the current empty transaction state until real
-        transaction data is connected.
-    */
-
-    if (recentTransactionsBody) {
-        recentTransactionsBody.setAttribute(
-            "data-state",
-            "waiting-for-data"
-        );
-    }
-
-    adminState.dashboardReady = true;
-}
-
-
-/* ================================================================
-   12. DASHBOARD DATA API
-   =================================================================
-
-   These functions are intentionally prepared for the next stage.
-
-   They allow real backend data to replace the placeholders without
-   changing the dashboard HTML structure.
-
-   No fake data is inserted.
-   ================================================================= */
-
-function updateDashboardSummary(data) {
-    if (!data || typeof data !== "object") {
-        return;
-    }
-
-    if (
-        totalUsersElement &&
-        Object.prototype.hasOwnProperty.call(data, "totalUsers")
-    ) {
-        totalUsersElement.textContent =
-            formatInteger(data.totalUsers);
-    }
-
-    if (
-        todayActiveUsersElement &&
-        Object.prototype.hasOwnProperty.call(data, "todayActiveUsers")
-    ) {
-        todayActiveUsersElement.textContent =
-            formatInteger(data.todayActiveUsers);
-    }
-
-    if (
-        totalProfitElement &&
-        Object.prototype.hasOwnProperty.call(data, "totalProfit")
-    ) {
         totalProfitElement.textContent =
-            formatCurrency(data.totalProfit);
+            totalProfit === null
+                ? "—"
+                : formatCurrency(totalProfit);
     }
 }
 
 
-/* ================================================================
-   13. INTEGER FORMATTER
-   ================================================================= */
+/* =========================================================
+   INTEGER FORMATTER
+   ========================================================= */
 
 function formatInteger(value) {
-    const number = Number(value);
+    const numericValue = Number(value);
 
-    if (!Number.isFinite(number)) {
+    if (!Number.isFinite(numericValue)) {
         return "—";
     }
 
-    return new Intl.NumberFormat(
-        "en-NG",
-        {
-            maximumFractionDigits: 0
-        }
-    ).format(number);
+    return new Intl.NumberFormat("en-NG", {
+        maximumFractionDigits: 0
+    }).format(numericValue);
 }
 
 
-/* ================================================================
-   14. CURRENCY FORMATTER
-   ================================================================= */
+/* =========================================================
+   CURRENCY FORMATTER
+   ========================================================= */
 
 function formatCurrency(value) {
-    const number = Number(value);
+    const numericValue = Number(value);
 
-    if (!Number.isFinite(number)) {
+    if (!Number.isFinite(numericValue)) {
         return "—";
     }
 
-    return new Intl.NumberFormat(
-        "en-NG",
-        {
-            style: "currency",
-            currency: "NGN",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    ).format(number);
+    return new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(numericValue);
 }
 
 
-/* ================================================================
-   15. TRANSACTION DATA RENDERER
-   =================================================================
+/* =========================================================
+   ANALYSIS STATE
+   ========================================================= */
 
-   This is ready for the real transaction data later.
-
-   Expected object shape:
-
-   {
-       date: "...",
-       user: "...",
-       type: "...",
-       amount: 0,
-       status: "..."
-   }
-
-   No transaction data is fabricated.
-   ================================================================= */
-
-function renderRecentTransactions(transactions) {
-    if (!recentTransactionsBody) {
+function setAnalysisState(message) {
+    if (!analysisChart) {
         return;
     }
 
-    if (!Array.isArray(transactions) || transactions.length === 0) {
-        recentTransactionsBody.innerHTML = `
-            <tr class="dashboard-empty-row">
-                <td
-                    colspan="5"
-                    class="dashboard-empty-cell"
-                >
-                    <div class="dashboard-empty-state">
-                        <div
-                            class="dashboard-empty-icon"
-                            aria-hidden="true"
-                        >
-                            —
-                        </div>
+    analysisChart.innerHTML = "";
 
-                        <strong>
-                            No transaction data loaded
-                        </strong>
+    const wrapper = document.createElement("div");
+    wrapper.className = "analysis-empty";
 
-                        <span>
-                            Recent transactions will appear here.
-                        </span>
-                    </div>
-                </td>
-            </tr>
-        `;
+    const title = document.createElement("span");
+    title.className = "analysis-empty-title";
+    title.textContent = "Analysis data";
 
+    const text = document.createElement("span");
+    text.className = "analysis-empty-text";
+    text.textContent = message;
+
+    wrapper.appendChild(title);
+    wrapper.appendChild(text);
+
+    analysisChart.appendChild(wrapper);
+}
+
+
+/* =========================================================
+   RECENT TRANSACTIONS
+   ========================================================= */
+
+function renderRecentTransactions(transactions = []) {
+    if (!recentTransactionsBody) {
         return;
     }
 
     recentTransactionsBody.innerHTML = "";
 
-    transactions.forEach((transaction) => {
-        if (
-            !transaction ||
-            typeof transaction !== "object"
-        ) {
-            return;
-        }
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+        const row = document.createElement("tr");
+        row.className = "transactions-empty-row";
 
+        const cell = document.createElement("td");
+        cell.className = "transactions-empty";
+        cell.colSpan = 5;
+        cell.textContent =
+            "No recent transactions available.";
+
+        row.appendChild(cell);
+        recentTransactionsBody.appendChild(row);
+
+        return;
+    }
+
+    transactions.forEach((transaction) => {
         const row = document.createElement("tr");
 
         const dateCell = document.createElement("td");
-        const userCell = document.createElement("td");
-        const typeCell = document.createElement("td");
-        const amountCell = document.createElement("td");
-        const statusCell = document.createElement("td");
-
         dateCell.textContent =
-            transaction.date || "—";
+            transaction.date ?? "—";
 
+        const userCell = document.createElement("td");
         userCell.textContent =
-            transaction.user || "—";
+            transaction.user ?? "—";
 
+        const typeCell = document.createElement("td");
         typeCell.textContent =
-            transaction.type || "—";
+            transaction.type ?? "—";
 
+        const amountCell = document.createElement("td");
         amountCell.textContent =
-            formatCurrency(transaction.amount);
+            transaction.amount === undefined ||
+            transaction.amount === null
+                ? "—"
+                : formatCurrency(transaction.amount);
 
+        const statusCell = document.createElement("td");
         statusCell.textContent =
-            transaction.status || "—";
+            transaction.status ?? "—";
 
         row.appendChild(dateCell);
         row.appendChild(userCell);
@@ -498,41 +334,79 @@ function renderRecentTransactions(transactions) {
 }
 
 
-/* ================================================================
-   16. ANALYSIS STATE
-   =================================================================
+/* =========================================================
+   DASHBOARD INITIALIZATION
+   ========================================================= */
 
-   The actual analysis chart will be connected when the dashboard
-   backend/data layer is built.
+function initializeDashboard() {
+    updateDashboardSummary({
+        totalUsers: null,
+        todayActiveUsers: null,
+        totalProfit: null
+    });
 
-   We deliberately do not invent chart values.
-   ================================================================= */
+    setAnalysisState(
+        "No analysis data available yet."
+    );
 
-function setAnalysisState(state, message) {
-    if (!analysisChart) {
-        return;
-    }
+    renderRecentTransactions([]);
 
-    analysisChart.dataset.state = state;
+    state.dashboardReady = true;
 
-    if (!message) {
-        return;
-    }
-
-    const existingMessage =
-        analysisChart.querySelector(
-            ".analysis-empty-state p"
-        );
-
-    if (existingMessage) {
-        existingMessage.textContent = message;
-    }
+    announce("NovaPay admin dashboard ready.");
 }
 
 
-/* ================================================================
-   17. EVENT LISTENERS
-   ================================================================= */
+/* =========================================================
+   MANUAL CONTENT PREPARATION
+   ========================================================= */
+
+function initializeManual() {
+    if (!adminManualContent) {
+        return;
+    }
+
+    /*
+     * Individual admin tools intentionally do not live here.
+     *
+     * They will be implemented separately through:
+     *
+     * admin-buttons.html
+     * admin-buttons.css
+     * admin-button.js
+     *
+     * This keeps the dashboard separate from the actual
+     * admin management tools.
+     */
+
+    adminManualContent.innerHTML = "";
+
+    const placeholder = document.createElement("div");
+    placeholder.className = "manual-placeholder";
+
+    const icon = document.createElement("div");
+    icon.className = "manual-placeholder-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "☰";
+
+    const title = document.createElement("h3");
+    title.textContent = "Admin Manual";
+
+    const description = document.createElement("p");
+    description.textContent =
+        "Admin management tools will be added here one feature at a time.";
+
+    placeholder.appendChild(icon);
+    placeholder.appendChild(title);
+    placeholder.appendChild(description);
+
+    adminManualContent.appendChild(placeholder);
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
 
 if (manualToggle) {
     manualToggle.addEventListener(
@@ -541,6 +415,7 @@ if (manualToggle) {
     );
 }
 
+
 if (manualClose) {
     manualClose.addEventListener(
         "click",
@@ -548,63 +423,66 @@ if (manualClose) {
     );
 }
 
+
 if (manualBackdrop) {
     manualBackdrop.addEventListener(
         "click",
-        closeManual
+        handleBackdropClick
     );
 }
 
-manualItems.forEach((button) => {
-    button.addEventListener(
-        "click",
-        handleManualItemClick
-    );
-});
 
 document.addEventListener(
     "keydown",
-    handleGlobalKeydown
+    handleKeyboard
 );
 
 
-/* ================================================================
-   18. INITIAL SETUP
-   ================================================================= */
+/* =========================================================
+   PREVENT BACKGROUND SCROLL WHILE MANUAL IS OPEN
+   ========================================================= */
 
-updateManualScrollState();
+document.addEventListener(
+    "wheel",
+    (event) => {
+        if (!state.manualOpen) {
+            return;
+        }
 
-initializeDashboard();
+        if (
+            adminManualScroll &&
+            adminManualScroll.contains(event.target)
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+    },
+    {
+        passive: false
+    }
+);
 
 
-/* ================================================================
-   19. INITIAL ACCESSIBILITY STATE
-   ================================================================= */
+/* =========================================================
+   PUBLIC ADMIN API
+   ========================================================= */
 
-if (manualToggle) {
-    manualToggle.setAttribute(
-        "aria-expanded",
-        "false"
-    );
-}
-
-
-/* ================================================================
-   20. DEVELOPMENT API
-   =================================================================
-
-   These methods are exposed only through the NovaPayAdmin namespace
-   so the next development stages can connect real backend data
-   without rewriting this dashboard.
-
-   They do not expose credentials or private information.
-   ================================================================= */
-
-window.NovaPayAdmin = {
+window.NovaPayAdmin = Object.freeze({
     openManual,
     closeManual,
     toggleManual,
     updateDashboardSummary,
     renderRecentTransactions,
-    setAnalysisState
-};
+    setAnalysisState,
+    formatInteger,
+    formatCurrency
+});
+
+
+/* =========================================================
+   START APPLICATION
+   ========================================================= */
+
+initializeManual();
+initializeDashboard();
