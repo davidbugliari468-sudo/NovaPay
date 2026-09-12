@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b63f6">
+  <title>NovaPay Admin Buttons</title>
+  <link rel="stylesheet" href="./admin-buttons.css">
+</head>
+
+<body>
+  <main class="admin-buttons-page">
+    <section class="admin-buttons-shell" aria-labelledby="adminButtonsTitle">
+
+      <header class="admin-buttons-header">
+        <div>
+          <span class="admin-buttons-eyebrow">NOVAPAY ADMIN</span>
+          <h1 id="adminButtonsTitle">Manual</h1>
+          <p>Select an administration tool.</p>
+        </div>
+      </header>
+
+      <div class="admin-buttons-list" id="adminButtonsList">
+
+        <section class="admin-button-group" aria-labelledby="platformGroup">
+          <h2 id="platformGroup">Platform</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="user-information">
+            <span class="admin-action-icon">UI</span>
+            <span class="admin-action-content">
+              <strong>User Information</strong>
+              <small>Manage and review user information</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="active-users">
+            <span class="admin-action-icon">AU</span>
+            <span class="admin-action-content">
+              <strong>Active Users</strong>
+              <small>View currently active users</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="pending-transactions">
+            <span class="admin-action-icon">PT</span>
+            <span class="admin-action-content">
+              <strong>Pending Transactions</strong>
+              <small>Review pending transactions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="failed-transactions">
+            <span class="admin-action-icon">FT</span>
+            <span class="admin-action-content">
+              <strong>Failed Transactions</strong>
+              <small>Review failed transactions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="transactions">
+            <span class="admin-action-icon">TX</span>
+            <span class="admin-action-content">
+              <strong>Transactions</strong>
+              <small>Review platform transactions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="profit">
+            <span class="admin-action-icon">PR</span>
+            <span class="admin-action-content">
+              <strong>Profit</strong>
+              <small>Review platform profit information</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+        <section class="admin-button-group" aria-labelledby="kycGroup">
+          <h2 id="kycGroup">KYC &amp; Verification</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="verification-records">
+            <span class="admin-action-icon">VR</span>
+            <span class="admin-action-content">
+              <strong>Verification Records</strong>
+              <small>Review verification records</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="approve-user-kyc">
+            <span class="admin-action-icon">AK</span>
+            <span class="admin-action-content">
+              <strong>Approve User KYC</strong>
+              <small>Manage KYC approval actions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+        <section class="admin-button-group" aria-labelledby="customerServiceGroup">
+          <h2 id="customerServiceGroup">Customer Service</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="live-chat">
+            <span class="admin-action-icon">LC</span>
+            <span class="admin-action-content">
+              <strong>Live Chat</strong>
+              <small>Access live customer conversations</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="customer-support">
+            <span class="admin-action-icon">CS</span>
+            <span class="admin-action-content">
+              <strong>Customer Support</strong>
+              <small>Manage customer support operations</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+        <section class="admin-button-group" aria-labelledby="userManagementGroup">
+          <h2 id="userManagementGroup">User Management</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="suspended-accounts">
+            <span class="admin-action-icon">SA</span>
+            <span class="admin-action-content">
+              <strong>Suspended Accounts</strong>
+              <small>Review suspended user accounts</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="suspend-user">
+            <span class="admin-action-icon">SU</span>
+            <span class="admin-action-content">
+              <strong>Suspend User</strong>
+              <small>Manage user suspension actions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="banned-accounts">
+            <span class="admin-action-icon">BA</span>
+            <span class="admin-action-content">
+              <strong>Banned Accounts</strong>
+              <small>Review banned user accounts</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="reward-user">
+            <span class="admin-action-icon">RW</span>
+            <span class="admin-action-content">
+              <strong>Reward User</strong>
+              <small>Manage user reward actions</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+        <section class="admin-button-group" aria-labelledby="platformControlGroup">
+          <h2 id="platformControlGroup">Platform Control</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="system-color">
+            <span class="admin-action-icon">SC</span>
+            <span class="admin-action-content">
+              <strong>System Color</strong>
+              <small>Manage system color controls</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="notifications">
+            <span class="admin-action-icon">NT</span>
+            <span class="admin-action-content">
+              <strong>Notifications</strong>
+              <small>Manage platform notifications</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="settings">
+            <span class="admin-action-icon">ST</span>
+            <span class="admin-action-content">
+              <strong>Settings</strong>
+              <small>Manage platform settings</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="legal-content">
+            <span class="admin-action-icon">LC</span>
+            <span class="admin-action-content">
+              <strong>Legal Content</strong>
+              <small>Manage legal content controls</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="content">
+            <span class="admin-action-icon">CO</span>
+            <span class="admin-action-content">
+              <strong>Content</strong>
+              <small>Manage platform content</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="system-information">
+            <span class="admin-action-icon">SI</span>
+            <span class="admin-action-content">
+              <strong>System Information</strong>
+              <small>View system information</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+        <section class="admin-button-group" aria-labelledby="securityRiskGroup">
+          <h2 id="securityRiskGroup">Security &amp; Risk</h2>
+
+          <button type="button" class="admin-action-button" data-admin-action="fraud-risk">
+            <span class="admin-action-icon">FR</span>
+            <span class="admin-action-content">
+              <strong>Fraud &amp; Risk</strong>
+              <small>Review fraud and risk controls</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button type="button" class="admin-action-button" data-admin-action="audit">
+            <span class="admin-action-icon">AD</span>
+            <span class="admin-action-content">
+              <strong>Audit</strong>
+              <small>Review administrative audit activity</small>
+            </span>
+            <span class="admin-action-arrow" aria-hidden="true">›</span>
+          </button>
+        </section>
+
+      </div>
+
+      <p class="admin-buttons-status" id="adminButtonsStatus" aria-live="polite"></p>
+
+    </section>
+  </main>
+
+  <script type="module" src="./admin-button.js"></script>
+</body>
+</html>
