@@ -2,127 +2,5203 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="description"
+        content="NovaPay Administration Dashboard"
+    >
+
+    <meta name="theme-color" content="#2563eb">
 
     <title>NovaPay Admin</title>
 
+    <!-- Admin stylesheet -->
     <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
 
-    <header class="admin-header">
-        <div>
-            <span class="brand">Nova<span>Pay</span></span>
-            <small>Admin</small>
-        </div>
+    <!-- =========================================================
+         ADMIN APPLICATION
+    ========================================================== -->
 
-        <button id="logoutBtn">
-            Logout
-        </button>
-    </header>
+    <div class="admin-app">
 
+        <!-- =====================================================
+             MOBILE OVERLAY
+        ====================================================== -->
 
-    <main class="admin-container">
-
-        <div class="page-heading">
-            <h1>Dashboard</h1>
-            <p>NovaPay overview</p>
-        </div>
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+            aria-hidden="true"
+        ></div>
 
 
-        <section class="stats-grid">
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
 
-            <div class="stat-card">
-                <span>Users</span>
-                <strong id="totalUsers">0</strong>
-            </div>
+        <aside
+            class="admin-sidebar"
+            id="adminSidebar"
+            aria-label="Admin navigation"
+        >
 
-            <div class="stat-card">
-                <span>Transactions</span>
-                <strong id="totalTransactions">0</strong>
-            </div>
+            <!-- Brand -->
+            <div class="sidebar-brand">
 
-            <div class="stat-card">
-                <span>Total Deposits</span>
-                <strong id="totalDeposits">₦0.00</strong>
-            </div>
+                <div class="brand-logo">
+                    <span>NP</span>
+                </div>
 
-        </section>
-
-
-        <section class="admin-section">
-
-            <div class="section-title">
-                <h2>Quick Access</h2>
-            </div>
-
-            <div class="admin-actions">
-
-                <button class="action-card" id="usersBtn">
-                    <div class="action-icon">👤</div>
-
-                    <div>
-                        <strong>Users</strong>
-                        <p>View NovaPay users</p>
-                    </div>
-
-                    <span>›</span>
-                </button>
-
-
-                <button class="action-card" id="transactionsBtn">
-                    <div class="action-icon">↔</div>
-
-                    <div>
-                        <strong>Transactions</strong>
-                        <p>View recent transactions</p>
-                    </div>
-
-                    <span>›</span>
-                </button>
-
-
-                <button class="action-card" id="supportBtn">
-                    <div class="action-icon">?</div>
-
-                    <div>
-                        <strong>Support</strong>
-                        <p>Customer support</p>
-                    </div>
-
-                    <span>›</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <section class="admin-section">
-
-            <div class="section-title">
-                <h2>Recent Activity</h2>
-
-                <button id="viewAllBtn">
-                    View all
-                </button>
-            </div>
-
-            <div id="recentActivity" class="activity-list">
-
-                <div class="empty-state">
-                    No recent activity
+                <div class="brand-text">
+                    <h1>NovaPay</h1>
+                    <span>Admin</span>
                 </div>
 
             </div>
 
-        </section>
 
-    </main>
+            <!-- Admin profile -->
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    <span id="adminAvatarText">A</span>
+                </div>
+
+                <div class="admin-profile-info">
+                    <strong id="adminName">Administrator</strong>
+                    <span id="adminRole">Super Admin</span>
+                </div>
+
+                <button
+                    type="button"
+                    class="profile-menu-button"
+                    id="profileMenuButton"
+                    aria-label="Open administrator menu"
+                >
+                    <span>•••</span>
+                </button>
+
+            </div>
 
 
-    <script type="module" src="admin.js"></script>
+            <!-- Main navigation -->
+            <nav class="admin-navigation">
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        OVERVIEW
+                    </p>
+
+                    <a
+                        href="#dashboard"
+                        class="nav-item active"
+                        data-section="dashboard"
+                    >
+                        <span class="nav-icon">⌂</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        CUSTOMERS
+                    </p>
+
+                    <a
+                        href="#users"
+                        class="nav-item"
+                        data-section="users"
+                    >
+                        <span class="nav-icon">♙</span>
+                        <span class="nav-label">Users</span>
+                        <span
+                            class="nav-count"
+                            id="usersCount"
+                        >0</span>
+                    </a>
+
+                    <a
+                        href="#kyc"
+                        class="nav-item"
+                        data-section="kyc"
+                    >
+                        <span class="nav-icon">✓</span>
+                        <span class="nav-label">KYC</span>
+                    </a>
+
+                    <a
+                        href="#support"
+                        class="nav-item"
+                        data-section="support"
+                    >
+                        <span class="nav-icon">?</span>
+                        <span class="nav-label">Customer Support</span>
+                        <span
+                            class="nav-count warning"
+                            id="supportCount"
+                        >0</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        MONEY
+                    </p>
+
+                    <a
+                        href="#wallets"
+                        class="nav-item"
+                        data-section="wallets"
+                    >
+                        <span class="nav-icon">₦</span>
+                        <span class="nav-label">Wallets</span>
+                    </a>
+
+                    <a
+                        href="#deposits"
+                        class="nav-item"
+                        data-section="deposits"
+                    >
+                        <span class="nav-icon">↓</span>
+                        <span class="nav-label">Deposits</span>
+                    </a>
+
+                    <a
+                        href="#withdrawals"
+                        class="nav-item"
+                        data-section="withdrawals"
+                    >
+                        <span class="nav-icon">↑</span>
+                        <span class="nav-label">Withdrawals</span>
+                    </a>
+
+                    <a
+                        href="#transfers"
+                        class="nav-item"
+                        data-section="transfers"
+                    >
+                        <span class="nav-icon">⇄</span>
+                        <span class="nav-label">Transfers</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        SERVICES
+                    </p>
+
+                    <a
+                        href="#airtime"
+                        class="nav-item"
+                        data-section="airtime"
+                    >
+                        <span class="nav-icon">☎</span>
+                        <span class="nav-label">Airtime</span>
+                    </a>
+
+                    <a
+                        href="#data"
+                        class="nav-item"
+                        data-section="data"
+                    >
+                        <span class="nav-icon">⌁</span>
+                        <span class="nav-label">Data</span>
+                    </a>
+
+                    <a
+                        href="#electricity"
+                        class="nav-item"
+                        data-section="electricity"
+                    >
+                        <span class="nav-icon">⚡</span>
+                        <span class="nav-label">Electricity</span>
+                    </a>
+
+                    <a
+                        href="#tv"
+                        class="nav-item"
+                        data-section="tv"
+                    >
+                        <span class="nav-icon">▣</span>
+                        <span class="nav-label">TV</span>
+                    </a>
+
+                    <a
+                        href="#betting"
+                        class="nav-item"
+                        data-section="betting"
+                    >
+                        <span class="nav-icon">◈</span>
+                        <span class="nav-label">Betting</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        COMMUNICATION
+                    </p>
+
+                    <a
+                        href="#notifications"
+                        class="nav-item"
+                        data-section="notifications"
+                    >
+                        <span class="nav-icon">♢</span>
+                        <span class="nav-label">Notifications</span>
+                    </a>
+
+                    <a
+                        href="#promotions"
+                        class="nav-item"
+                        data-section="promotions"
+                    >
+                        <span class="nav-icon">★</span>
+                        <span class="nav-label">Promotions</span>
+                    </a>
+
+                    <a
+                        href="#whatsapp"
+                        class="nav-item"
+                        data-section="whatsapp"
+                    >
+                        <span class="nav-icon">◉</span>
+                        <span class="nav-label">WhatsApp Channel</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        CONTROL
+                    </p>
+
+                    <a
+                        href="#tiers"
+                        class="nav-item"
+                        data-section="tiers"
+                    >
+                        <span class="nav-icon">◆</span>
+                        <span class="nav-label">Tiers & Limits</span>
+                    </a>
+
+                    <a
+                        href="#fees"
+                        class="nav-item"
+                        data-section="fees"
+                    >
+                        <span class="nav-icon">₦</span>
+                        <span class="nav-label">Fees</span>
+                    </a>
+
+                    <a
+                        href="#fraud"
+                        class="nav-item"
+                        data-section="fraud"
+                    >
+                        <span class="nav-icon">!</span>
+                        <span class="nav-label">Fraud & Risk</span>
+                    </a>
+
+                </div>
+
+
+                <div class="navigation-group">
+
+                    <p class="navigation-title">
+                        SYSTEM
+                    </p>
+
+                    <a
+                        href="#providers"
+                        class="nav-item"
+                        data-section="providers"
+                    >
+                        <span class="nav-icon">◇</span>
+                        <span class="nav-label">Providers & APIs</span>
+                    </a>
+
+                    <a
+                        href="#audit"
+                        class="nav-item"
+                        data-section="audit"
+                    >
+                        <span class="nav-icon">≡</span>
+                        <span class="nav-label">Audit Logs</span>
+                    </a>
+
+                    <a
+                        href="#settings"
+                        class="nav-item"
+                        data-section="settings"
+                    >
+                        <span class="nav-icon">⚙</span>
+                        <span class="nav-label">Settings</span>
+                    </a>
+
+                </div>
+
+            </nav>
+
+
+            <!-- Sidebar footer -->
+            <div class="sidebar-footer">
+
+                <button
+                    type="button"
+                    class="sidebar-logout"
+                    id="adminLogoutButton"
+                >
+                    <span class="nav-icon">↪</span>
+                    <span>Logout</span>
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN AREA
+        ====================================================== -->
+
+        <main class="admin-main">
+
+            <!-- =================================================
+                 TOP BAR
+            ================================================== -->
+
+            <header class="admin-topbar">
+
+                <div class="topbar-left">
+
+                    <button
+                        type="button"
+                        class="menu-toggle"
+                        id="menuToggle"
+                        aria-label="Open navigation"
+                        aria-expanded="false"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="page-heading">
+
+                        <span
+                            class="page-eyebrow"
+                            id="pageEyebrow"
+                        >
+                            Overview
+                        </span>
+
+                        <h2 id="pageTitle">
+                            Dashboard
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <button
+                        type="button"
+                        class="topbar-action"
+                        id="adminNotificationButton"
+                        aria-label="Notifications"
+                    >
+                        <span class="topbar-icon">♢</span>
+
+                        <span
+                            class="notification-dot"
+                            id="adminNotificationDot"
+                        ></span>
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="topbar-admin"
+                        id="topbarAdminButton"
+                    >
+
+                        <span class="topbar-avatar">
+                            <span id="topbarAvatarText">A</span>
+                        </span>
+
+                        <span class="topbar-admin-details">
+
+                            <strong id="topbarAdminName">
+                                Administrator
+                            </strong>
+
+                            <small id="topbarAdminRole">
+                                Super Admin
+                            </small>
+
+                        </span>
+
+                        <span class="topbar-chevron">
+                            ▾
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+            <div class="admin-content">
+
+
+                <!-- =================================================
+                     DASHBOARD
+                ================================================== -->
+
+                <section
+                    class="admin-section active"
+                    id="dashboard"
+                    data-page="dashboard"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                NOVAPAY
+                            </span>
+
+                            <h3>
+                                Welcome back, Administrator
+                            </h3>
+
+                            <p>
+                                Monitor users, wallets, transactions
+                                and NovaPay services from one place.
+                            </p>
+                        </div>
+
+                        <div class="section-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button secondary"
+                                id="refreshDashboardButton"
+                            >
+                                <span>↻</span>
+                                Refresh
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Dashboard statistics -->
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon blue">
+                                    ♙
+                                </span>
+
+                                <span class="stat-label">
+                                    Total Users
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="dashboardTotalUsers"
+                            >
+                                0
+                            </strong>
+
+                            <span
+                                class="stat-change neutral"
+                                id="dashboardUserChange"
+                            >
+                                No data yet
+                            </span>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon green">
+                                    ₦
+                                </span>
+
+                                <span class="stat-label">
+                                    Total Wallet Balance
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="dashboardWalletBalance"
+                            >
+                                ₦0.00
+                            </strong>
+
+                            <span
+                                class="stat-change neutral"
+                                id="dashboardWalletChange"
+                            >
+                                No data yet
+                            </span>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon orange">
+                                    ⇄
+                                </span>
+
+                                <span class="stat-label">
+                                    Today's Transactions
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="dashboardTransactions"
+                            >
+                                0
+                            </strong>
+
+                            <span
+                                class="stat-change neutral"
+                                id="dashboardTransactionChange"
+                            >
+                                No data yet
+                            </span>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon red">
+                                    !
+                                </span>
+
+                                <span class="stat-label">
+                                    Pending Issues
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="dashboardPendingIssues"
+                            >
+                                0
+                            </strong>
+
+                            <span
+                                class="stat-change warning"
+                                id="dashboardPendingChange"
+                            >
+                                Requires attention
+                            </span>
+
+                        </article>
+
+                    </div>
+
+
+                    <!-- User status overview -->
+                    <div class="dashboard-grid">
+
+                        <article class="admin-card">
+
+                            <div class="card-header">
+
+                                <div>
+                                    <h4>
+                                        User Account Status
+                                    </h4>
+
+                                    <p>
+                                        Current customer account states.
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="text-button"
+                                    data-navigate="users"
+                                >
+                                    View users
+                                </button>
+
+                            </div>
+
+
+                            <div class="status-list">
+
+                                <div class="status-row">
+
+                                    <div class="status-row-label">
+                                        <span class="status-dot green"></span>
+                                        Active
+                                    </div>
+
+                                    <strong id="activeUsersCount">
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="status-row">
+
+                                    <div class="status-row-label">
+                                        <span class="status-dot orange"></span>
+                                        Suspended
+                                    </div>
+
+                                    <strong id="suspendedUsersCount">
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="status-row">
+
+                                    <div class="status-row-label">
+                                        <span class="status-dot red"></span>
+                                        Banned
+                                    </div>
+
+                                    <strong id="bannedUsersCount">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <article class="admin-card">
+
+                            <div class="card-header">
+
+                                <div>
+                                    <h4>
+                                        Account Tiers
+                                    </h4>
+
+                                    <p>
+                                        Customer distribution by tier.
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="text-button"
+                                    data-navigate="tiers"
+                                >
+                                    Manage tiers
+                                </button>
+
+                            </div>
+
+
+                            <div class="tier-overview">
+
+                                <div class="tier-row">
+
+                                    <div class="tier-name">
+                                        <span class="tier-badge tier-one">
+                                            1
+                                        </span>
+
+                                        <span>
+                                            Free
+                                        </span>
+                                    </div>
+
+                                    <strong id="tierOneUsers">
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="tier-row">
+
+                                    <div class="tier-name">
+                                        <span class="tier-badge tier-two">
+                                            2
+                                        </span>
+
+                                        <span>
+                                            NIN Verified
+                                        </span>
+                                    </div>
+
+                                    <strong id="tierTwoUsers">
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="tier-row">
+
+                                    <div class="tier-name">
+                                        <span class="tier-badge tier-three">
+                                            3
+                                        </span>
+
+                                        <span>
+                                            BVN Verified
+                                        </span>
+                                    </div>
+
+                                    <strong id="tierThreeUsers">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+
+                    <!-- Recent activity -->
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Recent Activity
+                                </h4>
+
+                                <p>
+                                    Latest important activity across NovaPay.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="text-button"
+                                data-navigate="audit"
+                            >
+                                View audit logs
+                            </button>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Activity</th>
+                                        <th>User</th>
+                                        <th>Admin</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="recentActivityTable">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="5">
+                                            No activity available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     USERS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="users"
+                    data-page="users"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                CUSTOMERS
+                            </span>
+
+                            <h3>
+                                Users
+                            </h3>
+
+                            <p>
+                                Search, review and manage NovaPay customer
+                                accounts.
+                            </p>
+                        </div>
+
+                        <div class="section-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button secondary"
+                                id="refreshUsersButton"
+                            >
+                                <span>↻</span>
+                                Refresh
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- User search -->
+                    <article class="admin-card">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="userSearchInput"
+                                    placeholder="Search by name, email or phone..."
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="userStatusFilter"
+                                class="admin-select"
+                            >
+                                <option value="all">
+                                    All statuses
+                                </option>
+
+                                <option value="active">
+                                    Active
+                                </option>
+
+                                <option value="suspended">
+                                    Suspended
+                                </option>
+
+                                <option value="banned">
+                                    Banned
+                                </option>
+                            </select>
+
+
+                            <select
+                                id="userTierFilter"
+                                class="admin-select"
+                            >
+                                <option value="all">
+                                    All tiers
+                                </option>
+
+                                <option value="1">
+                                    Tier 1
+                                </option>
+
+                                <option value="2">
+                                    Tier 2
+                                </option>
+
+                                <option value="3">
+                                    Tier 3
+                                </option>
+                            </select>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Users table -->
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Customer Accounts
+                                </h4>
+
+                                <p>
+                                    Select a customer to view the complete
+                                    account profile.
+                                </p>
+                            </div>
+
+                            <span
+                                class="record-count"
+                                id="usersRecordCount"
+                            >
+                                0 users
+                            </span>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table users-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Phone</th>
+                                        <th>Tier</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="usersTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="7">
+                                            No users available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     USER DETAIL PANEL
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="user-detail"
+                    data-page="user-detail"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <button
+                                type="button"
+                                class="back-button"
+                                data-navigate="users"
+                            >
+                                ← Back to Users
+                            </button>
+
+                            <span class="section-kicker">
+                                CUSTOMER ACCOUNT
+                            </span>
+
+                            <h3 id="selectedUserTitle">
+                                User Details
+                            </h3>
+
+                            <p id="selectedUserSubtitle">
+                                Customer account information and controls.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Selected user summary -->
+                    <article class="user-profile-card">
+
+                        <div class="user-profile-main">
+
+                            <div
+                                class="large-user-avatar"
+                                id="selectedUserAvatar"
+                            >
+                                U
+                            </div>
+
+                            <div class="user-profile-details">
+
+                                <h4 id="selectedUserName">
+                                    User
+                                </h4>
+
+                                <p id="selectedUserEmail">
+                                    —
+                                </p>
+
+                                <span
+                                    class="account-status-badge active"
+                                    id="selectedUserStatus"
+                                >
+                                    Active
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="user-profile-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button warning"
+                                id="suspendUserButton"
+                            >
+                                Suspend User
+                            </button>
+
+                            <button
+                                type="button"
+                                class="admin-button danger"
+                                id="banUserButton"
+                            >
+                                Ban Account
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Personal information -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Personal Information
+                                </h4>
+
+                                <p>
+                                    Customer identity and profile details.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-grid">
+
+                            <div class="detail-item">
+                                <span>Full Name</span>
+                                <strong id="detailFullName">—</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Email</span>
+                                <strong id="detailEmail">—</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Phone Number</span>
+                                <strong id="detailPhone">—</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Account ID</span>
+                                <strong id="detailUserId">—</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Date Joined</span>
+                                <strong id="detailJoined">—</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Account Status</span>
+                                <strong id="detailAccountStatus">—</strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Account tier -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Account Tier
+                                </h4>
+
+                                <p>
+                                    Verification level and account limits.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tier-detail-grid">
+
+                            <div class="tier-detail-card">
+
+                                <span class="tier-badge tier-one">
+                                    1
+                                </span>
+
+                                <div>
+                                    <strong>
+                                        Tier 1 — Free
+                                    </strong>
+
+                                    <small>
+                                        Basic account
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="tier-state"
+                                    id="userTierOneState"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="tier-detail-card">
+
+                                <span class="tier-badge tier-two">
+                                    2
+                                </span>
+
+                                <div>
+                                    <strong>
+                                        Tier 2 — NIN
+                                    </strong>
+
+                                    <small>
+                                        NIN verified
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="tier-state"
+                                    id="userTierTwoState"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="tier-detail-card">
+
+                                <span class="tier-badge tier-three">
+                                    3
+                                </span>
+
+                                <div>
+                                    <strong>
+                                        Tier 3 — BVN
+                                    </strong>
+
+                                    <small>
+                                        BVN verified
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="tier-state"
+                                    id="userTierThreeState"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Wallet -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Wallet
+                                </h4>
+
+                                <p>
+                                    Customer wallet status and balance.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="wallet-summary-grid">
+
+                            <div class="wallet-summary-item">
+
+                                <span>
+                                    Available Balance
+                                </span>
+
+                                <strong id="userWalletBalance">
+                                    ₦0.00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="wallet-summary-item">
+
+                                <span>
+                                    Today's Spending
+                                </span>
+
+                                <strong id="userDailySpending">
+                                    ₦0.00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="wallet-summary-item">
+
+                                <span>
+                                    Today's Deposits
+                                </span>
+
+                                <strong id="userDailyDeposits">
+                                    ₦0.00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="wallet-summary-item">
+
+                                <span>
+                                    Wallet Status
+                                </span>
+
+                                <strong id="userWalletStatus">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Security -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Security
+                                </h4>
+
+                                <p>
+                                    Customer security configuration.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="security-list">
+
+                            <div class="security-row">
+
+                                <div>
+                                    <strong>
+                                        Login PIN
+                                    </strong>
+
+                                    <small>
+                                        Authentication PIN status
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="security-state"
+                                    id="loginPinStatus"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="security-row">
+
+                                <div>
+                                    <strong>
+                                        Transaction PIN
+                                    </strong>
+
+                                    <small>
+                                        Transaction authorization PIN status
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="security-state"
+                                    id="transactionPinStatus"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="security-row">
+
+                                <div>
+                                    <strong>
+                                        Biometric Login
+                                    </strong>
+
+                                    <small>
+                                        Biometric authentication status
+                                    </small>
+                                </div>
+
+                                <span
+                                    class="security-state"
+                                    id="biometricStatus"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Account controls -->
+                    <article class="admin-card danger-zone">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h4>
+                                    Account Controls
+                                </h4>
+
+                                <p>
+                                    Administrative actions affecting this
+                                    customer account.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="account-control-grid">
+
+                            <button
+                                type="button"
+                                class="control-action warning"
+                                id="detailSuspendButton"
+                            >
+
+                                <span class="control-action-icon">
+                                    ⏸
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        Suspend User
+                                    </strong>
+
+                                    <small>
+                                        Temporarily restrict account activity.
+                                    </small>
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="control-action danger"
+                                id="detailBanButton"
+                            >
+
+                                <span class="control-action-icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        Ban Account
+                                    </strong>
+
+                                    <small>
+                                        Permanently restrict the account.
+                                    </small>
+
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     KYC
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="kyc"
+                    data-page="kyc"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                VERIFICATION
+                            </span>
+
+                            <h3>
+                                KYC Management
+                            </h3>
+
+                            <p>
+                                Monitor customer verification status and
+                                identity verification activity.
+                            </p>
+
+                        </div>
+
+                        <div class="section-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button secondary"
+                                id="refreshKycButton"
+                            >
+                                <span>↻</span>
+                                Refresh
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon blue">
+                                    ✓
+                                </span>
+
+                                <span class="stat-label">
+                                    Verified Users
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="verifiedUsersCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon orange">
+                                    ◌
+                                </span>
+
+                                <span class="stat-label">
+                                    Pending KYC
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="pendingKycCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon red">
+                                    !
+                                </span>
+
+                                <span class="stat-label">
+                                    Failed KYC
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="failedKycCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Verification Records
+                                </h4>
+
+                                <p>
+                                    Review verification results without
+                                    exposing sensitive identity information
+                                    unnecessarily.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Verification</th>
+                                        <th>Tier</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="kycTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="6">
+                                            No KYC records available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     WALLETS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="wallets"
+                    data-page="wallets"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                MONEY
+                            </span>
+
+                            <h3>
+                                Wallets
+                            </h3>
+
+                            <p>
+                                Monitor customer wallet balances and wallet
+                                states.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon green">
+                                    ₦
+                                </span>
+
+                                <span class="stat-label">
+                                    Total Balance
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="walletTotalBalance"
+                            >
+                                ₦0.00
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon blue">
+                                    ♙
+                                </span>
+
+                                <span class="stat-label">
+                                    Active Wallets
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="activeWalletsCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+
+                                <span class="stat-icon red">
+                                    !
+                                </span>
+
+                                <span class="stat-label">
+                                    Restricted Wallets
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="restrictedWalletsCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Wallet Accounts
+                                </h4>
+
+                                <p>
+                                    Customer wallet balances and statuses.
+                                </p>
+                            </div>
+
+                            <div class="filter-toolbar compact">
+
+                                <input
+                                    type="search"
+                                    id="walletSearchInput"
+                                    class="admin-input"
+                                    placeholder="Search wallet..."
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Wallet ID</th>
+                                        <th>Balance</th>
+                                        <th>Tier</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="walletTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="6">
+                                            No wallet records available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     DEPOSITS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="deposits"
+                    data-page="deposits"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                MONEY IN
+                            </span>
+
+                            <h3>
+                                Deposits
+                            </h3>
+
+                            <p>
+                                Monitor customer deposits and payment gateway
+                                transactions.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="depositSearchInput"
+                                    placeholder="Search deposit..."
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="depositStatusFilter"
+                                class="admin-select"
+                            >
+
+                                <option value="all">
+                                    All statuses
+                                </option>
+
+                                <option value="success">
+                                    Successful
+                                </option>
+
+                                <option value="pending">
+                                    Pending
+                                </option>
+
+                                <option value="failed">
+                                    Failed
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Amount</th>
+                                        <th>Provider</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="depositTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="7">
+                                            No deposit records available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     WITHDRAWALS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="withdrawals"
+                    data-page="withdrawals"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                MONEY OUT
+                            </span>
+
+                            <h3>
+                                Withdrawals
+                            </h3>
+
+                            <p>
+                                Monitor and review customer withdrawal
+                                transactions.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="withdrawalSearchInput"
+                                    placeholder="Search withdrawal..."
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="withdrawalStatusFilter"
+                                class="admin-select"
+                            >
+
+                                <option value="all">
+                                    All statuses
+                                </option>
+
+                                <option value="success">
+                                    Successful
+                                </option>
+
+                                <option value="pending">
+                                    Pending
+                                </option>
+
+                                <option value="failed">
+                                    Failed
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Amount</th>
+                                        <th>Destination</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="withdrawalTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="7">
+                                            No withdrawal records available
+                                            yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     TRANSFERS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="transfers"
+                    data-page="transfers"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                TRANSFERS
+                            </span>
+
+                            <h3>
+                                Transfers
+                            </h3>
+
+                            <p>
+                                Monitor customer-to-customer and external
+                                transfers.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="transferSearchInput"
+                                    placeholder="Search transfer..."
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="transferStatusFilter"
+                                class="admin-select"
+                            >
+
+                                <option value="all">
+                                    All statuses
+                                </option>
+
+                                <option value="success">
+                                    Successful
+                                </option>
+
+                                <option value="pending">
+                                    Pending
+                                </option>
+
+                                <option value="failed">
+                                    Failed
+                                </option>
+
+                                <option value="reversed">
+                                    Reversed
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Sender</th>
+                                        <th>Recipient</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="transferTableBody">
+
+                                    <tr class="empty-table-row">
+
+                                        <td colspan="7">
+                                            No transfer records available yet.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+            </div>
+            <!-- /.admin-content -->
+
+        </main>
+        <!-- /.admin-main -->
+
+    </div>
+    <!-- /.admin-app -->
+
+
+    <!-- =========================================================
+         USER ACTION MODAL
+    ========================================================== -->
+
+    <div
+        class="admin-modal"
+        id="userActionModal"
+        aria-hidden="true"
+    >
+
+        <div class="modal-backdrop"></div>
+
+        <div
+            class="modal-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="userActionModalTitle"
+        >
+
+            <button
+                type="button"
+                class="modal-close"
+                id="userActionModalClose"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+            <div class="modal-icon warning" id="userActionModalIcon">
+                !
+            </div>
+
+            <h3 id="userActionModalTitle">
+                Account Action
+            </h3>
+
+            <p id="userActionModalMessage">
+                Confirm this administrative action.
+            </p>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="admin-button secondary"
+                    id="userActionCancel"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    class="admin-button danger"
+                    id="userActionConfirm"
+                >
+                    Confirm
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ADMIN TOAST
+    ========================================================== -->
+
+    <div
+        class="admin-toast"
+        id="adminToast"
+        role="status"
+        aria-live="polite"
+    >
+
+        <span
+            class="toast-icon"
+            id="toastIcon"
+        >
+            ✓
+        </span>
+
+        <span
+            class="toast-message"
+            id="toastMessage"
+        >
+            Action completed.
+        </span>
+
+    </div>
+                <!-- =================================================
+                     AIRTIME
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="airtime"
+                    data-page="airtime"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SERVICES
+                            </span>
+
+                            <h3>
+                                Airtime
+                            </h3>
+
+                            <p>
+                                Monitor airtime purchases, providers and
+                                transaction activity.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon blue">☎</span>
+                                <span class="stat-label">
+                                    Today's Purchases
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="airtimeTodayCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon green">₦</span>
+                                <span class="stat-label">
+                                    Today's Value
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="airtimeTodayValue"
+                            >
+                                ₦0.00
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon red">!</span>
+                                <span class="stat-label">
+                                    Failed Purchases
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="airtimeFailedCount"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>Airtime Transactions</h4>
+
+                                <p>
+                                    Review customer airtime purchases.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Network</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="airtimeTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No airtime transactions available
+                                            yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     DATA
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="data"
+                    data-page="data"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SERVICES
+                            </span>
+
+                            <h3>Data</h3>
+
+                            <p>
+                                Manage data purchases, networks and service
+                                activity.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">⌕</span>
+
+                                <input
+                                    type="search"
+                                    id="dataSearchInput"
+                                    placeholder="Search data transaction..."
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="dataStatusFilter"
+                                class="admin-select"
+                            >
+                                <option value="all">
+                                    All statuses
+                                </option>
+
+                                <option value="success">
+                                    Successful
+                                </option>
+
+                                <option value="pending">
+                                    Pending
+                                </option>
+
+                                <option value="failed">
+                                    Failed
+                                </option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Network</th>
+                                        <th>Plan</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="dataTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No data transactions available
+                                            yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     ELECTRICITY
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="electricity"
+                    data-page="electricity"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SERVICES
+                            </span>
+
+                            <h3>Electricity</h3>
+
+                            <p>
+                                Monitor electricity bill payments and
+                                electricity service providers.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Provider</th>
+                                        <th>Meter</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="electricityTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No electricity transactions
+                                            available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     TV
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="tv"
+                    data-page="tv"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SERVICES
+                            </span>
+
+                            <h3>TV Subscriptions</h3>
+
+                            <p>
+                                Monitor television subscription purchases.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Provider</th>
+                                        <th>Smartcard</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tvTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No TV transactions available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     BETTING
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="betting"
+                    data-page="betting"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SERVICES
+                            </span>
+
+                            <h3>Betting</h3>
+
+                            <p>
+                                Monitor supported betting wallet funding
+                                transactions.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>User</th>
+                                        <th>Provider</th>
+                                        <th>Customer ID</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="bettingTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No betting transactions available
+                                            yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     NOTIFICATIONS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="notifications"
+                    data-page="notifications"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                COMMUNICATION
+                            </span>
+
+                            <h3>Notifications</h3>
+
+                            <p>
+                                Send important notifications to NovaPay
+                                customers.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Create Notification
+                                </h4>
+
+                                <p>
+                                    Send a message to selected customers or
+                                    all customers.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            class="admin-form"
+                            id="notificationForm"
+                        >
+
+                            <div class="form-field">
+
+                                <label for="notificationTitle">
+                                    Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="notificationTitle"
+                                    name="title"
+                                    class="admin-input"
+                                    maxlength="100"
+                                    placeholder="Notification title"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="notificationMessage">
+                                    Message
+                                </label>
+
+                                <textarea
+                                    id="notificationMessage"
+                                    name="message"
+                                    class="admin-textarea"
+                                    maxlength="1000"
+                                    rows="5"
+                                    placeholder="Write your notification..."
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="notificationAudience">
+                                    Audience
+                                </label>
+
+                                <select
+                                    id="notificationAudience"
+                                    name="audience"
+                                    class="admin-select"
+                                >
+
+                                    <option value="all">
+                                        All users
+                                    </option>
+
+                                    <option value="tier1">
+                                        Tier 1 users
+                                    </option>
+
+                                    <option value="tier2">
+                                        Tier 2 users
+                                    </option>
+
+                                    <option value="tier3">
+                                        Tier 3 users
+                                    </option>
+
+                                    <option value="active">
+                                        Active users
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    class="admin-button primary"
+                                >
+                                    Send Notification
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </article>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Notification History
+                                </h4>
+
+                                <p>
+                                    Previously sent notifications.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Audience</th>
+                                        <th>Sent By</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="notificationTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="5">
+                                            No notifications available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     PROMOTIONS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="promotions"
+                    data-page="promotions"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                COMMUNICATION
+                            </span>
+
+                            <h3>Promotions</h3>
+
+                            <p>
+                                Manage promotional messages and customer
+                                campaigns.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Create Promotion
+                                </h4>
+
+                                <p>
+                                    Configure promotional content shown to
+                                    customers.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            class="admin-form"
+                            id="promotionForm"
+                        >
+
+                            <div class="form-field">
+
+                                <label for="promotionTitle">
+                                    Promotion Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="promotionTitle"
+                                    class="admin-input"
+                                    maxlength="100"
+                                    placeholder="Promotion title"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="promotionMessage">
+                                    Promotion Message
+                                </label>
+
+                                <textarea
+                                    id="promotionMessage"
+                                    class="admin-textarea"
+                                    maxlength="1000"
+                                    rows="5"
+                                    placeholder="Promotion details..."
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-grid">
+
+                                <div class="form-field">
+
+                                    <label for="promotionStart">
+                                        Start Date
+                                    </label>
+
+                                    <input
+                                        type="datetime-local"
+                                        id="promotionStart"
+                                        class="admin-input"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-field">
+
+                                    <label for="promotionEnd">
+                                        End Date
+                                    </label>
+
+                                    <input
+                                        type="datetime-local"
+                                        id="promotionEnd"
+                                        class="admin-input"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    class="admin-button primary"
+                                >
+                                    Create Promotion
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     WHATSAPP CHANNEL
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="whatsapp"
+                    data-page="whatsapp"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                COMMUNICATION
+                            </span>
+
+                            <h3>WhatsApp Channel</h3>
+
+                            <p>
+                                Control the NovaPay WhatsApp Channel
+                                invitation popup.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Channel Popup
+                                </h4>
+
+                                <p>
+                                    The popup should appear once after login
+                                    and should not disturb customers.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="setting-list">
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Enable Popup
+                                    </strong>
+
+                                    <small>
+                                        Allow the WhatsApp invitation popup
+                                        to appear.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="whatsappPopupEnabled"
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Display Duration
+                                    </strong>
+
+                                    <small>
+                                        Popup automatically disappears after
+                                        this period.
+                                    </small>
+                                </div>
+
+                                <strong>
+                                    20 seconds
+                                </strong>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Join Button
+                                    </strong>
+
+                                    <small>
+                                        Redirect customers to the NovaPay
+                                        WhatsApp Channel.
+                                    </small>
+                                </div>
+
+                                <span class="setting-state success">
+                                    Enabled
+                                </span>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Maybe Later
+                                    </strong>
+
+                                    <small>
+                                        Allows the customer to dismiss the
+                                        invitation.
+                                    </small>
+                                </div>
+
+                                <span class="setting-state success">
+                                    Enabled
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label for="whatsappChannelUrl">
+                                WhatsApp Channel URL
+                            </label>
+
+                            <input
+                                type="url"
+                                id="whatsappChannelUrl"
+                                class="admin-input"
+                                value="https://whatsapp.com/channel/0029VbDEr8TJUM2WW0aNkC2X"
+                                placeholder="WhatsApp Channel URL"
+                            >
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button primary"
+                                id="saveWhatsappSettings"
+                            >
+                                Save Channel Settings
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     TIERS & LIMITS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="tiers"
+                    data-page="tiers"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                CONTROL
+                            </span>
+
+                            <h3>Tiers & Limits</h3>
+
+                            <p>
+                                Configure the account levels and transaction
+                                limits enforced by NovaPay.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="tier-admin-grid">
+
+                        <!-- Tier 1 -->
+                        <article class="tier-admin-card">
+
+                            <div class="tier-admin-header">
+
+                                <span class="tier-badge tier-one">
+                                    1
+                                </span>
+
+                                <div>
+                                    <h4>
+                                        Free
+                                    </h4>
+
+                                    <span>
+                                        Basic account
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="limit-list">
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Daily Deposit
+                                    </span>
+
+                                    <strong>
+                                        ₦50,000
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Maximum Balance
+                                    </span>
+
+                                    <strong>
+                                        ₦100,000
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Daily Spending / Transfer Out
+                                    </span>
+
+                                    <strong>
+                                        ₦50,000
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="tier-admin-note">
+                                No KYC required.
+                            </span>
+
+                        </article>
+
+
+                        <!-- Tier 2 -->
+                        <article class="tier-admin-card">
+
+                            <div class="tier-admin-header">
+
+                                <span class="tier-badge tier-two">
+                                    2
+                                </span>
+
+                                <div>
+                                    <h4>
+                                        Verified
+                                    </h4>
+
+                                    <span>
+                                        NIN verification
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="limit-list">
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Verification
+                                    </span>
+
+                                    <strong>
+                                        NIN
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Account Limit
+                                    </span>
+
+                                    <strong>
+                                        ₦200,000 – ₦500,000
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="tier-admin-note">
+                                Exact Tier 2 limit can be controlled by the
+                                backend configuration.
+                            </span>
+
+                        </article>
+
+
+                        <!-- Tier 3 -->
+                        <article class="tier-admin-card">
+
+                            <div class="tier-admin-header">
+
+                                <span class="tier-badge tier-three">
+                                    3
+                                </span>
+
+                                <div>
+                                    <h4>
+                                        Advanced
+                                    </h4>
+
+                                    <span>
+                                        BVN verification
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="limit-list">
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Verification
+                                    </span>
+
+                                    <strong>
+                                        BVN
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Daily Transaction Limit
+                                    </span>
+
+                                    <strong>
+                                        ₦5,000,000
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="limit-row">
+
+                                    <span>
+                                        Maximum Balance
+                                    </span>
+
+                                    <strong>
+                                        Unlimited
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="tier-admin-note">
+                                ₦5,000,000 is the daily transaction limit,
+                                not the maximum wallet balance.
+                            </span>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Limit Configuration
+                                </h4>
+
+                                <p>
+                                    Backend will become the authoritative
+                                    source for these limits.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+                            <div class="form-field">
+
+                                <label for="tier1DepositLimit">
+                                    Tier 1 Daily Deposit
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="tier1DepositLimit"
+                                    class="admin-input"
+                                    value="50000"
+                                    min="0"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="tier1BalanceLimit">
+                                    Tier 1 Maximum Balance
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="tier1BalanceLimit"
+                                    class="admin-input"
+                                    value="100000"
+                                    min="0"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="tier1SpendingLimit">
+                                    Tier 1 Daily Spending
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="tier1SpendingLimit"
+                                    class="admin-input"
+                                    value="50000"
+                                    min="0"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="tier3DailyLimit">
+                                    Tier 3 Daily Transaction Limit
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="tier3DailyLimit"
+                                    class="admin-input"
+                                    value="5000000"
+                                    min="0"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button primary"
+                                id="saveTierLimitsButton"
+                            >
+                                Save Limit Configuration
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     FEES
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="fees"
+                    data-page="fees"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                CONTROL
+                            </span>
+
+                            <h3>Fees</h3>
+
+                            <p>
+                                Configure NovaPay service and transaction
+                                charges.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Service Fees
+                                </h4>
+
+                                <p>
+                                    Fees displayed here must be enforced by
+                                    the backend before a transaction is
+                                    completed.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="fee-list">
+
+                            <div class="fee-row">
+
+                                <div>
+                                    <strong>
+                                        Transfers
+                                    </strong>
+
+                                    <small>
+                                        Customer transfer fee
+                                    </small>
+                                </div>
+
+                                <input
+                                    type="number"
+                                    class="admin-input fee-input"
+                                    id="transferFee"
+                                    min="0"
+                                    step="0.01"
+                                    value="0"
+                                >
+
+                            </div>
+
+
+                            <div class="fee-row">
+
+                                <div>
+                                    <strong>
+                                        Withdrawals
+                                    </strong>
+
+                                    <small>
+                                        Customer withdrawal fee
+                                    </small>
+                                </div>
+
+                                <input
+                                    type="number"
+                                    class="admin-input fee-input"
+                                    id="withdrawalFee"
+                                    min="0"
+                                    step="0.01"
+                                    value="0"
+                                >
+
+                            </div>
+
+
+                            <div class="fee-row">
+
+                                <div>
+                                    <strong>
+                                        Airtime
+                                    </strong>
+
+                                    <small>
+                                        Airtime service fee
+                                    </small>
+                                </div>
+
+                                <input
+                                    type="number"
+                                    class="admin-input fee-input"
+                                    id="airtimeFee"
+                                    min="0"
+                                    step="0.01"
+                                    value="0"
+                                >
+
+                            </div>
+
+
+                            <div class="fee-row">
+
+                                <div>
+                                    <strong>
+                                        Data
+                                    </strong>
+
+                                    <small>
+                                        Data service fee
+                                    </small>
+                                </div>
+
+                                <input
+                                    type="number"
+                                    class="admin-input fee-input"
+                                    id="dataFee"
+                                    min="0"
+                                    step="0.01"
+                                    value="0"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button primary"
+                                id="saveFeesButton"
+                            >
+                                Save Fees
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     FRAUD & RISK
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="fraud"
+                    data-page="fraud"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SECURITY
+                            </span>
+
+                            <h3>Fraud & Risk</h3>
+
+                            <p>
+                                Review suspicious activity and account risk
+                                indicators.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon red">!</span>
+
+                                <span class="stat-label">
+                                    High Risk Accounts
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="highRiskAccounts"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon orange">◌</span>
+
+                                <span class="stat-label">
+                                    Flagged Transactions
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="flaggedTransactions"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Risk Alerts
+                                </h4>
+
+                                <p>
+                                    Transactions or accounts requiring
+                                    investigation.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Risk Type</th>
+                                        <th>Reference</th>
+                                        <th>Risk Level</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="riskTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No risk alerts available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     PROVIDERS & APIS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="providers"
+                    data-page="providers"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SYSTEM
+                            </span>
+
+                            <h3>Providers & APIs</h3>
+
+                            <p>
+                                Monitor external service providers used by
+                                NovaPay.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="provider-list">
+
+                            <div class="provider-row">
+
+                                <div class="provider-icon">
+                                    M
+                                </div>
+
+                                <div class="provider-details">
+
+                                    <strong>
+                                        Monnify
+                                    </strong>
+
+                                    <small>
+                                        Payment gateway
+                                    </small>
+
+                                </div>
+
+                                <span
+                                    class="provider-status"
+                                    id="monnifyStatus"
+                                >
+                                    Not Live
+                                </span>
+
+                            </div>
+
+
+                            <div class="provider-row">
+
+                                <div class="provider-icon">
+                                    P
+                                </div>
+
+                                <div class="provider-details">
+
+                                    <strong>
+                                        Payvessel
+                                    </strong>
+
+                                    <small>
+                                        Payment / financial service provider
+                                    </small>
+
+                                </div>
+
+                                <span
+                                    class="provider-status"
+                                    id="payvesselStatus"
+                                >
+                                    Not Configured
+                                </span>
+
+                            </div>
+
+
+                            <div class="provider-row">
+
+                                <div class="provider-icon">
+                                    B
+                                </div>
+
+                                <div class="provider-details">
+
+                                    <strong>
+                                        BabsPay
+                                    </strong>
+
+                                    <small>
+                                        Identity verification provider
+                                    </small>
+
+                                </div>
+
+                                <span
+                                    class="provider-status"
+                                    id="babspayStatus"
+                                >
+                                    Configured
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Provider Controls
+                                </h4>
+
+                                <p>
+                                    Provider credentials must remain
+                                    server-side and must never be exposed
+                                    through this frontend.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="setting-list">
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Monnify
+                                    </strong>
+
+                                    <small>
+                                        Enable only after live API credentials
+                                        have been configured on the backend.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="monnifyEnabled"
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        BabsPay Identity Verification
+                                    </strong>
+
+                                    <small>
+                                        Backend-controlled verification
+                                        service.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="babspayEnabled"
+                                        checked
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     AUDIT LOGS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="audit"
+                    data-page="audit"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SECURITY
+                            </span>
+
+                            <h3>Audit Logs</h3>
+
+                            <p>
+                                Track important administrative actions.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="filter-toolbar">
+
+                            <div class="search-box">
+
+                                <span class="search-icon">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="auditSearchInput"
+                                    placeholder="Search audit logs..."
+                                >
+
+                            </div>
+
+
+                            <select
+                                id="auditActionFilter"
+                                class="admin-select"
+                            >
+
+                                <option value="all">
+                                    All actions
+                                </option>
+
+                                <option value="user">
+                                    User actions
+                                </option>
+
+                                <option value="transaction">
+                                    Transaction actions
+                                </option>
+
+                                <option value="settings">
+                                    Settings changes
+                                </option>
+
+                                <option value="security">
+                                    Security actions
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Admin</th>
+                                        <th>Action</th>
+                                        <th>Target</th>
+                                        <th>IP / Session</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="auditTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="6">
+                                            No audit records available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     CUSTOMER SUPPORT
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="support"
+                    data-page="support"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SUPPORT
+                            </span>
+
+                            <h3>Customer Support</h3>
+
+                            <p>
+                                Review and manage customer support requests.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon orange">◌</span>
+
+                                <span class="stat-label">
+                                    Open Tickets
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="openSupportTickets"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+
+                        <article class="stat-card">
+
+                            <div class="stat-card-top">
+                                <span class="stat-icon blue">?</span>
+
+                                <span class="stat-label">
+                                    Total Tickets
+                                </span>
+                            </div>
+
+                            <strong
+                                class="stat-value"
+                                id="totalSupportTickets"
+                            >
+                                0
+                            </strong>
+
+                        </article>
+
+                    </div>
+
+
+                    <article class="admin-card full-width">
+
+                        <div class="table-wrapper">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Ticket</th>
+                                        <th>User</th>
+                                        <th>Subject</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="supportTableBody">
+
+                                    <tr class="empty-table-row">
+                                        <td colspan="7">
+                                            No support tickets available yet.
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     SETTINGS
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="settings"
+                    data-page="settings"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SYSTEM
+                            </span>
+
+                            <h3>Settings</h3>
+
+                            <p>
+                                Configure NovaPay application settings.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- NovaPay colours -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    NovaPay Brand Colours
+                                </h4>
+
+                                <p>
+                                    NovaPay uses three main brand colours.
+                                    The administrator controls the available
+                                    colour configuration.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="color-settings-grid">
+
+                            <div class="color-setting">
+
+                                <label for="primaryColor">
+                                    Primary Colour
+                                </label>
+
+                                <div class="color-control">
+
+                                    <input
+                                        type="color"
+                                        id="primaryColor"
+                                        value="#2563eb"
+                                    >
+
+                                    <input
+                                        type="text"
+                                        id="primaryColorText"
+                                        class="admin-input"
+                                        value="#2563EB"
+                                        maxlength="7"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="color-setting">
+
+                                <label for="secondaryColor">
+                                    Secondary Colour
+                                </label>
+
+                                <div class="color-control">
+
+                                    <input
+                                        type="color"
+                                        id="secondaryColor"
+                                        value="#1d4ed8"
+                                    >
+
+                                    <input
+                                        type="text"
+                                        id="secondaryColorText"
+                                        class="admin-input"
+                                        value="#1D4ED8"
+                                        maxlength="7"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="color-setting">
+
+                                <label for="accentColor">
+                                    Accent Colour
+                                </label>
+
+                                <div class="color-control">
+
+                                    <input
+                                        type="color"
+                                        id="accentColor"
+                                        value="#60a5fa"
+                                    >
+
+                                    <input
+                                        type="text"
+                                        id="accentColorText"
+                                        class="admin-input"
+                                        value="#60A5FA"
+                                        maxlength="7"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="admin-button primary"
+                                id="saveBrandColorsButton"
+                            >
+                                Save Brand Colours
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- User theme -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    User Appearance
+                                </h4>
+
+                                <p>
+                                    Control which appearance options are
+                                    available to customers.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="setting-list">
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Allow Users To Choose Theme
+                                    </strong>
+
+                                    <small>
+                                        Customers can choose from the
+                                        appearance options enabled by NovaPay.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="allowUserTheme"
+                                        checked
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Dark Mode
+                                    </strong>
+
+                                    <small>
+                                        Enable dark mode when the feature is
+                                        ready.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="darkModeEnabled"
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Application -->
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Application Controls
+                                </h4>
+
+                                <p>
+                                    General NovaPay application controls.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="setting-list">
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Maintenance Mode
+                                    </strong>
+
+                                    <small>
+                                        Temporarily restrict customer access
+                                        while maintenance is being performed.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="maintenanceMode"
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        New Registrations
+                                    </strong>
+
+                                    <small>
+                                        Allow new customers to create
+                                        accounts.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="newRegistrationsEnabled"
+                                        checked
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="setting-row">
+
+                                <div>
+                                    <strong>
+                                        Transactions
+                                    </strong>
+
+                                    <small>
+                                        Enable customer transaction
+                                        processing.
+                                    </small>
+                                </div>
+
+                                <label class="toggle">
+
+                                    <input
+                                        type="checkbox"
+                                        id="transactionsEnabled"
+                                        checked
+                                    >
+
+                                    <span class="toggle-slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     LEGAL & CONTENT
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="legal"
+                    data-page="legal"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                CONTENT
+                            </span>
+
+                            <h3>Legal & Content</h3>
+
+                            <p>
+                                Manage customer-facing legal and application
+                                information.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="setting-list">
+
+                            <button
+                                type="button"
+                                class="setting-navigation"
+                                id="privacyPolicySetting"
+                            >
+
+                                <div>
+                                    <strong>
+                                        Privacy Policy
+                                    </strong>
+
+                                    <small>
+                                        Manage the customer privacy policy.
+                                    </small>
+                                </div>
+
+                                <span>›</span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="setting-navigation"
+                                id="termsSetting"
+                            >
+
+                                <div>
+                                    <strong>
+                                        Terms & Conditions
+                                    </strong>
+
+                                    <small>
+                                        Manage NovaPay terms and conditions.
+                                    </small>
+                                </div>
+
+                                <span>›</span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="setting-navigation"
+                                id="aboutSetting"
+                            >
+
+                                <div>
+                                    <strong>
+                                        About NovaPay
+                                    </strong>
+
+                                    <small>
+                                        Manage application information.
+                                    </small>
+                                </div>
+
+                                <span>›</span>
+
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADMIN MANAGEMENT
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="admin-management"
+                    data-page="admin-management"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SECURITY
+                            </span>
+
+                            <h3>Admin Management</h3>
+
+                            <p>
+                                Manage administrator access and permissions.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h4>
+                                    Administrator Roles
+                                </h4>
+
+                                <p>
+                                    Administrative access should follow the
+                                    minimum-permission principle.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="role-list">
+
+                            <div class="role-row">
+
+                                <div>
+                                    <strong>
+                                        Super Admin
+                                    </strong>
+
+                                    <small>
+                                        Full administrative control.
+                                    </small>
+                                </div>
+
+                                <span class="role-badge">
+                                    Full Access
+                                </span>
+
+                            </div>
+
+
+                            <div class="role-row">
+
+                                <div>
+                                    <strong>
+                                        Operations Admin
+                                    </strong>
+
+                                    <small>
+                                        Customer and transaction operations.
+                                    </small>
+                                </div>
+
+                                <span class="role-badge">
+                                    Operations
+                                </span>
+
+                            </div>
+
+
+                            <div class="role-row">
+
+                                <div>
+                                    <strong>
+                                        Support Admin
+                                    </strong>
+
+                                    <small>
+                                        Customer support access.
+                                    </small>
+                                </div>
+
+                                <span class="role-badge">
+                                    Support
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     SYSTEM HEALTH
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="system"
+                    data-page="system"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SYSTEM
+                            </span>
+
+                            <h3>System Health</h3>
+
+                            <p>
+                                Monitor the health of NovaPay services.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-grid">
+
+                        <article class="health-card">
+
+                            <span class="health-indicator green"></span>
+
+                            <div>
+                                <strong>
+                                    NovaPay Backend
+                                </strong>
+
+                                <small>
+                                    API service
+                                </small>
+                            </div>
+
+                            <span
+                                id="backendHealthStatus"
+                                class="health-status"
+                            >
+                                Checking
+                            </span>
+
+                        </article>
+
+
+                        <article class="health-card">
+
+                            <span class="health-indicator green"></span>
+
+                            <div>
+                                <strong>
+                                    Firebase
+                                </strong>
+
+                                <small>
+                                    Authentication / database
+                                </small>
+                            </div>
+
+                            <span
+                                id="firebaseHealthStatus"
+                                class="health-status"
+                            >
+                                Checking
+                            </span>
+
+                        </article>
+
+
+                        <article class="health-card">
+
+                            <span class="health-indicator orange"></span>
+
+                            <div>
+                                <strong>
+                                    Payment Gateway
+                                </strong>
+
+                                <small>
+                                    Provider connection
+                                </small>
+                            </div>
+
+                            <span
+                                id="paymentHealthStatus"
+                                class="health-status"
+                            >
+                                Checking
+                            </span>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SYSTEM INFORMATION
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="system-info"
+                    data-page="system-info"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <span class="section-kicker">
+                                SYSTEM
+                            </span>
+
+                            <h3>System Information</h3>
+
+                            <p>
+                                NovaPay application and environment
+                                information.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <article class="admin-card">
+
+                        <div class="detail-grid">
+
+                            <div class="detail-item">
+                                <span>
+                                    Application
+                                </span>
+
+                                <strong>
+                                    NovaPay
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>
+                                    Environment
+                                </span>
+
+                                <strong id="systemEnvironment">
+                                    Production
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>
+                                    Frontend
+                                </span>
+
+                                <strong>
+                                    NovaPay Web
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>
+                                    Backend
+                                </span>
+
+                                <strong>
+                                    NovaPay API
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>
+                                    Authentication
+                                </span>
+
+                                <strong>
+                                    Firebase Authentication
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>
+                                    Database
+                                </span>
+
+                                <strong>
+                                    Firebase Firestore
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADMIN ACCESS DENIED
+                ================================================== -->
+
+                <section
+                    class="admin-section"
+                    id="access-denied"
+                    data-page="access-denied"
+                >
+
+                    <div class="empty-state">
+
+                        <div class="empty-state-icon">
+                            !
+                        </div>
+
+                        <h3>
+                            Access Restricted
+                        </h3>
+
+                        <p>
+                            You do not have permission to access this
+                            administration section.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="admin-button primary"
+                            data-navigate="dashboard"
+                        >
+                            Return to Dashboard
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     GLOBAL ADMIN LOADING
+                ================================================== -->
+
+                <div
+                    class="admin-loading"
+                    id="adminLoading"
+                    aria-hidden="true"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Loading NovaPay...
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     GLOBAL EMPTY STATE
+                ================================================== -->
+
+                <div
+                    class="admin-global-empty"
+                    id="adminGlobalEmpty"
+                    hidden
+                >
+
+                    <div class="empty-state-icon">
+                        ◌
+                    </div>
+
+                    <h3>
+                        Nothing to display
+                    </h3>
+
+                    <p>
+                        There is currently no information available for this
+                        section.
+                    </p>
+
+                </div>
+
+    <!-- =========================================================
+         ADMIN JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="admin.js"
+    ></script>
 
 </body>
 </html>
