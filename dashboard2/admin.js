@@ -1,488 +1,398 @@
-/* =========================================================
-   NOVAPAY ADMIN DASHBOARD
-   admin.js
-   ========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
 
-"use strict";
+    // ------------------------------------------------------------
+    // Dashboard elements
+    // ------------------------------------------------------------
 
+    const manualToggle = document.getElementById("manualToggle");
+    const manualClose = document.getElementById("manualClose");
+    const manualBackdrop = document.getElementById("manualBackdrop");
+    const adminManual = document.getElementById("adminManual");
+    const adminManualScroll = document.getElementById("adminManualScroll");
+    const adminManualContent = document.getElementById("adminManualContent");
+    const adminPageStatus = document.getElementById("adminPageStatus");
 
-/* =========================================================
-   DOM REFERENCES
-   ========================================================= */
+    const totalUsers = document.getElementById("totalUsers");
+    const todayActiveUsers = document.getElementById("todayActiveUsers");
+    const totalProfit = document.getElementById("totalProfit");
+    const analysisChart = document.getElementById("analysisChart");
+    const recentTransactionsBody = document.getElementById("recentTransactionsBody");
 
-const adminApp = document.getElementById("adminApp");
+    // ------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------
 
-const manualToggle = document.getElementById("manualToggle");
-const manualClose = document.getElementById("manualClose");
-const manualBackdrop = document.getElementById("manualBackdrop");
-const adminManual = document.getElementById("adminManual");
-const adminManualScroll = document.getElementById("adminManualScroll");
-const adminManualContent = document.getElementById("adminManualContent");
+    let manualButtonsLoaded = false;
+    let manualButtonsLoading = false;
 
-const adminPageStatus = document.getElementById("adminPageStatus");
+    // ------------------------------------------------------------
+    // Utility: status message
+    // ------------------------------------------------------------
 
-const totalUsersElement = document.getElementById("totalUsers");
-const todayActiveUsersElement = document.getElementById("todayActiveUsers");
-const totalProfitElement = document.getElementById("totalProfit");
+    function setAdminStatus(message = "", type = "") {
+        if (!adminPageStatus) {
+            return;
+        }
 
-const analysisChart = document.getElementById("analysisChart");
-const recentTransactionsBody = document.getElementById(
-    "recentTransactionsBody"
-);
-
-
-/* =========================================================
-   APPLICATION STATE
-   ========================================================= */
-
-const state = {
-    manualOpen: false,
-    dashboardReady: false
-};
-
-
-/* =========================================================
-   STATUS ANNOUNCEMENT
-   ========================================================= */
-
-function announce(message) {
-    if (!adminPageStatus) {
-        return;
-    }
-
-    adminPageStatus.textContent = "";
-
-    window.requestAnimationFrame(() => {
         adminPageStatus.textContent = message;
-    });
-}
+        adminPageStatus.className = "admin-page-status";
 
+        if (type) {
+            adminPageStatus.classList.add(`is-${type}`);
+        }
 
-/* =========================================================
-   OPEN MANUAL
-   ========================================================= */
-
-function openManual() {
-    if (
-        !adminManual ||
-        !manualToggle ||
-        !manualBackdrop
-    ) {
-        return;
+        if (message) {
+            adminPageStatus.hidden = false;
+        } else {
+            adminPageStatus.hidden = true;
+        }
     }
 
-    state.manualOpen = true;
+    // ------------------------------------------------------------
+    // Manual panel
+    // ------------------------------------------------------------
 
-    adminManual.hidden = false;
-    manualBackdrop.hidden = false;
+    function openManual() {
+        if (!adminManual || !manualBackdrop) {
+            return;
+        }
 
-    adminManual.setAttribute("aria-hidden", "false");
-    manualToggle.setAttribute("aria-expanded", "true");
-    manualBackdrop.setAttribute("aria-hidden", "false");
+        adminManual.classList.add("is-open");
+        manualBackdrop.classList.add("is-visible");
 
-    document.body.classList.add("manual-is-open");
+        document.body.classList.add("admin-manual-open");
 
-    announce("Admin manual opened.");
+        if (manualToggle) {
+            manualToggle.setAttribute("aria-expanded", "true");
+        }
+
+        if (manualClose) {
+            window.setTimeout(() => {
+                manualClose.focus();
+            }, 50);
+        }
+
+        loadManualButtons();
+    }
+
+    function closeManual() {
+        if (!adminManual || !manualBackdrop) {
+            return;
+        }
+
+        adminManual.classList.remove("is-open");
+        manualBackdrop.classList.remove("is-visible");
+
+        document.body.classList.remove("admin-manual-open");
+
+        if (manualToggle) {
+            manualToggle.setAttribute("aria-expanded", "false");
+            manualToggle.focus();
+        }
+    }
+
+    function toggleManual() {
+        if (!adminManual) {
+            return;
+        }
+
+        if (adminManual.classList.contains("is-open")) {
+            closeManual();
+        } else {
+            openManual();
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Load admin-buttons.css
+    // ------------------------------------------------------------
+
+    function loadAdminButtonsStylesheet() {
+        const existingStylesheet = document.querySelector(
+            'link[data-admin-buttons-stylesheet="true"]'
+        );
+
+        if (existingStylesheet) {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve, reject) => {
+            const stylesheet = document.createElement("link");
+
+            stylesheet.rel = "stylesheet";
+            stylesheet.href = "./admin-buttons.css";
+            stylesheet.dataset.adminButtonsStylesheet = "true";
+
+            stylesheet.addEventListener("load", () => {
+                resolve();
+            });
+
+            stylesheet.addEventListener("error", () => {
+                stylesheet.remove();
+                reject(
+                    new Error(
+                        "The admin-buttons.css stylesheet could not be loaded."
+                    )
+                );
+            });
+
+            document.head.appendChild(stylesheet);
+        });
+    }
+
+    // ------------------------------------------------------------
+    // Load admin-buttons.html
+    // ------------------------------------------------------------
+
+    async function loadManualButtons() {
+        if (!adminManualContent) {
+            return;
+        }
+
+        if (manualButtonsLoaded || manualButtonsLoading) {
+            return;
+        }
+
+        manualButtonsLoading = true;
+
+        adminManualContent.innerHTML = `
+            <div class="admin-buttons-loading" role="status" aria-live="polite">
+                <div class="admin-buttons-loading-spinner" aria-hidden="true"></div>
+                <p>Loading admin tools...</p>
+            </div>
+        `;
+
+        try {
+            await loadAdminButtonsStylesheet();
+
+            const response = await fetch("./admin-buttons.html", {
+                method: "GET",
+                cache: "no-cache",
+                headers: {
+                    Accept: "text/html"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Unable to load admin-buttons.html (${response.status}).`
+                );
+            }
+
+            const html = await response.text();
+
+            if (!html.trim()) {
+                throw new Error("admin-buttons.html is empty.");
+            }
+
+            const parser = new DOMParser();
+            const buttonsDocument = parser.parseFromString(
+                html,
+                "text/html"
+            );
+
+            const buttonList = buttonsDocument.querySelector(
+                ".admin-buttons-list"
+            );
+
+            if (!buttonList) {
+                throw new Error(
+                    "The .admin-buttons-list container was not found in admin-buttons.html."
+                );
+            }
+
+            const buttonListCopy = buttonList.cloneNode(true);
+
+            adminManualContent.replaceChildren(buttonListCopy);
+
+            manualButtonsLoaded = true;
+
+            setAdminStatus("");
+        } catch (error) {
+            console.error("NovaPay admin manual loading error:", error);
+
+            adminManualContent.innerHTML = `
+                <div class="admin-buttons-error" role="alert">
+                    <h3>Admin tools could not be loaded</h3>
+                    <p>
+                        The manual system could not load
+                        <strong>admin-buttons.html</strong>.
+                    </p>
+                    <button
+                        type="button"
+                        class="admin-buttons-retry"
+                        id="adminButtonsRetry"
+                    >
+                        Retry
+                    </button>
+                </div>
+            `;
+
+            const retryButton = document.getElementById(
+                "adminButtonsRetry"
+            );
+
+            if (retryButton) {
+                retryButton.addEventListener("click", () => {
+                    manualButtonsLoaded = false;
+                    loadManualButtons();
+                });
+            }
+
+            setAdminStatus(
+                "Admin management tools could not be loaded.",
+                "error"
+            );
+        } finally {
+            manualButtonsLoading = false;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Dashboard initial state
+    // ------------------------------------------------------------
+
+    function initializeDashboard() {
+        if (totalUsers) {
+            totalUsers.textContent = "—";
+        }
+
+        if (todayActiveUsers) {
+            todayActiveUsers.textContent = "—";
+        }
+
+        if (totalProfit) {
+            totalProfit.textContent = "—";
+        }
+
+        if (analysisChart) {
+            analysisChart.innerHTML = `
+                <div class="admin-chart-empty">
+                    <span class="admin-chart-empty-title">
+                        Analysis data will appear here
+                    </span>
+                    <span class="admin-chart-empty-text">
+                        Dashboard analytics will be connected to the backend.
+                    </span>
+                </div>
+            `;
+        }
+
+        if (recentTransactionsBody) {
+            recentTransactionsBody.innerHTML = `
+                <tr>
+                    <td colspan="100%">
+                        No transaction data available yet.
+                    </td>
+                </tr>
+            `;
+        }
+
+        setAdminStatus("");
+    }
+
+    // ------------------------------------------------------------
+    // Event listeners
+    // ------------------------------------------------------------
+
+    if (manualToggle) {
+        manualToggle.addEventListener("click", toggleManual);
+    }
+
+    if (manualClose) {
+        manualClose.addEventListener("click", closeManual);
+    }
+
+    if (manualBackdrop) {
+        manualBackdrop.addEventListener("click", closeManual);
+    }
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            if (
+                adminManual &&
+                adminManual.classList.contains("is-open")
+            ) {
+                closeManual();
+            }
+        }
+    });
+
+    // ------------------------------------------------------------
+    // Prevent background scrolling while Manual is open
+    // ------------------------------------------------------------
 
     if (adminManualScroll) {
-        adminManualScroll.scrollTop = 0;
+        adminManualScroll.addEventListener("wheel", (event) => {
+            event.stopPropagation();
+        });
     }
 
-    window.requestAnimationFrame(() => {
-        if (manualClose) {
-            manualClose.focus();
+    // ------------------------------------------------------------
+    // Public dashboard API
+    // ------------------------------------------------------------
+
+    window.NovaPayAdmin = {
+        openManual,
+        closeManual,
+        toggleManual,
+        loadManualButtons,
+        setAdminStatus,
+
+        setDashboardSummary(data = {}) {
+            if (totalUsers && data.totalUsers !== undefined) {
+                totalUsers.textContent = String(data.totalUsers);
+            }
+
+            if (
+                todayActiveUsers &&
+                data.todayActiveUsers !== undefined
+            ) {
+                todayActiveUsers.textContent = String(
+                    data.todayActiveUsers
+                );
+            }
+
+            if (totalProfit && data.totalProfit !== undefined) {
+                totalProfit.textContent = String(data.totalProfit);
+            }
+        },
+
+        setAnalysisChart(content = "") {
+            if (!analysisChart) {
+                return;
+            }
+
+            if (typeof content === "string") {
+                analysisChart.innerHTML = content;
+                return;
+            }
+
+            if (content instanceof Node) {
+                analysisChart.replaceChildren(content);
+            }
+        },
+
+        setRecentTransactions(content = "") {
+            if (!recentTransactionsBody) {
+                return;
+            }
+
+            if (typeof content === "string") {
+                recentTransactionsBody.innerHTML = content;
+                return;
+            }
+
+            if (content instanceof Node) {
+                recentTransactionsBody.replaceChildren(content);
+            }
         }
-    });
-}
+    };
 
+    // ------------------------------------------------------------
+    // Start dashboard
+    // ------------------------------------------------------------
 
-/* =========================================================
-   CLOSE MANUAL
-   ========================================================= */
-
-function closeManual() {
-    if (
-        !adminManual ||
-        !manualToggle ||
-        !manualBackdrop
-    ) {
-        return;
-    }
-
-    state.manualOpen = false;
-
-    adminManual.hidden = true;
-    manualBackdrop.hidden = true;
-
-    adminManual.setAttribute("aria-hidden", "true");
-    manualToggle.setAttribute("aria-expanded", "false");
-    manualBackdrop.setAttribute("aria-hidden", "true");
-
-    document.body.classList.remove("manual-is-open");
-
-    announce("Admin manual closed.");
-
-    window.requestAnimationFrame(() => {
-        manualToggle.focus();
-    });
-}
-
-
-/* =========================================================
-   TOGGLE MANUAL
-   ========================================================= */
-
-function toggleManual() {
-    if (state.manualOpen) {
-        closeManual();
-        return;
-    }
-
-    openManual();
-}
-
-
-/* =========================================================
-   ESCAPE KEY
-   ========================================================= */
-
-function handleKeyboard(event) {
-    if (event.key !== "Escape") {
-        return;
-    }
-
-    if (!state.manualOpen) {
-        return;
-    }
-
-    closeManual();
-}
-
-
-/* =========================================================
-   BACKDROP CLICK
-   ========================================================= */
-
-function handleBackdropClick(event) {
-    if (event.target !== manualBackdrop) {
-        return;
-    }
-
-    closeManual();
-}
-
-
-/* =========================================================
-   DASHBOARD SUMMARY
-   ========================================================= */
-
-function updateDashboardSummary({
-    totalUsers = null,
-    todayActiveUsers = null,
-    totalProfit = null
-} = {}) {
-    if (totalUsersElement) {
-        totalUsersElement.textContent =
-            totalUsers === null
-                ? "—"
-                : formatInteger(totalUsers);
-    }
-
-    if (todayActiveUsersElement) {
-        todayActiveUsersElement.textContent =
-            todayActiveUsers === null
-                ? "—"
-                : formatInteger(todayActiveUsers);
-    }
-
-    if (totalProfitElement) {
-        totalProfitElement.textContent =
-            totalProfit === null
-                ? "—"
-                : formatCurrency(totalProfit);
-    }
-}
-
-
-/* =========================================================
-   INTEGER FORMATTER
-   ========================================================= */
-
-function formatInteger(value) {
-    const numericValue = Number(value);
-
-    if (!Number.isFinite(numericValue)) {
-        return "—";
-    }
-
-    return new Intl.NumberFormat("en-NG", {
-        maximumFractionDigits: 0
-    }).format(numericValue);
-}
-
-
-/* =========================================================
-   CURRENCY FORMATTER
-   ========================================================= */
-
-function formatCurrency(value) {
-    const numericValue = Number(value);
-
-    if (!Number.isFinite(numericValue)) {
-        return "—";
-    }
-
-    return new Intl.NumberFormat("en-NG", {
-        style: "currency",
-        currency: "NGN",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(numericValue);
-}
-
-
-/* =========================================================
-   ANALYSIS STATE
-   ========================================================= */
-
-function setAnalysisState(message) {
-    if (!analysisChart) {
-        return;
-    }
-
-    analysisChart.innerHTML = "";
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "analysis-empty";
-
-    const title = document.createElement("span");
-    title.className = "analysis-empty-title";
-    title.textContent = "Analysis data";
-
-    const text = document.createElement("span");
-    text.className = "analysis-empty-text";
-    text.textContent = message;
-
-    wrapper.appendChild(title);
-    wrapper.appendChild(text);
-
-    analysisChart.appendChild(wrapper);
-}
-
-
-/* =========================================================
-   RECENT TRANSACTIONS
-   ========================================================= */
-
-function renderRecentTransactions(transactions = []) {
-    if (!recentTransactionsBody) {
-        return;
-    }
-
-    recentTransactionsBody.innerHTML = "";
-
-    if (!Array.isArray(transactions) || transactions.length === 0) {
-        const row = document.createElement("tr");
-        row.className = "transactions-empty-row";
-
-        const cell = document.createElement("td");
-        cell.className = "transactions-empty";
-        cell.colSpan = 5;
-        cell.textContent =
-            "No recent transactions available.";
-
-        row.appendChild(cell);
-        recentTransactionsBody.appendChild(row);
-
-        return;
-    }
-
-    transactions.forEach((transaction) => {
-        const row = document.createElement("tr");
-
-        const dateCell = document.createElement("td");
-        dateCell.textContent =
-            transaction.date ?? "—";
-
-        const userCell = document.createElement("td");
-        userCell.textContent =
-            transaction.user ?? "—";
-
-        const typeCell = document.createElement("td");
-        typeCell.textContent =
-            transaction.type ?? "—";
-
-        const amountCell = document.createElement("td");
-        amountCell.textContent =
-            transaction.amount === undefined ||
-            transaction.amount === null
-                ? "—"
-                : formatCurrency(transaction.amount);
-
-        const statusCell = document.createElement("td");
-        statusCell.textContent =
-            transaction.status ?? "—";
-
-        row.appendChild(dateCell);
-        row.appendChild(userCell);
-        row.appendChild(typeCell);
-        row.appendChild(amountCell);
-        row.appendChild(statusCell);
-
-        recentTransactionsBody.appendChild(row);
-    });
-}
-
-
-/* =========================================================
-   DASHBOARD INITIALIZATION
-   ========================================================= */
-
-function initializeDashboard() {
-    updateDashboardSummary({
-        totalUsers: null,
-        todayActiveUsers: null,
-        totalProfit: null
-    });
-
-    setAnalysisState(
-        "No analysis data available yet."
-    );
-
-    renderRecentTransactions([]);
-
-    state.dashboardReady = true;
-
-    announce("NovaPay admin dashboard ready.");
-}
-
-
-/* =========================================================
-   MANUAL CONTENT PREPARATION
-   ========================================================= */
-
-function initializeManual() {
-    if (!adminManualContent) {
-        return;
-    }
-
-    /*
-     * Individual admin tools intentionally do not live here.
-     *
-     * They will be implemented separately through:
-     *
-     * admin-buttons.html
-     * admin-buttons.css
-     * admin-button.js
-     *
-     * This keeps the dashboard separate from the actual
-     * admin management tools.
-     */
-
-    adminManualContent.innerHTML = "";
-
-    const placeholder = document.createElement("div");
-    placeholder.className = "manual-placeholder";
-
-    const icon = document.createElement("div");
-    icon.className = "manual-placeholder-icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = "☰";
-
-    const title = document.createElement("h3");
-    title.textContent = "Admin Manual";
-
-    const description = document.createElement("p");
-    description.textContent =
-        "Admin management tools will be added here one feature at a time.";
-
-    placeholder.appendChild(icon);
-    placeholder.appendChild(title);
-    placeholder.appendChild(description);
-
-    adminManualContent.appendChild(placeholder);
-}
-
-
-/* =========================================================
-   EVENT LISTENERS
-   ========================================================= */
-
-if (manualToggle) {
-    manualToggle.addEventListener(
-        "click",
-        toggleManual
-    );
-}
-
-
-if (manualClose) {
-    manualClose.addEventListener(
-        "click",
-        closeManual
-    );
-}
-
-
-if (manualBackdrop) {
-    manualBackdrop.addEventListener(
-        "click",
-        handleBackdropClick
-    );
-}
-
-
-document.addEventListener(
-    "keydown",
-    handleKeyboard
-);
-
-
-/* =========================================================
-   PREVENT BACKGROUND SCROLL WHILE MANUAL IS OPEN
-   ========================================================= */
-
-document.addEventListener(
-    "wheel",
-    (event) => {
-        if (!state.manualOpen) {
-            return;
-        }
-
-        if (
-            adminManualScroll &&
-            adminManualScroll.contains(event.target)
-        ) {
-            return;
-        }
-
-        event.preventDefault();
-    },
-    {
-        passive: false
-    }
-);
-
-
-/* =========================================================
-   PUBLIC ADMIN API
-   ========================================================= */
-
-window.NovaPayAdmin = Object.freeze({
-    openManual,
-    closeManual,
-    toggleManual,
-    updateDashboardSummary,
-    renderRecentTransactions,
-    setAnalysisState,
-    formatInteger,
-    formatCurrency
+    initializeDashboard();
 });
-
-
-/* =========================================================
-   START APPLICATION
-   ========================================================= */
-
-initializeManual();
-initializeDashboard();

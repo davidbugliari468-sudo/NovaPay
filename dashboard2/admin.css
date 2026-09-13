@@ -1,1299 +1,1208 @@
-/* =========================================================
-   NOVAPAY ADMIN DASHBOARD
-   admin.css
-   ========================================================= */
-
-
-/* =========================================================
-   ROOT VARIABLES
-   ========================================================= */
-
 :root {
-    --np-primary: #0866ff;
-    --np-primary-dark: #0451d9;
-    --np-primary-light: #eaf2ff;
+  --np-blue: #0b63f6;
+  --np-blue-dark: #084fc7;
+  --np-blue-light: #eaf2ff;
+  --np-blue-soft: #f5f9ff;
 
-    --np-navy: #071a3a;
-    --np-navy-soft: #102957;
+  --np-text: #10213f;
+  --np-text-secondary: #66758f;
+  --np-text-muted: #8b98aa;
 
-    --np-white: #ffffff;
-    --np-bg: #f4f7fb;
-    --np-card: #ffffff;
+  --np-white: #ffffff;
+  --np-background: #f3f6fb;
+  --np-surface: #ffffff;
 
-    --np-text: #10213f;
-    --np-text-soft: #667085;
-    --np-text-muted: #98a2b3;
+  --np-border: #e1e8f1;
+  --np-border-strong: #d2dce9;
 
-    --np-border: #e4eaf2;
-    --np-border-dark: #d5deea;
+  --np-success: #159b64;
+  --np-danger: #dc4b55;
+  --np-warning: #d58a16;
 
-    --np-success: #12b76a;
-    --np-warning: #f79009;
-    --np-danger: #f04438;
+  --np-shadow-small:
+    0 4px 14px rgba(16, 33, 63, 0.055);
 
-    --np-shadow-sm:
-        0 2px 8px rgba(16, 33, 63, 0.05);
+  --np-shadow-medium:
+    0 12px 34px rgba(16, 33, 63, 0.08);
 
-    --np-shadow:
-        0 8px 30px rgba(16, 33, 63, 0.08);
+  --np-radius-large: 20px;
+  --np-radius-medium: 15px;
+  --np-radius-small: 11px;
 
-    --np-shadow-lg:
-        0 20px 60px rgba(7, 26, 58, 0.16);
-
-    --np-radius-sm: 8px;
-    --np-radius: 14px;
-    --np-radius-lg: 20px;
-
-    --np-dashboard-min-width: 980px;
-
-    --np-header-height: 76px;
-
-    --np-transition:
-        180ms ease;
+  --np-dashboard-width: 1180px;
+  --np-dashboard-min-width: 900px;
 }
 
-
-/* =========================================================
+/* =========================================
    RESET
-   ========================================================= */
+========================================= */
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-
 
 html {
-    min-width: 100%;
-    min-height: 100%;
-
-    margin: 0;
-    padding: 0;
-
-    overflow-x: auto;
-    overflow-y: auto;
-
-    background: var(--np-bg);
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--np-background);
+  overflow-x: auto;
+  overflow-y: auto;
 }
-
 
 body {
-    min-width: 100%;
-    min-height: 100vh;
-
-    margin: 0;
-    padding: 0;
-
-    overflow-x: auto;
-    overflow-y: auto;
-
-    background: var(--np-bg);
-
-    color: var(--np-text);
-
-    font-family:
-        Inter,
-        ui-sans-serif,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(11, 99, 246, 0.09),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f7faff 0%,
+      #f0f4fa 100%
+    );
+  color: var(--np-text);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-
 
 button,
 input,
-textarea,
-select {
-    font: inherit;
+select,
+textarea {
+  font: inherit;
 }
-
 
 button {
-    border: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-
-button:focus-visible {
-    outline: 3px solid rgba(8, 102, 255, 0.25);
-    outline-offset: 3px;
-}
-
-
-h1,
-h2,
-h3,
-p {
-    margin-top: 0;
-}
-
-
-::selection {
-    color: var(--np-white);
-    background: var(--np-primary);
-}
-
-
-/* =========================================================
-   ADMIN APPLICATION
-   ========================================================= */
+/* =========================================
+   APP
+========================================= */
 
 .admin-app {
-    position: relative;
-
-    min-width: var(--np-dashboard-min-width);
-    min-height: 100vh;
-
-    background:
-        linear-gradient(
-            180deg,
-            #f7faff 0%,
-            var(--np-bg) 260px,
-            var(--np-bg) 100%
-        );
+  position: relative;
+  min-width: var(--np-dashboard-min-width);
+  min-height: 100vh;
 }
 
-
-/* =========================================================
+/* =========================================
    HEADER
-   ========================================================= */
+========================================= */
 
 .admin-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 
-    width: 100%;
-    min-width: var(--np-dashboard-min-width);
-    height: var(--np-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  width: 100%;
+  min-height: 70px;
+  padding: 12px 28px;
 
-    padding:
-        0 34px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--np-border);
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--np-navy) 0%,
-            #0a2859 100%
-        );
+  box-shadow:
+    0 2px 12px rgba(16, 33, 63, 0.045);
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-    box-shadow:
-        0 4px 20px rgba(7, 26, 58, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-
-/* =========================================================
+/* =========================================
    BRAND
-   ========================================================= */
+========================================= */
 
 .admin-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-
-    min-width: max-content;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
+.admin-brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.admin-brand-name {
-    color: var(--np-white);
+  width: 40px;
+  height: 40px;
+  margin-right: 11px;
 
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    line-height: 1;
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--np-blue),
+      #3182ff
+    );
+
+  color: #ffffff;
+
+  font-size: 17px;
+  font-weight: 850;
+
+  box-shadow:
+    0 6px 15px rgba(11, 99, 246, 0.2);
 }
 
-
-.admin-brand-role {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 28px;
-    padding: 0 10px;
-
-    color: #dceaff;
-
-    background: rgba(255, 255, 255, 0.10);
-
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 7px;
-
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+.admin-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
+.admin-brand-text strong {
+  color: var(--np-text);
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: 1.1px;
+  line-height: 1.1;
+}
 
-/* =========================================================
+.admin-brand-text span {
+  margin-top: 3px;
+  color: var(--np-blue);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+  line-height: 1;
+}
+
+/* =========================================
    MANUAL TOGGLE
-   ========================================================= */
+========================================= */
 
 .manual-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
 
-    min-height: 42px;
-    padding: 0 17px;
+  min-height: 40px;
+  padding: 0 14px;
 
-    color: var(--np-white);
+  border: 1px solid #c9daf5;
+  border-radius: 11px;
 
-    background:
-        rgba(255, 255, 255, 0.10);
+  background: var(--np-blue-soft);
+  color: var(--np-blue);
 
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 9px;
+  cursor: pointer;
 
-    cursor: pointer;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.8px;
 
-    font-size: 12px;
-    font-weight: 750;
-    letter-spacing: 0.08em;
-
-    transition:
-        background var(--np-transition),
-        border-color var(--np-transition),
-        transform var(--np-transition),
-        box-shadow var(--np-transition);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
-
-
-.manual-toggle:hover {
-    background:
-        rgba(255, 255, 255, 0.17);
-
-    border-color:
-        rgba(255, 255, 255, 0.28);
-
-    box-shadow:
-        0 5px 18px rgba(0, 0, 0, 0.14);
-}
-
-
-.manual-toggle:active {
-    transform: translateY(1px);
-}
-
-
-.manual-toggle[aria-expanded="true"] {
-    background: var(--np-primary);
-    border-color: var(--np-primary);
-}
-
 
 .manual-toggle-icon {
-    display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    align-items: center;
-    justify-content: center;
+  width: 22px;
+  height: 22px;
 
+  border-radius: 7px;
+
+  background: var(--np-blue);
+  color: #ffffff;
+
+  font-size: 13px;
+  line-height: 1;
+}
+
+.manual-toggle:hover {
+  transform: translateY(-1px);
+
+  border-color: var(--np-blue);
+  background: var(--np-blue);
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 18px rgba(11, 99, 246, 0.18);
+}
+
+.manual-toggle:hover .manual-toggle-icon {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.manual-toggle:active {
+  transform: translateY(0);
+}
+
+.manual-toggle:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 4px rgba(11, 99, 246, 0.14);
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.admin-main {
+  width: min(
+    calc(100% - 48px),
+    var(--np-dashboard-width)
+  );
+
+  margin: 0 auto;
+  padding: 30px 0 45px;
+}
+
+/* =========================================
+   DASHBOARD INTRO
+========================================= */
+
+.dashboard-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.dashboard-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+
+  color: var(--np-blue);
+
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.45px;
+  line-height: 1;
+}
+
+.dashboard-intro h1 {
+  color: var(--np-text);
+
+  font-size: 28px;
+  font-weight: 820;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+}
+
+.dashboard-intro p {
+  margin-top: 6px;
+
+  color: var(--np-text-secondary);
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================================
+   SUMMARY CARDS
+========================================= */
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  min-width: 0;
+  min-height: 126px;
+
+  padding: 17px 18px 15px;
+
+  background: var(--np-surface);
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius-medium);
+
+  box-shadow: var(--np-shadow-small);
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-1px);
+
+  border-color: #d1dff2;
+
+  box-shadow:
+    0 8px 22px rgba(16, 33, 63, 0.07);
+}
+
+.summary-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.summary-card-label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: var(--np-text-secondary);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 30px;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid #d9e6fa;
+  border-radius: 9px;
+
+  background: var(--np-blue-light);
+  color: var(--np-blue);
+
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+}
+
+.summary-card-value {
+  display: block;
+
+  margin-top: 11px;
+
+  color: var(--np-text);
+
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+
+  line-height: 1.05;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-card-note {
+  display: block;
+
+  margin-top: 7px;
+
+  color: var(--np-text-muted);
+
+  font-size: 10.5px;
+  font-weight: 500;
+
+  line-height: 1.35;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.dashboard-panel {
+  width: 100%;
+  margin-bottom: 18px;
+
+  background: var(--np-surface);
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius-large);
+
+  box-shadow: var(--np-shadow-small);
+
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  min-height: 72px;
+  padding: 17px 20px;
+
+  border-bottom: 1px solid var(--np-border);
+}
+
+.panel-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--np-blue);
+
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.25px;
+  line-height: 1;
+}
+
+.panel-header h2 {
+  color: var(--np-text);
+
+  font-size: 17px;
+  font-weight: 780;
+  letter-spacing: -0.25px;
+
+  line-height: 1.2;
+}
+
+.panel-status {
+  flex: 0 0 auto;
+
+  padding: 6px 9px;
+
+  border: 1px solid var(--np-border);
+  border-radius: 8px;
+
+  background: #f8fafc;
+  color: var(--np-text-muted);
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* =========================================
+   ANALYSIS
+========================================= */
+
+.analysis-chart {
+  min-height: 270px;
+  padding: 22px;
+}
+
+.dashboard-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  min-height: 225px;
+
+  padding: 30px;
+
+  border: 1px dashed var(--np-border-strong);
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdff 0%,
+      #f8faff 100%
+    );
+
+  text-align: center;
+}
+
+.dashboard-placeholder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  margin-bottom: 13px;
+
+  border: 1px solid #dce8fa;
+  border-radius: 13px;
+
+  background: var(--np-blue-light);
+  color: var(--np-blue);
+
+  font-size: 22px;
+}
+
+.dashboard-placeholder strong {
+  color: var(--np-text);
+
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.dashboard-placeholder span {
+  max-width: 390px;
+
+  margin-top: 5px;
+
+  color: var(--np-text-muted);
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================================
+   TRANSACTIONS
+========================================= */
+
+.transactions-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.transactions-table {
+  width: 100%;
+  min-width: 720px;
+
+  border-collapse: collapse;
+
+  table-layout: auto;
+}
+
+.transactions-table th {
+  padding: 12px 16px;
+
+  background: #f8fafd;
+  border-bottom: 1px solid var(--np-border);
+
+  color: var(--np-text-secondary);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.transactions-table td {
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #edf1f6;
+
+  color: var(--np-text);
+
+  font-size: 11px;
+  font-weight: 550;
+
+  white-space: nowrap;
+}
+
+.transactions-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.transactions-table tbody tr:hover td {
+  background: #fbfdff;
+}
+
+.dashboard-table-empty {
+  padding: 34px 15px;
+
+  color: var(--np-text-muted);
+
+  font-size: 11px;
+  font-weight: 500;
+
+  text-align: center;
+}
+
+/* =========================================
+   PAGE STATUS
+========================================= */
+
+.admin-page-status {
+  position: fixed;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+/* =========================================
+   MANUAL BACKDROP
+========================================= */
+
+.manual-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+
+  background: rgba(10, 25, 49, 0.34);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease;
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.manual-backdrop.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================================
+   ADMIN MANUAL
+========================================= */
+
+.admin-manual {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 200;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(440px, 94vw);
+  height: 100vh;
+  height: 100dvh;
+
+  background: #ffffff;
+
+  border-left: 1px solid var(--np-border);
+
+  box-shadow:
+    -16px 0 45px rgba(16, 33, 63, 0.13);
+
+  transform: translateX(105%);
+  visibility: hidden;
+
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 220ms ease;
+}
+
+.admin-manual.is-open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* =========================================
+   MANUAL HEADER
+========================================= */
+
+.admin-manual-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  flex: 0 0 auto;
+
+  min-height: 84px;
+  padding: 18px 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f5f9ff 100%
+    );
+
+  border-bottom: 1px solid var(--np-border);
+}
+
+.manual-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--np-blue);
+
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.35px;
+  line-height: 1;
+}
+
+.admin-manual-header h2 {
+  color: var(--np-text);
+
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.35px;
+
+  line-height: 1.15;
+}
+
+.admin-manual-header p {
+  margin-top: 4px;
+
+  color: var(--np-text-muted);
+
+  font-size: 10.5px;
+  font-weight: 500;
+
+  line-height: 1.35;
+}
+
+.manual-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 34px;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid var(--np-border);
+  border-radius: 10px;
+
+  background: #f7f9fc;
+  color: var(--np-text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.manual-close span {
+  margin-top: -2px;
+
+  font-size: 23px;
+  font-weight: 350;
+  line-height: 1;
+}
+
+.manual-close:hover {
+  transform: rotate(2deg);
+
+  border-color: #c7d8ef;
+  background: var(--np-blue-light);
+  color: var(--np-blue);
+}
+
+.manual-close:active {
+  transform: scale(0.96);
+}
+
+.manual-close:focus-visible {
+  outline: none;
+
+  border-color: var(--np-blue);
+
+  box-shadow:
+    0 0 0 4px rgba(11, 99, 246, 0.13);
+}
+
+/* =========================================
+   MANUAL SCROLL AREA
+========================================= */
+
+.admin-manual-scroll {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: #c8d4e4 transparent;
+}
+
+.admin-manual-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.admin-manual-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-manual-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #c8d4e4;
+}
+
+.admin-manual-scroll::-webkit-scrollbar-thumb:hover {
+  background: #aebed2;
+}
+
+.admin-manual-content {
+  width: 100%;
+  min-height: 100%;
+  padding: 18px;
+}
+
+/* =========================================
+   CURRENT MANUAL PLACEHOLDER
+========================================= */
+
+.manual-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  min-height: 230px;
+
+  padding: 28px 20px;
+
+  border: 1px dashed var(--np-border-strong);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdff 0%,
+      #f7faff 100%
+    );
+
+  text-align: center;
+}
+
+.manual-placeholder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  margin-bottom: 13px;
+
+  border: 1px solid #d8e6fa;
+  border-radius: 13px;
+
+  background: var(--np-blue-light);
+  color: var(--np-blue);
+
+  font-size: 18px;
+}
+
+.manual-placeholder h3 {
+  color: var(--np-text);
+
+  font-size: 14px;
+  font-weight: 750;
+
+  line-height: 1.4;
+}
+
+.manual-placeholder p {
+  max-width: 320px;
+
+  margin-top: 6px;
+
+  color: var(--np-text-secondary);
+
+  font-size: 11px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+.manual-placeholder span {
+  margin-top: 12px;
+
+  color: var(--np-text-muted);
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* =========================================
+   BODY LOCK WHEN MANUAL IS OPEN
+========================================= */
+
+body.manual-is-open {
+  overflow: hidden;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+  .admin-main {
+    width: calc(100% - 34px);
+  }
+
+  .admin-header {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .dashboard-summary {
+    gap: 11px;
+  }
+
+  .summary-card {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 700px) {
+  /*
+    The dashboard keeps its desktop-style
+    working width. The page itself can scroll
+    horizontally rather than cutting content.
+  */
+
+  .admin-app {
+    min-width: var(--np-dashboard-min-width);
+  }
+
+  .admin-header {
+    min-height: 64px;
+    padding: 10px 14px;
+  }
+
+  .admin-brand-mark {
+    width: 36px;
+    height: 36px;
+    margin-right: 9px;
+
+    border-radius: 10px;
+    font-size: 15px;
+  }
+
+  .admin-brand-text strong {
+    font-size: 13px;
+  }
+
+  .admin-brand-text span {
+    font-size: 8px;
+  }
+
+  .manual-toggle {
+    min-height: 37px;
+    padding: 0 11px;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+  }
+
+  .manual-toggle-icon {
     width: 20px;
     height: 20px;
 
-    font-size: 17px;
-    line-height: 1;
-}
-
-
-/* =========================================================
-   MAIN DASHBOARD
-   ========================================================= */
-
-.admin-main {
-    width: 100%;
-    min-width: var(--np-dashboard-min-width);
-
-    padding:
-        42px 38px
-        56px;
-}
-
-
-/* =========================================================
-   DASHBOARD HEADING
-   ========================================================= */
-
-.dashboard-heading {
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-
-.dashboard-eyebrow {
-    margin-bottom: 7px;
-
-    color: var(--np-primary);
-
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    line-height: 1.3;
-}
-
-
-.dashboard-heading h1 {
-    margin-bottom: 7px;
-
-    color: var(--np-navy);
-
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-}
-
-
-.dashboard-subtitle {
-    margin-bottom: 0;
-
-    color: var(--np-text-soft);
-
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   SUMMARY CARDS
-   ========================================================= */
-
-.dashboard-summary {
-    width: 100%;
-
-    display: grid;
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-    gap: 20px;
-
-    margin-bottom: 24px;
-}
-
-
-.summary-card {
-    position: relative;
-
-    min-height: 164px;
-
-    padding: 25px 26px;
-
-    overflow: hidden;
-
-    background: var(--np-card);
-
-    border: 1px solid var(--np-border);
-    border-radius: var(--np-radius);
-
-    box-shadow: var(--np-shadow-sm);
-
-    transition:
-        transform var(--np-transition),
-        box-shadow var(--np-transition),
-        border-color var(--np-transition);
-}
-
-
-.summary-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 4px;
-    height: 100%;
-
-    background:
-        linear-gradient(
-            180deg,
-            var(--np-primary),
-            #5c9cff
-        );
-}
-
-
-.summary-card:hover {
-    transform: translateY(-2px);
-
-    border-color:
-        #d4e0f1;
-
-    box-shadow:
-        0 12px 34px rgba(16, 33, 63, 0.09);
-}
-
-
-.summary-card-label {
-    margin-bottom: 17px;
-
-    color: var(--np-text-soft);
-
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
-}
-
-
-.summary-card-value {
-    min-height: 43px;
-
-    color: var(--np-navy);
-
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-
-    word-break: break-word;
-}
-
-
-.summary-card-note {
-    margin-top: 9px;
-
-    color: var(--np-text-muted);
+    border-radius: 6px;
 
     font-size: 12px;
-    line-height: 1.5;
-}
+  }
 
+  .admin-main {
+    width: calc(100% - 28px);
+    padding-top: 23px;
+  }
 
-/* =========================================================
-   DASHBOARD CONTENT
-   ========================================================= */
-
-.dashboard-content {
-    width: 100%;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1.05fr)
-        minmax(0, 1fr);
-
-    gap: 24px;
-}
-
-
-/* =========================================================
-   GENERAL PANEL
-   ========================================================= */
-
-.dashboard-panel {
-    min-width: 0;
-
-    background: var(--np-card);
-
-    border: 1px solid var(--np-border);
-    border-radius: var(--np-radius-lg);
-
-    box-shadow: var(--np-shadow-sm);
-}
-
-
-.panel-header {
-    min-height: 78px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding:
-        18px 23px;
-
-    border-bottom:
-        1px solid var(--np-border);
-}
-
-
-.panel-eyebrow {
-    margin-bottom: 5px;
-
-    color: var(--np-primary);
-
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    line-height: 1.3;
-}
-
-
-.panel-header h2 {
-    margin-bottom: 0;
-
-    color: var(--np-navy);
-
-    font-size: 17px;
-    font-weight: 750;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-}
-
-
-/* =========================================================
-   ANALYSIS PANEL
-   ========================================================= */
-
-.analysis-panel {
-    min-height: 430px;
-}
-
-
-.analysis-chart {
-    position: relative;
-
-    min-height: 350px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin: 0 20px 20px;
-}
-
-
-.analysis-chart::before {
-    content: "";
-
-    position: absolute;
-    inset: 30px 8px 25px;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(8, 102, 255, 0.05) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        100% 25%;
-    
-    pointer-events: none;
-}
-
-
-.analysis-empty {
-    position: relative;
-    z-index: 1;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    max-width: 280px;
-
-    padding: 30px;
-
-    text-align: center;
-}
-
-
-.analysis-empty-title {
-    display: block;
-
-    margin-bottom: 7px;
-
-    color: var(--np-text);
-
-    font-size: 14px;
-    font-weight: 700;
-}
-
-
-.analysis-empty-text {
-    display: block;
-
-    color: var(--np-text-muted);
-
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   TRANSACTIONS PANEL
-   ========================================================= */
-
-.transactions-panel {
-    min-height: 430px;
-
-    overflow: hidden;
-}
-
-
-.transactions-table-wrapper {
-    width: 100%;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    scrollbar-width: thin;
-    scrollbar-color:
-        #c6d1df
-        transparent;
-}
-
-
-.transactions-table {
-    width: 100%;
-    min-width: 650px;
-
-    border-collapse: collapse;
-
-    table-layout: fixed;
-}
-
-
-.transactions-table th {
-    height: 54px;
-
-    padding:
-        0 17px;
-
-    color: var(--np-text-muted);
-
-    background: #fbfcfe;
-
-    border-bottom:
-        1px solid var(--np-border);
-
-    text-align: left;
-
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.07em;
-    white-space: nowrap;
-}
-
-
-.transactions-table td {
-    height: 64px;
-
-    padding:
-        0 17px;
-
-    color: var(--np-text);
-
-    border-bottom:
-        1px solid #edf1f6;
-
-    font-size: 12px;
-
-    vertical-align: middle;
-}
-
-
-.transactions-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-
-.transactions-empty-row td {
-    height: 290px;
-}
-
-
-.transactions-empty {
-    color: var(--np-text-muted) !important;
-
-    text-align: center;
-
-    font-size: 12px !important;
-}
-
-
-/* =========================================================
-   MANUAL BACKDROP
-   ========================================================= */
-
-.manual-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-
-    background:
-        rgba(4, 18, 43, 0.42);
-
-    backdrop-filter:
-        blur(2px);
-
-    -webkit-backdrop-filter:
-        blur(2px);
-
-    opacity: 1;
-
-    transition:
-        opacity var(--np-transition);
-}
-
-
-.manual-backdrop[hidden] {
-    display: none;
-}
-
-
-/* =========================================================
-   MANUAL PANEL
-   ========================================================= */
-
-.admin-manual {
-    position: fixed;
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-
-    z-index: 300;
-
-    width:
-        min(430px, 94vw);
-
-    height: 100dvh;
-
-    display: flex;
-    flex-direction: column;
-
-    color: var(--np-text);
-
-    background: var(--np-white);
-
-    border-left:
-        1px solid var(--np-border);
-
-    box-shadow:
-        -18px 0 55px rgba(7, 26, 58, 0.18);
-
-    overflow: hidden;
-}
-
-
-.admin-manual[hidden] {
-    display: none;
-}
-
-
-/* =========================================================
-   MANUAL HEADER
-   ========================================================= */
-
-.admin-manual-header {
-    flex: 0 0 auto;
-
-    min-height: 108px;
-
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding:
-        25px 23px 21px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--np-navy) 0%,
-            #0b2e66 100%
-        );
-
-    border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
-}
-
-
-.admin-manual-title-group {
-    min-width: 0;
-}
-
-
-.admin-manual-eyebrow {
-    margin-bottom: 5px;
-
-    color: #8fb9ff;
-
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-}
-
-
-.admin-manual-header h2 {
-    margin-bottom: 5px;
-
-    color: var(--np-white);
-
-    font-size: 22px;
-    font-weight: 800;
-    line-height: 1.2;
-}
-
-
-.admin-manual-description {
-    max-width: 290px;
-
-    margin-bottom: 0;
-
-    color: #b9c9e2;
-
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-
-/* =========================================================
-   MANUAL CLOSE BUTTON
-   ========================================================= */
-
-.manual-close {
-    flex: 0 0 auto;
-
-    width: 38px;
-    height: 38px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    color: var(--np-white);
-
-    background:
-        rgba(255, 255, 255, 0.10);
-
-    border:
-        1px solid rgba(255, 255, 255, 0.16);
-
-    border-radius: 9px;
-
-    cursor: pointer;
-
-    transition:
-        background var(--np-transition),
-        transform var(--np-transition);
-}
-
-
-.manual-close:hover {
-    background:
-        rgba(255, 255, 255, 0.18);
-}
-
-
-.manual-close:active {
-    transform: scale(0.96);
-}
-
-
-.manual-close span {
-    display: block;
-
+  .dashboard-intro h1 {
     font-size: 25px;
-    font-weight: 300;
-    line-height: 1;
-}
+  }
 
-
-/* =========================================================
-   MANUAL SCROLL AREA
-   ========================================================= */
-
-.admin-manual-scroll {
-    flex: 1 1 auto;
-
-    min-height: 0;
-
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    overscroll-behavior:
-        contain;
-
-    scrollbar-width: thin;
-
-    scrollbar-color:
-        #bcc9d9
-        transparent;
-}
-
-
-.admin-manual-scroll::-webkit-scrollbar {
-    width: 7px;
-}
-
-
-.admin-manual-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-
-.admin-manual-scroll::-webkit-scrollbar-thumb {
-    background: #bcc9d9;
-
-    border-radius: 20px;
-}
-
-
-.admin-manual-scroll::-webkit-scrollbar-thumb:hover {
-    background: #9eafc4;
-}
-
-
-/* =========================================================
-   MANUAL CONTENT
-   ========================================================= */
-
-.admin-manual-content {
-    min-height: 100%;
-
-    padding: 24px;
-}
-
-
-.manual-placeholder {
-    min-height: 360px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 30px;
-
-    text-align: center;
-
-    border:
-        1px dashed var(--np-border-dark);
-
-    border-radius: var(--np-radius);
-
-    background:
-        linear-gradient(
-            180deg,
-            #fbfdff,
-            #f7faff
-        );
-}
-
-
-.manual-placeholder-icon {
-    width: 54px;
-    height: 54px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 17px;
-
-    color: var(--np-primary);
-
-    background: var(--np-primary-light);
-
-    border-radius: 14px;
-
-    font-size: 22px;
-}
-
-
-.manual-placeholder h3 {
-    margin-bottom: 8px;
-
-    color: var(--np-navy);
-
-    font-size: 16px;
-    font-weight: 750;
-}
-
-
-.manual-placeholder p {
-    max-width: 270px;
-
-    margin-bottom: 0;
-
-    color: var(--np-text-muted);
-
+  .dashboard-intro p {
     font-size: 12px;
-    line-height: 1.65;
+  }
+
+  .summary-card {
+    min-height: 116px;
+    padding: 14px;
+  }
+
+  .summary-card-value {
+    font-size: 23px;
+  }
+
+  .panel-header {
+    min-height: 66px;
+    padding: 15px 17px;
+  }
+
+  .analysis-chart {
+    min-height: 245px;
+    padding: 17px;
+  }
+
+  .dashboard-placeholder {
+    min-height: 205px;
+  }
+
+  .transactions-table th,
+  .transactions-table td {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+
+  .admin-manual {
+    width: min(430px, 94vw);
+  }
 }
 
+/* =========================================
+   SMALL PHONE
+========================================= */
 
-/* =========================================================
-   ACCESSIBILITY / SYSTEM STATUS
-   ========================================================= */
+@media (max-width: 430px) {
+  .admin-header {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
 
-.admin-page-status {
-    position: fixed;
+  .manual-toggle {
+    gap: 6px;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
 
-    left: 16px;
-    bottom: 16px;
+  .admin-main {
+    width: calc(100% - 20px);
+    padding-top: 18px;
+  }
 
-    z-index: 500;
+  .dashboard-intro {
+    margin-bottom: 15px;
+  }
 
-    width: 1px;
-    height: 1px;
+  .dashboard-intro h1 {
+    font-size: 23px;
+  }
 
-    overflow: hidden;
+  .dashboard-intro p {
+    font-size: 11px;
+  }
 
-    clip: rect(0, 0, 0, 0);
-    clip-path: inset(50%);
+  .dashboard-summary {
+    gap: 9px;
+    margin-bottom: 14px;
+  }
 
-    white-space: nowrap;
+  .summary-card {
+    min-height: 108px;
+    padding: 12px;
+  }
+
+  .summary-card-label {
+    font-size: 10px;
+  }
+
+  .summary-card-icon {
+    flex-basis: 27px;
+
+    width: 27px;
+    height: 27px;
+
+    border-radius: 8px;
+
+    font-size: 8px;
+  }
+
+  .summary-card-value {
+    margin-top: 9px;
+    font-size: 21px;
+  }
+
+  .summary-card-note {
+    margin-top: 5px;
+    font-size: 9.5px;
+  }
+
+  .dashboard-panel {
+    margin-bottom: 14px;
+    border-radius: 16px;
+  }
+
+  .panel-header {
+    padding: 13px 14px;
+  }
+
+  .panel-header h2 {
+    font-size: 15px;
+  }
+
+  .panel-status {
+    padding: 5px 7px;
+    font-size: 8px;
+  }
+
+  .analysis-chart {
+    padding: 13px;
+  }
+
+  .dashboard-placeholder {
+    padding: 22px 14px;
+  }
+
+  .admin-manual-header {
+    min-height: 78px;
+    padding: 16px;
+  }
+
+  .admin-manual-content {
+    padding: 13px;
+  }
 }
 
-
-/* =========================================================
-   LARGE DESKTOP
-   ========================================================= */
-
-@media (min-width: 1400px) {
-
-    .admin-main {
-        padding-left: 55px;
-        padding-right: 55px;
-    }
-
-
-    .dashboard-heading h1 {
-        font-size: 33px;
-    }
-
-
-    .summary-card {
-        min-height: 174px;
-    }
-
-
-    .analysis-panel,
-    .transactions-panel {
-        min-height: 470px;
-    }
-
-
-    .analysis-chart {
-        min-height: 390px;
-    }
-
-
-    .transactions-empty-row td {
-        height: 330px;
-    }
-}
-
-
-/* =========================================================
-   MEDIUM DESKTOP / TABLET LANDSCAPE
-   ========================================================= */
-
-@media (max-width: 1100px) {
-
-    .admin-header {
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-
-
-    .admin-main {
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-
-
-    .dashboard-summary {
-        gap: 15px;
-    }
-
-
-    .dashboard-content {
-        gap: 16px;
-    }
-
-
-    .summary-card {
-        padding:
-            22px 23px;
-    }
-}
-
-
-/* =========================================================
-   PHONE
-   =========================================================
-   
-   The dashboard deliberately remains wide.
-   We do NOT squash the desktop layout into an unusable
-   narrow card arrangement.
-
-   Horizontal scrolling is allowed so that nothing gets
-   cut off on smaller screens.
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    .admin-header {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-
-    .admin-main {
-        padding:
-            30px 18px
-            42px;
-    }
-
-
-    .dashboard-heading {
-        margin-bottom: 24px;
-    }
-
-
-    .dashboard-heading h1 {
-        font-size: 26px;
-    }
-
-
-    .dashboard-subtitle {
-        font-size: 13px;
-    }
-
-
-    .summary-card {
-        min-height: 150px;
-
-        padding:
-            21px 22px;
-    }
-
-
-    .summary-card-value {
-        font-size: 27px;
-    }
-
-
-    .panel-header {
-        padding:
-            18px 20px;
-    }
-
-
-    .admin-manual {
-        width:
-            min(430px, 94vw);
-    }
-
-
-    .admin-manual-header {
-        padding:
-            22px 19px 19px;
-    }
-
-
-    .admin-manual-content {
-        padding:
-            19px;
-    }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 420px) {
-
-    .admin-header {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-
-    .admin-brand {
-        gap: 9px;
-    }
-
-
-    .admin-brand-name {
-        font-size: 18px;
-    }
-
-
-    .admin-brand-role {
-        min-height: 25px;
-
-        padding:
-            0 8px;
-
-        font-size: 9px;
-    }
-
-
-    .manual-toggle {
-        min-height: 39px;
-
-        padding:
-            0 12px;
-
-        gap: 7px;
-
-        font-size: 10px;
-    }
-
-
-    .admin-main {
-        padding:
-            25px 15px
-            38px;
-    }
-
-
-    .dashboard-heading h1 {
-        font-size: 24px;
-    }
-
-
-    .summary-card {
-        padding:
-            19px 20px;
-    }
-
-
-    .summary-card-value {
-        font-size: 25px;
-    }
-}
-
-
-/* =========================================================
+/* =========================================
    REDUCED MOTION
-   ========================================================= */
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-    }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }

@@ -1,593 +1,785 @@
 :root {
-  --novapay-blue: #0b63f6;
-  --novapay-blue-dark: #084fc7;
-  --novapay-blue-light: #eaf2ff;
-  --novapay-blue-soft: #f4f8ff;
+    --novapay-blue: #0b63ce;
+    --novapay-blue-dark: #084b9d;
+    --novapay-blue-light: #eaf3ff;
+    --novapay-blue-soft: #f4f8ff;
 
-  --text-primary: #10213f;
-  --text-secondary: #66758f;
-  --text-muted: #8a97aa;
+    --white: #ffffff;
+    --page-bg: #f5f8fc;
+    --surface: #ffffff;
+    --surface-soft: #f8fbff;
 
-  --surface: #ffffff;
-  --surface-soft: #f7f9fc;
-  --border: #e3e9f2;
-  --border-strong: #d5deeb;
+    --text-primary: #10233f;
+    --text-secondary: #61718a;
+    --text-muted: #8a98ab;
 
-  --success: #16a36a;
-  --danger: #e34b4b;
+    --border: #dce5f0;
+    --border-light: #e9eef5;
 
-  --shadow-small: 0 4px 14px rgba(16, 33, 63, 0.06);
-  --shadow-medium: 0 12px 32px rgba(16, 33, 63, 0.09);
+    --success: #18a56b;
+    --shadow-sm: 0 2px 8px rgba(16, 35, 63, 0.06);
+    --shadow-md: 0 8px 24px rgba(16, 35, 63, 0.08);
 
-  --radius-large: 22px;
-  --radius-medium: 16px;
-  --radius-small: 12px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
 
-  --content-width: 760px;
+    --transition: 180ms ease;
 }
 
+
+/* ================================================================
+   RESET
+================================================================ */
+
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
-  min-height: 100%;
-  background: #f1f5fa;
-  overflow-x: auto;
-  overflow-y: auto;
+    min-width: 320px;
+    scroll-behavior: smooth;
 }
 
 body {
-  min-width: 320px;
-  min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(11, 99, 246, 0.09),
-      transparent 34%
-    ),
-    linear-gradient(
-      180deg,
-      #f5f8fd 0%,
-      #eef3f9 100%
-    );
-  color: var(--text-primary);
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+    min-width: 320px;
+    min-height: 100vh;
+    background: var(--page-bg);
+    color: var(--text-primary);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 button {
-  font: inherit;
+    font: inherit;
 }
 
+button:focus-visible {
+    outline: 3px solid rgba(11, 99, 206, 0.25);
+    outline-offset: 2px;
+}
+
+
+/* ================================================================
+   PAGE
+================================================================ */
+
 .admin-buttons-page {
-  width: 100%;
-  min-height: 100vh;
-  padding: 36px 24px 50px;
+    width: 100%;
+    min-height: 100vh;
+    padding: 28px;
+    overflow-x: auto;
 }
 
 .admin-buttons-shell {
-  width: min(100%, var(--content-width));
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(227, 233, 242, 0.95);
-  border-radius: var(--radius-large);
-  box-shadow: var(--shadow-medium);
-  overflow: hidden;
+    width: min(1180px, 100%);
+    min-width: 720px;
+    margin: 0 auto;
 }
 
-/* =========================================
+
+/* ================================================================
    HEADER
-========================================= */
+================================================================ */
 
 .admin-buttons-header {
-  position: relative;
-  padding: 30px 32px 26px;
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f8fbff 58%,
-      #eef5ff 100%
-    );
-  border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    min-height: 76px;
+    padding: 16px 22px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
 }
 
-.admin-buttons-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--novapay-blue),
-    #3182ff,
-    #70aaff
-  );
+.admin-buttons-brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
 }
 
-.admin-buttons-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 8px;
-  color: var(--novapay-blue);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  line-height: 1;
-  text-transform: uppercase;
+.admin-buttons-brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    background: var(--novapay-blue);
+    color: var(--white);
+
+    border-radius: 11px;
+
+    font-size: 21px;
+    font-weight: 800;
+
+    box-shadow: 0 5px 14px rgba(11, 99, 206, 0.22);
 }
 
-.admin-buttons-eyebrow::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--novapay-blue);
-  box-shadow: 0 0 0 4px rgba(11, 99, 246, 0.1);
+.admin-buttons-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
-.admin-buttons-header h1 {
-  color: var(--text-primary);
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.7px;
-  line-height: 1.15;
+.admin-buttons-brand-text h1 {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.admin-buttons-header p {
-  margin-top: 7px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.5;
+.admin-buttons-brand-text span {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
 }
 
-/* =========================================
+.admin-buttons-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 12px;
+
+    background: var(--novapay-blue-soft);
+    border: 1px solid #dceaff;
+    border-radius: 999px;
+
+    color: var(--novapay-blue-dark);
+
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-status-dot {
+    width: 8px;
+    height: 8px;
+
+    flex: 0 0 8px;
+
+    background: var(--success);
+    border-radius: 50%;
+
+    box-shadow: 0 0 0 3px rgba(24, 165, 107, 0.10);
+}
+
+
+/* ================================================================
+   INTRO
+================================================================ */
+
+.admin-buttons-intro {
+    margin-top: 22px;
+    padding: 24px 4px 10px;
+}
+
+.admin-section-label,
+.admin-group-label {
+    display: block;
+
+    color: var(--novapay-blue);
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.admin-buttons-intro h2 {
+    margin-top: 5px;
+
+    color: var(--text-primary);
+
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.admin-buttons-intro p {
+    max-width: 700px;
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* ================================================================
    BUTTON LIST
-========================================= */
+================================================================ */
 
 .admin-buttons-list {
-  padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin-top: 16px;
 }
+
+
+/* ================================================================
+   BUTTON GROUP
+================================================================ */
 
 .admin-button-group {
-  margin-bottom: 24px;
+    padding: 18px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
 }
 
-.admin-button-group:last-child {
-  margin-bottom: 0;
+.admin-button-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1px 2px 14px;
 }
 
-.admin-button-group h2 {
-  display: flex;
-  align-items: center;
-  min-height: 22px;
-  margin: 0 5px 10px;
-  color: #52627b;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.15px;
-  line-height: 1.2;
-  text-transform: uppercase;
+.admin-button-group-header h3 {
+    margin-top: 3px;
+
+    color: var(--text-primary);
+
+    font-size: 16px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
 }
 
-.admin-button-group h2::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  margin-left: 12px;
-  background: var(--border);
+
+/* ================================================================
+   BUTTON GROUP LIST
+================================================================ */
+
+.admin-button-group-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
 
-/* =========================================
+
+/* ================================================================
    ADMIN ACTION BUTTON
-========================================= */
+================================================================ */
 
 .admin-action-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 70px;
-  margin-bottom: 9px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-medium);
-  background: var(--surface);
-  color: var(--text-primary);
-  cursor: pointer;
-  text-align: left;
-  box-shadow: var(--shadow-small);
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 160ms ease;
-  -webkit-tap-highlight-color: transparent;
-}
+    position: relative;
 
-.admin-action-button:last-child {
-  margin-bottom: 0;
-}
+    display: flex;
+    align-items: center;
 
-.admin-action-button::before {
-  content: "";
-  position: absolute;
-  top: 12px;
-  bottom: 12px;
-  left: -1px;
-  width: 3px;
-  border-radius: 0 4px 4px 0;
-  background: transparent;
-  transition: background-color 160ms ease;
+    width: 100%;
+    min-height: 76px;
+
+    padding: 13px 14px;
+
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+
+    color: var(--text-primary);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition),
+        transform var(--transition);
 }
 
 .admin-action-button:hover {
-  transform: translateY(-1px);
-  border-color: #cbd9ee;
-  background: #fbfdff;
-  box-shadow:
-    0 8px 22px rgba(16, 33, 63, 0.09),
-    0 0 0 3px rgba(11, 99, 246, 0.035);
-}
+    background: var(--novapay-blue-soft);
+    border-color: #c7dcf7;
+    box-shadow: 0 5px 15px rgba(11, 99, 206, 0.08);
 
-.admin-action-button:hover::before {
-  background: var(--novapay-blue);
+    transform: translateY(-1px);
 }
 
 .admin-action-button:active {
-  transform: translateY(0);
-  background: var(--novapay-blue-soft);
-  box-shadow: 0 3px 10px rgba(16, 33, 63, 0.06);
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .admin-action-button:focus-visible {
-  outline: none;
-  border-color: var(--novapay-blue);
-  box-shadow:
-    0 0 0 4px rgba(11, 99, 246, 0.14),
-    var(--shadow-small);
+    border-color: var(--novapay-blue);
 }
 
-.admin-action-button.is-selected {
-  border-color: #a9c7fa;
-  background: #f5f9ff;
-}
 
-.admin-action-button.is-selected::before {
-  background: var(--novapay-blue);
-}
-
-/* =========================================
-   BUTTON ICON
-========================================= */
+/* ================================================================
+   ACTION ICON
+================================================================ */
 
 .admin-action-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  margin-right: 13px;
-  border: 1px solid #dbe8fb;
-  border-radius: 13px;
-  background:
-    linear-gradient(
-      145deg,
-      #edf5ff 0%,
-      #e5efff 100%
-    );
-  color: var(--novapay-blue);
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.3px;
-  line-height: 1;
-  transition:
-    background-color 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    margin-right: 12px;
+
+    background: var(--novapay-blue-light);
+    border: 1px solid #d8e9ff;
+    border-radius: 11px;
+
+    color: var(--novapay-blue);
+
+    font-size: 18px;
+    line-height: 1;
 }
 
-.admin-action-button:hover .admin-action-icon {
-  border-color: #c7dcfc;
-  background: var(--novapay-blue);
-  color: #ffffff;
-  transform: scale(1.03);
-}
 
-.admin-action-button:active .admin-action-icon {
-  transform: scale(0.98);
-}
-
-/* =========================================
-   BUTTON TEXT
-========================================= */
+/* ================================================================
+   ACTION CONTENT
+================================================================ */
 
 .admin-action-content {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-width: 0;
-  padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    flex: 1;
+
+    padding-right: 10px;
 }
 
 .admin-action-content strong {
-  display: block;
-  overflow: hidden;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 750;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    display: block;
+
+    overflow: hidden;
+
+    color: var(--text-primary);
+
+    font-size: 13px;
+    font-weight: 750;
+
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .admin-action-content small {
-  display: block;
-  margin-top: 3px;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    display: block;
+
+    margin-top: 4px;
+
+    overflow: hidden;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
 }
 
-.admin-action-button:hover .admin-action-content strong {
-  color: var(--novapay-blue-dark);
-}
 
-/* =========================================
-   ARROW
-========================================= */
+/* ================================================================
+   ACTION ARROW
+================================================================ */
 
 .admin-action-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
-  margin-left: 6px;
-  border-radius: 9px;
-  background: #f3f6fa;
-  color: #8190a7;
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 1;
-  transition:
-    transform 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    flex: 0 0 28px;
+
+    color: var(--novapay-blue);
+
+    font-size: 18px;
+    font-weight: 700;
+
+    transition:
+        transform var(--transition),
+        color var(--transition);
 }
 
 .admin-action-button:hover .admin-action-arrow {
-  transform: translateX(2px);
-  background: var(--novapay-blue-light);
-  color: var(--novapay-blue);
+    transform: translateX(3px);
+    color: var(--novapay-blue-dark);
 }
 
-/* =========================================
-   STATUS
-========================================= */
 
-.admin-buttons-status {
-  min-height: 20px;
-  padding: 0 24px 22px;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
+/* ================================================================
+   FOOTER
+================================================================ */
+
+.admin-buttons-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-top: 20px;
+    padding: 18px 4px 10px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+    font-weight: 600;
 }
 
-.admin-buttons-status:empty {
-  display: none;
+
+/* ================================================================
+   LOADING STATE
+================================================================ */
+
+.admin-buttons-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+    padding: 30px;
+
+    color: var(--text-secondary);
+
+    text-align: center;
 }
 
-/* =========================================
+.admin-buttons-loading-spinner {
+    width: 32px;
+    height: 32px;
+
+    margin-bottom: 12px;
+
+    border: 3px solid #dceaff;
+    border-top-color: var(--novapay-blue);
+    border-radius: 50%;
+
+    animation: adminButtonsSpinner 0.8s linear infinite;
+}
+
+.admin-buttons-loading p {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@keyframes adminButtonsSpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ================================================================
+   ERROR STATE
+================================================================ */
+
+.admin-buttons-error {
+    padding: 24px;
+
+    background: #fff7f7;
+    border: 1px solid #f2d6d6;
+    border-radius: var(--radius-md);
+
+    text-align: center;
+}
+
+.admin-buttons-error h3 {
+    color: #a12626;
+
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.admin-buttons-error p {
+    margin-top: 6px;
+
+    color: #765b5b;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.admin-buttons-retry {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    margin-top: 14px;
+    padding: 0 18px;
+
+    background: var(--novapay-blue);
+    border: 1px solid var(--novapay-blue);
+    border-radius: 9px;
+
+    color: var(--white);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition),
+        border-color var(--transition);
+}
+
+.admin-buttons-retry:hover {
+    background: var(--novapay-blue-dark);
+    border-color: var(--novapay-blue-dark);
+}
+
+
+/* ================================================================
    TABLET
-========================================= */
+================================================================ */
+
+@media (max-width: 900px) {
+
+    .admin-buttons-page {
+        padding: 20px;
+    }
+
+    .admin-buttons-shell {
+        min-width: 680px;
+    }
+
+    .admin-buttons-intro h2 {
+        font-size: 25px;
+    }
+
+    .admin-button-group {
+        padding: 16px;
+    }
+
+    .admin-action-button {
+        min-height: 72px;
+    }
+
+}
+
+
+/* ================================================================
+   SMALL SCREEN
+================================================================ */
 
 @media (max-width: 700px) {
-  .admin-buttons-page {
-    padding: 20px 14px 30px;
-  }
 
-  .admin-buttons-shell {
-    border-radius: 18px;
-  }
+    .admin-buttons-page {
+        padding: 12px;
+    }
 
-  .admin-buttons-header {
-    padding: 25px 22px 22px;
-  }
+    .admin-buttons-shell {
+        min-width: 0;
+        width: 100%;
+    }
 
-  .admin-buttons-header h1 {
-    font-size: 27px;
-  }
+    .admin-buttons-header {
+        min-height: 66px;
+        padding: 12px 14px;
+        border-radius: 13px;
+    }
 
-  .admin-buttons-list {
-    padding: 17px 14px;
-  }
+    .admin-buttons-brand-mark {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
 
-  .admin-button-group {
-    margin-bottom: 21px;
-  }
+        border-radius: 9px;
 
-  .admin-action-button {
-    min-height: 66px;
-    padding: 9px 11px;
-    border-radius: 14px;
-  }
+        font-size: 18px;
+    }
 
-  .admin-action-icon {
-    flex-basis: 41px;
-    width: 41px;
-    height: 41px;
-    margin-right: 11px;
-    border-radius: 11px;
-  }
+    .admin-buttons-brand-text h1 {
+        font-size: 16px;
+    }
 
-  .admin-action-content strong {
-    font-size: 13.5px;
-  }
+    .admin-buttons-brand-text span {
+        font-size: 10px;
+    }
 
-  .admin-action-content small {
-    font-size: 11px;
-  }
+    .admin-buttons-status {
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
+    .admin-buttons-intro {
+        padding-top: 18px;
+    }
+
+    .admin-buttons-intro h2 {
+        font-size: 23px;
+    }
+
+    .admin-buttons-intro p {
+        font-size: 12px;
+    }
+
+    .admin-buttons-list {
+        gap: 14px;
+    }
+
+    .admin-button-group {
+        padding: 12px;
+        border-radius: 13px;
+    }
+
+    .admin-button-group-header {
+        padding-bottom: 11px;
+    }
+
+    .admin-button-group-header h3 {
+        font-size: 14px;
+    }
+
+    .admin-button-group-list {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .admin-action-button {
+        min-height: 68px;
+        padding: 11px;
+    }
+
+    .admin-action-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+
+        margin-right: 10px;
+
+        border-radius: 9px;
+
+        font-size: 16px;
+    }
+
+    .admin-action-content strong {
+        font-size: 12px;
+    }
+
+    .admin-action-content small {
+        font-size: 10px;
+    }
+
+    .admin-action-arrow {
+        width: 24px;
+        height: 24px;
+        flex-basis: 24px;
+
+        font-size: 16px;
+    }
+
+    .admin-buttons-footer {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 4px;
+
+        padding-bottom: 8px;
+    }
+
 }
 
-/* =========================================
-   SMALL PHONES
-========================================= */
 
-@media (max-width: 430px) {
-  .admin-buttons-page {
-    padding: 10px 8px 20px;
-  }
-
-  .admin-buttons-shell {
-    border-radius: 15px;
-  }
-
-  .admin-buttons-header {
-    padding: 22px 17px 19px;
-  }
-
-  .admin-buttons-eyebrow {
-    font-size: 10px;
-    letter-spacing: 1.2px;
-  }
-
-  .admin-buttons-header h1 {
-    font-size: 25px;
-  }
-
-  .admin-buttons-header p {
-    font-size: 13px;
-  }
-
-  .admin-buttons-list {
-    padding: 14px 9px;
-  }
-
-  .admin-button-group {
-    margin-bottom: 19px;
-  }
-
-  .admin-button-group h2 {
-    margin-right: 3px;
-    margin-left: 3px;
-    font-size: 10px;
-  }
-
-  .admin-action-button {
-    min-height: 62px;
-    margin-bottom: 7px;
-    padding: 8px 9px;
-    border-radius: 13px;
-  }
-
-  .admin-action-icon {
-    flex-basis: 38px;
-    width: 38px;
-    height: 38px;
-    margin-right: 9px;
-    border-radius: 10px;
-    font-size: 10px;
-  }
-
-  .admin-action-content {
-    padding-right: 3px;
-  }
-
-  .admin-action-content strong {
-    font-size: 12.5px;
-  }
-
-  .admin-action-content small {
-    margin-top: 2px;
-    font-size: 10.5px;
-  }
-
-  .admin-action-arrow {
-    flex-basis: 27px;
-    width: 27px;
-    height: 27px;
-    margin-left: 3px;
-    font-size: 20px;
-  }
-
-  .admin-buttons-status {
-    padding: 0 15px 17px;
-  }
-}
-
-/* =========================================
+/* ================================================================
    VERY SMALL PHONES
-========================================= */
+================================================================ */
 
-@media (max-width: 340px) {
-  .admin-buttons-page {
-    padding-right: 5px;
-    padding-left: 5px;
-  }
+@media (max-width: 400px) {
 
-  .admin-buttons-header {
-    padding-right: 14px;
-    padding-left: 14px;
-  }
+    .admin-buttons-page {
+        padding: 8px;
+    }
 
-  .admin-buttons-list {
-    padding-right: 7px;
-    padding-left: 7px;
-  }
+    .admin-buttons-header {
+        padding: 10px 11px;
+    }
 
-  .admin-action-button {
-    padding-right: 7px;
-    padding-left: 7px;
-  }
+    .admin-buttons-status {
+        display: none;
+    }
 
-  .admin-action-icon {
-    flex-basis: 35px;
-    width: 35px;
-    height: 35px;
-    margin-right: 8px;
-  }
+    .admin-buttons-intro {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
 
-  .admin-action-content strong {
-    font-size: 12px;
-  }
+    .admin-buttons-intro h2 {
+        font-size: 21px;
+    }
 
-  .admin-action-content small {
-    font-size: 10px;
-  }
+    .admin-button-group {
+        padding: 10px;
+    }
+
+    .admin-action-button {
+        min-height: 64px;
+    }
+
+    .admin-action-icon {
+        width: 35px;
+        height: 35px;
+        flex-basis: 35px;
+
+        margin-right: 8px;
+    }
+
 }
 
-/* =========================================
+
+/* ================================================================
    REDUCED MOTION
-========================================= */
+================================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  .admin-action-button,
-  .admin-action-icon,
-  .admin-action-arrow {
-    transition: none;
-  }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
 }

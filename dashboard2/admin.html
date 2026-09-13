@@ -1,335 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    name="theme-color"
+    content="#0b63f6"
+  >
+  <meta
+    name="description"
+    content="NovaPay administrator dashboard"
+  >
 
-    <meta
-        name="description"
-        content="NovaPay Admin Dashboard"
-    >
+  <title>NovaPay Admin Dashboard</title>
 
-    <title>NovaPay Admin Dashboard</title>
-
-    <link rel="stylesheet" href="./admin.css">
-
-    <script type="module" src="./admin.js" defer></script>
+  <link rel="stylesheet" href="./admin.css">
 </head>
 
 <body>
+  <div class="admin-app" id="adminApp">
 
-    <!-- =========================================================
-         ADMIN APPLICATION
-         ========================================================= -->
-    <div id="adminApp" class="admin-app">
+    <!-- =========================================
+         ADMIN HEADER
+    ========================================== -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <div class="admin-brand-mark" aria-hidden="true">
+          N
+        </div>
 
-        <!-- =====================================================
-             TOP HEADER
-             ===================================================== -->
-        <header class="admin-header">
+        <div class="admin-brand-text">
+          <strong>NOVAPAY</strong>
+          <span>ADMIN</span>
+        </div>
+      </div>
 
-            <div class="admin-brand">
-                <div class="admin-brand-name">NOVAPAY</div>
-                <div class="admin-brand-role">ADMIN</div>
-            </div>
+      <button
+        type="button"
+        class="manual-toggle"
+        id="manualToggle"
+        aria-label="Open admin manual"
+        aria-controls="adminManual"
+        aria-expanded="false"
+      >
+        <span>MANUAL</span>
+        <span class="manual-toggle-icon" aria-hidden="true">☰</span>
+      </button>
+    </header>
 
-            <button
-                type="button"
-                id="manualToggle"
-                class="manual-toggle"
-                aria-controls="adminManual"
-                aria-expanded="false"
+
+    <!-- =========================================
+         MAIN DASHBOARD
+    ========================================== -->
+    <main class="admin-main">
+
+      <section
+        class="dashboard-intro"
+        aria-labelledby="dashboardTitle"
+      >
+        <div>
+          <span class="dashboard-eyebrow">
+            NOVAPAY CONTROL CENTER
+          </span>
+
+          <h1 id="dashboardTitle">
+            Admin Dashboard
+          </h1>
+
+          <p>
+            Monitor the platform and review important activity.
+          </p>
+        </div>
+      </section>
+
+
+      <!-- =======================================
+           SUMMARY CARDS
+      ======================================== -->
+      <section
+        class="dashboard-summary"
+        aria-label="Dashboard summary"
+      >
+
+        <article class="summary-card">
+          <div class="summary-card-top">
+            <span class="summary-card-label">
+              Total Users
+            </span>
+
+            <span
+              class="summary-card-icon"
+              aria-hidden="true"
             >
-                <span class="manual-toggle-label">MANUAL</span>
-                <span
-                    class="manual-toggle-icon"
-                    aria-hidden="true"
-                >
-                    ☰
-                </span>
-            </button>
+              US
+            </span>
+          </div>
 
-        </header>
+          <strong
+            class="summary-card-value"
+            id="totalUsers"
+          >
+            —
+          </strong>
 
-
-        <!-- =====================================================
-             MAIN DASHBOARD
-             ===================================================== -->
-        <main class="admin-main">
-
-            <!-- Dashboard heading -->
-            <section class="dashboard-heading">
-                <div>
-                    <p class="dashboard-eyebrow">NOVAPAY ADMINISTRATION</p>
-                    <h1>Admin Dashboard</h1>
-                    <p class="dashboard-subtitle">
-                        Platform overview and operational activity.
-                    </p>
-                </div>
-            </section>
+          <span class="summary-card-note">
+            Registered accounts
+          </span>
+        </article>
 
 
-            <!-- =================================================
-                 SUMMARY CARDS
-                 Only the three requested dashboard summaries.
-                 ================================================= -->
-            <section
-                class="dashboard-summary"
-                aria-label="Dashboard summary"
+        <article class="summary-card">
+          <div class="summary-card-top">
+            <span class="summary-card-label">
+              Today Active Users
+            </span>
+
+            <span
+              class="summary-card-icon"
+              aria-hidden="true"
             >
+              AU
+            </span>
+          </div>
 
-                <article class="summary-card">
-                    <div class="summary-card-label">
-                        TOTAL USERS
-                    </div>
+          <strong
+            class="summary-card-value"
+            id="todayActiveUsers"
+          >
+            —
+          </strong>
 
-                    <div
-                        id="totalUsers"
-                        class="summary-card-value"
-                    >
-                        —
-                    </div>
-
-                    <div class="summary-card-note">
-                        Registered platform users
-                    </div>
-                </article>
+          <span class="summary-card-note">
+            Active today
+          </span>
+        </article>
 
 
-                <article class="summary-card">
-                    <div class="summary-card-label">
-                        TODAY ACTIVE USERS
-                    </div>
+        <article class="summary-card">
+          <div class="summary-card-top">
+            <span class="summary-card-label">
+              Total Profit
+            </span>
 
-                    <div
-                        id="todayActiveUsers"
-                        class="summary-card-value"
-                    >
-                        —
-                    </div>
+            <span
+              class="summary-card-icon"
+              aria-hidden="true"
+            >
+              ₦
+            </span>
+          </div>
 
-                    <div class="summary-card-note">
-                        Active users today
-                    </div>
-                </article>
+          <strong
+            class="summary-card-value"
+            id="totalProfit"
+          >
+            —
+          </strong>
 
+          <span class="summary-card-note">
+            Platform profit
+          </span>
+        </article>
 
-                <article class="summary-card">
-                    <div class="summary-card-label">
-                        TOTAL PROFIT
-                    </div>
-
-                    <div
-                        id="totalProfit"
-                        class="summary-card-value"
-                    >
-                        —
-                    </div>
-
-                    <div class="summary-card-note">
-                        Platform profit
-                    </div>
-                </article>
-
-            </section>
+      </section>
 
 
-            <!-- =================================================
-                 DASHBOARD CONTENT
-                 ================================================= -->
-            <section class="dashboard-content">
+      <!-- =======================================
+           ANALYSIS
+      ======================================== -->
+      <section
+        class="dashboard-panel analysis-panel"
+        aria-labelledby="analysisTitle"
+      >
+        <div class="panel-header">
+          <div>
+            <span class="panel-eyebrow">
+              OVERVIEW
+            </span>
 
-                <!-- =============================================
-                     ANALYSIS
-                     ============================================= -->
-                <article class="dashboard-panel analysis-panel">
+            <h2 id="analysisTitle">
+              Analysis
+            </h2>
+          </div>
 
-                    <div class="panel-header">
-                        <div>
-                            <p class="panel-eyebrow">OVERVIEW</p>
-                            <h2>Analysis</h2>
-                        </div>
-                    </div>
-
-                    <div
-                        id="analysisChart"
-                        class="analysis-chart"
-                        aria-label="Platform analysis"
-                    >
-                        <div class="analysis-empty">
-                            <span class="analysis-empty-title">
-                                Analysis data
-                            </span>
-
-                            <span class="analysis-empty-text">
-                                No analysis data available yet.
-                            </span>
-                        </div>
-                    </div>
-
-                </article>
-
-
-                <!-- =============================================
-                     RECENT TRANSACTIONS
-                     ============================================= -->
-                <article class="dashboard-panel transactions-panel">
-
-                    <div class="panel-header">
-                        <div>
-                            <p class="panel-eyebrow">ACTIVITY</p>
-                            <h2>Recent Transactions</h2>
-                        </div>
-                    </div>
-
-
-                    <div class="transactions-table-wrapper">
-
-                        <table class="transactions-table">
-
-                            <thead>
-                                <tr>
-                                    <th scope="col">DATE</th>
-                                    <th scope="col">USER</th>
-                                    <th scope="col">TYPE</th>
-                                    <th scope="col">AMOUNT</th>
-                                    <th scope="col">STATUS</th>
-                                </tr>
-                            </thead>
-
-                            <tbody id="recentTransactionsBody">
-
-                                <tr class="transactions-empty-row">
-                                    <td
-                                        colspan="5"
-                                        class="transactions-empty"
-                                    >
-                                        No recent transactions available.
-                                    </td>
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </article>
-
-            </section>
-
-        </main>
-
-
-        <!-- =====================================================
-             MANUAL SYSTEM
-             
-             IMPORTANT:
-             This is ONLY the manual container/control area.
-             Individual admin feature buttons are NOT placed here.
-             
-             They will be built later in:
-             admin-buttons.html
-             admin-buttons.css
-             admin-button.js
-             ===================================================== -->
+          <span class="panel-status">
+            Awaiting data
+          </span>
+        </div>
 
         <div
-            id="manualBackdrop"
-            class="manual-backdrop"
-            hidden
-            aria-hidden="true"
-        ></div>
-
-
-        <aside
-            id="adminManual"
-            class="admin-manual"
-            aria-label="Admin manual"
-            aria-hidden="true"
-            hidden
+          class="analysis-chart"
+          id="analysisChart"
+          aria-live="polite"
         >
-
-            <div class="admin-manual-header">
-
-                <div class="admin-manual-title-group">
-                    <p class="admin-manual-eyebrow">
-                        NOVAPAY
-                    </p>
-
-                    <h2>Manual</h2>
-
-                    <p class="admin-manual-description">
-                        Admin controls and platform management.
-                    </p>
-                </div>
-
-
-                <button
-                    type="button"
-                    id="manualClose"
-                    class="manual-close"
-                    aria-label="Close manual"
-                >
-                    <span aria-hidden="true">×</span>
-                </button>
-
-            </div>
-
-
-            <!--
-                The actual admin buttons/pages will be connected
-                here later through admin-buttons.html.
-                
-                Nothing is being added to the dashboard itself.
-            -->
+          <div class="dashboard-placeholder">
             <div
-                id="adminManualScroll"
-                class="admin-manual-scroll"
+              class="dashboard-placeholder-icon"
+              aria-hidden="true"
             >
-
-                <div
-                    id="adminManualContent"
-                    class="admin-manual-content"
-                >
-
-                    <div class="manual-placeholder">
-
-                        <div class="manual-placeholder-icon">
-                            ☰
-                        </div>
-
-                        <h3>Admin Manual</h3>
-
-                        <p>
-                            Admin management tools will be added here
-                            one feature at a time.
-                        </p>
-
-                    </div>
-
-                </div>
-
+              ◌
             </div>
 
-        </aside>
+            <strong>
+              Analysis data will appear here
+            </strong>
+
+            <span>
+              Platform analytics will be connected to the backend.
+            </span>
+          </div>
+        </div>
+      </section>
 
 
-        <!-- =====================================================
-             ACCESSIBILITY / SYSTEM STATUS
-             ===================================================== -->
+      <!-- =======================================
+           RECENT TRANSACTIONS
+      ======================================== -->
+      <section
+        class="dashboard-panel transactions-panel"
+        aria-labelledby="transactionsTitle"
+      >
+        <div class="panel-header">
+          <div>
+            <span class="panel-eyebrow">
+              ACTIVITY
+            </span>
+
+            <h2 id="transactionsTitle">
+              Recent Transactions
+            </h2>
+          </div>
+
+          <span class="panel-status">
+            Awaiting data
+          </span>
+        </div>
+
+        <div class="transactions-table-wrapper">
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th scope="col">Transaction</th>
+                <th scope="col">User</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Time</th>
+              </tr>
+            </thead>
+
+            <tbody id="recentTransactionsBody">
+              <tr>
+                <td colspan="5">
+                  <div class="dashboard-table-empty">
+                    Recent transactions will appear here.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+
+    <!-- =========================================
+         ADMIN PAGE STATUS
+    ========================================== -->
+    <p
+      class="admin-page-status"
+      id="adminPageStatus"
+      aria-live="polite"
+      aria-atomic="true"
+    ></p>
+
+
+    <!-- =========================================
+         MANUAL BACKDROP
+    ========================================== -->
+    <div
+      class="manual-backdrop"
+      id="manualBackdrop"
+      aria-hidden="true"
+    ></div>
+
+
+    <!-- =========================================
+         ADMIN MANUAL PANEL
+         
+         admin.js will later load:
+         admin-buttons.html
+         
+         into #adminManualContent
+    ========================================== -->
+    <aside
+      class="admin-manual"
+      id="adminManual"
+      aria-label="Admin management tools"
+      aria-hidden="true"
+    >
+
+      <div class="admin-manual-header">
+        <div>
+          <span class="manual-eyebrow">
+            NOVAPAY ADMIN
+          </span>
+
+          <h2>
+            Manual
+          </h2>
+
+          <p>
+            Admin management tools
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="manual-close"
+          id="manualClose"
+          aria-label="Close admin manual"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+
+      <div
+        class="admin-manual-scroll"
+        id="adminManualScroll"
+      >
+
         <div
-            id="adminPageStatus"
-            class="admin-page-status"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-        ></div>
+          class="admin-manual-content"
+          id="adminManualContent"
+        >
+          <div class="manual-placeholder">
+            <div
+              class="manual-placeholder-icon"
+              aria-hidden="true"
+            >
+              ☰
+            </div>
 
-    </div>
+            <h3>
+              Admin management tools
+            </h3>
 
+            <p>
+              Admin management tools will be added here one feature at a time.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+  <script
+    type="module"
+    src="./admin.js"
+  ></script>
 </body>
 </html>
