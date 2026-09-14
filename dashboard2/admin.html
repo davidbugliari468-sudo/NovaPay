@@ -38,17 +38,16 @@
         </div>
       </div>
 
-      <button
-        type="button"
+      <!-- Direct HTML connection to admin-button.html -->
+      <a
+        href="./admin-button.html"
         class="manual-toggle"
         id="manualToggle"
         aria-label="Open admin manual"
-        aria-controls="adminManual"
-        aria-expanded="false"
       >
         <span>MANUAL</span>
         <span class="manual-toggle-icon" aria-hidden="true">☰</span>
-      </button>
+      </a>
     </header>
 
 
@@ -277,90 +276,8 @@
       aria-atomic="true"
     ></p>
 
-
-    <!-- =========================================
-         MANUAL BACKDROP
-    ========================================== -->
-    <div
-      class="manual-backdrop"
-      id="manualBackdrop"
-      aria-hidden="true"
-    ></div>
-
-
-    <!-- =========================================
-         ADMIN MANUAL PANEL
-         
-         admin.js will later load:
-         admin-buttons.html
-         
-         into #adminManualContent
-    ========================================== -->
-    <aside
-      class="admin-manual"
-      id="adminManual"
-      aria-label="Admin management tools"
-      aria-hidden="true"
-    >
-
-      <div class="admin-manual-header">
-        <div>
-          <span class="manual-eyebrow">
-            NOVAPAY ADMIN
-          </span>
-
-          <h2>
-            Manual
-          </h2>
-
-          <p>
-            Admin management tools
-          </p>
-        </div>
-
-        <button
-          type="button"
-          class="manual-close"
-          id="manualClose"
-          aria-label="Close admin manual"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-
-
-      <div
-        class="admin-manual-scroll"
-        id="adminManualScroll"
-      >
-
-        <div
-          class="admin-manual-content"
-          id="adminManualContent"
-        >
-          <div class="manual-placeholder">
-            <div
-              class="manual-placeholder-icon"
-              aria-hidden="true"
-            >
-              ☰
-            </div>
-
-            <h3>
-              Admin management tools
-            </h3>
-
-            <p>
-              Admin management tools will be added here one feature at a time.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-    </aside>
-
   </div>
+
 
   <script
     type="module"

@@ -60,6 +60,7 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-y: auto;
 }
 
 button {
@@ -81,6 +82,7 @@ button:focus-visible {
     min-height: 100vh;
     padding: 28px;
     overflow-x: auto;
+    overflow-y: visible;
 }
 
 .admin-buttons-shell {
@@ -133,7 +135,6 @@ button:focus-visible {
 
     font-size: 21px;
     font-weight: 800;
-
     box-shadow: 0 5px 14px rgba(11, 99, 206, 0.22);
 }
 
@@ -406,7 +407,6 @@ button:focus-visible {
     font-weight: 500;
 
     line-height: 1.4;
-
     text-overflow: ellipsis;
 }
 

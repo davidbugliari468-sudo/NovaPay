@@ -1,398 +1,257 @@
+"use strict";
+
+/*
+ * NovaPay Admin Dashboard
+ *
+ * This file controls the dashboard only.
+ *
+ * IMPORTANT:
+ * - admin-button.html is connected directly from admin.html.
+ * - This file does NOT fetch admin-button.html.
+ * - This file does NOT inject admin-button.html into the dashboard.
+ * - Management buttons belong to admin-button.html / admin-button.js.
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
-    "use strict";
+  const adminApp = document.getElementById("adminApp");
 
-    // ------------------------------------------------------------
-    // Dashboard elements
-    // ------------------------------------------------------------
+  const adminPageStatus =
+    document.getElementById("adminPageStatus");
 
-    const manualToggle = document.getElementById("manualToggle");
-    const manualClose = document.getElementById("manualClose");
-    const manualBackdrop = document.getElementById("manualBackdrop");
-    const adminManual = document.getElementById("adminManual");
-    const adminManualScroll = document.getElementById("adminManualScroll");
-    const adminManualContent = document.getElementById("adminManualContent");
-    const adminPageStatus = document.getElementById("adminPageStatus");
+  const totalUsers =
+    document.getElementById("totalUsers");
 
-    const totalUsers = document.getElementById("totalUsers");
-    const todayActiveUsers = document.getElementById("todayActiveUsers");
-    const totalProfit = document.getElementById("totalProfit");
-    const analysisChart = document.getElementById("analysisChart");
-    const recentTransactionsBody = document.getElementById("recentTransactionsBody");
+  const todayActiveUsers =
+    document.getElementById("todayActiveUsers");
 
-    // ------------------------------------------------------------
-    // State
-    // ------------------------------------------------------------
+  const totalProfit =
+    document.getElementById("totalProfit");
 
-    let manualButtonsLoaded = false;
-    let manualButtonsLoading = false;
+  const analysisChart =
+    document.getElementById("analysisChart");
 
-    // ------------------------------------------------------------
-    // Utility: status message
-    // ------------------------------------------------------------
+  const recentTransactionsBody =
+    document.getElementById("recentTransactionsBody");
 
-    function setAdminStatus(message = "", type = "") {
-        if (!adminPageStatus) {
-            return;
-        }
 
-        adminPageStatus.textContent = message;
-        adminPageStatus.className = "admin-page-status";
+  /* =========================================
+     DASHBOARD STATUS
+  ========================================== */
 
-        if (type) {
-            adminPageStatus.classList.add(`is-${type}`);
-        }
-
-        if (message) {
-            adminPageStatus.hidden = false;
-        } else {
-            adminPageStatus.hidden = true;
-        }
+  function setStatus(message = "") {
+    if (!adminPageStatus) {
+      return;
     }
 
-    // ------------------------------------------------------------
-    // Manual panel
-    // ------------------------------------------------------------
+    adminPageStatus.textContent = String(message);
+  }
 
-    function openManual() {
-        if (!adminManual || !manualBackdrop) {
-            return;
-        }
 
-        adminManual.classList.add("is-open");
-        manualBackdrop.classList.add("is-visible");
+  /* =========================================
+     SUMMARY DATA
+  ========================================== */
 
-        document.body.classList.add("admin-manual-open");
-
-        if (manualToggle) {
-            manualToggle.setAttribute("aria-expanded", "true");
-        }
-
-        if (manualClose) {
-            window.setTimeout(() => {
-                manualClose.focus();
-            }, 50);
-        }
-
-        loadManualButtons();
+  function setDashboardSummary(data = {}) {
+    if (totalUsers && data.totalUsers !== undefined) {
+      totalUsers.textContent = formatValue(data.totalUsers);
     }
 
-    function closeManual() {
-        if (!adminManual || !manualBackdrop) {
-            return;
-        }
-
-        adminManual.classList.remove("is-open");
-        manualBackdrop.classList.remove("is-visible");
-
-        document.body.classList.remove("admin-manual-open");
-
-        if (manualToggle) {
-            manualToggle.setAttribute("aria-expanded", "false");
-            manualToggle.focus();
-        }
+    if (
+      todayActiveUsers &&
+      data.todayActiveUsers !== undefined
+    ) {
+      todayActiveUsers.textContent =
+        formatValue(data.todayActiveUsers);
     }
 
-    function toggleManual() {
-        if (!adminManual) {
-            return;
-        }
+    if (totalProfit && data.totalProfit !== undefined) {
+      totalProfit.textContent =
+        formatValue(data.totalProfit);
+    }
+  }
 
-        if (adminManual.classList.contains("is-open")) {
-            closeManual();
-        } else {
-            openManual();
-        }
+
+  function formatValue(value) {
+    if (value === null || value === undefined) {
+      return "—";
     }
 
-    // ------------------------------------------------------------
-    // Load admin-buttons.css
-    // ------------------------------------------------------------
-
-    function loadAdminButtonsStylesheet() {
-        const existingStylesheet = document.querySelector(
-            'link[data-admin-buttons-stylesheet="true"]'
-        );
-
-        if (existingStylesheet) {
-            return Promise.resolve();
-        }
-
-        return new Promise((resolve, reject) => {
-            const stylesheet = document.createElement("link");
-
-            stylesheet.rel = "stylesheet";
-            stylesheet.href = "./admin-buttons.css";
-            stylesheet.dataset.adminButtonsStylesheet = "true";
-
-            stylesheet.addEventListener("load", () => {
-                resolve();
-            });
-
-            stylesheet.addEventListener("error", () => {
-                stylesheet.remove();
-                reject(
-                    new Error(
-                        "The admin-buttons.css stylesheet could not be loaded."
-                    )
-                );
-            });
-
-            document.head.appendChild(stylesheet);
-        });
+    if (typeof value === "number") {
+      return value.toLocaleString();
     }
 
-    // ------------------------------------------------------------
-    // Load admin-buttons.html
-    // ------------------------------------------------------------
+    return String(value);
+  }
 
-    async function loadManualButtons() {
-        if (!adminManualContent) {
-            return;
-        }
 
-        if (manualButtonsLoaded || manualButtonsLoading) {
-            return;
-        }
+  /* =========================================
+     ANALYSIS
+  ========================================== */
 
-        manualButtonsLoading = true;
+  function setAnalysisChart(content) {
+    if (!analysisChart) {
+      return;
+    }
 
-        adminManualContent.innerHTML = `
-            <div class="admin-buttons-loading" role="status" aria-live="polite">
-                <div class="admin-buttons-loading-spinner" aria-hidden="true"></div>
-                <p>Loading admin tools...</p>
+    if (content === null || content === undefined) {
+      analysisChart.innerHTML = `
+        <div class="dashboard-placeholder">
+          <div
+            class="dashboard-placeholder-icon"
+            aria-hidden="true"
+          >
+            ◌
+          </div>
+
+          <strong>
+            Analysis data will appear here
+          </strong>
+
+          <span>
+            Platform analytics will be connected to the backend.
+          </span>
+        </div>
+      `;
+
+      return;
+    }
+
+    if (typeof content === "string") {
+      analysisChart.innerHTML = content;
+      return;
+    }
+
+    if (content instanceof Node) {
+      analysisChart.replaceChildren(content);
+      return;
+    }
+
+    analysisChart.textContent = String(content);
+  }
+
+
+  /* =========================================
+     RECENT TRANSACTIONS
+  ========================================== */
+
+  function setRecentTransactions(transactions = []) {
+    if (!recentTransactionsBody) {
+      return;
+    }
+
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      recentTransactionsBody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="dashboard-table-empty">
+              Recent transactions will appear here.
             </div>
-        `;
+          </td>
+        </tr>
+      `;
 
-        try {
-            await loadAdminButtonsStylesheet();
-
-            const response = await fetch("./admin-buttons.html", {
-                method: "GET",
-                cache: "no-cache",
-                headers: {
-                    Accept: "text/html"
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Unable to load admin-buttons.html (${response.status}).`
-                );
-            }
-
-            const html = await response.text();
-
-            if (!html.trim()) {
-                throw new Error("admin-buttons.html is empty.");
-            }
-
-            const parser = new DOMParser();
-            const buttonsDocument = parser.parseFromString(
-                html,
-                "text/html"
-            );
-
-            const buttonList = buttonsDocument.querySelector(
-                ".admin-buttons-list"
-            );
-
-            if (!buttonList) {
-                throw new Error(
-                    "The .admin-buttons-list container was not found in admin-buttons.html."
-                );
-            }
-
-            const buttonListCopy = buttonList.cloneNode(true);
-
-            adminManualContent.replaceChildren(buttonListCopy);
-
-            manualButtonsLoaded = true;
-
-            setAdminStatus("");
-        } catch (error) {
-            console.error("NovaPay admin manual loading error:", error);
-
-            adminManualContent.innerHTML = `
-                <div class="admin-buttons-error" role="alert">
-                    <h3>Admin tools could not be loaded</h3>
-                    <p>
-                        The manual system could not load
-                        <strong>admin-buttons.html</strong>.
-                    </p>
-                    <button
-                        type="button"
-                        class="admin-buttons-retry"
-                        id="adminButtonsRetry"
-                    >
-                        Retry
-                    </button>
-                </div>
-            `;
-
-            const retryButton = document.getElementById(
-                "adminButtonsRetry"
-            );
-
-            if (retryButton) {
-                retryButton.addEventListener("click", () => {
-                    manualButtonsLoaded = false;
-                    loadManualButtons();
-                });
-            }
-
-            setAdminStatus(
-                "Admin management tools could not be loaded.",
-                "error"
-            );
-        } finally {
-            manualButtonsLoading = false;
-        }
+      return;
     }
 
-    // ------------------------------------------------------------
-    // Dashboard initial state
-    // ------------------------------------------------------------
+    recentTransactionsBody.innerHTML = "";
 
-    function initializeDashboard() {
-        if (totalUsers) {
-            totalUsers.textContent = "—";
-        }
+    transactions.forEach((transaction) => {
+      const row = document.createElement("tr");
 
-        if (todayActiveUsers) {
-            todayActiveUsers.textContent = "—";
-        }
+      const transactionCell =
+        document.createElement("td");
 
-        if (totalProfit) {
-            totalProfit.textContent = "—";
-        }
+      const userCell =
+        document.createElement("td");
 
-        if (analysisChart) {
-            analysisChart.innerHTML = `
-                <div class="admin-chart-empty">
-                    <span class="admin-chart-empty-title">
-                        Analysis data will appear here
-                    </span>
-                    <span class="admin-chart-empty-text">
-                        Dashboard analytics will be connected to the backend.
-                    </span>
-                </div>
-            `;
-        }
+      const amountCell =
+        document.createElement("td");
 
-        if (recentTransactionsBody) {
-            recentTransactionsBody.innerHTML = `
-                <tr>
-                    <td colspan="100%">
-                        No transaction data available yet.
-                    </td>
-                </tr>
-            `;
-        }
+      const statusCell =
+        document.createElement("td");
 
-        setAdminStatus("");
-    }
+      const timeCell =
+        document.createElement("td");
 
-    // ------------------------------------------------------------
-    // Event listeners
-    // ------------------------------------------------------------
 
-    if (manualToggle) {
-        manualToggle.addEventListener("click", toggleManual);
-    }
+      transactionCell.textContent =
+        transaction.transaction ??
+        transaction.id ??
+        "—";
 
-    if (manualClose) {
-        manualClose.addEventListener("click", closeManual);
-    }
+      userCell.textContent =
+        transaction.user ??
+        transaction.userName ??
+        "—";
 
-    if (manualBackdrop) {
-        manualBackdrop.addEventListener("click", closeManual);
-    }
+      amountCell.textContent =
+        transaction.amount ??
+        "—";
 
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            if (
-                adminManual &&
-                adminManual.classList.contains("is-open")
-            ) {
-                closeManual();
-            }
-        }
+      statusCell.textContent =
+        transaction.status ??
+        "—";
+
+      timeCell.textContent =
+        transaction.time ??
+        transaction.createdAt ??
+        "—";
+
+
+      row.appendChild(transactionCell);
+      row.appendChild(userCell);
+      row.appendChild(amountCell);
+      row.appendChild(statusCell);
+      row.appendChild(timeCell);
+
+      recentTransactionsBody.appendChild(row);
+    });
+  }
+
+
+  /* =========================================
+     DASHBOARD INITIALIZATION
+  ========================================== */
+
+  function initializeDashboard() {
+    setDashboardSummary({
+      totalUsers: "—",
+      todayActiveUsers: "—",
+      totalProfit: "—"
     });
 
-    // ------------------------------------------------------------
-    // Prevent background scrolling while Manual is open
-    // ------------------------------------------------------------
+    setAnalysisChart(null);
 
-    if (adminManualScroll) {
-        adminManualScroll.addEventListener("wheel", (event) => {
-            event.stopPropagation();
-        });
-    }
+    setRecentTransactions([]);
 
-    // ------------------------------------------------------------
-    // Public dashboard API
-    // ------------------------------------------------------------
+    setStatus("");
+  }
 
-    window.NovaPayAdmin = {
-        openManual,
-        closeManual,
-        toggleManual,
-        loadManualButtons,
-        setAdminStatus,
 
-        setDashboardSummary(data = {}) {
-            if (totalUsers && data.totalUsers !== undefined) {
-                totalUsers.textContent = String(data.totalUsers);
-            }
+  /* =========================================
+     OPTIONAL DASHBOARD API
+  ========================================== */
 
-            if (
-                todayActiveUsers &&
-                data.todayActiveUsers !== undefined
-            ) {
-                todayActiveUsers.textContent = String(
-                    data.todayActiveUsers
-                );
-            }
+  window.NovaPayAdmin = {
+    setStatus,
 
-            if (totalProfit && data.totalProfit !== undefined) {
-                totalProfit.textContent = String(data.totalProfit);
-            }
-        },
+    setDashboardSummary,
 
-        setAnalysisChart(content = "") {
-            if (!analysisChart) {
-                return;
-            }
+    setAnalysisChart,
 
-            if (typeof content === "string") {
-                analysisChart.innerHTML = content;
-                return;
-            }
+    setRecentTransactions,
 
-            if (content instanceof Node) {
-                analysisChart.replaceChildren(content);
-            }
-        },
+    initializeDashboard
+  };
 
-        setRecentTransactions(content = "") {
-            if (!recentTransactionsBody) {
-                return;
-            }
 
-            if (typeof content === "string") {
-                recentTransactionsBody.innerHTML = content;
-                return;
-            }
+  /* =========================================
+     START
+  ========================================== */
 
-            if (content instanceof Node) {
-                recentTransactionsBody.replaceChildren(content);
-            }
-        }
-    };
+  initializeDashboard();
 
-    // ------------------------------------------------------------
-    // Start dashboard
-    // ------------------------------------------------------------
-
-    initializeDashboard();
+  if (adminApp) {
+    adminApp.classList.add("is-ready");
+  }
 });

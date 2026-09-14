@@ -23,9 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ============================================================
     // BUTTON ACTION REGISTRY
-    //
-    // The actions are intentionally registered here without
-    // opening feature pages or performing backend operations yet.
     // ============================================================
 
     const adminActionRegistry = {
@@ -189,19 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /*
-         * The individual feature has not been connected yet.
-         *
-         * We intentionally do not:
-         * - navigate to a guessed page
-         * - modify Firestore
-         * - call the backend
-         * - create fake feature data
-         *
-         * The button is registered and ready for its real feature
-         * to be connected later.
-         */
-
         console.info(
             `NovaPay Admin: "${actionDetails.name}" selected.`
         );
@@ -252,14 +236,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let nextIndex = -1;
 
-        if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        if (
+            event.key === "ArrowDown" ||
+            event.key === "ArrowRight"
+        ) {
             nextIndex =
                 currentIndex + 1 >= adminButtons.length
                     ? 0
                     : currentIndex + 1;
         }
 
-        if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        if (
+            event.key === "ArrowUp" ||
+            event.key === "ArrowLeft"
+        ) {
             nextIndex =
                 currentIndex - 1 < 0
                     ? adminButtons.length - 1
@@ -323,6 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             setSelectedButton(button);
+
             button.focus();
 
             return true;
