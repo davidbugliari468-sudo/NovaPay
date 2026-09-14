@@ -20,15 +20,16 @@
   --warning: #e59b22;
   --danger: #dc4c4c;
 
-  --shadow-sm: 0 4px 14px rgba(16, 35, 63, 0.06);
-  --shadow-md: 0 12px 32px rgba(16, 35, 63, 0.10);
-  --shadow-lg: 0 20px 50px rgba(16, 35, 63, 0.16);
+  --shadow-sm: 0 3px 14px rgba(16, 35, 63, 0.06);
+  --shadow-md: 0 10px 28px rgba(16, 35, 63, 0.09);
+  --shadow-lg: -12px 0 38px rgba(16, 35, 63, 0.14);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
 
-  --manual-width: min(520px, 72vw);
+  /* Manual stays on the right while leaving the dashboard visible. */
+  --manual-width: min(500px, 68vw);
 }
 
 
@@ -48,8 +49,10 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+
   background: var(--page-bg);
   color: var(--text-primary);
+
   font-family:
     Inter,
     -apple-system,
@@ -59,6 +62,7 @@ body {
     Helvetica,
     Arial,
     sans-serif;
+
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -67,72 +71,105 @@ body.manual-open {
   overflow: hidden;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
 button {
+  font: inherit;
   cursor: pointer;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+button:focus-visible {
+  outline: 3px solid rgba(11, 99, 206, 0.22);
+  outline-offset: 3px;
 }
 
 
 /* =========================================================
-   MAIN ADMIN PAGE
+   MAIN APPLICATION
 ========================================================= */
 
-.admin-page {
+.admin-app {
+  width: 100%;
   min-height: 100vh;
-  padding: 24px;
+  background: var(--page-bg);
 }
 
-.admin-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+
+/* =========================================================
+   ADMIN HEADER
+========================================================= */
 
 .admin-header {
+  width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 24px;
+
+  padding: 18px 28px;
+
+  background: var(--white);
+  border-bottom: 1px solid var(--border-light);
+
+  box-shadow: 0 2px 12px rgba(16, 35, 63, 0.04);
 }
 
-.admin-header-content {
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
   min-width: 0;
 }
 
-.admin-eyebrow {
-  margin: 0 0 6px;
-  color: var(--novapay-blue);
-  font-size: 12px;
+.admin-brand-mark {
+  width: 46px;
+  height: 46px;
+
+  flex: 0 0 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: linear-gradient(
+    145deg,
+    #1475ed,
+    #0b63ce
+  );
+
+  color: var(--white);
+
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+
+  box-shadow:
+    0 6px 16px rgba(11, 99, 206, 0.22);
 }
 
-.admin-title {
-  margin: 0;
+.admin-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-brand-text strong {
   color: var(--text-primary);
-  font-size: clamp(24px, 3vw, 34px);
-  font-weight: 800;
-  line-height: 1.15;
+
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1;
 }
 
-.admin-subtitle {
-  margin: 8px 0 0;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.5;
+.admin-brand-text span {
+  color: var(--novapay-blue);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.20em;
+  line-height: 1;
 }
 
 
@@ -142,81 +179,210 @@ a {
 
 .manual-toggle {
   flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
   min-height: 44px;
+
   padding: 0 18px;
-  border: 0;
+
+  border: 1px solid var(--novapay-blue);
   border-radius: 10px;
+
   background: var(--novapay-blue);
   color: var(--white);
-  font-size: 13px;
+
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.06em;
+
+  box-shadow:
+    0 5px 15px rgba(11, 99, 206, 0.16);
+
   transition:
     background 180ms ease,
+    border-color 180ms ease,
     transform 180ms ease,
     box-shadow 180ms ease;
 }
 
+.manual-toggle-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .manual-toggle:hover {
   background: var(--novapay-blue-dark);
-  box-shadow: var(--shadow-md);
+  border-color: var(--novapay-blue-dark);
+
   transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px rgba(11, 99, 206, 0.20);
 }
 
 .manual-toggle:active {
   transform: translateY(0);
 }
 
-.manual-toggle:focus-visible {
-  outline: 3px solid rgba(11, 99, 206, 0.22);
-  outline-offset: 3px;
+
+/* =========================================================
+   MAIN DASHBOARD
+========================================================= */
+
+.admin-main {
+  width: min(1380px, calc(100% - 48px));
+  margin: 0 auto;
+
+  padding: 30px 0 50px;
 }
 
 
 /* =========================================================
-   DASHBOARD CARDS
+   DASHBOARD INTRO
 ========================================================= */
 
-.admin-stats {
+.dashboard-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.dashboard-eyebrow {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--novapay-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.dashboard-intro h1 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 850;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.dashboard-intro p {
+  margin: 9px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.dashboard-summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
   gap: 16px;
+
   margin-bottom: 20px;
 }
 
-.admin-stat-card {
+.summary-card {
   min-width: 0;
+
   padding: 20px;
+
+  background: var(--surface);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--surface);
+
   box-shadow: var(--shadow-sm);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 }
 
-.admin-stat-label {
-  margin: 0 0 10px;
+.summary-card:hover {
+  transform: translateY(-1px);
+
+  border-color: #cbdcf0;
+
+  box-shadow: var(--shadow-md);
+}
+
+.summary-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.summary-card-label {
   color: var(--text-secondary);
-  font-size: 13px;
+
+  font-size: 12px;
   font-weight: 700;
 }
 
-.admin-stat-value {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: clamp(24px, 3vw, 32px);
-  font-weight: 800;
-  line-height: 1.1;
-  word-break: break-word;
-}
+.summary-card-icon {
+  width: 34px;
+  height: 34px;
 
-.admin-stat-meta {
+  flex: 0 0 34px;
+
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: var(--novapay-blue-light);
+  color: var(--novapay-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.summary-card-value {
+  display: block;
+
+  margin-top: 15px;
+
+  color: var(--text-primary);
+
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.summary-card-note {
+  display: block;
+
+  margin-top: 7px;
+
   color: var(--text-muted);
-  font-size: 12px;
+
+  font-size: 11px;
 }
 
 
@@ -224,41 +390,74 @@ a {
    DASHBOARD PANELS
 ========================================================= */
 
-.admin-panel {
+.dashboard-panel {
+  width: 100%;
+
+  background: var(--surface);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--surface);
+
   box-shadow: var(--shadow-sm);
+
+  overflow: hidden;
 }
 
-.admin-panel + .admin-panel {
+.dashboard-panel + .dashboard-panel {
   margin-top: 20px;
 }
 
-.admin-panel-header {
+.panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 16px;
+
   padding: 18px 20px;
+
   border-bottom: 1px solid var(--border-light);
 }
 
-.admin-panel-title {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 16px;
+.panel-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--novapay-blue);
+
+  font-size: 9px;
   font-weight: 800;
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
 }
 
-.admin-panel-subtitle {
-  margin: 4px 0 0;
-  color: var(--text-muted);
-  font-size: 12px;
+.panel-header h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.admin-panel-body {
-  padding: 20px;
+.panel-status {
+  flex: 0 0 auto;
+
+  padding: 6px 9px;
+
+  border: 1px solid #dceaff;
+  border-radius: 999px;
+
+  background: var(--novapay-blue-soft);
+  color: var(--novapay-blue-dark);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
 
@@ -268,72 +467,149 @@ a {
 
 .analysis-chart {
   width: 100%;
-  min-height: 260px;
-  border-radius: var(--radius-md);
-  background: var(--surface-soft);
-  overflow: hidden;
+  min-height: 270px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdff 0%,
+      #f6faff 100%
+    );
 }
 
-#analysisChart {
-  width: 100%;
-  min-height: 260px;
+.dashboard-placeholder {
+  width: min(480px, 100%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.dashboard-placeholder-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 50%;
+
+  background: var(--novapay-blue-light);
+  color: var(--novapay-blue);
+
+  font-size: 20px;
+}
+
+.dashboard-placeholder strong {
+  color: var(--text-primary);
+
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.dashboard-placeholder span {
+  margin-top: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 
 /* =========================================================
-   TRANSACTIONS TABLE
+   TRANSACTIONS
 ========================================================= */
 
-.admin-table-wrap {
+.transactions-table-wrapper {
   width: 100%;
+
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.admin-table {
+.transactions-table {
   width: 100%;
-  min-width: 680px;
+  min-width: 620px;
+
   border-collapse: collapse;
 }
 
-.admin-table th {
-  padding: 12px 14px;
+.transactions-table th {
+  padding: 12px 16px;
+
+  background: #fbfdff;
+
   border-bottom: 1px solid var(--border);
+
   color: var(--text-muted);
-  font-size: 11px;
+
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
+
   text-align: left;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.admin-table td {
-  padding: 14px;
+.transactions-table td {
+  padding: 15px 16px;
+
   border-bottom: 1px solid var(--border-light);
+
   color: var(--text-secondary);
-  font-size: 13px;
-  vertical-align: middle;
+
+  font-size: 12px;
 }
 
-.admin-table tbody tr:last-child td {
+.transactions-table tbody tr:last-child td {
   border-bottom: 0;
 }
 
-.admin-table tbody tr:hover {
+.transactions-table tbody tr:hover {
   background: var(--surface-soft);
+}
+
+.dashboard-table-empty {
+  min-height: 105px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+
+  text-align: center;
 }
 
 
 /* =========================================================
-   STATUS
+   PAGE STATUS
 ========================================================= */
 
-.admin-status {
-  margin-top: 16px;
+.admin-page-status {
+  width: min(1380px, calc(100% - 48px));
+
+  margin: 0 auto;
+  padding: 0 0 25px;
+
   color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.5;
+
+  font-size: 11px;
 }
 
 
@@ -344,11 +620,15 @@ a {
 .manual-backdrop {
   position: fixed;
   inset: 0;
+
   z-index: 1000;
-  background: rgba(16, 35, 63, 0.10);
+
+  background: rgba(16, 35, 63, 0.12);
+
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+
   transition:
     opacity 280ms ease,
     visibility 280ms ease;
@@ -367,9 +647,11 @@ a {
 
 .admin-manual {
   position: fixed;
+
   top: 0;
   right: 0;
   bottom: 0;
+
   z-index: 1001;
 
   display: flex;
@@ -377,23 +659,33 @@ a {
 
   width: var(--manual-width);
   max-width: 100%;
+
   min-height: 0;
 
-  border-left: 1px solid var(--border);
   background: var(--white);
+
+  border-left: 1px solid var(--border);
+
   box-shadow: var(--shadow-lg);
 
   transform: translateX(100%);
+
   visibility: hidden;
   pointer-events: none;
 
   transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    ),
     visibility 280ms ease;
 }
 
 .admin-manual.is-open {
   transform: translateX(0);
+
   visibility: visible;
   pointer-events: auto;
 }
@@ -409,58 +701,69 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
 
-  padding: 20px;
-  border-bottom: 1px solid var(--border-light);
+  gap: 14px;
+
+  padding: 18px 18px 16px;
+
   background: var(--white);
+
+  border-bottom: 1px solid var(--border-light);
 }
 
-.admin-manual-header-content {
-  min-width: 0;
-}
+.manual-eyebrow {
+  display: block;
 
-.admin-manual-eyebrow {
-  margin: 0 0 5px;
+  margin-bottom: 4px;
+
   color: var(--novapay-blue);
-  font-size: 10px;
+
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
+
   text-transform: uppercase;
 }
 
-.admin-manual-title {
+.admin-manual-header h2 {
   margin: 0;
+
   color: var(--text-primary);
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.2;
+
+  font-size: 25px;
+  font-weight: 850;
+  line-height: 1.1;
 }
 
-.admin-manual-subtitle {
+.admin-manual-header p {
   margin: 5px 0 0;
+
   color: var(--text-secondary);
+
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .manual-close {
-  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
 
-  display: inline-flex;
+  flex: 0 0 40px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 38px;
-  height: 38px;
   padding: 0;
 
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 10px;
+
   background: var(--white);
   color: var(--text-secondary);
 
-  font-size: 22px;
+  font-size: 25px;
+  font-weight: 400;
   line-height: 1;
 
   transition:
@@ -470,36 +773,35 @@ a {
 }
 
 .manual-close:hover {
-  border-color: var(--novapay-blue);
   background: var(--novapay-blue-light);
+  border-color: #bfd7f4;
   color: var(--novapay-blue);
-}
-
-.manual-close:focus-visible {
-  outline: 3px solid rgba(11, 99, 206, 0.20);
-  outline-offset: 2px;
 }
 
 
 /* =========================================================
-   MANUAL SCROLL AREA
+   MANUAL SCROLL
 ========================================================= */
 
 .admin-manual-scroll {
   flex: 1 1 auto;
+
   min-height: 0;
+
   overflow-y: auto;
   overflow-x: hidden;
 
-  padding: 18px 18px 24px;
+  padding: 14px 16px 20px;
 
   overscroll-behavior: contain;
+
   -webkit-overflow-scrolling: touch;
+
   scrollbar-width: thin;
 }
 
 .admin-manual-scroll::-webkit-scrollbar {
-  width: 7px;
+  width: 5px;
 }
 
 .admin-manual-scroll::-webkit-scrollbar-track {
@@ -507,41 +809,56 @@ a {
 }
 
 .admin-manual-scroll::-webkit-scrollbar-thumb {
+  background: #c4d0df;
   border-radius: 20px;
-  background: #cbd6e4;
-}
-
-.admin-manual-scroll::-webkit-scrollbar-thumb:hover {
-  background: #aebdce;
 }
 
 
 /* =========================================================
-   MANUAL CONTENT
+   MANUAL SECTIONS
 ========================================================= */
 
 .admin-manual-content {
   width: 100%;
 }
 
-.admin-manual-section {
-  margin: 0 0 22px;
+.manual-section {
+  margin: 0 0 16px;
 }
 
-.admin-manual-section:last-child {
+.manual-section:last-child {
   margin-bottom: 0;
 }
 
-.admin-manual-section-title {
-  margin: 0 0 9px;
+.manual-section-heading {
+  margin: 0 0 7px;
   padding: 0 2px;
+}
+
+.manual-section-heading span {
+  display: block;
 
   color: var(--text-muted);
-  font-size: 10px;
+
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.10em;
-  line-height: 1.3;
+
+  line-height: 1.25;
+
   text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MANUAL BUTTON LIST
+========================================================= */
+
+.manual-button-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
 }
 
 
@@ -551,76 +868,150 @@ a {
 
 .admin-action-button {
   width: 100%;
-  min-height: 58px;
+  min-height: 51px;
 
   display: flex;
   align-items: center;
-  gap: 13px;
 
-  margin: 0 0 8px;
-  padding: 10px 13px;
+  gap: 11px;
+
+  padding: 8px 11px;
 
   border: 1px solid var(--border);
   border-radius: 11px;
-  background: var(--white);
 
+  background: var(--white);
   color: var(--text-primary);
+
   text-align: left;
 
-  box-shadow: 0 2px 7px rgba(16, 35, 63, 0.035);
+  box-shadow:
+    0 2px 6px rgba(16, 35, 63, 0.035);
 
   transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.admin-action-button:last-child {
-  margin-bottom: 0;
+    background 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
 }
 
 .admin-action-button:hover {
-  border-color: #b9d2f1;
   background: var(--novapay-blue-soft);
-  box-shadow: 0 6px 16px rgba(11, 99, 206, 0.08);
+
+  border-color: #c8dcf5;
+
+  box-shadow:
+    0 5px 13px rgba(11, 99, 206, 0.07);
+
   transform: translateY(-1px);
 }
 
 .admin-action-button:active {
   transform: translateY(0);
+  box-shadow: none;
 }
 
-.admin-action-button:focus-visible {
-  outline: 3px solid rgba(11, 99, 206, 0.18);
-  outline-offset: 2px;
-}
 
-.admin-action-button-icon {
-  flex: 0 0 auto;
+/* =========================================================
+   BUTTON ICONS
+   No sticker/pill background by default.
+========================================================= */
 
-  display: inline-flex;
+.admin-action-icon {
+  width: 29px;
+  height: 29px;
+
+  flex: 0 0 29px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 36px;
-  height: 36px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 
-  border-radius: 9px;
-  background: var(--novapay-blue-light);
   color: var(--novapay-blue);
 
   font-size: 17px;
   line-height: 1;
 }
 
+
+/* Only selected status/risk icons get a small visual treatment. */
+
+.admin-action-button[data-admin-action="active-users"]
+.admin-action-icon {
+  width: 19px;
+  height: 19px;
+
+  flex-basis: 19px;
+
+  margin-left: 5px;
+  margin-right: 5px;
+
+  border-radius: 50%;
+
+  background: #16b84e;
+
+  color: transparent;
+
+  box-shadow:
+    0 0 0 3px rgba(22, 184, 78, 0.10);
+}
+
+.admin-action-button[data-admin-action="failed-transactions"]
+.admin-action-icon {
+  width: 27px;
+  height: 27px;
+
+  flex-basis: 27px;
+
+  border-radius: 8px;
+
+  background: #fff5df;
+  color: var(--warning);
+}
+
+.admin-action-button[data-admin-action="notifications"]
+.admin-action-icon {
+  width: 29px;
+  height: 29px;
+
+  flex-basis: 29px;
+
+  border-radius: 8px;
+
+  background: var(--novapay-blue-light);
+}
+
+.admin-action-button[data-admin-action="fraud-risk"]
+.admin-action-icon {
+  width: 29px;
+  height: 29px;
+
+  flex-basis: 29px;
+
+  border-radius: 8px;
+
+  background: #eef5ff;
+}
+
+
+/* =========================================================
+   BUTTON TITLE
+========================================================= */
+
 .admin-action-button strong {
   min-width: 0;
+  flex: 1;
 
   color: var(--text-primary);
+
   font-size: 13px;
   font-weight: 750;
-  line-height: 1.3;
+
+  line-height: 1.25;
 }
 
 .admin-action-button:hover strong {
@@ -629,21 +1020,26 @@ a {
 
 
 /* =========================================================
-   PREVENT OLD ARROWS / DESCRIPTIONS
+   REMOVE OLD ARROWS / DESCRIPTIONS
 ========================================================= */
+
+.admin-action-button::after {
+  content: none !important;
+}
 
 .admin-action-button .arrow,
 .admin-action-button .admin-action-arrow,
 .admin-action-button .button-arrow,
 .admin-action-button .description,
 .admin-action-button .admin-action-description,
-.admin-action-button p {
+.admin-action-button p,
+.admin-action-button small {
   display: none !important;
 }
 
 
 /* =========================================================
-   MANUAL OPEN STATE ACCESSIBILITY
+   ACCESSIBILITY
 ========================================================= */
 
 .admin-manual[aria-hidden="true"] {
@@ -656,24 +1052,21 @@ a {
 
 
 /* =========================================================
-   SMALL DESKTOP / TABLET
+   LARGE DESKTOP
 ========================================================= */
 
-@media (max-width: 1100px) {
-  :root {
-    --manual-width: min(500px, 76vw);
+@media (min-width: 1200px) {
+  .admin-main {
+    padding-top: 34px;
   }
 
-  .admin-page {
-    padding: 20px;
+  .admin-header {
+    padding-left: 34px;
+    padding-right: 34px;
   }
 
-  .admin-stats {
-    gap: 13px;
-  }
-
-  .admin-stat-card {
-    padding: 17px;
+  .admin-manual {
+    width: min(510px, 60vw);
   }
 }
 
@@ -682,29 +1075,31 @@ a {
    TABLET
 ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   :root {
-    --manual-width: min(480px, 82vw);
+    --manual-width: min(470px, 76vw);
   }
 
   .admin-header {
-    align-items: flex-start;
+    padding: 16px 20px;
   }
 
-  .admin-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .admin-main {
+    width: calc(100% - 36px);
+    padding-top: 24px;
   }
 
-  .admin-stats .admin-stat-card:last-child {
+  .admin-page-status {
+    width: calc(100% - 36px);
+  }
+
+  .dashboard-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-card:last-child {
     grid-column: 1 / -1;
-  }
-
-  .admin-manual-header {
-    padding: 17px;
-  }
-
-  .admin-manual-scroll {
-    padding: 16px;
   }
 }
 
@@ -713,93 +1108,217 @@ a {
    MOBILE
 ========================================================= */
 
-@media (max-width: 560px) {
+@media (max-width: 600px) {
   :root {
-    --manual-width: 92vw;
-  }
-
-  .admin-page {
-    padding: 14px;
+    /* Reduced from the previous 92vw so more dashboard
+       remains visible while the panel is open. */
+    --manual-width: 84vw;
   }
 
   .admin-header {
-    flex-direction: column;
-    gap: 14px;
-    margin-bottom: 18px;
+    padding: 14px 16px;
+  }
+
+  .admin-brand-mark {
+    width: 42px;
+    height: 42px;
+
+    flex-basis: 42px;
+
+    border-radius: 11px;
+
+    font-size: 19px;
+  }
+
+  .admin-brand-text strong {
+    font-size: 15px;
+  }
+
+  .admin-brand-text span {
+    font-size: 8px;
   }
 
   .manual-toggle {
-    width: 100%;
+    min-height: 40px;
+    padding: 0 14px;
+
+    font-size: 11px;
   }
 
-  .admin-stats {
+  .admin-main {
+    width: calc(100% - 28px);
+
+    padding-top: 22px;
+    padding-bottom: 36px;
+  }
+
+  .dashboard-intro {
+    margin-bottom: 18px;
+  }
+
+  .dashboard-eyebrow {
+    font-size: 9px;
+  }
+
+  .dashboard-intro h1 {
+    font-size: 27px;
+  }
+
+  .dashboard-intro p {
+    font-size: 12px;
+  }
+
+  .dashboard-summary {
     grid-template-columns: 1fr;
+
     gap: 10px;
+
+    margin-bottom: 14px;
   }
 
-  .admin-stats .admin-stat-card:last-child {
+  .summary-card:last-child {
     grid-column: auto;
   }
 
-  .admin-stat-card {
+  .summary-card {
     padding: 16px;
   }
 
-  .admin-panel-header {
+  .summary-card-value {
+    margin-top: 11px;
+    font-size: 27px;
+  }
+
+  .dashboard-panel + .dashboard-panel {
+    margin-top: 14px;
+  }
+
+  .panel-header {
     padding: 15px;
   }
 
-  .admin-panel-body {
-    padding: 15px;
+  .panel-header h2 {
+    font-size: 16px;
+  }
+
+  .panel-status {
+    font-size: 9px;
+    padding: 5px 7px;
+  }
+
+  .analysis-chart {
+    min-height: 220px;
+    padding: 18px;
+  }
+
+  .dashboard-table-empty {
+    min-height: 90px;
+  }
+
+  .admin-page-status {
+    width: calc(100% - 28px);
   }
 
   .admin-manual-header {
-    padding: 15px;
+    padding: 16px 14px 14px;
   }
 
-  .admin-manual-title {
-    font-size: 20px;
+  .admin-manual-header h2 {
+    font-size: 22px;
+  }
+
+  .admin-manual-header p {
+    font-size: 11px;
+  }
+
+  .manual-close {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
   }
 
   .admin-manual-scroll {
-    padding: 14px;
+    padding: 12px 12px 18px;
+  }
+
+  .manual-section {
+    margin-bottom: 14px;
+  }
+
+  .manual-section-heading {
+    margin-bottom: 6px;
+  }
+
+  .manual-section-heading span {
+    font-size: 8px;
+  }
+
+  .manual-button-list {
+    gap: 5px;
   }
 
   .admin-action-button {
-    min-height: 56px;
+    min-height: 48px;
+
+    padding: 7px 9px;
+
+    border-radius: 10px;
+
+    gap: 9px;
+  }
+
+  .admin-action-icon {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+
+    font-size: 15px;
+  }
+
+  .admin-action-button strong {
+    font-size: 12px;
   }
 }
 
 
 /* =========================================================
-   VERY SMALL MOBILE
+   VERY SMALL PHONES
 ========================================================= */
 
 @media (max-width: 380px) {
   :root {
-    --manual-width: 94vw;
+    --manual-width: 82vw;
   }
 
-  .admin-page {
-    padding: 10px;
+  .admin-header {
+    gap: 12px;
+  }
+
+  .manual-toggle {
+    padding: 0 11px;
+  }
+
+  .admin-main {
+    width: calc(100% - 20px);
+  }
+
+  .admin-page-status {
+    width: calc(100% - 20px);
   }
 
   .admin-manual-header {
-    padding: 13px;
+    padding: 14px 12px 12px;
   }
 
   .admin-manual-scroll {
-    padding: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .admin-action-button {
-    min-height: 54px;
-    padding: 9px 11px;
-  }
-
-  .admin-action-button-icon {
-    width: 34px;
-    height: 34px;
+    min-height: 46px;
   }
 }
 
@@ -816,8 +1335,8 @@ a {
   *,
   *::before,
   *::after {
-    transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
