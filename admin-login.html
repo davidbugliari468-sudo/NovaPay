@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="googlebot" content="noindex, nofollow, noarchive">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>NovaPay Access Center</title>
+
+    <link rel="stylesheet" href="admin-login.css">
+</head>
+
+<body>
+
+    <main class="admin-login-page">
+
+        <section class="admin-login-card" aria-labelledby="access-title">
+
+            <div class="brand-area">
+                <div class="brand-mark" aria-hidden="true">
+                    N
+                </div>
+
+                <div class="brand-name">
+                    NovaPay
+                </div>
+            </div>
+
+            <div class="access-header">
+                <span class="access-label">SECURE ACCESS</span>
+
+                <h1 id="access-title">
+                    Access Center
+                </h1>
+
+                <p>
+                    Sign in to continue.
+                </p>
+            </div>
+
+            <form id="admin-login-form" novalidate>
+
+                <div class="form-group">
+
+                    <label for="admin-username">
+                        Email address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="admin-username"
+                        name="username"
+                        placeholder="Enter your email address"
+                        autocomplete="username"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="admin-password">
+                        Password
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            type="password"
+                            id="admin-password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="admin-password-toggle"
+                            aria-label="Show password"
+                            aria-controls="admin-password"
+                            aria-pressed="false"
+                        >
+                            <span class="password-toggle-text">
+                                Show
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="admin-login-error"
+                    class="admin-login-error"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+                <button
+                    type="submit"
+                    id="admin-login-button"
+                    class="admin-login-button"
+                >
+                    <span class="button-text">
+                        Continue
+                    </span>
+
+                    <span
+                        class="button-loading"
+                        aria-hidden="true"
+                        hidden
+                    >
+                        Checking...
+                    </span>
+                </button>
+
+            </form>
+
+            <div class="security-note">
+                <span class="security-icon" aria-hidden="true">
+                    &#128274;
+                </span>
+
+                <span>
+                    Secure connection
+                </span>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="admin-login.js"></script>
+
+</body>
+</html>
