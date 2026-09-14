@@ -1,287 +1,1061 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-  <meta
-    name="theme-color"
-    content="#0b63f6"
-  >
-  <meta
-    name="description"
-    content="NovaPay administrator dashboard"
-  >
+    <meta charset="UTF-8">
 
-  <title>NovaPay Admin Dashboard</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-  <link rel="stylesheet" href="./admin.css">
+    <meta
+        name="theme-color"
+        content="#0b63f6"
+    >
+
+    <meta
+        name="description"
+        content="NovaPay administrator dashboard"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
+
+    <title>NovaPay Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="./admin.css"
+    >
 </head>
 
 <body>
-  <div class="admin-app" id="adminApp">
 
-    <!-- =========================================
-         ADMIN HEADER
-    ========================================== -->
-    <header class="admin-header">
-      <div class="admin-brand">
-        <div class="admin-brand-mark" aria-hidden="true">
-          N
-        </div>
+    <div
+        class="admin-app"
+        id="adminApp"
+    >
 
-        <div class="admin-brand-text">
-          <strong>NOVAPAY</strong>
-          <span>ADMIN</span>
-        </div>
-      </div>
+        <!-- ==================================================
+             ADMIN HEADER
+        =================================================== -->
 
-      <!-- Direct HTML connection to admin-button.html -->
-      <a
-        href="./admin-button.html"
-        class="manual-toggle"
-        id="manualToggle"
-        aria-label="Open admin manual"
-      >
-        <span>MANUAL</span>
-        <span class="manual-toggle-icon" aria-hidden="true">☰</span>
-      </a>
-    </header>
+        <header class="admin-header">
 
+            <div class="admin-brand">
 
-    <!-- =========================================
-         MAIN DASHBOARD
-    ========================================== -->
-    <main class="admin-main">
+                <div
+                    class="admin-brand-mark"
+                    aria-hidden="true"
+                >
+                    N
+                </div>
 
-      <section
-        class="dashboard-intro"
-        aria-labelledby="dashboardTitle"
-      >
-        <div>
-          <span class="dashboard-eyebrow">
-            NOVAPAY CONTROL CENTER
-          </span>
+                <div class="admin-brand-text">
+                    <strong>NOVAPAY</strong>
+                    <span>ADMIN</span>
+                </div>
 
-          <h1 id="dashboardTitle">
-            Admin Dashboard
-          </h1>
-
-          <p>
-            Monitor the platform and review important activity.
-          </p>
-        </div>
-      </section>
-
-
-      <!-- =======================================
-           SUMMARY CARDS
-      ======================================== -->
-      <section
-        class="dashboard-summary"
-        aria-label="Dashboard summary"
-      >
-
-        <article class="summary-card">
-          <div class="summary-card-top">
-            <span class="summary-card-label">
-              Total Users
-            </span>
-
-            <span
-              class="summary-card-icon"
-              aria-hidden="true"
-            >
-              US
-            </span>
-          </div>
-
-          <strong
-            class="summary-card-value"
-            id="totalUsers"
-          >
-            —
-          </strong>
-
-          <span class="summary-card-note">
-            Registered accounts
-          </span>
-        </article>
-
-
-        <article class="summary-card">
-          <div class="summary-card-top">
-            <span class="summary-card-label">
-              Today Active Users
-            </span>
-
-            <span
-              class="summary-card-icon"
-              aria-hidden="true"
-            >
-              AU
-            </span>
-          </div>
-
-          <strong
-            class="summary-card-value"
-            id="todayActiveUsers"
-          >
-            —
-          </strong>
-
-          <span class="summary-card-note">
-            Active today
-          </span>
-        </article>
-
-
-        <article class="summary-card">
-          <div class="summary-card-top">
-            <span class="summary-card-label">
-              Total Profit
-            </span>
-
-            <span
-              class="summary-card-icon"
-              aria-hidden="true"
-            >
-              ₦
-            </span>
-          </div>
-
-          <strong
-            class="summary-card-value"
-            id="totalProfit"
-          >
-            —
-          </strong>
-
-          <span class="summary-card-note">
-            Platform profit
-          </span>
-        </article>
-
-      </section>
-
-
-      <!-- =======================================
-           ANALYSIS
-      ======================================== -->
-      <section
-        class="dashboard-panel analysis-panel"
-        aria-labelledby="analysisTitle"
-      >
-        <div class="panel-header">
-          <div>
-            <span class="panel-eyebrow">
-              OVERVIEW
-            </span>
-
-            <h2 id="analysisTitle">
-              Analysis
-            </h2>
-          </div>
-
-          <span class="panel-status">
-            Awaiting data
-          </span>
-        </div>
-
-        <div
-          class="analysis-chart"
-          id="analysisChart"
-          aria-live="polite"
-        >
-          <div class="dashboard-placeholder">
-            <div
-              class="dashboard-placeholder-icon"
-              aria-hidden="true"
-            >
-              ◌
             </div>
 
-            <strong>
-              Analysis data will appear here
-            </strong>
 
-            <span>
-              Platform analytics will be connected to the backend.
-            </span>
-          </div>
-        </div>
-      </section>
+            <button
+                type="button"
+                class="manual-toggle"
+                id="manualToggle"
+                aria-label="Open admin manual"
+                aria-controls="adminManual"
+                aria-expanded="false"
+            >
+                <span>MANUAL</span>
 
+                <span
+                    class="manual-toggle-icon"
+                    aria-hidden="true"
+                >
+                    ☰
+                </span>
+            </button>
 
-      <!-- =======================================
-           RECENT TRANSACTIONS
-      ======================================== -->
-      <section
-        class="dashboard-panel transactions-panel"
-        aria-labelledby="transactionsTitle"
-      >
-        <div class="panel-header">
-          <div>
-            <span class="panel-eyebrow">
-              ACTIVITY
-            </span>
-
-            <h2 id="transactionsTitle">
-              Recent Transactions
-            </h2>
-          </div>
-
-          <span class="panel-status">
-            Awaiting data
-          </span>
-        </div>
-
-        <div class="transactions-table-wrapper">
-          <table class="transactions-table">
-            <thead>
-              <tr>
-                <th scope="col">Transaction</th>
-                <th scope="col">User</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Status</th>
-                <th scope="col">Time</th>
-              </tr>
-            </thead>
-
-            <tbody id="recentTransactionsBody">
-              <tr>
-                <td colspan="5">
-                  <div class="dashboard-table-empty">
-                    Recent transactions will appear here.
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-    </main>
+        </header>
 
 
-    <!-- =========================================
-         ADMIN PAGE STATUS
-    ========================================== -->
-    <p
-      class="admin-page-status"
-      id="adminPageStatus"
-      aria-live="polite"
-      aria-atomic="true"
-    ></p>
+        <!-- ==================================================
+             MAIN DASHBOARD
+        =================================================== -->
 
-  </div>
+        <main class="admin-main">
+
+            <!-- DASHBOARD INTRO -->
+
+            <section
+                class="dashboard-intro"
+                aria-labelledby="dashboardTitle"
+            >
+
+                <div>
+
+                    <span class="dashboard-eyebrow">
+                        NOVAPAY CONTROL CENTER
+                    </span>
+
+                    <h1 id="dashboardTitle">
+                        Admin Dashboard
+                    </h1>
+
+                    <p>
+                        Monitor the platform and review important activity.
+                    </p>
+
+                </div>
+
+            </section>
 
 
-  <script
-    type="module"
-    src="./admin.js"
-  ></script>
+            <!-- ==================================================
+                 SUMMARY CARDS
+            =================================================== -->
+
+            <section
+                class="dashboard-summary"
+                aria-label="Dashboard summary"
+            >
+
+                <article class="summary-card">
+
+                    <div class="summary-card-top">
+
+                        <span class="summary-card-label">
+                            Total Users
+                        </span>
+
+                        <span
+                            class="summary-card-icon"
+                            aria-hidden="true"
+                        >
+                            US
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="summary-card-value"
+                        id="totalUsers"
+                    >
+                        —
+                    </strong>
+
+                    <span class="summary-card-note">
+                        Registered accounts
+                    </span>
+
+                </article>
+
+
+                <article class="summary-card">
+
+                    <div class="summary-card-top">
+
+                        <span class="summary-card-label">
+                            Today Active Users
+                        </span>
+
+                        <span
+                            class="summary-card-icon"
+                            aria-hidden="true"
+                        >
+                            AU
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="summary-card-value"
+                        id="todayActiveUsers"
+                    >
+                        —
+                    </strong>
+
+                    <span class="summary-card-note">
+                        Active today
+                    </span>
+
+                </article>
+
+
+                <article class="summary-card">
+
+                    <div class="summary-card-top">
+
+                        <span class="summary-card-label">
+                            Total Profit
+                        </span>
+
+                        <span
+                            class="summary-card-icon"
+                            aria-hidden="true"
+                        >
+                            ₦
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="summary-card-value"
+                        id="totalProfit"
+                    >
+                        —
+                    </strong>
+
+                    <span class="summary-card-note">
+                        Platform profit
+                    </span>
+
+                </article>
+
+            </section>
+
+
+            <!-- ==================================================
+                 ANALYSIS
+            =================================================== -->
+
+            <section
+                class="dashboard-panel analysis-panel"
+                aria-labelledby="analysisTitle"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            OVERVIEW
+                        </span>
+
+                        <h2 id="analysisTitle">
+                            Analysis
+                        </h2>
+
+                    </div>
+
+                    <span class="panel-status">
+                        Awaiting data
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="analysis-chart"
+                    id="analysisChart"
+                    aria-live="polite"
+                >
+
+                    <div class="dashboard-placeholder">
+
+                        <div
+                            class="dashboard-placeholder-icon"
+                            aria-hidden="true"
+                        >
+                            ◌
+                        </div>
+
+                        <strong>
+                            Analysis data will appear here
+                        </strong>
+
+                        <span>
+                            Platform analytics will be connected to the backend.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 RECENT TRANSACTIONS
+            =================================================== -->
+
+            <section
+                class="dashboard-panel transactions-panel"
+                aria-labelledby="transactionsTitle"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            ACTIVITY
+                        </span>
+
+                        <h2 id="transactionsTitle">
+                            Recent Transactions
+                        </h2>
+
+                    </div>
+
+                    <span class="panel-status">
+                        Awaiting data
+                    </span>
+
+                </div>
+
+
+                <div class="transactions-table-wrapper">
+
+                    <table class="transactions-table">
+
+                        <thead>
+
+                            <tr>
+                                <th scope="col">Transaction</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Time</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="recentTransactionsBody">
+
+                            <tr>
+
+                                <td colspan="5">
+
+                                    <div class="dashboard-table-empty">
+                                        Recent transactions will appear here.
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- ==================================================
+             ADMIN PAGE STATUS
+        =================================================== -->
+
+        <p
+            class="admin-page-status"
+            id="adminPageStatus"
+            aria-live="polite"
+            aria-atomic="true"
+        ></p>
+
+
+        <!-- ==================================================
+             MANUAL BACKDROP
+        =================================================== -->
+
+        <div
+            class="manual-backdrop"
+            id="manualBackdrop"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- ==================================================
+             SLIDING MANUAL PANEL
+        =================================================== -->
+
+        <aside
+            class="admin-manual"
+            id="adminManual"
+            aria-label="NovaPay Admin Manual"
+            aria-hidden="true"
+        >
+
+            <!-- MANUAL HEADER -->
+
+            <div class="admin-manual-header">
+
+                <div>
+
+                    <span class="manual-eyebrow">
+                        NOVAPAY ADMIN
+                    </span>
+
+                    <h2>
+                        Manual
+                    </h2>
+
+                    <p>
+                        Admin management tools
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="manual-close"
+                    id="manualClose"
+                    aria-label="Close admin manual"
+                >
+                    <span aria-hidden="true">
+                        ×
+                    </span>
+                </button>
+
+            </div>
+
+
+            <!-- ==================================================
+                 MANUAL SCROLL AREA
+            =================================================== -->
+
+            <div
+                class="admin-manual-scroll"
+                id="adminManualScroll"
+            >
+
+                <div
+                    class="admin-manual-content"
+                    id="adminManualContent"
+                >
+
+
+                    <!-- ==================================================
+                         PLATFORM MANAGEMENT
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="platformToolsTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    PLATFORM
+                                </span>
+
+                                <h3 id="platformToolsTitle">
+                                    Platform Management
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="user-information"
+                                aria-label="Open User Information"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    👤
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>User Information</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="active-users"
+                                aria-label="Open Active Users"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🟢
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Active Users</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="pending-transactions"
+                                aria-label="Open Pending Transactions"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⏳
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Pending Transactions</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="failed-transactions"
+                                aria-label="Open Failed Transactions"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⚠
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Failed Transactions</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="transactions"
+                                aria-label="Open Transactions"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⇄
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Transactions</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="profit"
+                                aria-label="Open Profit"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ₦
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Profit</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==================================================
+                         KYC & VERIFICATION
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="verificationToolsTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    KYC &amp; VERIFICATION
+                                </span>
+
+                                <h3 id="verificationToolsTitle">
+                                    Identity &amp; Verification
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="verification-records"
+                                aria-label="Open Verification Records"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ✓
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Verification Records</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="approve-user-kyc"
+                                aria-label="Open Approve User KYC"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ✓
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Approve User KYC</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==================================================
+                         CUSTOMER SERVICE
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="customerServiceTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    CUSTOMER SERVICE
+                                </span>
+
+                                <h3 id="customerServiceTitle">
+                                    Customer Support
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="live-chat"
+                                aria-label="Open Live Chat"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    💬
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Live Chat</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="customer-support"
+                                aria-label="Open Customer Support"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎧
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Customer Support</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==================================================
+                         USER MANAGEMENT
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="userManagementTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    USER MANAGEMENT
+                                </span>
+
+                                <h3 id="userManagementTitle">
+                                    Account Management
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="suspended-accounts"
+                                aria-label="Open Suspended Accounts"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⏸
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Suspended Accounts</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="suspend-user"
+                                aria-label="Open Suspend User"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🔒
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Suspend User</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="banned-accounts"
+                                aria-label="Open Banned Accounts"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🚫
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Banned Accounts</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="reward-user"
+                                aria-label="Open Reward User"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎁
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Reward User</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==================================================
+                         PLATFORM CONTROL
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="platformControlTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    PLATFORM CONTROL
+                                </span>
+
+                                <h3 id="platformControlTitle">
+                                    System Controls
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="system-color"
+                                aria-label="Open System Color"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎨
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>System Color</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="notifications"
+                                aria-label="Open Notifications"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🔔
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Notifications</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="settings"
+                                aria-label="Open Settings"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⚙
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Settings</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="legal-content"
+                                aria-label="Open Legal Content"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⚖
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Legal Content</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="content"
+                                aria-label="Open Content"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ▤
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Content</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="system-information"
+                                aria-label="Open System Information"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⓘ
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>System Information</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==================================================
+                         SECURITY & RISK
+                    =================================================== -->
+
+                    <section
+                        class="admin-button-group"
+                        aria-labelledby="securityRiskTitle"
+                    >
+
+                        <div class="admin-button-group-header">
+
+                            <div>
+
+                                <span class="admin-group-label">
+                                    SECURITY &amp; RISK
+                                </span>
+
+                                <h3 id="securityRiskTitle">
+                                    Security Management
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-button-group-list">
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="fraud-risk"
+                                aria-label="Open Fraud and Risk"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🛡
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Fraud &amp; Risk</strong>
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="admin-action-button"
+                                data-admin-action="audit"
+                                aria-label="Open Audit"
+                            >
+                                <span
+                                    class="admin-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    📋
+                                </span>
+
+                                <span class="admin-action-content">
+                                    <strong>Audit</strong>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    <script
+        src="./admin.js"
+    ></script>
+
 </body>
 </html>

@@ -1,975 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="NovaPay Admin Management System"
-    >
-
-    <meta
-        name="robots"
-        content="noindex, nofollow"
-    >
-
-    <title>NovaPay Admin Management</title>
-
-    <link
-        rel="stylesheet"
-        href="./admin-button.css"
-    >
-</head>
-
-<body>
-
-    <main
-        class="admin-buttons-page"
-        id="adminButtonsPage"
-    >
-
-        <div class="admin-buttons-shell">
-
-            <!-- ==================================================
-                 PAGE HEADER
-            =================================================== -->
-
-            <header class="admin-buttons-header">
-
-                <div class="admin-buttons-brand">
-
-                    <div
-                        class="admin-buttons-brand-mark"
-                        aria-hidden="true"
-                    >
-                        N
-                    </div>
-
-                    <div class="admin-buttons-brand-text">
-                        <h1>NovaPay</h1>
-                        <span>Admin Management</span>
-                    </div>
-
-                </div>
-
-                <div class="admin-buttons-status">
-
-                    <span
-                        class="admin-status-dot"
-                        aria-hidden="true"
-                    ></span>
-
-                    <span>Admin Panel</span>
-
-                </div>
-
-            </header>
-
-
-            <!-- ==================================================
-                 INTRODUCTION
-            =================================================== -->
-
-            <section
-                class="admin-buttons-intro"
-                aria-labelledby="adminToolsTitle"
-            >
-
-                <div>
-
-                    <span class="admin-section-label">
-                        ADMIN CONTROL CENTER
-                    </span>
-
-                    <h2 id="adminToolsTitle">
-                        Management Tools
-                    </h2>
-
-                    <p>
-                        Select an administrative tool to manage,
-                        monitor, verify, or review the NovaPay platform.
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- ==================================================
-                 ADMIN BUTTONS
-            =================================================== -->
-
-            <div
-                class="admin-buttons-list"
-                id="adminButtonsList"
-            >
-
-                <!-- ==================================================
-                     PLATFORM
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="platformToolsTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                PLATFORM
-                            </span>
-
-                            <h3 id="platformToolsTitle">
-                                Platform Management
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="user-information"
-                            aria-label="Open User Information"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                👤
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>User Information</strong>
-                                <small>
-                                    View and manage registered user information.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="active-users"
-                            aria-label="Open Active Users"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🟢
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Active Users</strong>
-                                <small>
-                                    Monitor users currently active on NovaPay.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="pending-transactions"
-                            aria-label="Open Pending Transactions"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⏳
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Pending Transactions</strong>
-                                <small>
-                                    Review transactions awaiting processing.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="failed-transactions"
-                            aria-label="Open Failed Transactions"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⚠
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Failed Transactions</strong>
-                                <small>
-                                    Review transactions that failed or were rejected.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="transactions"
-                            aria-label="Open Transactions"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⇄
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Transactions</strong>
-                                <small>
-                                    Review platform transaction activity.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="profit"
-                            aria-label="Open Profit"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ₦
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Profit</strong>
-                                <small>
-                                    Review NovaPay platform profit information.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- ==================================================
-                     KYC & VERIFICATION
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="verificationToolsTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                KYC &amp; VERIFICATION
-                            </span>
-
-                            <h3 id="verificationToolsTitle">
-                                Identity &amp; Verification
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="verification-records"
-                            aria-label="Open Verification Records"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ✓
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Verification Records</strong>
-                                <small>
-                                    Review submitted identity verification records.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="approve-user-kyc"
-                            aria-label="Open Approve User KYC"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ✓
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Approve User KYC</strong>
-                                <small>
-                                    Review and approve eligible user verification.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- ==================================================
-                     CUSTOMER SERVICE
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="customerServiceTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                CUSTOMER SERVICE
-                            </span>
-
-                            <h3 id="customerServiceTitle">
-                                Customer Support
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="live-chat"
-                            aria-label="Open Live Chat"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                💬
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Live Chat</strong>
-                                <small>
-                                    Manage customer conversations and live support.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="customer-support"
-                            aria-label="Open Customer Support"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🎧
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Customer Support</strong>
-                                <small>
-                                    Manage customer support requests and cases.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- ==================================================
-                     USER MANAGEMENT
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="userManagementTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                USER MANAGEMENT
-                            </span>
-
-                            <h3 id="userManagementTitle">
-                                Account Management
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="suspended-accounts"
-                            aria-label="Open Suspended Accounts"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⏸
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Suspended Accounts</strong>
-                                <small>
-                                    Review accounts currently suspended.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="suspend-user"
-                            aria-label="Open Suspend User"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🔒
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Suspend User</strong>
-                                <small>
-                                    Suspend an account when administrative action is required.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="banned-accounts"
-                            aria-label="Open Banned Accounts"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🚫
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Banned Accounts</strong>
-                                <small>
-                                    Review accounts that are permanently restricted.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="reward-user"
-                            aria-label="Open Reward User"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🎁
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Reward User</strong>
-                                <small>
-                                    Manage administrative user rewards.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- ==================================================
-                     PLATFORM CONTROL
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="platformControlTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                PLATFORM CONTROL
-                            </span>
-
-                            <h3 id="platformControlTitle">
-                                System Controls
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="system-color"
-                            aria-label="Open System Color"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🎨
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>System Color</strong>
-                                <small>
-                                    Manage the platform's system color configuration.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="notifications"
-                            aria-label="Open Notifications"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🔔
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Notifications</strong>
-                                <small>
-                                    Manage platform notification controls.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="settings"
-                            aria-label="Open Settings"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⚙
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Settings</strong>
-                                <small>
-                                    Manage administrative platform settings.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="legal-content"
-                            aria-label="Open Legal Content"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⚖
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Legal Content</strong>
-                                <small>
-                                    Manage platform legal and policy content.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="content"
-                            aria-label="Open Content"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ▤
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Content</strong>
-                                <small>
-                                    Manage platform-managed content.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="system-information"
-                            aria-label="Open System Information"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                ⓘ
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>System Information</strong>
-                                <small>
-                                    Review important NovaPay system information.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- ==================================================
-                     SECURITY & RISK
-                =================================================== -->
-
-                <section
-                    class="admin-button-group"
-                    aria-labelledby="securityRiskTitle"
-                >
-
-                    <div class="admin-button-group-header">
-
-                        <div>
-
-                            <span class="admin-group-label">
-                                SECURITY &amp; RISK
-                            </span>
-
-                            <h3 id="securityRiskTitle">
-                                Security Management
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-button-group-list">
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="fraud-risk"
-                            aria-label="Open Fraud and Risk"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                🛡
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Fraud &amp; Risk</strong>
-                                <small>
-                                    Review fraud indicators and platform risk activity.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="admin-action-button"
-                            data-admin-action="audit"
-                            aria-label="Open Audit"
-                        >
-                            <span
-                                class="admin-action-icon"
-                                aria-hidden="true"
-                            >
-                                📋
-                            </span>
-
-                            <span class="admin-action-content">
-                                <strong>Audit</strong>
-                                <small>
-                                    Review administrative and platform activity records.
-                                </small>
-                            </span>
-
-                            <span
-                                class="admin-action-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-                        </button>
-
-                    </div>
-
-                </section>
-
-            </div>
-
-
-            <!-- ==================================================
-                 FOOTER
-            =================================================== -->
-
-            <footer class="admin-buttons-footer">
-
-                <span>
-                    NovaPay Admin Management
-                </span>
-
-                <span>
-                    Secure administrative control
-                </span>
-
-            </footer>
-
-        </div>
-
-    </main>
-
-
-    <!-- ==========================================================
-         BUTTON JAVASCRIPT
-    =========================================================== -->
-
-    <script
-        type="module"
-        src="./admin-button.js"
-    ></script>
-
-</body>
-</html>
+<!-- admin-button.html -->
+<section class="admin-tools-page" aria-label="Admin management tools">
+
+  <div class="admin-tools-list">
+
+    <button type="button" class="admin-action-button" data-admin-action="user-information">
+      <span class="admin-action-button-icon">👤</span>
+      <strong>User Information</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="active-users">
+      <span class="admin-action-button-icon">🟢</span>
+      <strong>Active Users</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="pending-transactions">
+      <span class="admin-action-button-icon">⏳</span>
+      <strong>Pending Transactions</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="failed-transactions">
+      <span class="admin-action-button-icon">⚠</span>
+      <strong>Failed Transactions</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="transactions">
+      <span class="admin-action-button-icon">⇄</span>
+      <strong>Transactions</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="profit">
+      <span class="admin-action-button-icon">₦</span>
+      <strong>Profit</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="verification-records">
+      <span class="admin-action-button-icon">✓</span>
+      <strong>Verification Records</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="approve-user-kyc">
+      <span class="admin-action-button-icon">✓</span>
+      <strong>Approve User KYC</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="live-chat">
+      <span class="admin-action-button-icon">💬</span>
+      <strong>Live Chat</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="customer-support">
+      <span class="admin-action-button-icon">🎧</span>
+      <strong>Customer Support</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="suspended-accounts">
+      <span class="admin-action-button-icon">⏸</span>
+      <strong>Suspended Accounts</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="suspend-user">
+      <span class="admin-action-button-icon">🔒</span>
+      <strong>Suspend User</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="banned-accounts">
+      <span class="admin-action-button-icon">🚫</span>
+      <strong>Banned Accounts</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="reward-user">
+      <span class="admin-action-button-icon">🎁</span>
+      <strong>Reward User</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="system-color">
+      <span class="admin-action-button-icon">🎨</span>
+      <strong>System Color</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="notifications">
+      <span class="admin-action-button-icon">🔔</span>
+      <strong>Notifications</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="settings">
+      <span class="admin-action-button-icon">⚙</span>
+      <strong>Settings</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="legal-content">
+      <span class="admin-action-button-icon">⚖</span>
+      <strong>Legal Content</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="content">
+      <span class="admin-action-button-icon">▤</span>
+      <strong>Content</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="system-information">
+      <span class="admin-action-button-icon">ⓘ</span>
+      <strong>System Information</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="fraud-risk">
+      <span class="admin-action-button-icon">🛡</span>
+      <strong>Fraud &amp; Risk</strong>
+    </button>
+
+    <button type="button" class="admin-action-button" data-admin-action="audit">
+      <span class="admin-action-button-icon">📋</span>
+      <strong>Audit</strong>
+    </button>
+
+  </div>
+
+</section>
