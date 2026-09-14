@@ -40,6 +40,86 @@ let loginInProgress = false;
 
 
 // =====================================================
+// FRONTEND DEBUGGING
+// =====================================================
+
+function debugLog(stage, details = {}) {
+    console.groupCollapsed(
+        `%c[NOVAPAY LOGIN DEBUG] ${stage}`,
+        "font-weight:bold;"
+    );
+
+    console.log("Time:", new Date().toISOString());
+    console.log("Page URL:", window.location.href);
+    console.log("Page Origin:", window.location.origin);
+    console.log("Backend URL:", BACKEND_URL);
+    console.log("User Agent:", navigator.userAgent);
+
+    if (details && typeof details === "object") {
+        console.log("Details:", details);
+    }
+
+    console.groupEnd();
+}
+
+
+function getDetailedErrorMessage(error) {
+    if (!error) {
+        return "Unknown error. No error object was returned.";
+    }
+
+    const code =
+        error?.code ||
+        "NO_ERROR_CODE";
+
+    const name =
+        error?.name ||
+        "UnknownError";
+
+    const message =
+        error?.message ||
+        String(error);
+
+    return [
+        `Error code: ${code}`,
+        `Error name: ${name}`,
+        `Error message: ${message}`
+    ].join("\n");
+}
+
+
+function showDebugFailure(title, error, extraDetails = "") {
+    const errorDetails =
+        getDetailedErrorMessage(error);
+
+    let message =
+        `${errorDetails}`;
+
+    if (extraDetails) {
+        message += `\n\n${extraDetails}`;
+    }
+
+    console.error(
+        "[NOVAPAY LOGIN DEBUG] FINAL FAILURE",
+        {
+            error,
+            errorCode: error?.code,
+            errorName: error?.name,
+            errorMessage: error?.message,
+            pageOrigin: window.location.origin,
+            pageURL: window.location.href,
+            backendURL: BACKEND_URL
+        }
+    );
+
+    showModal(
+        title,
+        message
+    );
+}
+
+
+// =====================================================
 // MODAL
 // =====================================================
 
@@ -336,17 +416,66 @@ async function readBackendResponse(response) {
     const contentType =
         response.headers.get("content-type") || "";
 
+    debugLog(
+        "BACKEND RESPONSE HEADERS",
+        {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok,
+            contentType,
+            contentLength:
+                response.headers.get("content-length"),
+            accessControlAllowOrigin:
+                response.headers.get(
+                    "access-control-allow-origin"
+                )
+        }
+    );
+
     if (contentType.includes("application/json")) {
         try {
-            return await response.json();
-        } catch {
+            const json =
+                await response.json();
+
+            debugLog(
+                "BACKEND JSON RESPONSE",
+                {
+                    status: response.status,
+                    response: json
+                }
+            );
+
+            return json;
+
+        } catch (error) {
+
+            debugLog(
+                "BACKEND JSON PARSE FAILED",
+                {
+                    status: response.status,
+                    contentType,
+                    errorName: error?.name,
+                    errorMessage: error?.message
+                }
+            );
+
             throw new Error(
-                "The backend returned invalid JSON."
+                `The backend returned invalid JSON. HTTP status: ${response.status}. ${error?.message || ""}`
             );
         }
     }
 
-    const text = await response.text();
+    const text =
+        await response.text();
+
+    debugLog(
+        "BACKEND TEXT RESPONSE",
+        {
+            status: response.status,
+            contentType,
+            responseText: text
+        }
+    );
 
     if (!text) {
         return {};
@@ -366,7 +495,27 @@ if (form) {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        debugLog(
+            "LOGIN SUBMIT STARTED",
+            {
+                formFound: Boolean(form),
+                emailFieldFound: Boolean(emailInput),
+                passwordFieldFound: Boolean(passwordInput),
+                rememberMeFieldFound: Boolean(rememberMeInput),
+                loginButtonFound: Boolean(loginButton),
+                pageOrigin: window.location.origin,
+                pageProtocol: window.location.protocol
+            }
+        );
+
         if (loginInProgress) {
+            debugLog(
+                "LOGIN IGNORED",
+                {
+                    reason: "A login request is already in progress."
+                }
+            );
+
             return;
         }
 
@@ -375,6 +524,15 @@ if (form) {
             !passwordInput ||
             !rememberMeInput
         ) {
+            debugLog(
+                "LOGIN FORM ERROR",
+                {
+                    emailInput: Boolean(emailInput),
+                    passwordInput: Boolean(passwordInput),
+                    rememberMeInput: Boolean(rememberMeInput)
+                }
+            );
+
             showModal(
                 "Login Error",
                 "The login form is missing a required field."
@@ -398,11 +556,29 @@ if (form) {
             rememberMeInput.checked;
 
 
+        debugLog(
+            "FORM VALUES READ",
+            {
+                email,
+                passwordProvided: Boolean(password),
+                passwordLength: password.length,
+                rememberMe
+            }
+        );
+
+
         // =============================================
         // BASIC VALIDATION
         // =============================================
 
         if (!email) {
+            debugLog(
+                "VALIDATION FAILED",
+                {
+                    reason: "Email address is empty."
+                }
+            );
+
             showModal(
                 "Login",
                 "Please enter your email address."
@@ -415,6 +591,14 @@ if (form) {
 
 
         if (!isValidEmail(email)) {
+            debugLog(
+                "VALIDATION FAILED",
+                {
+                    reason: "Email address format is invalid.",
+                    email
+                }
+            );
+
             showModal(
                 "Login",
                 "Please enter a valid email address."
@@ -427,6 +611,13 @@ if (form) {
 
 
         if (!password) {
+            debugLog(
+                "VALIDATION FAILED",
+                {
+                    reason: "Password is empty."
+                }
+            );
+
             showModal(
                 "Login",
                 "Please enter your password."
@@ -447,11 +638,33 @@ if (form) {
         setLoginButtonLoading(true);
 
 
+        debugLog(
+            "LOGIN PROCESS STARTED",
+            {
+                email,
+                rememberMe,
+                pageOrigin: window.location.origin,
+                pageProtocol: window.location.protocol,
+                backendURL: BACKEND_URL
+            }
+        );
+
+
         try {
 
             // =========================================
             // 1. FIREBASE PERSISTENCE
             // =========================================
+
+            debugLog(
+                "STEP 1 - SETTING FIREBASE PERSISTENCE",
+                {
+                    persistence:
+                        rememberMe
+                            ? "browserLocalPersistence"
+                            : "browserSessionPersistence"
+                }
+            );
 
             await setPersistence(
                 auth,
@@ -461,9 +674,28 @@ if (form) {
             );
 
 
+            debugLog(
+                "STEP 1 SUCCESS - FIREBASE PERSISTENCE SET"
+            );
+
+
             // =========================================
             // 2. FIREBASE LOGIN
             // =========================================
+
+            debugLog(
+                "STEP 2 - FIREBASE LOGIN STARTING",
+                {
+                    email,
+                    firebaseAuthCurrentUser:
+                        auth.currentUser
+                            ? {
+                                uid: auth.currentUser.uid,
+                                email: auth.currentUser.email
+                            }
+                            : null
+                }
+            );
 
             const userCredential =
                 await signInWithEmailAndPassword(
@@ -477,6 +709,26 @@ if (form) {
                 userCredential?.user;
 
 
+            debugLog(
+                "STEP 2 SUCCESS - FIREBASE LOGIN SUCCEEDED",
+                {
+                    uid: user?.uid || null,
+                    email: user?.email || null,
+                    emailVerified:
+                        user?.emailVerified === true,
+                    providerData:
+                        user?.providerData || [],
+                    firebaseAuthCurrentUser:
+                        auth.currentUser
+                            ? {
+                                uid: auth.currentUser.uid,
+                                email: auth.currentUser.email
+                            }
+                            : null
+                }
+            );
+
+
             if (!user) {
                 throw new Error(
                     "The authenticated user was not returned."
@@ -488,8 +740,28 @@ if (form) {
             // 3. GET FRESH FIREBASE ID TOKEN
             // =========================================
 
+            debugLog(
+                "STEP 3 - REQUESTING FRESH FIREBASE ID TOKEN",
+                {
+                    uid: user.uid,
+                    email: user.email
+                }
+            );
+
             const idToken =
                 await user.getIdToken(true);
+
+
+            debugLog(
+                "STEP 3 TOKEN RESULT",
+                {
+                    tokenReceived: Boolean(idToken),
+                    tokenLength:
+                        idToken
+                            ? idToken.length
+                            : 0
+                }
+            );
 
 
             if (!idToken) {
@@ -503,28 +775,104 @@ if (form) {
             // 4. AUTHENTICATE WITH NOVAPAY BACKEND
             // =========================================
 
-            const response =
-                await fetch(
-                    `${BACKEND_URL}/api/protected`,
+            const protectedURL =
+                `${BACKEND_URL}/api/protected`;
+
+            debugLog(
+                "STEP 4 - CALLING NOVAPAY BACKEND",
+                {
+                    method: "GET",
+                    url: protectedURL,
+                    pageOrigin: window.location.origin,
+                    pageProtocol: window.location.protocol,
+                    authorizationHeaderPresent: true,
+                    tokenLength: idToken.length
+                }
+            );
+
+
+            let response;
+
+            try {
+
+                response =
+                    await fetch(
+                        protectedURL,
+                        {
+                            method: "GET",
+
+                            headers: {
+                                "Authorization": `Bearer ${idToken}`,
+                                "Accept": "application/json"
+                            },
+
+                            cache: "no-store"
+                        }
+                    );
+
+            } catch (fetchError) {
+
+                debugLog(
+                    "STEP 4 FAILED - BACKEND FETCH ERROR",
                     {
-                        method: "GET",
-
-                        headers: {
-                            "Authorization": `Bearer ${idToken}`,
-                            "Accept": "application/json"
-                        },
-
-                        cache: "no-store"
+                        errorName:
+                            fetchError?.name,
+                        errorCode:
+                            fetchError?.code,
+                        errorMessage:
+                            fetchError?.message,
+                        pageOrigin:
+                            window.location.origin,
+                        backendURL:
+                            protectedURL,
+                        likelyCause:
+                            "Possible CORS error, network error, blocked request, HTTPS/origin issue, DNS issue, or backend unavailable."
                     }
                 );
+
+                throw new Error(
+                    `Backend request could not be completed.\n\n` +
+                    `Error: ${fetchError?.message || "Failed to fetch"}\n\n` +
+                    `Frontend origin: ${window.location.origin}\n` +
+                    `Backend URL: ${protectedURL}\n\n` +
+                    `Check the browser console for the complete diagnostic details.`
+                );
+            }
+
+
+            debugLog(
+                "STEP 4 RESPONSE RECEIVED",
+                {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok,
+                    url: response.url,
+                    redirected: response.redirected,
+                    type: response.type
+                }
+            );
 
 
             // =========================================
             // 5. READ BACKEND RESPONSE
             // =========================================
 
+            debugLog(
+                "STEP 5 - READING BACKEND RESPONSE"
+            );
+
             const data =
                 await readBackendResponse(response);
+
+
+            debugLog(
+                "STEP 5 COMPLETE",
+                {
+                    status: response.status,
+                    ok: response.ok,
+                    data
+                }
+            );
 
 
             // =========================================
@@ -537,15 +885,30 @@ if (form) {
                     "NovaPay backend authentication failed.",
                     {
                         status: response.status,
-                        success: data?.success === true
+                        statusText: response.statusText,
+                        success: data?.success === true,
+                        responseData: data,
+                        backendURL:
+                            `${BACKEND_URL}/api/protected`,
+                        frontendOrigin:
+                            window.location.origin
                     }
                 );
 
-                throw new Error(
+
+                const backendMessage =
                     getBackendErrorMessage(
                         data,
                         response
-                    )
+                    );
+
+
+                throw new Error(
+                    `Backend authentication failed.\n\n` +
+                    `HTTP status: ${response.status} ${response.statusText}\n` +
+                    `Backend message: ${backendMessage}\n` +
+                    `Response success: ${data?.success === true}\n\n` +
+                    `See the browser console for the complete backend response.`
                 );
             }
 
@@ -559,9 +922,29 @@ if (form) {
             );
 
 
+            debugLog(
+                "STEP 7 SUCCESS - COMPLETE LOGIN SUCCESS",
+                {
+                    firebaseUser:
+                        user?.email || null,
+                    backendStatus:
+                        response.status,
+                    backendSuccess:
+                        data?.success === true
+                }
+            );
+
+
             // =========================================
             // 8. GO TO DASHBOARD
             // =========================================
+
+            debugLog(
+                "STEP 8 - REDIRECTING TO DASHBOARD",
+                {
+                    destination: "dashboard.html"
+                }
+            );
 
             window.location.replace(
                 "dashboard.html"
@@ -572,6 +955,32 @@ if (form) {
             console.error(
                 "NovaPay login error:",
                 error
+            );
+
+
+            debugLog(
+                "LOGIN FAILED",
+                {
+                    errorName:
+                        error?.name,
+                    errorCode:
+                        error?.code,
+                    errorMessage:
+                        error?.message,
+                    pageURL:
+                        window.location.href,
+                    pageOrigin:
+                        window.location.origin,
+                    backendURL:
+                        BACKEND_URL,
+                    firebaseCurrentUser:
+                        auth.currentUser
+                            ? {
+                                uid: auth.currentUser.uid,
+                                email: auth.currentUser.email
+                            }
+                            : null
+                }
             );
 
 
@@ -602,9 +1011,10 @@ if (form) {
                 )
             ) {
 
-                showModal(
+                showDebugFailure(
                     firebaseError.title,
-                    firebaseError.message
+                    error,
+                    `User-friendly message: ${firebaseError.message}`
                 );
 
             } else {
@@ -613,10 +1023,9 @@ if (form) {
                 // BACKEND / UNKNOWN ERROR
                 // =====================================
 
-                showModal(
-                    "Login Failed",
-                    error?.message ||
-                    "We could not complete your login. Please try again."
+                showDebugFailure(
+                    "Login Failed - Diagnostic Details",
+                    error
                 );
             }
 
@@ -625,6 +1034,14 @@ if (form) {
             loginInProgress = false;
 
             setLoginButtonLoading(false);
+
+            debugLog(
+                "LOGIN PROCESS FINISHED",
+                {
+                    loginInProgress,
+                    buttonRestored: true
+                }
+            );
         }
     });
 }
@@ -684,3 +1101,35 @@ if (rememberMeInput) {
 // =====================================================
 
 setLoginButtonLoading(false);
+
+
+// =====================================================
+// INITIAL DEBUG INFORMATION
+// =====================================================
+
+debugLog(
+    "LOGIN.JS LOADED",
+    {
+        formFound: Boolean(form),
+        emailInputFound: Boolean(emailInput),
+        passwordInputFound: Boolean(passwordInput),
+        rememberMeInputFound: Boolean(rememberMeInput),
+        loginButtonFound: Boolean(loginButton),
+        forgotPasswordFound: Boolean(forgotPassword),
+        customModalFound: Boolean(customModal),
+        modalTitleFound: Boolean(modalTitle),
+        modalMessageFound: Boolean(modalMessage),
+        modalButtonFound: Boolean(modalButton),
+        pageURL: window.location.href,
+        pageOrigin: window.location.origin,
+        pageProtocol: window.location.protocol,
+        backendURL: BACKEND_URL,
+        firebaseCurrentUser:
+            auth.currentUser
+                ? {
+                    uid: auth.currentUser.uid,
+                    email: auth.currentUser.email
+                }
+                : null
+    }
+);
