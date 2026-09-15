@@ -358,7 +358,7 @@ if (form) {
                  * The user is now sent to the new
                  * NovaPay admin dashboard.
                  */
-                window.location.href = "admin.html";
+                window.location.href = "dashboard2/admin.html";
             } catch (error) {
                 console.error(
                     "Admin login request failed:",
