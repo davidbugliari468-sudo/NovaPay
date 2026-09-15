@@ -1,748 +1,376 @@
-"use strict";
-
-/*
- * NovaPay Admin Login
- *
- * This file connects the Admin Login frontend
- * to the NovaPay Admin Management System backend.
- *
- * Backend:
- * https://novapay-server.onrender.com
- *
- * Admin authentication is completely separate
- * from normal NovaPay Firebase user authentication.
- */
-
 const ADMIN_API_BASE_URL =
-  "https://novapay-server.onrender.com/api/admin";
+    "https://novapay-server.onrender.com/api/admin";
 
-/*
- * Session storage keys.
- *
- * The admin session is intentionally kept separate
- * from the normal NovaPay user authentication.
- */
-const ADMIN_SESSION_ID_KEY =
-  "novapay_admin_session_id";
+const SESSION_ID_KEY =
+    "novapay_admin_session_id";
 
-const ADMIN_SESSION_TOKEN_KEY =
-  "novapay_admin_session_token";
+const SESSION_TOKEN_KEY =
+    "novapay_admin_session_token";
 
-const ADMIN_SESSION_EXPIRES_KEY =
-  "novapay_admin_session_expires_at";
+const SESSION_EXPIRES_AT_KEY =
+    "novapay_admin_session_expires_at";
 
-/*
- * Expected login field IDs.
- *
- * These IDs match the current Admin Login HTML.
- */
-const ADMIN_LOGIN_FORM_ID =
-  "admin-login-form";
+const form =
+    document.getElementById("admin-login-form");
 
-const ADMIN_USERNAME_ID =
-  "admin-username";
+const usernameInput =
+    document.getElementById("admin-username");
 
-const ADMIN_PASSWORD_ID =
-  "admin-password";
+const passwordInput =
+    document.getElementById("admin-password");
 
-const ADMIN_LOGIN_BUTTON_ID =
-  "admin-login-button";
+const passwordToggle =
+    document.getElementById("admin-password-toggle");
 
-const ADMIN_LOGIN_ERROR_ID =
-  "admin-login-error";
+const errorBox =
+    document.getElementById("admin-login-error");
 
-const ADMIN_PASSWORD_TOGGLE_ID =
-  "admin-password-toggle";
+const loginButton =
+    document.getElementById("admin-login-button");
 
-/*
- * Button element IDs from the current HTML.
- */
-const ADMIN_LOGIN_BUTTON_TEXT_CLASS =
-  "button-text";
 
-const ADMIN_LOGIN_BUTTON_LOADING_CLASS =
-  "button-loading";
+function showError(message) {
+    if (!errorBox) return;
 
-/*
- * Optional dashboard location.
- *
- * We will update this when the Admin Dashboard
- * frontend file is created.
- */
-const ADMIN_DASHBOARD_PATH =
-  "admin-dashboard.html";
-
-/*
- * Get an element safely.
- */
-function getAdminElement(id) {
-  return document.getElementById(id);
+    errorBox.textContent = message;
+    errorBox.hidden = false;
 }
 
-/*
- * Display a login error.
- */
-function showAdminLoginError(message) {
-  const errorElement =
-    getAdminElement(ADMIN_LOGIN_ERROR_ID);
 
-  if (!errorElement) {
-    console.error("Admin Login:", message);
-    return;
-  }
+function hideError() {
+    if (!errorBox) return;
 
-  errorElement.textContent = message;
-  errorElement.hidden = false;
+    errorBox.textContent = "";
+    errorBox.hidden = true;
 }
 
-/*
- * Clear the login error.
- */
-function clearAdminLoginError() {
-  const errorElement =
-    getAdminElement(ADMIN_LOGIN_ERROR_ID);
 
-  if (!errorElement) {
-    return;
-  }
+function setLoading(isLoading) {
+    if (!loginButton) return;
 
-  errorElement.textContent = "";
-  errorElement.hidden = true;
+    loginButton.disabled = isLoading;
+
+    const normalText =
+        loginButton.querySelector(".button-text");
+
+    const loadingText =
+        loginButton.querySelector(".button-loading");
+
+    if (normalText) {
+        normalText.hidden = isLoading;
+    }
+
+    if (loadingText) {
+        loadingText.hidden = !isLoading;
+    }
 }
 
-/*
- * Set the login button loading state.
- *
- * This matches the current HTML:
- *
- * .button-text
- * .button-loading
- */
-function setAdminLoginLoading(isLoading) {
-  const button =
-    getAdminElement(
-      ADMIN_LOGIN_BUTTON_ID
-    );
 
-  if (!button) {
-    return;
-  }
-
-  const buttonText =
-    button.querySelector(
-      "." +
-        ADMIN_LOGIN_BUTTON_TEXT_CLASS
-    );
-
-  const buttonLoading =
-    button.querySelector(
-      "." +
-        ADMIN_LOGIN_BUTTON_LOADING_CLASS
-    );
-
-  button.disabled = isLoading;
-  button.setAttribute(
-    "aria-busy",
-    isLoading ? "true" : "false"
-  );
-
-  if (buttonText) {
-    buttonText.hidden = isLoading;
-  }
-
-  if (buttonLoading) {
-    buttonLoading.hidden = !isLoading;
-  }
-
-  /*
-   * Fallback for unexpected HTML changes.
-   */
-  if (!buttonText && !buttonLoading) {
-    button.textContent = isLoading
-      ? "Signing in..."
-      : "Continue";
-  }
-}
-
-/*
- * Set the password visibility state.
- */
-function setAdminPasswordVisibility(
-  isVisible
-) {
-  const passwordInput =
-    getAdminElement(
-      ADMIN_PASSWORD_ID
-    );
-
-  const toggleButton =
-    getAdminElement(
-      ADMIN_PASSWORD_TOGGLE_ID
-    );
-
-  if (!passwordInput) {
-    return;
-  }
-
-  passwordInput.type =
-    isVisible
-      ? "text"
-      : "password";
-
-  if (!toggleButton) {
-    return;
-  }
-
-  const toggleText =
-    toggleButton.querySelector(
-      ".password-toggle-text"
-    );
-
-  if (toggleText) {
-    toggleText.textContent =
-      isVisible
-        ? "Hide"
-        : "Show";
-  }
-
-  toggleButton.setAttribute(
-    "aria-label",
-    isVisible
-      ? "Hide password"
-      : "Show password"
-  );
-
-  toggleButton.setAttribute(
-    "aria-pressed",
-    isVisible
-      ? "true"
-      : "false"
-  );
-}
-
-/*
- * Toggle password visibility.
- */
-function toggleAdminPasswordVisibility() {
-  const passwordInput =
-    getAdminElement(
-      ADMIN_PASSWORD_ID
-    );
-
-  if (!passwordInput) {
-    return;
-  }
-
-  const isCurrentlyVisible =
-    passwordInput.type === "text";
-
-  setAdminPasswordVisibility(
-    !isCurrentlyVisible
-  );
-}
-
-/*
- * Save the admin session returned by the backend.
- */
-function saveAdminSession(session) {
-  if (
-    !session ||
-    typeof session.sessionId !== "string" ||
-    !session.sessionId ||
-    typeof session.sessionToken !== "string" ||
-    !session.sessionToken
-  ) {
-    throw new Error(
-      "The server returned an invalid admin session."
-    );
-  }
-
-  sessionStorage.setItem(
-    ADMIN_SESSION_ID_KEY,
-    session.sessionId
-  );
-
-  sessionStorage.setItem(
-    ADMIN_SESSION_TOKEN_KEY,
-    session.sessionToken
-  );
-
-  if (
-    typeof session.expiresAt === "string" &&
-    session.expiresAt
-  ) {
-    sessionStorage.setItem(
-      ADMIN_SESSION_EXPIRES_KEY,
-      session.expiresAt
-    );
-  } else {
-    sessionStorage.removeItem(
-      ADMIN_SESSION_EXPIRES_KEY
-    );
-  }
-}
-
-/*
- * Get the currently stored admin session.
- */
-function getAdminSession() {
-  const sessionId =
-    sessionStorage.getItem(
-      ADMIN_SESSION_ID_KEY
-    );
-
-  const sessionToken =
-    sessionStorage.getItem(
-      ADMIN_SESSION_TOKEN_KEY
-    );
-
-  const expiresAt =
-    sessionStorage.getItem(
-      ADMIN_SESSION_EXPIRES_KEY
-    );
-
-  if (!sessionId || !sessionToken) {
-    return null;
-  }
-
-  return {
-    sessionId,
-    sessionToken,
-    expiresAt: expiresAt || null,
-  };
-}
-
-/*
- * Clear the local admin session.
- */
 function clearAdminSession() {
-  sessionStorage.removeItem(
-    ADMIN_SESSION_ID_KEY
-  );
-
-  sessionStorage.removeItem(
-    ADMIN_SESSION_TOKEN_KEY
-  );
-
-  sessionStorage.removeItem(
-    ADMIN_SESSION_EXPIRES_KEY
-  );
+    sessionStorage.removeItem(SESSION_ID_KEY);
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(SESSION_EXPIRES_AT_KEY);
 }
 
-/*
- * Check whether the locally stored session has expired.
- *
- * This is only a frontend convenience check.
- *
- * The backend remains the final authority and
- * validates the session on every protected request.
- */
-function isAdminSessionExpired() {
-  const session =
-    getAdminSession();
 
-  if (!session) {
-    return true;
-  }
+function saveAdminSession(session) {
+    if (!session || typeof session !== "object") {
+        throw new Error("Invalid admin session.");
+    }
 
-  if (!session.expiresAt) {
-    return false;
-  }
+    if (
+        typeof session.sessionId !== "string" ||
+        !session.sessionId
+    ) {
+        throw new Error("Admin session ID is missing.");
+    }
 
-  const expirationTime =
-    new Date(
-      session.expiresAt
-    ).getTime();
+    if (
+        typeof session.sessionToken !== "string" ||
+        !session.sessionToken
+    ) {
+        throw new Error("Admin session token is missing.");
+    }
 
-  if (
-    Number.isNaN(expirationTime)
-  ) {
-    return false;
-  }
+    sessionStorage.setItem(
+        SESSION_ID_KEY,
+        session.sessionId
+    );
 
-  return Date.now() >= expirationTime;
+    sessionStorage.setItem(
+        SESSION_TOKEN_KEY,
+        session.sessionToken
+    );
+
+    if (session.expiresAt) {
+        sessionStorage.setItem(
+            SESSION_EXPIRES_AT_KEY,
+            String(session.expiresAt)
+        );
+    } else {
+        sessionStorage.removeItem(
+            SESSION_EXPIRES_AT_KEY
+        );
+    }
 }
 
-/*
- * Build the Authorization header required
- * by protected Admin Management System routes.
- *
- * Backend format:
- *
- * Bearer SESSION_ID.SESSION_TOKEN
- */
-function getAdminAuthorizationHeader() {
-  const session =
-    getAdminSession();
 
-  if (!session) {
-    return null;
-  }
+function getAdminSession() {
+    const sessionId =
+        sessionStorage.getItem(SESSION_ID_KEY);
 
-  if (isAdminSessionExpired()) {
-    clearAdminSession();
-    return null;
-  }
+    const sessionToken =
+        sessionStorage.getItem(SESSION_TOKEN_KEY);
 
-  return (
-    "Bearer " +
-    session.sessionId +
-    "." +
-    session.sessionToken
-  );
-}
+    const expiresAt =
+        sessionStorage.getItem(SESSION_EXPIRES_AT_KEY);
 
-/*
- * Login request.
- *
- * The backend expects the initial admin credentials:
- *
- * superAdmin
- * token
- */
-async function loginAdmin(
-  superAdmin,
-  token
-) {
-  let response;
-
-  try {
-    response =
-      await fetch(
-        ADMIN_API_BASE_URL +
-          "/login",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-
-            Accept:
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            superAdmin,
-            token,
-          }),
-        }
-      );
-  } catch (error) {
-    console.error(
-      "NovaPay Admin Login connection error:",
-      error
-    );
-
-    throw new Error(
-      "Unable to connect to the Admin Management System right now."
-    );
-  }
-
-  let data = null;
-
-  try {
-    data = await response.json();
-  } catch (error) {
-    data = null;
-  }
-
-  /*
-   * Successful login.
-   */
-  if (
-    response.ok &&
-    data &&
-    data.success === true &&
-    data.session
-  ) {
-    saveAdminSession(
-      data.session
-    );
+    if (!sessionId || !sessionToken) {
+        return null;
+    }
 
     return {
-      success: true,
-      data,
+        sessionId,
+        sessionToken,
+        expiresAt
     };
-  }
-
-  /*
-   * The backend is the authority for the
-   * exact reason authentication failed.
-   *
-   * We map the known credential errors to
-   * the requested frontend messages.
-   */
-  if (
-    response.status === 401
-  ) {
-    const backendError =
-      typeof data?.error === "string"
-        ? data.error.toLowerCase()
-        : "";
-
-    if (
-      backendError.includes(
-        "email"
-      ) ||
-      backendError.includes(
-        "superadmin"
-      ) ||
-      backendError.includes(
-        "super admin"
-      ) ||
-      backendError.includes(
-        "identifier"
-      )
-    ) {
-      throw new Error(
-        "Email address incorrect"
-      );
-    }
-
-    if (
-      backendError.includes(
-        "password"
-      ) ||
-      backendError.includes(
-        "token"
-      )
-    ) {
-      throw new Error(
-        "Password incorrect"
-      );
-    }
-
-    /*
-     * If the backend gives a generic
-     * authentication error, do not expose
-     * unnecessary backend details.
-     */
-    throw new Error(
-      "Email address or password incorrect"
-    );
-  }
-
-  /*
-   * Admin lockout.
-   */
-  if (
-    response.status === 429
-  ) {
-    throw new Error(
-      data?.error ||
-        "Too many login attempts. Please try again later."
-    );
-  }
-
-  /*
-   * Account disabled/inactive.
-   */
-  if (
-    response.status === 403
-  ) {
-    throw new Error(
-      data?.error ||
-        "Admin access is currently unavailable."
-    );
-  }
-
-  /*
-   * Server-side failure.
-   */
-  if (
-    response.status >= 500
-  ) {
-    throw new Error(
-      "Unable to connect to the Admin Management System right now."
-    );
-  }
-
-  /*
-   * Other backend response.
-   */
-  throw new Error(
-    data?.error ||
-      "Unable to sign in."
-  );
 }
 
-/*
- * Submit the Admin Login form.
- */
-async function handleAdminLogin(event) {
-  if (event) {
-    event.preventDefault();
-  }
 
-  clearAdminLoginError();
+function isSessionExpired() {
+    const expiresAt =
+        sessionStorage.getItem(SESSION_EXPIRES_AT_KEY);
 
-  const usernameInput =
-    getAdminElement(
-      ADMIN_USERNAME_ID
-    );
-
-  const passwordInput =
-    getAdminElement(
-      ADMIN_PASSWORD_ID
-    );
-
-  if (
-    !usernameInput ||
-    !passwordInput
-  ) {
-    console.error(
-      "NovaPay Admin Login: login inputs were not found."
-    );
-
-    showAdminLoginError(
-      "Admin login form is not configured correctly."
-    );
-
-    return;
-  }
-
-  const superAdmin =
-    usernameInput.value.trim();
-
-  const token =
-    passwordInput.value.trim();
-
-  /*
-   * Do not allow empty login requests.
-   */
-  if (!superAdmin) {
-    showAdminLoginError(
-      "Email address incorrect"
-    );
-
-    usernameInput.focus();
-
-    return;
-  }
-
-  if (!token) {
-    showAdminLoginError(
-      "Password incorrect"
-    );
-
-    passwordInput.focus();
-
-    return;
-  }
-
-  setAdminLoginLoading(true);
-
-  try {
-    const result =
-      await loginAdmin(
-        superAdmin,
-        token
-      );
-
-    if (
-      result.success
-    ) {
-      /*
-       * Clear the password field
-       * after successful authentication.
-       */
-      passwordInput.value = "";
-
-      /*
-       * Redirect to the Admin Dashboard.
-       *
-       * This path will be changed if the
-       * final dashboard filename is different.
-       */
-      window.location.href =
-        ADMIN_DASHBOARD_PATH;
+    if (!expiresAt) {
+        return false;
     }
-  } catch (error) {
-    console.error(
-      "Admin login failed:",
-      error
-    );
 
-    showAdminLoginError(
-      error?.message ||
-        "Unable to sign in."
-    );
-  } finally {
-    setAdminLoginLoading(false);
-  }
+    const timestamp =
+        new Date(expiresAt).getTime();
+
+    if (Number.isNaN(timestamp)) {
+        return false;
+    }
+
+    return timestamp <= Date.now();
 }
 
-/*
- * Automatically connect the form when
- * the Admin Login HTML has loaded.
- */
-function initializeAdminLogin() {
-  const form =
-    getAdminElement(
-      ADMIN_LOGIN_FORM_ID
-    );
 
-  if (!form) {
-    /*
-     * The HTML has not been created yet.
-     */
-    return;
-  }
+if (isSessionExpired()) {
+    clearAdminSession();
+}
 
-  form.addEventListener(
-    "submit",
-    handleAdminLogin
-  );
 
-  /*
-   * Connect the Show/Hide password button.
-   */
-  const passwordToggle =
-    getAdminElement(
-      ADMIN_PASSWORD_TOGGLE_ID
-    );
-
-  if (passwordToggle) {
+if (passwordToggle && passwordInput) {
     passwordToggle.addEventListener(
-      "click",
-      toggleAdminPasswordVisibility
-    );
-  }
+        "click",
+        function () {
+            const isPassword =
+                passwordInput.type === "password";
 
-  /*
-   * Start with the password hidden.
-   */
-  setAdminPasswordVisibility(
-    false
-  );
+            passwordInput.type =
+                isPassword ? "text" : "password";
+
+            passwordToggle.textContent =
+                isPassword ? "Hide" : "Show";
+
+            passwordToggle.setAttribute(
+                "aria-label",
+                isPassword
+                    ? "Hide password"
+                    : "Show password"
+            );
+        }
+    );
 }
 
-/*
- * Export useful functions globally so
- * the future Admin Dashboard frontend
- * can reuse the session connection.
- */
-window.NovaPayAdmin = {
-  loginAdmin,
-  getAdminSession,
-  saveAdminSession,
-  clearAdminSession,
-  getAdminAuthorizationHeader,
-  isAdminSessionExpired,
-};
 
-/*
- * Start when the document is ready.
- */
-if (
-  document.readyState ===
-  "loading"
-) {
-  document.addEventListener(
-    "DOMContentLoaded",
-    initializeAdminLogin
-  );
-} else {
-  initializeAdminLogin();
+if (form) {
+    form.addEventListener(
+        "submit",
+        async function (event) {
+            event.preventDefault();
+
+            hideError();
+
+            const superAdmin =
+                usernameInput
+                    ? usernameInput.value.trim()
+                    : "";
+
+            const token =
+                passwordInput
+                    ? passwordInput.value
+                    : "";
+
+            if (!superAdmin) {
+                showError("Email address incorrect");
+
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+
+                return;
+            }
+
+            if (!token) {
+                showError("Password incorrect");
+
+                if (passwordInput) {
+                    passwordInput.focus();
+                }
+
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const response =
+                    await fetch(
+                        `${ADMIN_API_BASE_URL}/login`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify({
+                                superAdmin,
+                                token
+                            })
+                        }
+                    );
+
+                let data = null;
+
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    data = null;
+                }
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        const serverError =
+                            data &&
+                            typeof data.error === "string"
+                                ? data.error
+                                : "";
+
+                        if (
+                            serverError
+                                .toLowerCase()
+                                .includes("email")
+                        ) {
+                            showError(
+                                "Email address incorrect"
+                            );
+                        } else if (
+                            serverError
+                                .toLowerCase()
+                                .includes("password")
+                        ) {
+                            showError(
+                                "Password incorrect"
+                            );
+                        } else {
+                            showError(
+                                "Email address or password incorrect"
+                            );
+                        }
+
+                        return;
+                    }
+
+                    if (response.status === 429) {
+                        showError(
+                            data &&
+                            typeof data.error === "string"
+                                ? data.error
+                                : "Too many failed attempts. Please try again later."
+                        );
+
+                        return;
+                    }
+
+                    if (response.status === 403) {
+                        showError(
+                            data &&
+                            typeof data.error === "string"
+                                ? data.error
+                                : "Admin account is not active."
+                        );
+
+                        return;
+                    }
+
+                    if (response.status >= 500) {
+                        showError(
+                            "Unable to connect to the admin security system."
+                        );
+
+                        return;
+                    }
+
+                    showError(
+                        data &&
+                        typeof data.error === "string"
+                            ? data.error
+                            : "Unable to sign in."
+                    );
+
+                    return;
+                }
+
+                if (
+                    !data ||
+                    data.success !== true ||
+                    !data.session
+                ) {
+                    showError(
+                        "Invalid response from the admin security system."
+                    );
+
+                    return;
+                }
+
+                try {
+                    saveAdminSession(data.session);
+                } catch (sessionError) {
+                    clearAdminSession();
+
+                    console.error(
+                        "Admin session storage error:",
+                        sessionError.message
+                    );
+
+                    showError(
+                        "Unable to securely create your admin session."
+                    );
+
+                    return;
+                }
+
+                /*
+                 * Successful admin authentication.
+                 *
+                 * The user is now sent to the new
+                 * NovaPay admin dashboard.
+                 */
+                window.location.href = "admin.html";
+            } catch (error) {
+                console.error(
+                    "Admin login request failed:",
+                    error
+                );
+
+                showError(
+                    "Unable to connect to the admin security system."
+                );
+            } finally {
+                setLoading(false);
+            }
+        }
+    );
 }

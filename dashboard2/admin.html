@@ -10,12 +10,17 @@
 
   <meta
     name="theme-color"
-    content="#0b63f6"
+    content="#0b63ce"
   >
 
   <meta
     name="description"
     content="NovaPay administrator dashboard"
+  >
+
+  <meta
+    name="robots"
+    content="noindex, nofollow"
   >
 
   <title>NovaPay Admin Dashboard</title>
@@ -28,11 +33,14 @@
 
 <body>
 
-  <div class="admin-app" id="adminApp">
+  <div
+    class="admin-app"
+    id="adminApp"
+  >
 
-    <!-- =========================================
+    <!-- =====================================================
          ADMIN HEADER
-    ========================================== -->
+    ====================================================== -->
 
     <header class="admin-header">
 
@@ -52,32 +60,38 @@
 
       </div>
 
+
+      <!-- Three-dot admin tools control -->
+
       <button
         type="button"
         class="manual-toggle"
         id="manualToggle"
-        aria-label="Open admin manual"
+        aria-label="Open admin tools"
         aria-controls="adminManual"
         aria-expanded="false"
       >
-        <span>MANUAL</span>
-
         <span
-          class="manual-toggle-icon"
+          class="manual-toggle-dots"
           aria-hidden="true"
         >
-          ☰
+          •••
         </span>
       </button>
 
     </header>
 
 
-    <!-- =========================================
+    <!-- =====================================================
          MAIN DASHBOARD
-    ========================================== -->
+    ====================================================== -->
 
     <main class="admin-main">
+
+
+      <!-- ===================================================
+           DASHBOARD OVERVIEW
+      ==================================================== -->
 
       <section
         class="dashboard-intro"
@@ -91,11 +105,11 @@
           </span>
 
           <h1 id="dashboardTitle">
-            Admin Dashboard
+            Dashboard Overview
           </h1>
 
           <p>
-            Monitor the platform and review important activity.
+            Monitor platform activity, sales, earnings and users.
           </p>
 
         </div>
@@ -103,14 +117,17 @@
       </section>
 
 
-      <!-- =======================================
-           SUMMARY CARDS
-      ======================================== -->
+      <!-- ===================================================
+           DASHBOARD SUMMARY
+      ==================================================== -->
 
       <section
         class="dashboard-summary"
-        aria-label="Dashboard summary"
+        aria-label="Dashboard overview statistics"
       >
+
+
+        <!-- TOTAL USERS -->
 
         <article class="summary-card">
 
@@ -124,7 +141,7 @@
               class="summary-card-icon"
               aria-hidden="true"
             >
-              US
+              U
             </span>
 
           </div>
@@ -143,43 +160,47 @@
         </article>
 
 
+        <!-- ACTIVE USERS -->
+
         <article class="summary-card">
 
           <div class="summary-card-top">
 
             <span class="summary-card-label">
-              Today Active Users
+              Active Users
             </span>
 
             <span
               class="summary-card-icon"
               aria-hidden="true"
             >
-              AU
+              A
             </span>
 
           </div>
 
           <strong
             class="summary-card-value"
-            id="todayActiveUsers"
+            id="activeUsers"
           >
             —
           </strong>
 
           <span class="summary-card-note">
-            Active today
+            Currently active
           </span>
 
         </article>
 
+
+        <!-- TOTAL SALES -->
 
         <article class="summary-card">
 
           <div class="summary-card-top">
 
             <span class="summary-card-label">
-              Total Profit
+              Total Sales
             </span>
 
             <span
@@ -193,13 +214,46 @@
 
           <strong
             class="summary-card-value"
-            id="totalProfit"
+            id="totalSales"
           >
             —
           </strong>
 
           <span class="summary-card-note">
-            Platform profit
+            Platform sales
+          </span>
+
+        </article>
+
+
+        <!-- EARNINGS -->
+
+        <article class="summary-card">
+
+          <div class="summary-card-top">
+
+            <span class="summary-card-label">
+              Earnings
+            </span>
+
+            <span
+              class="summary-card-icon"
+              aria-hidden="true"
+            >
+              E
+            </span>
+
+          </div>
+
+          <strong
+            class="summary-card-value"
+            id="totalEarnings"
+          >
+            —
+          </strong>
+
+          <span class="summary-card-note">
+            Platform earnings
           </span>
 
         </article>
@@ -207,9 +261,9 @@
       </section>
 
 
-      <!-- =======================================
+      <!-- ===================================================
            ANALYSIS
-      ======================================== -->
+      ==================================================== -->
 
       <section
         class="dashboard-panel analysis-panel"
@@ -221,7 +275,7 @@
           <div>
 
             <span class="panel-eyebrow">
-              OVERVIEW
+              PERFORMANCE
             </span>
 
             <h2 id="analysisTitle">
@@ -230,11 +284,15 @@
 
           </div>
 
-          <span class="panel-status">
+          <span
+            class="panel-status"
+            id="analysisStatus"
+          >
             Awaiting data
           </span>
 
         </div>
+
 
         <div
           class="analysis-chart"
@@ -256,7 +314,7 @@
             </strong>
 
             <span>
-              Platform analytics will be connected to the backend.
+              Platform analytics will be connected when the admin backend is ready.
             </span>
 
           </div>
@@ -266,9 +324,9 @@
       </section>
 
 
-      <!-- =======================================
+      <!-- ===================================================
            RECENT TRANSACTIONS
-      ======================================== -->
+      ==================================================== -->
 
       <section
         class="dashboard-panel transactions-panel"
@@ -289,11 +347,15 @@
 
           </div>
 
-          <span class="panel-status">
+          <span
+            class="panel-status"
+            id="transactionsStatus"
+          >
             Awaiting data
           </span>
 
         </div>
+
 
         <div class="transactions-table-wrapper">
 
@@ -302,14 +364,31 @@
             <thead>
 
               <tr>
-                <th scope="col">Transaction</th>
-                <th scope="col">User</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Status</th>
-                <th scope="col">Time</th>
+
+                <th scope="col">
+                  Transaction
+                </th>
+
+                <th scope="col">
+                  User
+                </th>
+
+                <th scope="col">
+                  Amount
+                </th>
+
+                <th scope="col">
+                  Status
+                </th>
+
+                <th scope="col">
+                  Time
+                </th>
+
               </tr>
 
             </thead>
+
 
             <tbody id="recentTransactionsBody">
 
@@ -318,7 +397,9 @@
                 <td colspan="5">
 
                   <div class="dashboard-table-empty">
+
                     Recent transactions will appear here.
+
                   </div>
 
                 </td>
@@ -333,12 +414,13 @@
 
       </section>
 
+
     </main>
 
 
-    <!-- =========================================
-         ADMIN PAGE STATUS
-    ========================================== -->
+    <!-- =====================================================
+         DASHBOARD STATUS
+    ====================================================== -->
 
     <p
       class="admin-page-status"
@@ -348,9 +430,9 @@
     ></p>
 
 
-    <!-- =========================================
+    <!-- =====================================================
          MANUAL BACKDROP
-    ========================================== -->
+    ====================================================== -->
 
     <div
       class="manual-backdrop"
@@ -359,9 +441,9 @@
     ></div>
 
 
-    <!-- =========================================
-         MANUAL SLIDING PANEL
-    ========================================== -->
+    <!-- =====================================================
+         ADMIN TOOLS SLIDING PANEL
+    ====================================================== -->
 
     <aside
       class="admin-manual"
@@ -369,6 +451,11 @@
       aria-label="Admin management tools"
       aria-hidden="true"
     >
+
+
+      <!-- ===================================================
+           PANEL HEADER
+      ==================================================== -->
 
       <div class="admin-manual-header">
 
@@ -379,30 +466,33 @@
           </span>
 
           <h2>
-            Manual
+            Admin Tools
           </h2>
 
           <p>
-            Admin management tools
+            Platform management and security
           </p>
 
         </div>
+
 
         <button
           type="button"
           class="manual-close"
           id="manualClose"
-          aria-label="Close admin manual"
+          aria-label="Close admin tools"
         >
-          <span aria-hidden="true">×</span>
+          <span aria-hidden="true">
+            ×
+          </span>
         </button>
 
       </div>
 
 
-      <!-- =========================================
-           SCROLLABLE MANUAL CONTENT
-      ========================================== -->
+      <!-- ===================================================
+           SCROLLABLE ADMIN TOOLS
+      ==================================================== -->
 
       <div
         class="admin-manual-scroll"
@@ -415,288 +505,522 @@
         >
 
 
-          <!-- PLATFORM MANAGEMENT -->
+          <!-- ===============================================
+               PLATFORM MANAGEMENT
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>PLATFORM MANAGEMENT</span>
+              <span>
+                Platform Management
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="user-information"
               >
-                <span class="admin-action-icon">👤</span>
-                <strong>User Information</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  👤
+                </span>
+
+                <span class="admin-action-text">
+                  User Information
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="active-users"
               >
-                <span class="admin-action-icon">🟢</span>
-                <strong>Active Users</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ●
+                </span>
+
+                <span class="admin-action-text">
+                  Active Users
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="pending-transactions"
               >
-                <span class="admin-action-icon">⏳</span>
-                <strong>Pending Transactions</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ◷
+                </span>
+
+                <span class="admin-action-text">
+                  Pending Transactions
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="failed-transactions"
               >
-                <span class="admin-action-icon">⚠</span>
-                <strong>Failed Transactions</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  !
+                </span>
+
+                <span class="admin-action-text">
+                  Failed Transactions
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="transactions"
               >
-                <span class="admin-action-icon">⇄</span>
-                <strong>Transactions</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ⇄
+                </span>
+
+                <span class="admin-action-text">
+                  Transactions
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="profit"
               >
-                <span class="admin-action-icon">₦</span>
-                <strong>Profit</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ₦
+                </span>
+
+                <span class="admin-action-text">
+                  Profit
+                </span>
               </button>
+
 
             </div>
 
           </section>
 
 
-          <!-- KYC & VERIFICATION -->
+          <!-- ===============================================
+               KYC & VERIFICATION
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>KYC &amp; VERIFICATION</span>
+              <span>
+                KYC &amp; Verification
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="verification-records"
               >
-                <span class="admin-action-icon">✓</span>
-                <strong>Verification Records</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ✓
+                </span>
+
+                <span class="admin-action-text">
+                  Verification Records
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="approve-user-kyc"
               >
-                <span class="admin-action-icon">✓</span>
-                <strong>Approve User KYC</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ✓
+                </span>
+
+                <span class="admin-action-text">
+                  Approve User KYC
+                </span>
               </button>
+
 
             </div>
 
           </section>
 
 
-          <!-- CUSTOMER SERVICE -->
+          <!-- ===============================================
+               CUSTOMER SERVICE
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>CUSTOMER SERVICE</span>
+              <span>
+                Customer Service
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="live-chat"
               >
-                <span class="admin-action-icon">💬</span>
-                <strong>Live Chat</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  💬
+                </span>
+
+                <span class="admin-action-text">
+                  Live Chat
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="customer-support"
               >
-                <span class="admin-action-icon">🎧</span>
-                <strong>Customer Support</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ◉
+                </span>
+
+                <span class="admin-action-text">
+                  Customer Support
+                </span>
               </button>
+
 
             </div>
 
           </section>
 
 
-          <!-- USER MANAGEMENT -->
+          <!-- ===============================================
+               USER MANAGEMENT
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>USER MANAGEMENT</span>
+              <span>
+                User Management
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="suspended-accounts"
               >
-                <span class="admin-action-icon">⏸</span>
-                <strong>Suspended Accounts</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ⏸
+                </span>
+
+                <span class="admin-action-text">
+                  Suspended Accounts
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="suspend-user"
               >
-                <span class="admin-action-icon">🔒</span>
-                <strong>Suspend User</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  🔒
+                </span>
+
+                <span class="admin-action-text">
+                  Suspend User
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="banned-accounts"
               >
-                <span class="admin-action-icon">🚫</span>
-                <strong>Banned Accounts</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ×
+                </span>
+
+                <span class="admin-action-text">
+                  Banned Accounts
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="reward-user"
               >
-                <span class="admin-action-icon">🎁</span>
-                <strong>Reward User</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+
+                <span class="admin-action-text">
+                  Reward User
+                </span>
               </button>
+
 
             </div>
 
           </section>
 
 
-          <!-- PLATFORM CONTROL -->
+          <!-- ===============================================
+               PLATFORM CONTROL
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>PLATFORM CONTROL</span>
+              <span>
+                Platform Control
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="system-color"
               >
-                <span class="admin-action-icon">🎨</span>
-                <strong>System Color</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ◐
+                </span>
+
+                <span class="admin-action-text">
+                  System Color
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="notifications"
               >
-                <span class="admin-action-icon">🔔</span>
-                <strong>Notifications</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ♢
+                </span>
+
+                <span class="admin-action-text">
+                  Notifications
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="settings"
               >
-                <span class="admin-action-icon">⚙</span>
-                <strong>Settings</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ⚙
+                </span>
+
+                <span class="admin-action-text">
+                  Settings
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="legal-content"
               >
-                <span class="admin-action-icon">⚖</span>
-                <strong>Legal Content</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  §
+                </span>
+
+                <span class="admin-action-text">
+                  Legal Content
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="content"
               >
-                <span class="admin-action-icon">▤</span>
-                <strong>Content</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ▤
+                </span>
+
+                <span class="admin-action-text">
+                  Content
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="system-information"
               >
-                <span class="admin-action-icon">ⓘ</span>
-                <strong>System Information</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  i
+                </span>
+
+                <span class="admin-action-text">
+                  System Information
+                </span>
               </button>
+
 
             </div>
 
           </section>
 
 
-          <!-- SECURITY & RISK -->
+          <!-- ===============================================
+               SECURITY & RISK
+          ================================================ -->
 
           <section class="manual-section">
 
             <div class="manual-section-heading">
-              <span>SECURITY &amp; RISK</span>
+              <span>
+                Security &amp; Risk
+              </span>
             </div>
 
+
             <div class="manual-button-list">
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="fraud-risk"
               >
-                <span class="admin-action-icon">🛡</span>
-                <strong>Fraud &amp; Risk</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  🛡
+                </span>
+
+                <span class="admin-action-text">
+                  Fraud &amp; Risk
+                </span>
               </button>
+
 
               <button
                 type="button"
                 class="admin-action-button"
                 data-admin-action="audit"
               >
-                <span class="admin-action-icon">📋</span>
-                <strong>Audit</strong>
+                <span
+                  class="admin-action-icon"
+                  aria-hidden="true"
+                >
+                  ≡
+                </span>
+
+                <span class="admin-action-text">
+                  Audit
+                </span>
               </button>
+
 
             </div>
 

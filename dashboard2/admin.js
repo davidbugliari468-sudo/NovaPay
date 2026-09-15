@@ -1,33 +1,16 @@
 "use strict";
 
-import { auth } from "./firebase.js";
-
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-
-// =====================================================
-// NOVAPAY BACKEND
-// =====================================================
-
-const BACKEND_URL =
-  "https://novapay-server.onrender.com";
+/* =========================================================
+   NOVAPAY ADMIN DASHBOARD
+   Dashboard / Admin Tools Controller
+   ========================================================= */
 
 
-// =====================================================
-// ADMIN BACKEND ENDPOINT
-// =====================================================
+/* =========================================================
+   DOM ELEMENTS
+   ========================================================= */
 
-const ADMIN_PROTECTED_URL =
-  `${BACKEND_URL}/api/admin/protected`;
-
-
-// =====================================================
-// ELEMENTS
-// =====================================================
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
   const manualToggle =
     document.getElementById("manualToggle");
@@ -41,257 +24,272 @@ document.addEventListener("DOMContentLoaded", () => {
   const manualBackdrop =
     document.getElementById("manualBackdrop");
 
-  const manualScroll =
+  const adminManualScroll =
     document.getElementById("adminManualScroll");
 
-  const adminStatus =
+  const adminPageStatus =
     document.getElementById("adminPageStatus");
 
+  const totalUsers =
+    document.getElementById("totalUsers");
 
-  // ===================================================
-  // ADMIN AUTHENTICATION STATE
-  // ===================================================
+  const activeUsers =
+    document.getElementById("activeUsers");
 
-  let adminAuthenticationComplete = false;
+  const totalSales =
+    document.getElementById("totalSales");
 
-  let adminAuthenticationInProgress = false;
+  const totalEarnings =
+    document.getElementById("totalEarnings");
+
+  const analysisStatus =
+    document.getElementById("analysisStatus");
+
+  const transactionsStatus =
+    document.getElementById("transactionsStatus");
+
+  const recentTransactionsBody =
+    document.getElementById("recentTransactionsBody");
 
 
-  // ===================================================
-  // DEBUGGING
-  // ===================================================
+  /* =======================================================
+     REQUIRED ELEMENT CHECK
+     ======================================================= */
 
-  function debugLog(stage, details = {}) {
-
-    console.groupCollapsed(
-      `%c[NOVAPAY ADMIN DEBUG] ${stage}`,
-      "font-weight:bold;"
+  if (
+    !manualToggle ||
+    !manualClose ||
+    !adminManual ||
+    !manualBackdrop ||
+    !adminManualScroll ||
+    !adminPageStatus
+  ) {
+    console.error(
+      "NovaPay Admin Dashboard: One or more required elements were not found."
     );
 
-    console.log(
-      "Time:",
-      new Date().toISOString()
-    );
-
-    console.log(
-      "Page URL:",
-      window.location.href
-    );
-
-    console.log(
-      "Page Origin:",
-      window.location.origin
-    );
-
-    console.log(
-      "Backend URL:",
-      BACKEND_URL
-    );
-
-    console.log(
-      "Admin Protected URL:",
-      ADMIN_PROTECTED_URL
-    );
-
-    console.log(
-      "User Agent:",
-      navigator.userAgent
-    );
-
-    if (
-      details &&
-      typeof details === "object"
-    ) {
-      console.log(
-        "Details:",
-        details
-      );
-    }
-
-    console.groupEnd();
+    return;
   }
 
 
-  // ===================================================
-  // STATUS
-  // ===================================================
+  /* =======================================================
+     PANEL STATE
+     ======================================================= */
 
-  function setStatus(message) {
-
-    if (adminStatus) {
-      adminStatus.textContent = message;
-    }
-
-  }
+  let manualIsOpen = false;
 
 
-  // ===================================================
-  // OPEN ADMIN MANUAL
-  // ===================================================
+  /* =======================================================
+     SHOW STATUS MESSAGE
+     ======================================================= */
 
-  function openManual() {
+  function showPageStatus(message) {
 
-    if (!adminManual) {
+    if (!adminPageStatus) {
       return;
     }
 
+    adminPageStatus.textContent = message;
+
+    adminPageStatus.classList.add("show");
+
+    window.clearTimeout(
+      showPageStatus.timeoutId
+    );
+
+    showPageStatus.timeoutId =
+      window.setTimeout(function () {
+
+        adminPageStatus.classList.remove("show");
+
+      }, 2600);
+  }
+
+
+  /* =======================================================
+     OPEN ADMIN TOOLS
+     ======================================================= */
+
+  function openAdminTools() {
+
+    if (manualIsOpen) {
+      return;
+    }
+
+    manualIsOpen = true;
+
     adminManual.classList.add("is-open");
 
-    if (manualBackdrop) {
-      manualBackdrop.classList.add("is-open");
-    }
+    manualBackdrop.classList.add("is-visible");
+
+    manualToggle.setAttribute(
+      "aria-expanded",
+      "true"
+    );
 
     adminManual.setAttribute(
       "aria-hidden",
       "false"
     );
 
-    if (manualToggle) {
-      manualToggle.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-    }
-
-    document.body.classList.add(
-      "manual-open"
+    manualBackdrop.setAttribute(
+      "aria-hidden",
+      "false"
     );
 
-    if (manualScroll) {
+    document.body.classList.add(
+      "admin-tools-open"
+    );
 
-      requestAnimationFrame(() => {
+    /*
+     * Start the admin tools at the top
+     * whenever the panel is opened.
+     */
 
-        manualScroll.scrollTop = 0;
+    adminManualScroll.scrollTop = 0;
 
-      });
+    /*
+     * Move keyboard focus into the panel.
+     */
 
-    }
+    window.setTimeout(function () {
 
+      manualClose.focus();
+
+    }, 50);
   }
 
 
-  // ===================================================
-  // CLOSE ADMIN MANUAL
-  // ===================================================
+  /* =======================================================
+     CLOSE ADMIN TOOLS
+     ======================================================= */
 
-  function closeManual() {
+  function closeAdminTools(
+    returnFocus = true
+  ) {
 
-    if (!adminManual) {
+    if (!manualIsOpen) {
       return;
     }
+
+    manualIsOpen = false;
 
     adminManual.classList.remove(
       "is-open"
     );
 
-    if (manualBackdrop) {
-      manualBackdrop.classList.remove(
-        "is-open"
-      );
-    }
+    manualBackdrop.classList.remove(
+      "is-visible"
+    );
+
+    manualToggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
 
     adminManual.setAttribute(
       "aria-hidden",
       "true"
     );
 
-    if (manualToggle) {
-      manualToggle.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
-
-    document.body.classList.remove(
-      "manual-open"
+    manualBackdrop.setAttribute(
+      "aria-hidden",
+      "true"
     );
 
-    if (manualToggle) {
-      manualToggle.focus();
-    }
+    document.body.classList.remove(
+      "admin-tools-open"
+    );
 
+    if (
+      returnFocus &&
+      document.visibilityState !== "hidden"
+    ) {
+
+      window.setTimeout(function () {
+
+        manualToggle.focus();
+
+      }, 50);
+
+    }
   }
 
 
-  // ===================================================
-  // TOGGLE ADMIN MANUAL
-  // ===================================================
+  /* =======================================================
+     TOGGLE ADMIN TOOLS
+     ======================================================= */
 
-  function toggleManual() {
+  function toggleAdminTools() {
 
-    const isOpen =
-      adminManual &&
-      adminManual.classList.contains(
-        "is-open"
-      );
+    if (manualIsOpen) {
 
-    if (isOpen) {
-
-      closeManual();
+      closeAdminTools();
 
     } else {
 
-      openManual();
+      openAdminTools();
 
     }
-
   }
 
 
-  // ===================================================
-  // MANUAL EVENTS
-  // ===================================================
+  /* =======================================================
+     OPEN BUTTON
+     ======================================================= */
 
-  if (manualToggle) {
+  manualToggle.addEventListener(
+    "click",
+    function () {
 
-    manualToggle.addEventListener(
-      "click",
-      toggleManual
-    );
+      toggleAdminTools();
 
-  }
-
-
-  if (manualClose) {
-
-    manualClose.addEventListener(
-      "click",
-      closeManual
-    );
-
-  }
+    }
+  );
 
 
-  if (manualBackdrop) {
+  /* =======================================================
+     CLOSE BUTTON
+     ======================================================= */
 
-    manualBackdrop.addEventListener(
-      "click",
-      closeManual
-    );
+  manualClose.addEventListener(
+    "click",
+    function () {
 
-  }
+      closeAdminTools();
+
+    }
+  );
 
 
-  // ===================================================
-  // ESCAPE KEY
-  // ===================================================
+  /* =======================================================
+     BACKDROP CLOSE
+     ======================================================= */
+
+  manualBackdrop.addEventListener(
+    "click",
+    function () {
+
+      closeAdminTools();
+
+    }
+  );
+
+
+  /* =======================================================
+     ESCAPE KEY
+     ======================================================= */
 
   document.addEventListener(
     "keydown",
-    (event) => {
-
-      if (event.key !== "Escape") {
-        return;
-      }
+    function (event) {
 
       if (
-        adminManual &&
-        adminManual.classList.contains(
-          "is-open"
-        )
+        event.key === "Escape" &&
+        manualIsOpen
       ) {
 
-        closeManual();
+        closeAdminTools();
 
       }
 
@@ -299,35 +297,175 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  // ===================================================
-  // ADMIN ACTION BUTTONS
-  // ===================================================
+  /* =======================================================
+     PREVENT PANEL CLICK FROM CLOSING IT
+     ======================================================= */
 
-  const actionButtons =
+  adminManual.addEventListener(
+    "click",
+    function (event) {
+
+      event.stopPropagation();
+
+    }
+  );
+
+
+  /* =======================================================
+     ADMIN TOOL ROUTES
+     ======================================================= */
+
+  const adminRoutes = {
+
+    "user-information":
+      "./user-information.html",
+
+    "active-users":
+      "./active-users.html",
+
+    "pending-transactions":
+      "./pending-transactions.html",
+
+    "failed-transactions":
+      "./failed-transactions.html",
+
+    "transactions":
+      "./transactions.html",
+
+    "profit":
+      "./profit.html",
+
+    "verification-records":
+      "./verification-records.html",
+
+    "approve-user-kyc":
+      "./approve-user-kyc.html",
+
+    "live-chat":
+      "./live-chat.html",
+
+    "customer-support":
+      "./customer-support.html",
+
+    "suspended-accounts":
+      "./suspended-accounts.html",
+
+    "suspend-user":
+      "./suspend-user.html",
+
+    "banned-accounts":
+      "./banned-accounts.html",
+
+    "reward-user":
+      "./reward-user.html",
+
+    "system-color":
+      "./system-color.html",
+
+    "notifications":
+      "./notifications.html",
+
+    "settings":
+      "./settings.html",
+
+    "legal-content":
+      "./legal-content.html",
+
+    "content":
+      "./content.html",
+
+    "system-information":
+      "./system-information.html",
+
+    "fraud-risk":
+      "./fraud-risk.html",
+
+    "audit":
+      "./audit.html"
+
+  };
+
+
+  /* =======================================================
+     HANDLE ADMIN TOOL
+     ======================================================= */
+
+  function handleAdminAction(action) {
+
+    if (
+      typeof action !== "string" ||
+      !action
+    ) {
+
+      showPageStatus(
+        "Admin action unavailable."
+      );
+
+      return;
+
+    }
+
+
+    const target =
+      adminRoutes[action];
+
+
+    if (!target) {
+
+      console.error(
+        "NovaPay Admin Dashboard: No route found for action:",
+        action
+      );
+
+      showPageStatus(
+        "This admin tool is not available yet."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * Close the sliding panel before
+     * moving to the selected admin page.
+     */
+
+    closeAdminTools(false);
+
+
+    /*
+     * Navigate to the selected admin page.
+     */
+
+    window.location.href = target;
+
+  }
+
+
+  /* =======================================================
+     ADMIN TOOL BUTTONS
+     ======================================================= */
+
+  const adminActionButtons =
     document.querySelectorAll(
       "[data-admin-action]"
     );
 
 
-  actionButtons.forEach(
-    (button) => {
+  adminActionButtons.forEach(
+    function (button) {
 
       button.addEventListener(
         "click",
-        () => {
+        function () {
 
           const action =
             button.getAttribute(
               "data-admin-action"
             );
 
-          if (!action) {
-            return;
-          }
-
-          handleAdminAction(
-            action
-          );
+          handleAdminAction(action);
 
         }
       );
@@ -336,920 +474,181 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  // ===================================================
-  // ADMIN ACTION HANDLER
-  // ===================================================
+  /* =======================================================
+     KEYBOARD ACCESS FOR ADMIN TOOLS
+     ======================================================= */
 
-  function handleAdminAction(
-    action
-  ) {
+  adminActionButtons.forEach(
+    function (button) {
 
-    if (!adminAuthenticationComplete) {
+      button.addEventListener(
+        "keydown",
+        function (event) {
 
-      setStatus(
-        "Admin authentication is still being verified."
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+
+            event.preventDefault();
+
+            button.click();
+
+          }
+
+        }
       );
 
+    }
+  );
+
+
+  /* =======================================================
+     DASHBOARD PLACEHOLDER VALUES
+     ======================================================= */
+
+  function initializeDashboardValues() {
+
+    /*
+     * The admin backend is not connected yet.
+     *
+     * Do not display fake numbers.
+     */
+
+    if (totalUsers) {
+      totalUsers.textContent = "—";
+    }
+
+    if (activeUsers) {
+      activeUsers.textContent = "—";
+    }
+
+    if (totalSales) {
+      totalSales.textContent = "—";
+    }
+
+    if (totalEarnings) {
+      totalEarnings.textContent = "—";
+    }
+
+
+    if (analysisStatus) {
+
+      analysisStatus.textContent =
+        "Awaiting data";
+
+    }
+
+
+    if (transactionsStatus) {
+
+      transactionsStatus.textContent =
+        "Awaiting data";
+
+    }
+
+  }
+
+
+  /* =======================================================
+     INITIALIZE EMPTY TRANSACTION STATE
+     ======================================================= */
+
+  function initializeTransactions() {
+
+    if (!recentTransactionsBody) {
       return;
-
     }
 
 
-    switch (action) {
+    /*
+     * Keep the table empty until the real
+     * admin backend supplies transaction data.
+     */
 
-      case "user-information":
-        navigateTo("user-information");
-        break;
-
-      case "active-users":
-        navigateTo("active-users");
-        break;
-
-      case "pending-transactions":
-        navigateTo("pending-transactions");
-        break;
-
-      case "failed-transactions":
-        navigateTo("failed-transactions");
-        break;
-
-      case "transactions":
-        navigateTo("transactions");
-        break;
-
-      case "profit":
-        navigateTo("profit");
-        break;
-
-      case "verification-records":
-        navigateTo("verification-records");
-        break;
-
-      case "approve-user-kyc":
-        navigateTo("approve-user-kyc");
-        break;
-
-      case "live-chat":
-        navigateTo("live-chat");
-        break;
-
-      case "customer-support":
-        navigateTo("customer-support");
-        break;
-
-      case "suspended-accounts":
-        navigateTo("suspended-accounts");
-        break;
-
-      case "suspend-user":
-        navigateTo("suspend-user");
-        break;
-
-      case "banned-accounts":
-        navigateTo("banned-accounts");
-        break;
-
-      case "reward-user":
-        navigateTo("reward-user");
-        break;
-
-      case "system-color":
-        navigateTo("system-color");
-        break;
-
-      case "notifications":
-        navigateTo("notifications");
-        break;
-
-      case "settings":
-        navigateTo("settings");
-        break;
-
-      case "legal-content":
-        navigateTo("legal-content");
-        break;
-
-      case "content":
-        navigateTo("content");
-        break;
-
-      case "system-information":
-        navigateTo("system-information");
-        break;
-
-      case "fraud-risk":
-        navigateTo("fraud-risk");
-        break;
-
-      case "audit":
-        navigateTo("audit");
-        break;
-
-      default:
-
-        setStatus(
-          "Admin action is not available."
-        );
-
-        break;
-
-    }
+    recentTransactionsBody.innerHTML = `
+      <tr>
+        <td colspan="5">
+          <div class="dashboard-table-empty">
+            Recent transactions will appear here.
+          </div>
+        </td>
+      </tr>
+    `;
 
   }
 
 
-  // ===================================================
-  // ADMIN PAGE ROUTES
-  // ===================================================
-
-  function navigateTo(
-    action
-  ) {
-
-    const routes = {
-
-      "user-information":
-        "user-information.html",
-
-      "active-users":
-        "active-users.html",
-
-      "pending-transactions":
-        "pending-transactions.html",
-
-      "failed-transactions":
-        "failed-transactions.html",
-
-      "transactions":
-        "transactions.html",
-
-      "profit":
-        "profit.html",
-
-      "verification-records":
-        "verification-records.html",
-
-      "approve-user-kyc":
-        "approve-user-kyc.html",
-
-      "live-chat":
-        "live-chat.html",
-
-      "customer-support":
-        "customer-support.html",
-
-      "suspended-accounts":
-        "suspended-accounts.html",
-
-      "suspend-user":
-        "suspend-user.html",
-
-      "banned-accounts":
-        "banned-accounts.html",
-
-      "reward-user":
-        "reward-user.html",
-
-      "system-color":
-        "system-color.html",
-
-      "notifications":
-        "notifications.html",
-
-      "settings":
-        "settings.html",
-
-      "legal-content":
-        "legal-content.html",
-
-      "content":
-        "content.html",
-
-      "system-information":
-        "system-information.html",
-
-      "fraud-risk":
-        "fraud-risk.html",
-
-      "audit":
-        "audit.html"
-
-    };
-
-
-    const target =
-      routes[action];
-
-
-    if (!target) {
-
-      setStatus(
-        "This admin tool is not available."
-      );
-
-      return;
-
-    }
-
-
-    window.location.href =
-      target;
-
-  }
-
-
-  // ===================================================
-  // SET TEXT
-  // ===================================================
-
-  function setText(
-    id,
-    value
-  ) {
-
-    const element =
-      document.getElementById(id);
-
-    if (element) {
-
-      element.textContent =
-        value;
-
-    }
-
-  }
-
-
-  // ===================================================
-  // INITIALIZE DASHBOARD
-  // ===================================================
+  /* =======================================================
+     DASHBOARD INITIALIZATION
+     ======================================================= */
 
   function initializeDashboard() {
 
-    setText(
-      "totalUsers",
-      "0"
-    );
+    initializeDashboardValues();
 
-    setText(
-      "todayActiveUsers",
-      "0"
-    );
-
-    setText(
-      "totalProfit",
-      "₦0"
-    );
-
-
-    if (adminStatus) {
-
-      adminStatus.textContent =
-        "Admin dashboard ready.";
-
-    }
-
-
-    initializeChart();
+    initializeTransactions();
 
   }
 
 
-  // ===================================================
-  // INITIALIZE CHART
-  // ===================================================
-
-  function initializeChart() {
-
-    const chart =
-      document.getElementById(
-        "analysisChart"
-      );
-
-
-    if (!chart) {
-      return;
-    }
-
-
-    if (chart.children.length > 0) {
-      return;
-    }
-
-
-    const wrapper =
-      document.createElement(
-        "div"
-      );
-
-
-    wrapper.style.width =
-      "100%";
-
-    wrapper.style.minHeight =
-      "260px";
-
-    wrapper.style.display =
-      "flex";
-
-    wrapper.style.alignItems =
-      "center";
-
-    wrapper.style.justifyContent =
-      "center";
-
-    wrapper.style.padding =
-      "20px";
-
-    wrapper.style.color =
-      "#61718a";
-
-    wrapper.style.fontSize =
-      "13px";
-
-
-    wrapper.textContent =
-      "Analysis data will appear here.";
-
-
-    chart.appendChild(
-      wrapper
-    );
-
-  }
-
-
-  // ===================================================
-  // ADMIN AUTHENTICATION
-  // ===================================================
-
-  async function authenticateAdmin(
-    user
-  ) {
-
-    if (adminAuthenticationInProgress) {
-      return;
-    }
-
-
-    adminAuthenticationInProgress =
-      true;
-
-
-    try {
-
-      debugLog(
-        "ADMIN AUTHENTICATION STARTED",
-        {
-          firebaseUserFound:
-            Boolean(user),
-
-          uid:
-            user?.uid || null,
-
-          email:
-            user?.email || null,
-
-          emailVerified:
-            user?.emailVerified === true
-        }
-      );
-
-
-      if (!user) {
-
-        adminAuthenticationComplete =
-          false;
-
-
-        setStatus(
-          "Authentication required. Redirecting to login..."
-        );
-
-
-        debugLog(
-          "NO FIREBASE USER",
-          {
-            reason:
-              "No authenticated Firebase user was found."
-          }
-        );
-
-
-        window.location.replace(
-          "login.html"
-        );
-
-
-        return;
-
-      }
-
-
-      // ===============================================
-      // GET FRESH FIREBASE ID TOKEN
-      // ===============================================
-
-      debugLog(
-        "REQUESTING FRESH FIREBASE ID TOKEN",
-        {
-          uid: user.uid,
-          email: user.email
-        }
-      );
-
-
-      const idToken =
-        await user.getIdToken(
-          true
-        );
-
-
-      debugLog(
-        "FIREBASE ID TOKEN RECEIVED",
-        {
-          tokenReceived:
-            Boolean(idToken),
-
-          tokenLength:
-            idToken
-              ? idToken.length
-              : 0
-        }
-      );
-
-
-      if (!idToken) {
-
-        throw new Error(
-          "Authentication token was not received."
-        );
-
-      }
-
-
-      // ===============================================
-      // CALL PROTECTED ADMIN BACKEND
-      // ===============================================
-
-      debugLog(
-        "CALLING ADMIN PROTECTED ENDPOINT",
-        {
-          method: "GET",
-
-          url:
-            ADMIN_PROTECTED_URL,
-
-          authorizationHeaderPresent:
-            true,
-
-          tokenLength:
-            idToken.length
-        }
-      );
-
-
-      let response;
-
-
-      try {
-
-        response =
-          await fetch(
-            ADMIN_PROTECTED_URL,
-            {
-              method: "GET",
-
-              headers: {
-                "Authorization":
-                  `Bearer ${idToken}`,
-
-                "Accept":
-                  "application/json"
-              },
-
-              cache:
-                "no-store"
-            }
-          );
-
-      } catch (fetchError) {
-
-        debugLog(
-          "ADMIN BACKEND FETCH FAILED",
-          {
-            errorName:
-              fetchError?.name,
-
-            errorCode:
-              fetchError?.code,
-
-            errorMessage:
-              fetchError?.message,
-
-            likelyCause:
-              "Possible CORS error, network error, blocked request, HTTPS/origin issue, DNS issue, or backend unavailable."
-          }
-        );
-
-
-        throw new Error(
-          "The NovaPay admin server could not be reached."
-        );
-
-      }
-
-
-      debugLog(
-        "ADMIN BACKEND RESPONSE RECEIVED",
-        {
-          status:
-            response.status,
-
-          statusText:
-            response.statusText,
-
-          ok:
-            response.ok,
-
-          url:
-            response.url,
-
-          redirected:
-            response.redirected,
-
-          type:
-            response.type
-        }
-      );
-
-
-      // ===============================================
-      // READ ADMIN BACKEND RESPONSE
-      // ===============================================
-
-      const contentType =
-        response.headers.get(
-          "content-type"
-        ) || "";
-
-
-      let data = {};
-
-
-      if (
-        contentType.includes(
-          "application/json"
-        )
-      ) {
-
-        try {
-
-          data =
-            await response.json();
-
-        } catch (jsonError) {
-
-          debugLog(
-            "ADMIN BACKEND JSON PARSE FAILED",
-            {
-              status:
-                response.status,
-
-              errorName:
-                jsonError?.name,
-
-              errorMessage:
-                jsonError?.message
-            }
-          );
-
-
-          throw new Error(
-            "The admin server returned an invalid response."
-          );
-
-        }
-
-      } else {
-
-        const text =
-          await response.text();
-
-
-        data = {
-          message: text
-        };
-
-      }
-
-
-      debugLog(
-        "ADMIN BACKEND RESPONSE DATA",
-        {
-          status:
-            response.status,
-
-          responseData:
-            data
-        }
-      );
-
-
-      // ===============================================
-      // NOT AUTHENTICATED
-      // ===============================================
-
-      if (
-        response.status === 401
-      ) {
-
-        adminAuthenticationComplete =
-          false;
-
-
-        setStatus(
-          "Your authentication session has expired. Redirecting to login..."
-        );
-
-
-        debugLog(
-          "ADMIN AUTHENTICATION REJECTED",
-          {
-            status: 401,
-
-            reason:
-              "Backend rejected the Firebase authentication token."
-          }
-        );
-
-
-        window.location.replace(
-          "login.html"
-        );
-
-
-        return;
-
-      }
-
-
-      // ===============================================
-      // AUTHENTICATED BUT NOT ADMIN
-      // ===============================================
-
-      if (
-        response.status === 403
-      ) {
-
-        adminAuthenticationComplete =
-          false;
-
-
-        setStatus(
-          "Admin access required."
-        );
-
-
-        debugLog(
-          "ADMIN AUTHORIZATION REJECTED",
-          {
-            status: 403,
-
-            reason:
-              "Firebase user is authenticated but does not have the required admin claim.",
-
-            backendResponse:
-              data
-          }
-        );
-
-
-        return;
-
-      }
-
-
-      // ===============================================
-      // OTHER BACKEND FAILURE
-      // ===============================================
-
-      if (
-        !response.ok ||
-        data?.success !== true
-      ) {
-
-        adminAuthenticationComplete =
-          false;
-
-
-        const backendMessage =
-          data?.error ||
-          data?.message ||
-          "Unable to verify admin authorization.";
-
-
-        debugLog(
-          "ADMIN AUTHENTICATION FAILED",
-          {
-            status:
-              response.status,
-
-            backendMessage,
-
-            backendResponse:
-              data
-          }
-        );
-
-
-        setStatus(
-          backendMessage
-        );
-
-
-        return;
-
-      }
-
-
-      // ===============================================
-      // ADMIN AUTHENTICATION SUCCESSFUL
-      // ===============================================
-
-      adminAuthenticationComplete =
-        true;
-
-
-      debugLog(
-        "ADMIN AUTHENTICATION SUCCESSFUL",
-        {
-          status:
-            response.status,
-
-          success:
-            data?.success === true,
-
-          admin:
-            data?.admin || null,
-
-          uid:
-            user.uid,
-
-          email:
-            user.email
-        }
-      );
-
-
-      setStatus(
-        "Admin dashboard ready."
-      );
-
-
-      // ===============================================
-      // INITIALIZE DASHBOARD AFTER AUTHORIZATION
-      // ===============================================
-
-      initializeDashboard();
-
-
-    } catch (error) {
-
-      adminAuthenticationComplete =
-        false;
-
-
-      console.error(
-        "NovaPay admin authentication error:",
-        error
-      );
-
-
-      debugLog(
-        "ADMIN AUTHENTICATION ERROR",
-        {
-          errorName:
-            error?.name,
-
-          errorCode:
-            error?.code,
-
-          errorMessage:
-            error?.message,
-
-          firebaseCurrentUser:
-            auth.currentUser
-              ? {
-                  uid:
-                    auth.currentUser.uid,
-
-                  email:
-                    auth.currentUser.email
-                }
-              : null
-        }
-      );
-
-
-      setStatus(
-        "Unable to verify admin access. Please try again."
-      );
-
-    } finally {
-
-      adminAuthenticationInProgress =
-        false;
-
-    }
-
-  }
-
-
-  // ===================================================
-  // FIREBASE AUTH STATE
-  // ===================================================
-
-  debugLog(
-    "WAITING FOR FIREBASE AUTH STATE"
-  );
-
-
-  onAuthStateChanged(
-    auth,
-    (user) => {
-
-      debugLog(
-        "FIREBASE AUTH STATE CHANGED",
-        {
-          authenticated:
-            Boolean(user),
-
-          uid:
-            user?.uid || null,
-
-          email:
-            user?.email || null
-        }
-      );
-
-
-      authenticateAdmin(
-        user
-      );
+  /* =======================================================
+     CLOSE PANEL WHEN PAGE IS HIDDEN
+     ======================================================= */
+
+  window.addEventListener(
+    "pagehide",
+    function () {
+
+      closeAdminTools(false);
 
     }
   );
 
 
-  // ===================================================
-  // PAGE SHOWS
-  // ===================================================
+  /* =======================================================
+     BROWSER BACK / FORWARD
+     ======================================================= */
 
   window.addEventListener(
     "pageshow",
-    () => {
+    function () {
 
-      if (!adminManual) {
-        return;
-      }
-
-
-      adminManual.classList.remove(
-        "is-open"
-      );
-
-
-      if (manualBackdrop) {
-
-        manualBackdrop.classList.remove(
-          "is-open"
-        );
-
-      }
-
-
-      adminManual.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-
-      if (manualToggle) {
-
-        manualToggle.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-      }
-
-
-      document.body.classList.remove(
-        "manual-open"
-      );
+      closeAdminTools(false);
 
     }
   );
+
+
+  /* =======================================================
+     PREVENT ACCIDENTAL SCROLL LOCK
+     ======================================================= */
+
+  window.addEventListener(
+    "resize",
+    function () {
+
+      if (
+        !manualIsOpen &&
+        document.body.classList.contains(
+          "admin-tools-open"
+        )
+      ) {
+
+        document.body.classList.remove(
+          "admin-tools-open"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* =======================================================
+     START DASHBOARD
+     ======================================================= */
+
+  initializeDashboard();
 
 });

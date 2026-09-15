@@ -1,60 +1,88 @@
+/* =========================================================
+   NOVAPAY ADMIN DASHBOARD
+   Dashboard / Admin Tools Styling
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT VARIABLES
+   ========================================================= */
+
 :root {
   --novapay-blue: #0b63ce;
   --novapay-blue-dark: #084b9d;
   --novapay-blue-light: #eaf3ff;
-  --novapay-blue-soft: #f4f8ff;
+  --novapay-blue-soft: #f5f9ff;
 
-  --white: #ffffff;
-  --page-bg: #f5f8fc;
+  --page-background: #f4f7fb;
   --surface: #ffffff;
-  --surface-soft: #f8fbff;
+  --surface-soft: #f8fafc;
 
-  --text-primary: #10233f;
-  --text-secondary: #61718a;
-  --text-muted: #8a98ab;
+  --text-primary: #111827;
+  --text-secondary: #667085;
+  --text-muted: #98a2b3;
 
-  --border: #dce5f0;
-  --border-light: #e9eef5;
+  --border: #e4e7ec;
+  --border-light: #edf0f4;
 
-  --success: #18a56b;
-  --warning: #e59b22;
-  --danger: #dc4c4c;
+  --success: #12b76a;
+  --success-soft: #ecfdf3;
 
-  --shadow-sm: 0 3px 14px rgba(16, 35, 63, 0.06);
-  --shadow-md: 0 10px 28px rgba(16, 35, 63, 0.09);
-  --shadow-lg: -12px 0 38px rgba(16, 35, 63, 0.14);
+  --warning: #f79009;
+  --warning-soft: #fffaeb;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --danger: #f04438;
+  --danger-soft: #fef3f2;
 
-  /* Manual stays on the right while leaving the dashboard visible. */
-  --manual-width: min(500px, 68vw);
+  --shadow-small:
+    0 2px 8px rgba(16, 24, 40, 0.05);
+
+  --shadow-medium:
+    0 8px 24px rgba(16, 24, 40, 0.08);
+
+  --shadow-large:
+    0 18px 50px rgba(16, 24, 40, 0.14);
+
+  --radius-small: 10px;
+  --radius-medium: 16px;
+  --radius-large: 22px;
+
+  --header-height: 76px;
+
+  --content-max-width: 1500px;
+
+  --manual-width: 410px;
 }
 
 
 /* =========================================================
-   RESET
-========================================================= */
+   GLOBAL RESET
+   ========================================================= */
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+
 html {
+  width: 100%;
   min-height: 100%;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
+
 body {
-  margin: 0;
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
 
-  background: var(--page-bg);
+  background: var(--page-background);
   color: var(--text-primary);
 
   font-family:
-    Inter,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
@@ -65,53 +93,91 @@ body {
 
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  overflow-x: hidden;
 }
 
-body.manual-open {
-  overflow: hidden;
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
+
 
 button {
-  font: inherit;
-  cursor: pointer;
+  border: 0;
 }
 
-button:focus-visible {
-  outline: 3px solid rgba(11, 99, 206, 0.22);
-  outline-offset: 3px;
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+img,
+svg {
+  max-width: 100%;
 }
 
 
 /* =========================================================
    MAIN APPLICATION
-========================================================= */
+   ========================================================= */
 
 .admin-app {
+  position: relative;
+
   width: 100%;
   min-height: 100vh;
-  background: var(--page-bg);
+  min-width: 0;
+
+  overflow-x: hidden;
 }
 
 
 /* =========================================================
    ADMIN HEADER
-========================================================= */
+   ========================================================= */
 
 .admin-header {
-  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 900;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
 
-  padding: 18px 28px;
+  width: 100%;
+  height: var(--header-height);
 
-  background: var(--white);
-  border-bottom: 1px solid var(--border-light);
+  padding:
+    0 clamp(18px, 4vw, 44px);
 
-  box-shadow: 0 2px 12px rgba(16, 35, 63, 0.04);
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid var(--border);
+
+  box-shadow:
+    0 1px 3px rgba(16, 24, 40, 0.03);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
 
 .admin-brand {
   display: flex;
@@ -121,213 +187,273 @@ button:focus-visible {
   min-width: 0;
 }
 
+
 .admin-brand-mark {
-  width: 46px;
-  height: 46px;
-
-  flex: 0 0 46px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
   border-radius: 12px;
 
-  background: linear-gradient(
-    145deg,
-    #1475ed,
-    #0b63ce
-  );
+  background:
+    linear-gradient(
+      145deg,
+      var(--novapay-blue),
+      var(--novapay-blue-dark)
+    );
 
-  color: var(--white);
+  color: #ffffff;
 
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 800;
 
   box-shadow:
-    0 6px 16px rgba(11, 99, 206, 0.22);
+    0 5px 14px rgba(11, 99, 206, 0.22);
 }
+
 
 .admin-brand-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+
+  min-width: 0;
 }
+
 
 .admin-brand-text strong {
   color: var(--text-primary);
 
-  font-size: 17px;
-  font-weight: 850;
+  font-size: 15px;
+  font-weight: 800;
+
   letter-spacing: 0.08em;
-  line-height: 1;
+  line-height: 1.15;
 }
 
+
 .admin-brand-text span {
+  margin-top: 3px;
+
   color: var(--novapay-blue);
 
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.20em;
-  line-height: 1;
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+  line-height: 1.1;
 }
 
 
 /* =========================================================
-   MANUAL TOGGLE
-========================================================= */
+   THREE-DOT ADMIN TOOLS CONTROL
+   ========================================================= */
 
 .manual-toggle {
-  flex: 0 0 auto;
-
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
 
-  min-height: 44px;
+  width: 44px;
+  height: 44px;
 
-  padding: 0 18px;
+  flex: 0 0 44px;
 
-  border: 1px solid var(--novapay-blue);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
 
-  background: var(--novapay-blue);
-  color: var(--white);
+  background: transparent;
 
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  color: var(--text-secondary);
 
-  box-shadow:
-    0 5px 15px rgba(11, 99, 206, 0.16);
+  cursor: pointer;
 
   transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    transform 180ms ease,
-    box-shadow 180ms ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.manual-toggle-icon {
-  font-size: 16px;
-  line-height: 1;
-}
 
 .manual-toggle:hover {
-  background: var(--novapay-blue-dark);
-  border-color: var(--novapay-blue-dark);
+  background: var(--novapay-blue-soft);
 
-  transform: translateY(-1px);
+  color: var(--novapay-blue);
 
-  box-shadow:
-    0 8px 20px rgba(11, 99, 206, 0.20);
+  border-color: var(--border);
 }
 
+
 .manual-toggle:active {
-  transform: translateY(0);
+  transform: scale(0.94);
+}
+
+
+.manual-toggle:focus-visible {
+  outline: 3px solid rgba(11, 99, 206, 0.18);
+  outline-offset: 2px;
+}
+
+
+.manual-toggle-dots {
+  display: block;
+
+  font-size: 21px;
+  font-weight: 800;
+
+  letter-spacing: 3px;
+
+  line-height: 1;
+
+  transform: translateX(1px);
 }
 
 
 /* =========================================================
    MAIN DASHBOARD
-========================================================= */
+   ========================================================= */
 
 .admin-main {
-  width: min(1380px, calc(100% - 48px));
+  width: 100%;
+  max-width: var(--content-max-width);
+
   margin: 0 auto;
 
-  padding: 30px 0 50px;
+  padding:
+    clamp(28px, 4vw, 52px)
+    clamp(18px, 4vw, 44px)
+    60px;
+
+  min-width: 0;
 }
 
 
 /* =========================================================
    DASHBOARD INTRO
-========================================================= */
+   ========================================================= */
 
 .dashboard-intro {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
 
-  margin-bottom: 24px;
+  width: 100%;
+
+  margin-bottom: 30px;
+
+  min-width: 0;
 }
+
+
+.dashboard-intro > div {
+  min-width: 0;
+}
+
 
 .dashboard-eyebrow {
   display: block;
 
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 
   color: var(--novapay-blue);
 
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.12em;
 
-  text-transform: uppercase;
+  letter-spacing: 0.14em;
+
+  line-height: 1.2;
 }
+
 
 .dashboard-intro h1 {
-  margin: 0;
-
   color: var(--text-primary);
 
-  font-size: clamp(28px, 4vw, 38px);
-  font-weight: 850;
-  line-height: 1.12;
-  letter-spacing: -0.035em;
+  font-size: clamp(28px, 4vw, 40px);
+
+  font-weight: 800;
+
+  line-height: 1.15;
+
+  letter-spacing: -0.025em;
 }
 
+
 .dashboard-intro p {
-  margin: 9px 0 0;
+  max-width: 650px;
+
+  margin-top: 9px;
 
   color: var(--text-secondary);
 
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 15px;
+
+  line-height: 1.6;
 }
 
 
 /* =========================================================
    SUMMARY CARDS
-========================================================= */
+   ========================================================= */
 
 .dashboard-summary {
   display: grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+    repeat(4, minmax(0, 1fr));
 
-  gap: 16px;
+  gap: 18px;
 
-  margin-bottom: 20px;
+  width: 100%;
+
+  margin-bottom: 22px;
+
+  min-width: 0;
 }
 
+
 .summary-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
   min-width: 0;
 
-  padding: 20px;
+  min-height: 175px;
+
+  padding: 23px;
 
   background: var(--surface);
 
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
 
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-medium);
+
+  box-shadow: var(--shadow-small);
+
+  overflow: hidden;
 
   transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    border-color 160ms ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
+
 
 .summary-card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 
-  border-color: #cbdcf0;
+  border-color: #d7dce4;
 
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-medium);
 }
+
 
 .summary-card-top {
   display: flex;
@@ -335,89 +461,118 @@ button:focus-visible {
   justify-content: space-between;
 
   gap: 12px;
+
+  min-width: 0;
 }
+
 
 .summary-card-label {
   color: var(--text-secondary);
 
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 650;
+
+  line-height: 1.4;
 }
 
+
 .summary-card-icon {
-  width: 34px;
-  height: 34px;
-
-  flex: 0 0 34px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 9px;
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 40px;
+
+  border-radius: 11px;
 
   background: var(--novapay-blue-light);
+
   color: var(--novapay-blue);
 
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 800;
 }
+
 
 .summary-card-value {
   display: block;
 
-  margin-top: 15px;
+  margin-top: 22px;
 
   color: var(--text-primary);
 
-  font-size: clamp(25px, 3vw, 34px);
-  font-weight: 850;
+  font-size: clamp(27px, 3vw, 36px);
+
+  font-weight: 800;
+
   line-height: 1.1;
+
+  letter-spacing: -0.025em;
+
+  overflow-wrap: anywhere;
 }
+
 
 .summary-card-note {
   display: block;
 
-  margin-top: 7px;
+  margin-top: auto;
+  padding-top: 10px;
 
   color: var(--text-muted);
 
-  font-size: 11px;
+  font-size: 12px;
+
+  line-height: 1.4;
 }
 
 
 /* =========================================================
-   DASHBOARD PANELS
-========================================================= */
+   GENERIC DASHBOARD PANEL
+   ========================================================= */
 
 .dashboard-panel {
   width: 100%;
+  min-width: 0;
+
+  margin-top: 22px;
 
   background: var(--surface);
 
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
 
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-large);
+
+  box-shadow: var(--shadow-small);
 
   overflow: hidden;
 }
 
-.dashboard-panel + .dashboard-panel {
-  margin-top: 20px;
-}
 
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 16px;
+  gap: 20px;
 
-  padding: 18px 20px;
+  min-width: 0;
+
+  padding:
+    24px
+    26px;
 
   border-bottom: 1px solid var(--border-light);
 }
+
+
+.panel-header > div {
+  min-width: 0;
+}
+
 
 .panel-eyebrow {
   display: block;
@@ -426,36 +581,51 @@ button:focus-visible {
 
   color: var(--novapay-blue);
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.12em;
 
-  text-transform: uppercase;
-}
+  letter-spacing: 0.13em;
 
-.panel-header h2 {
-  margin: 0;
-
-  color: var(--text-primary);
-
-  font-size: 18px;
-  font-weight: 800;
   line-height: 1.2;
 }
 
+
+.panel-header h2 {
+  color: var(--text-primary);
+
+  font-size: 20px;
+
+  font-weight: 750;
+
+  line-height: 1.3;
+
+  letter-spacing: -0.015em;
+}
+
+
 .panel-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   flex: 0 0 auto;
 
-  padding: 6px 9px;
+  min-height: 30px;
 
-  border: 1px solid #dceaff;
+  padding:
+    6px
+    10px;
+
   border-radius: 999px;
 
-  background: var(--novapay-blue-soft);
-  color: var(--novapay-blue-dark);
+  background: var(--surface-soft);
 
-  font-size: 10px;
-  font-weight: 700;
+  border: 1px solid var(--border-light);
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  font-weight: 650;
 
   white-space: nowrap;
 }
@@ -463,187 +633,280 @@ button:focus-visible {
 
 /* =========================================================
    ANALYSIS
-========================================================= */
+   ========================================================= */
+
+.analysis-panel {
+  min-height: 360px;
+}
+
 
 .analysis-chart {
   width: 100%;
-  min-height: 270px;
+  min-height: 290px;
 
+  padding: 26px;
+
+  min-width: 0;
+}
+
+
+.dashboard-placeholder {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  padding: 24px;
+  width: 100%;
+  min-height: 245px;
+
+  padding: 30px;
+
+  border: 1px dashed #d8dee8;
+
+  border-radius: 16px;
 
   background:
     linear-gradient(
       180deg,
-      #fbfdff 0%,
-      #f6faff 100%
+      #fbfcfe,
+      #f8fafc
     );
-}
-
-.dashboard-placeholder {
-  width: min(480px, 100%);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 
   text-align: center;
 }
 
-.dashboard-placeholder-icon {
-  width: 42px;
-  height: 42px;
 
+.dashboard-placeholder-icon {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 12px;
+  width: 54px;
+  height: 54px;
 
-  border-radius: 50%;
+  margin-bottom: 15px;
+
+  border-radius: 15px;
 
   background: var(--novapay-blue-light);
+
   color: var(--novapay-blue);
 
-  font-size: 20px;
+  font-size: 26px;
 }
+
 
 .dashboard-placeholder strong {
   color: var(--text-primary);
 
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 15px;
+  font-weight: 700;
+
+  line-height: 1.4;
 }
 
+
 .dashboard-placeholder span {
-  margin-top: 5px;
+  max-width: 540px;
+
+  margin-top: 7px;
 
   color: var(--text-muted);
 
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13px;
+
+  line-height: 1.55;
 }
 
 
 /* =========================================================
-   TRANSACTIONS
-========================================================= */
+   RECENT TRANSACTIONS
+   ========================================================= */
+
+.transactions-panel {
+  min-width: 0;
+}
+
 
 .transactions-table-wrapper {
   width: 100%;
 
   overflow-x: auto;
+  overflow-y: hidden;
+
   -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: thin;
 }
+
 
 .transactions-table {
   width: 100%;
-  min-width: 620px;
+
+  min-width: 720px;
 
   border-collapse: collapse;
+
+  text-align: left;
 }
 
-.transactions-table th {
-  padding: 12px 16px;
 
-  background: #fbfdff;
+.transactions-table th {
+  padding:
+    15px
+    20px;
+
+  background: #fafbfc;
 
   border-bottom: 1px solid var(--border);
 
   color: var(--text-muted);
 
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
+  font-size: 11px;
+  font-weight: 750;
 
-  text-align: left;
+  letter-spacing: 0.04em;
+
   text-transform: uppercase;
+
   white-space: nowrap;
 }
 
+
 .transactions-table td {
-  padding: 15px 16px;
+  padding:
+    18px
+    20px;
 
   border-bottom: 1px solid var(--border-light);
 
   color: var(--text-secondary);
 
-  font-size: 12px;
+  font-size: 13px;
+
+  vertical-align: middle;
+
+  white-space: nowrap;
 }
+
 
 .transactions-table tbody tr:last-child td {
   border-bottom: 0;
 }
 
-.transactions-table tbody tr:hover {
-  background: var(--surface-soft);
-}
 
 .dashboard-table-empty {
-  min-height: 105px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  min-height: 90px;
+
   color: var(--text-muted);
 
-  font-size: 12px;
+  font-size: 13px;
 
   text-align: center;
+
+  white-space: normal;
 }
 
 
 /* =========================================================
    PAGE STATUS
-========================================================= */
+   ========================================================= */
 
 .admin-page-status {
-  width: min(1380px, calc(100% - 48px));
+  position: fixed;
 
-  margin: 0 auto;
-  padding: 0 0 25px;
+  left: 50%;
 
-  color: var(--text-muted);
+  bottom: 24px;
 
-  font-size: 11px;
+  z-index: 1200;
+
+  max-width:
+    min(520px, calc(100vw - 32px));
+
+  padding:
+    10px
+    16px;
+
+  border-radius: 10px;
+
+  background: var(--text-primary);
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  box-shadow: var(--shadow-large);
+
+  transform:
+    translate(-50%, 20px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease;
+}
+
+
+.admin-page-status.show {
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translate(-50%, 0);
 }
 
 
 /* =========================================================
    MANUAL BACKDROP
-========================================================= */
+   ========================================================= */
 
 .manual-backdrop {
   position: fixed;
+
   inset: 0;
 
   z-index: 1000;
 
-  background: rgba(16, 35, 63, 0.12);
+  background: rgba(15, 23, 42, 0.36);
 
   opacity: 0;
   visibility: hidden;
+
   pointer-events: none;
 
   transition:
-    opacity 280ms ease,
-    visibility 280ms ease;
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
-.manual-backdrop.is-open {
+
+.manual-backdrop.is-visible {
   opacity: 1;
   visibility: visible;
+
   pointer-events: auto;
 }
 
 
 /* =========================================================
-   MANUAL SLIDING PANEL
-========================================================= */
+   ADMIN TOOLS SLIDING PANEL
+   ========================================================= */
 
 .admin-manual {
   position: fixed;
@@ -652,691 +915,858 @@ button:focus-visible {
   right: 0;
   bottom: 0;
 
-  z-index: 1001;
+  z-index: 1100;
 
   display: flex;
   flex-direction: column;
 
-  width: var(--manual-width);
+  width:
+    min(
+      var(--manual-width),
+      92vw
+    );
+
   max-width: 100%;
 
-  min-height: 0;
-
-  background: var(--white);
+  background: var(--surface);
 
   border-left: 1px solid var(--border);
 
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-large);
 
-  transform: translateX(100%);
+  transform: translateX(105%);
 
   visibility: hidden;
+
   pointer-events: none;
 
   transition:
-    transform 280ms cubic-bezier(
-      0.22,
-      1,
-      0.36,
-      1
-    ),
-    visibility 280ms ease;
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.3s ease;
 }
+
 
 .admin-manual.is-open {
   transform: translateX(0);
 
   visibility: visible;
+
   pointer-events: auto;
 }
 
 
 /* =========================================================
-   MANUAL HEADER
-========================================================= */
+   ADMIN TOOLS HEADER
+   ========================================================= */
 
 .admin-manual-header {
-  flex: 0 0 auto;
-
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
-  gap: 14px;
+  gap: 16px;
 
-  padding: 18px 18px 16px;
+  flex: 0 0 auto;
 
-  background: var(--white);
+  padding:
+    24px
+    22px
+    20px;
 
-  border-bottom: 1px solid var(--border-light);
+  background: var(--surface);
+
+  border-bottom: 1px solid var(--border);
 }
+
+
+.admin-manual-header > div {
+  min-width: 0;
+}
+
 
 .manual-eyebrow {
   display: block;
 
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 
   color: var(--novapay-blue);
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
+
   letter-spacing: 0.13em;
 
-  text-transform: uppercase;
+  line-height: 1.2;
 }
+
 
 .admin-manual-header h2 {
-  margin: 0;
-
   color: var(--text-primary);
 
-  font-size: 25px;
-  font-weight: 850;
-  line-height: 1.1;
+  font-size: 23px;
+
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.02em;
 }
+
 
 .admin-manual-header p {
-  margin: 5px 0 0;
+  margin-top: 6px;
 
-  color: var(--text-secondary);
+  color: var(--text-muted);
 
   font-size: 12px;
-  line-height: 1.35;
-}
 
-.manual-close {
-  width: 40px;
-  height: 40px;
-
-  flex: 0 0 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  background: var(--white);
-  color: var(--text-secondary);
-
-  font-size: 25px;
-  font-weight: 400;
-  line-height: 1;
-
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.manual-close:hover {
-  background: var(--novapay-blue-light);
-  border-color: #bfd7f4;
-  color: var(--novapay-blue);
+  line-height: 1.45;
 }
 
 
 /* =========================================================
-   MANUAL SCROLL
-========================================================= */
+   CLOSE CONTROL
+   ========================================================= */
+
+.manual-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.manual-close:hover {
+  background: var(--danger-soft);
+
+  color: var(--danger);
+}
+
+
+.manual-close:active {
+  transform: scale(0.92);
+}
+
+
+.manual-close:focus-visible {
+  outline: 3px solid rgba(11, 99, 206, 0.18);
+  outline-offset: 2px;
+}
+
+
+.manual-close span {
+  display: block;
+
+  font-size: 30px;
+  font-weight: 300;
+
+  line-height: 0.8;
+}
+
+
+/* =========================================================
+   ADMIN TOOLS SCROLL AREA
+   ========================================================= */
 
 .admin-manual-scroll {
   flex: 1 1 auto;
 
   min-height: 0;
 
+  width: 100%;
+
   overflow-y: auto;
   overflow-x: hidden;
 
-  padding: 14px 16px 20px;
+  -webkit-overflow-scrolling: touch;
 
   overscroll-behavior: contain;
-
-  -webkit-overflow-scrolling: touch;
 
   scrollbar-width: thin;
 }
 
-.admin-manual-scroll::-webkit-scrollbar {
-  width: 5px;
-}
 
-.admin-manual-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
+.admin-manual-content {
+  width: 100%;
 
-.admin-manual-scroll::-webkit-scrollbar-thumb {
-  background: #c4d0df;
-  border-radius: 20px;
+  padding:
+    10px
+    14px
+    34px;
 }
 
 
 /* =========================================================
    MANUAL SECTIONS
-========================================================= */
-
-.admin-manual-content {
-  width: 100%;
-}
+   ========================================================= */
 
 .manual-section {
-  margin: 0 0 16px;
+  width: 100%;
+
+  padding:
+    15px
+    0
+    17px;
 }
 
-.manual-section:last-child {
-  margin-bottom: 0;
+
+.manual-section + .manual-section {
+  border-top: 1px solid var(--border-light);
 }
+
 
 .manual-section-heading {
-  margin: 0 0 7px;
-  padding: 0 2px;
+  display: flex;
+  align-items: center;
+
+  min-height: 24px;
+
+  padding:
+    0
+    8px;
+
+  margin-bottom: 5px;
 }
 
-.manual-section-heading span {
-  display: block;
 
+.manual-section-heading span {
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.10em;
 
-  line-height: 1.25;
+  letter-spacing: 0.11em;
+
+  line-height: 1.3;
 
   text-transform: uppercase;
 }
 
 
 /* =========================================================
-   MANUAL BUTTON LIST
-========================================================= */
+   ADMIN TOOL LIST
+   ========================================================= */
 
 .manual-button-list {
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  width: 100%;
 }
 
 
 /* =========================================================
-   MANUAL BUTTONS
-========================================================= */
+   ADMIN TOOL ROW
+   ========================================================= */
 
 .admin-action-button {
-  width: 100%;
-  min-height: 51px;
+  position: relative;
 
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  width: 100%;
 
-  padding: 8px 11px;
+  min-height: 48px;
 
-  border: 1px solid var(--border);
-  border-radius: 11px;
+  padding:
+    8px
+    9px;
 
-  background: var(--white);
+  gap: 12px;
+
+  border-radius: 10px;
+
+  background: transparent;
+
   color: var(--text-primary);
 
   text-align: left;
 
-  box-shadow:
-    0 2px 6px rgba(16, 35, 63, 0.035);
+  cursor: pointer;
 
   transition:
-    background 150ms ease,
-    border-color 150ms ease,
-    box-shadow 150ms ease,
-    transform 150ms ease;
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
 }
+
 
 .admin-action-button:hover {
   background: var(--novapay-blue-soft);
 
-  border-color: #c8dcf5;
-
-  box-shadow:
-    0 5px 13px rgba(11, 99, 206, 0.07);
-
-  transform: translateY(-1px);
+  color: var(--novapay-blue);
 }
 
+
 .admin-action-button:active {
-  transform: translateY(0);
-  box-shadow: none;
+  transform: scale(0.985);
+}
+
+
+.admin-action-button:focus-visible {
+  outline: 3px solid rgba(11, 99, 206, 0.16);
+  outline-offset: -1px;
 }
 
 
 /* =========================================================
-   BUTTON ICONS
-   No sticker/pill background by default.
-========================================================= */
+   ADMIN TOOL ICON
+   ========================================================= */
 
 .admin-action-icon {
-  width: 29px;
-  height: 29px;
-
-  flex: 0 0 29px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: transparent;
-  border: 0;
-  border-radius: 0;
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  border-radius: 9px;
+
+  background: var(--surface-soft);
+
+  border: 1px solid var(--border-light);
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+
+.admin-action-button:hover .admin-action-icon {
+  background: var(--novapay-blue-light);
+
+  border-color: #d5e6ff;
 
   color: var(--novapay-blue);
-
-  font-size: 17px;
-  line-height: 1;
-}
-
-
-/* Only selected status/risk icons get a small visual treatment. */
-
-.admin-action-button[data-admin-action="active-users"]
-.admin-action-icon {
-  width: 19px;
-  height: 19px;
-
-  flex-basis: 19px;
-
-  margin-left: 5px;
-  margin-right: 5px;
-
-  border-radius: 50%;
-
-  background: #16b84e;
-
-  color: transparent;
-
-  box-shadow:
-    0 0 0 3px rgba(22, 184, 78, 0.10);
-}
-
-.admin-action-button[data-admin-action="failed-transactions"]
-.admin-action-icon {
-  width: 27px;
-  height: 27px;
-
-  flex-basis: 27px;
-
-  border-radius: 8px;
-
-  background: #fff5df;
-  color: var(--warning);
-}
-
-.admin-action-button[data-admin-action="notifications"]
-.admin-action-icon {
-  width: 29px;
-  height: 29px;
-
-  flex-basis: 29px;
-
-  border-radius: 8px;
-
-  background: var(--novapay-blue-light);
-}
-
-.admin-action-button[data-admin-action="fraud-risk"]
-.admin-action-icon {
-  width: 29px;
-  height: 29px;
-
-  flex-basis: 29px;
-
-  border-radius: 8px;
-
-  background: #eef5ff;
 }
 
 
 /* =========================================================
-   BUTTON TITLE
-========================================================= */
+   ADMIN TOOL TEXT
+   ========================================================= */
 
-.admin-action-button strong {
+.admin-action-text {
   min-width: 0;
-  flex: 1;
 
-  color: var(--text-primary);
+  overflow: hidden;
+
+  color: inherit;
 
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 620;
 
-  line-height: 1.25;
-}
+  line-height: 1.35;
 
-.admin-action-button:hover strong {
-  color: var(--novapay-blue-dark);
-}
+  text-overflow: ellipsis;
 
-
-/* =========================================================
-   REMOVE OLD ARROWS / DESCRIPTIONS
-========================================================= */
-
-.admin-action-button::after {
-  content: none !important;
-}
-
-.admin-action-button .arrow,
-.admin-action-button .admin-action-arrow,
-.admin-action-button .button-arrow,
-.admin-action-button .description,
-.admin-action-button .admin-action-description,
-.admin-action-button p,
-.admin-action-button small {
-  display: none !important;
+  white-space: nowrap;
 }
 
 
 /* =========================================================
-   ACCESSIBILITY
-========================================================= */
+   SCROLLBAR
+   ========================================================= */
 
-.admin-manual[aria-hidden="true"] {
-  pointer-events: none;
+.admin-manual-scroll::-webkit-scrollbar,
+.transactions-table-wrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.admin-manual.is-open[aria-hidden="false"] {
-  pointer-events: auto;
+
+.admin-manual-scroll::-webkit-scrollbar-track,
+.transactions-table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.admin-manual-scroll::-webkit-scrollbar-thumb,
+.transactions-table-wrapper::-webkit-scrollbar-thumb {
+  background: #c9d0da;
+
+  border-radius: 999px;
+}
+
+
+.admin-manual-scroll::-webkit-scrollbar-thumb:hover,
+.transactions-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #aeb7c4;
 }
 
 
 /* =========================================================
-   LARGE DESKTOP
-========================================================= */
+   BODY LOCK WHEN TOOLS ARE OPEN
+   ========================================================= */
 
-@media (min-width: 1200px) {
-  .admin-main {
-    padding-top: 34px;
-  }
-
-  .admin-header {
-    padding-left: 34px;
-    padding-right: 34px;
-  }
-
-  .admin-manual {
-    width: min(510px, 60vw);
-  }
+body.admin-tools-open {
+  overflow: hidden;
 }
 
 
 /* =========================================================
    TABLET
-========================================================= */
+   ========================================================= */
 
-@media (max-width: 900px) {
-  :root {
-    --manual-width: min(470px, 76vw);
-  }
-
-  .admin-header {
-    padding: 16px 20px;
-  }
-
-  .admin-main {
-    width: calc(100% - 36px);
-    padding-top: 24px;
-  }
-
-  .admin-page-status {
-    width: calc(100% - 36px);
-  }
+@media (max-width: 1100px) {
 
   .dashboard-summary {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
   }
 
-  .summary-card:last-child {
-    grid-column: 1 / -1;
+  .summary-card {
+    min-height: 165px;
   }
+
 }
 
 
 /* =========================================================
-   MOBILE
-========================================================= */
+   SMALLER TABLET / LARGE PHONE
+   ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 760px) {
+
   :root {
-    /* Reduced from the previous 92vw so more dashboard
-       remains visible while the panel is open. */
-    --manual-width: 84vw;
+    --header-height: 68px;
+    --manual-width: 390px;
   }
+
 
   .admin-header {
-    padding: 14px 16px;
+    padding:
+      0
+      16px;
   }
+
 
   .admin-brand-mark {
-    width: 42px;
-    height: 42px;
-
-    flex-basis: 42px;
-
-    border-radius: 11px;
-
-    font-size: 19px;
-  }
-
-  .admin-brand-text strong {
-    font-size: 15px;
-  }
-
-  .admin-brand-text span {
-    font-size: 8px;
-  }
-
-  .manual-toggle {
-    min-height: 40px;
-    padding: 0 14px;
-
-    font-size: 11px;
-  }
-
-  .admin-main {
-    width: calc(100% - 28px);
-
-    padding-top: 22px;
-    padding-bottom: 36px;
-  }
-
-  .dashboard-intro {
-    margin-bottom: 18px;
-  }
-
-  .dashboard-eyebrow {
-    font-size: 9px;
-  }
-
-  .dashboard-intro h1 {
-    font-size: 27px;
-  }
-
-  .dashboard-intro p {
-    font-size: 12px;
-  }
-
-  .dashboard-summary {
-    grid-template-columns: 1fr;
-
-    gap: 10px;
-
-    margin-bottom: 14px;
-  }
-
-  .summary-card:last-child {
-    grid-column: auto;
-  }
-
-  .summary-card {
-    padding: 16px;
-  }
-
-  .summary-card-value {
-    margin-top: 11px;
-    font-size: 27px;
-  }
-
-  .dashboard-panel + .dashboard-panel {
-    margin-top: 14px;
-  }
-
-  .panel-header {
-    padding: 15px;
-  }
-
-  .panel-header h2 {
-    font-size: 16px;
-  }
-
-  .panel-status {
-    font-size: 9px;
-    padding: 5px 7px;
-  }
-
-  .analysis-chart {
-    min-height: 220px;
-    padding: 18px;
-  }
-
-  .dashboard-table-empty {
-    min-height: 90px;
-  }
-
-  .admin-page-status {
-    width: calc(100% - 28px);
-  }
-
-  .admin-manual-header {
-    padding: 16px 14px 14px;
-  }
-
-  .admin-manual-header h2 {
-    font-size: 22px;
-  }
-
-  .admin-manual-header p {
-    font-size: 11px;
-  }
-
-  .manual-close {
     width: 38px;
     height: 38px;
 
     flex-basis: 38px;
+
+    border-radius: 11px;
+
+    font-size: 18px;
   }
 
-  .admin-manual-scroll {
-    padding: 12px 12px 18px;
+
+  .admin-brand-text strong {
+    font-size: 14px;
   }
+
+
+  .admin-main {
+    padding:
+      25px
+      16px
+      48px;
+  }
+
+
+  .dashboard-intro {
+    margin-bottom: 23px;
+  }
+
+
+  .dashboard-intro h1 {
+    font-size: 29px;
+  }
+
+
+  .dashboard-intro p {
+    font-size: 14px;
+  }
+
+
+  .dashboard-summary {
+    gap: 13px;
+
+    margin-bottom: 15px;
+  }
+
+
+  .summary-card {
+    min-height: 155px;
+
+    padding: 18px;
+  }
+
+
+  .summary-card-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+  }
+
+
+  .summary-card-value {
+    margin-top: 18px;
+
+    font-size: 28px;
+  }
+
+
+  .dashboard-panel {
+    margin-top: 15px;
+
+    border-radius: 17px;
+  }
+
+
+  .panel-header {
+    padding:
+      19px
+      18px;
+  }
+
+
+  .panel-header h2 {
+    font-size: 18px;
+  }
+
+
+  .analysis-chart {
+    padding: 18px;
+  }
+
+
+  .analysis-panel {
+    min-height: 325px;
+  }
+
+
+  .dashboard-placeholder {
+    min-height: 230px;
+
+    padding: 22px;
+  }
+
+
+  .transactions-table th,
+  .transactions-table td {
+    padding:
+      14px
+      16px;
+  }
+
+
+  .admin-manual-header {
+    padding:
+      21px
+      18px
+      17px;
+  }
+
+
+  .admin-manual-content {
+    padding:
+      7px
+      10px
+      28px;
+  }
+
 
   .manual-section {
-    margin-bottom: 14px;
+    padding:
+      13px
+      0
+      15px;
   }
 
-  .manual-section-heading {
-    margin-bottom: 6px;
-  }
-
-  .manual-section-heading span {
-    font-size: 8px;
-  }
-
-  .manual-button-list {
-    gap: 5px;
-  }
 
   .admin-action-button {
-    min-height: 48px;
-
-    padding: 7px 9px;
-
-    border-radius: 10px;
-
-    gap: 9px;
+    min-height: 47px;
   }
 
-  .admin-action-icon {
-    width: 27px;
-    height: 27px;
+}
 
-    flex-basis: 27px;
 
-    font-size: 15px;
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .dashboard-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 11px;
   }
 
-  .admin-action-button strong {
+
+  .summary-card {
+    min-height: 148px;
+
+    padding: 16px;
+
+    border-radius: 14px;
+  }
+
+
+  .summary-card-label {
     font-size: 12px;
   }
+
+
+  .summary-card-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+  }
+
+
+  .summary-card-value {
+    margin-top: 16px;
+
+    font-size: 25px;
+  }
+
+
+  .summary-card-note {
+    font-size: 11px;
+  }
+
+
+  .panel-status {
+    min-height: 27px;
+
+    padding:
+      5px
+      8px;
+
+    font-size: 10px;
+  }
+
+
+  .admin-manual {
+    width: min(390px, 94vw);
+  }
+
 }
 
 
 /* =========================================================
    VERY SMALL PHONES
-========================================================= */
+   ========================================================= */
 
-@media (max-width: 380px) {
-  :root {
-    --manual-width: 82vw;
-  }
-
-  .admin-header {
-    gap: 12px;
-  }
-
-  .manual-toggle {
-    padding: 0 11px;
-  }
+@media (max-width: 390px) {
 
   .admin-main {
-    width: calc(100% - 20px);
+    padding:
+      21px
+      12px
+      42px;
   }
 
-  .admin-page-status {
-    width: calc(100% - 20px);
+
+  .dashboard-intro h1 {
+    font-size: 26px;
   }
+
+
+  .dashboard-intro p {
+    font-size: 13px;
+  }
+
+
+  .dashboard-summary {
+    gap: 9px;
+  }
+
+
+  .summary-card {
+    min-height: 140px;
+
+    padding: 14px;
+  }
+
+
+  .summary-card-value {
+    font-size: 22px;
+  }
+
+
+  .summary-card-note {
+    font-size: 10px;
+  }
+
+
+  .panel-header {
+    padding:
+      17px
+      14px;
+  }
+
+
+  .panel-header h2 {
+    font-size: 17px;
+  }
+
+
+  .analysis-chart {
+    padding: 13px;
+  }
+
+
+  .dashboard-placeholder {
+    padding: 18px;
+  }
+
+
+  .dashboard-placeholder span {
+    font-size: 12px;
+  }
+
+
+  .admin-manual {
+    width: 96vw;
+  }
+
 
   .admin-manual-header {
-    padding: 14px 12px 12px;
+    padding:
+      19px
+      15px
+      16px;
   }
 
-  .admin-manual-scroll {
-    padding-left: 10px;
-    padding-right: 10px;
+
+  .admin-manual-content {
+    padding-left: 7px;
+    padding-right: 7px;
   }
 
-  .admin-action-button {
-    min-height: 46px;
+
+  .admin-action-text {
+    font-size: 12.5px;
   }
+
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONE
+   ========================================================= */
+
+@media (
+  max-height: 520px
+) and (
+  orientation: landscape
+) {
+
+  .admin-header {
+    height: 60px;
+  }
+
+
+  .admin-main {
+    padding-top: 22px;
+  }
+
+
+  .admin-manual-header {
+    padding-top: 16px;
+    padding-bottom: 14px;
+  }
+
+
+  .manual-section {
+    padding-top: 9px;
+    padding-bottom: 10px;
+  }
+
 }
 
 
 /* =========================================================
    REDUCED MOTION
-========================================================= */
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   html {
     scroll-behavior: auto;
   }
 
+
   *,
   *::before,
   *::after {
+    transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
+
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+  .admin-header {
+    position: static;
+
+    box-shadow: none;
+  }
+
+
+  .manual-toggle,
+  .manual-backdrop,
+  .admin-manual,
+  .admin-page-status {
+    display: none !important;
+  }
+
+
+  .admin-main {
+    max-width: none;
+
+    padding: 20px;
+  }
+
+
+  .dashboard-panel,
+  .summary-card {
+    box-shadow: none;
+  }
+
 }

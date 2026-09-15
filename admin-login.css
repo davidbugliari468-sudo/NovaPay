@@ -264,6 +264,35 @@ button {
     display: none;
 }
 
+/* Forgot Password link */
+.forgot-password-link {
+    width: 100%;
+    margin-top: 14px;
+    text-align: center;
+}
+
+.forgot-password-link a {
+    color: #172033;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 650;
+    text-decoration: none;
+    transition:
+        color 0.18s ease,
+        opacity 0.18s ease;
+}
+
+.forgot-password-link a:hover {
+    color: #0f1728;
+    text-decoration: underline;
+}
+
+.forgot-password-link a:focus-visible {
+    outline: 2px solid #172033;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
 .security-note {
     display: flex;
     align-items: center;
